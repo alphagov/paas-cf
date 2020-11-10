@@ -31,15 +31,16 @@ func (fake *FakeLogitElasticsearchClient) Search(arg1 string, arg2 interface{}) 
 		arg1 string
 		arg2 interface{}
 	}{arg1, arg2})
+	stub := fake.SearchStub
+	fakeReturns := fake.searchReturns
 	fake.recordInvocation("Search", []interface{}{arg1, arg2})
 	fake.searchMutex.Unlock()
-	if fake.SearchStub != nil {
-		return fake.SearchStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.searchReturns
 	return fakeReturns.result1
 }
 

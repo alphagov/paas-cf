@@ -10,7 +10,7 @@ type Client struct {
 	elasticsearchUrl *url.URL
 }
 
-//go:generate go run github.com/maxbrunsfeld/counterfeiter/v6 . LogitElasticsearchClient
+//go:generate counterfeiter -o logitfakes/fake_logit_elasticsearch_client.go . LogitElasticsearchClient
 type LogitElasticsearchClient interface {
 	Search(string, interface{}) error
 }

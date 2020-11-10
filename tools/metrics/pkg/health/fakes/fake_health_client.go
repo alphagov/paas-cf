@@ -736,15 +736,16 @@ func (fake *FakeHealthAPI) DescribeAffectedAccountsForOrganization(arg1 *health.
 	fake.describeAffectedAccountsForOrganizationArgsForCall = append(fake.describeAffectedAccountsForOrganizationArgsForCall, struct {
 		arg1 *health.DescribeAffectedAccountsForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeAffectedAccountsForOrganizationStub
+	fakeReturns := fake.describeAffectedAccountsForOrganizationReturns
 	fake.recordInvocation("DescribeAffectedAccountsForOrganization", []interface{}{arg1})
 	fake.describeAffectedAccountsForOrganizationMutex.Unlock()
-	if fake.DescribeAffectedAccountsForOrganizationStub != nil {
-		return fake.DescribeAffectedAccountsForOrganizationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedAccountsForOrganizationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -800,15 +801,16 @@ func (fake *FakeHealthAPI) DescribeAffectedAccountsForOrganizationPages(arg1 *he
 		arg1 *health.DescribeAffectedAccountsForOrganizationInput
 		arg2 func(*health.DescribeAffectedAccountsForOrganizationOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeAffectedAccountsForOrganizationPagesStub
+	fakeReturns := fake.describeAffectedAccountsForOrganizationPagesReturns
 	fake.recordInvocation("DescribeAffectedAccountsForOrganizationPages", []interface{}{arg1, arg2})
 	fake.describeAffectedAccountsForOrganizationPagesMutex.Unlock()
-	if fake.DescribeAffectedAccountsForOrganizationPagesStub != nil {
-		return fake.DescribeAffectedAccountsForOrganizationPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeAffectedAccountsForOrganizationPagesReturns
 	return fakeReturns.result1
 }
 
@@ -863,15 +865,16 @@ func (fake *FakeHealthAPI) DescribeAffectedAccountsForOrganizationPagesWithConte
 		arg3 func(*health.DescribeAffectedAccountsForOrganizationOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeAffectedAccountsForOrganizationPagesWithContextStub
+	fakeReturns := fake.describeAffectedAccountsForOrganizationPagesWithContextReturns
 	fake.recordInvocation("DescribeAffectedAccountsForOrganizationPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeAffectedAccountsForOrganizationPagesWithContextMutex.Unlock()
-	if fake.DescribeAffectedAccountsForOrganizationPagesWithContextStub != nil {
-		return fake.DescribeAffectedAccountsForOrganizationPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeAffectedAccountsForOrganizationPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -923,15 +926,16 @@ func (fake *FakeHealthAPI) DescribeAffectedAccountsForOrganizationRequest(arg1 *
 	fake.describeAffectedAccountsForOrganizationRequestArgsForCall = append(fake.describeAffectedAccountsForOrganizationRequestArgsForCall, struct {
 		arg1 *health.DescribeAffectedAccountsForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeAffectedAccountsForOrganizationRequestStub
+	fakeReturns := fake.describeAffectedAccountsForOrganizationRequestReturns
 	fake.recordInvocation("DescribeAffectedAccountsForOrganizationRequest", []interface{}{arg1})
 	fake.describeAffectedAccountsForOrganizationRequestMutex.Unlock()
-	if fake.DescribeAffectedAccountsForOrganizationRequestStub != nil {
-		return fake.DescribeAffectedAccountsForOrganizationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedAccountsForOrganizationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -988,15 +992,16 @@ func (fake *FakeHealthAPI) DescribeAffectedAccountsForOrganizationWithContext(ar
 		arg2 *health.DescribeAffectedAccountsForOrganizationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeAffectedAccountsForOrganizationWithContextStub
+	fakeReturns := fake.describeAffectedAccountsForOrganizationWithContextReturns
 	fake.recordInvocation("DescribeAffectedAccountsForOrganizationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeAffectedAccountsForOrganizationWithContextMutex.Unlock()
-	if fake.DescribeAffectedAccountsForOrganizationWithContextStub != nil {
-		return fake.DescribeAffectedAccountsForOrganizationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedAccountsForOrganizationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1051,15 +1056,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntities(arg1 *health.DescribeAffecte
 	fake.describeAffectedEntitiesArgsForCall = append(fake.describeAffectedEntitiesArgsForCall, struct {
 		arg1 *health.DescribeAffectedEntitiesInput
 	}{arg1})
+	stub := fake.DescribeAffectedEntitiesStub
+	fakeReturns := fake.describeAffectedEntitiesReturns
 	fake.recordInvocation("DescribeAffectedEntities", []interface{}{arg1})
 	fake.describeAffectedEntitiesMutex.Unlock()
-	if fake.DescribeAffectedEntitiesStub != nil {
-		return fake.DescribeAffectedEntitiesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedEntitiesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1114,15 +1120,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesForOrganization(arg1 *health.
 	fake.describeAffectedEntitiesForOrganizationArgsForCall = append(fake.describeAffectedEntitiesForOrganizationArgsForCall, struct {
 		arg1 *health.DescribeAffectedEntitiesForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeAffectedEntitiesForOrganizationStub
+	fakeReturns := fake.describeAffectedEntitiesForOrganizationReturns
 	fake.recordInvocation("DescribeAffectedEntitiesForOrganization", []interface{}{arg1})
 	fake.describeAffectedEntitiesForOrganizationMutex.Unlock()
-	if fake.DescribeAffectedEntitiesForOrganizationStub != nil {
-		return fake.DescribeAffectedEntitiesForOrganizationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedEntitiesForOrganizationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1178,15 +1185,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesForOrganizationPages(arg1 *he
 		arg1 *health.DescribeAffectedEntitiesForOrganizationInput
 		arg2 func(*health.DescribeAffectedEntitiesForOrganizationOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeAffectedEntitiesForOrganizationPagesStub
+	fakeReturns := fake.describeAffectedEntitiesForOrganizationPagesReturns
 	fake.recordInvocation("DescribeAffectedEntitiesForOrganizationPages", []interface{}{arg1, arg2})
 	fake.describeAffectedEntitiesForOrganizationPagesMutex.Unlock()
-	if fake.DescribeAffectedEntitiesForOrganizationPagesStub != nil {
-		return fake.DescribeAffectedEntitiesForOrganizationPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeAffectedEntitiesForOrganizationPagesReturns
 	return fakeReturns.result1
 }
 
@@ -1241,15 +1249,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesForOrganizationPagesWithConte
 		arg3 func(*health.DescribeAffectedEntitiesForOrganizationOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeAffectedEntitiesForOrganizationPagesWithContextStub
+	fakeReturns := fake.describeAffectedEntitiesForOrganizationPagesWithContextReturns
 	fake.recordInvocation("DescribeAffectedEntitiesForOrganizationPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeAffectedEntitiesForOrganizationPagesWithContextMutex.Unlock()
-	if fake.DescribeAffectedEntitiesForOrganizationPagesWithContextStub != nil {
-		return fake.DescribeAffectedEntitiesForOrganizationPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeAffectedEntitiesForOrganizationPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -1301,15 +1310,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesForOrganizationRequest(arg1 *
 	fake.describeAffectedEntitiesForOrganizationRequestArgsForCall = append(fake.describeAffectedEntitiesForOrganizationRequestArgsForCall, struct {
 		arg1 *health.DescribeAffectedEntitiesForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeAffectedEntitiesForOrganizationRequestStub
+	fakeReturns := fake.describeAffectedEntitiesForOrganizationRequestReturns
 	fake.recordInvocation("DescribeAffectedEntitiesForOrganizationRequest", []interface{}{arg1})
 	fake.describeAffectedEntitiesForOrganizationRequestMutex.Unlock()
-	if fake.DescribeAffectedEntitiesForOrganizationRequestStub != nil {
-		return fake.DescribeAffectedEntitiesForOrganizationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedEntitiesForOrganizationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1366,15 +1376,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesForOrganizationWithContext(ar
 		arg2 *health.DescribeAffectedEntitiesForOrganizationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeAffectedEntitiesForOrganizationWithContextStub
+	fakeReturns := fake.describeAffectedEntitiesForOrganizationWithContextReturns
 	fake.recordInvocation("DescribeAffectedEntitiesForOrganizationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeAffectedEntitiesForOrganizationWithContextMutex.Unlock()
-	if fake.DescribeAffectedEntitiesForOrganizationWithContextStub != nil {
-		return fake.DescribeAffectedEntitiesForOrganizationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedEntitiesForOrganizationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1430,15 +1441,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesPages(arg1 *health.DescribeAf
 		arg1 *health.DescribeAffectedEntitiesInput
 		arg2 func(*health.DescribeAffectedEntitiesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeAffectedEntitiesPagesStub
+	fakeReturns := fake.describeAffectedEntitiesPagesReturns
 	fake.recordInvocation("DescribeAffectedEntitiesPages", []interface{}{arg1, arg2})
 	fake.describeAffectedEntitiesPagesMutex.Unlock()
-	if fake.DescribeAffectedEntitiesPagesStub != nil {
-		return fake.DescribeAffectedEntitiesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeAffectedEntitiesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -1493,15 +1505,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesPagesWithContext(arg1 context
 		arg3 func(*health.DescribeAffectedEntitiesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeAffectedEntitiesPagesWithContextStub
+	fakeReturns := fake.describeAffectedEntitiesPagesWithContextReturns
 	fake.recordInvocation("DescribeAffectedEntitiesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeAffectedEntitiesPagesWithContextMutex.Unlock()
-	if fake.DescribeAffectedEntitiesPagesWithContextStub != nil {
-		return fake.DescribeAffectedEntitiesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeAffectedEntitiesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -1553,15 +1566,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesRequest(arg1 *health.Describe
 	fake.describeAffectedEntitiesRequestArgsForCall = append(fake.describeAffectedEntitiesRequestArgsForCall, struct {
 		arg1 *health.DescribeAffectedEntitiesInput
 	}{arg1})
+	stub := fake.DescribeAffectedEntitiesRequestStub
+	fakeReturns := fake.describeAffectedEntitiesRequestReturns
 	fake.recordInvocation("DescribeAffectedEntitiesRequest", []interface{}{arg1})
 	fake.describeAffectedEntitiesRequestMutex.Unlock()
-	if fake.DescribeAffectedEntitiesRequestStub != nil {
-		return fake.DescribeAffectedEntitiesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedEntitiesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1618,15 +1632,16 @@ func (fake *FakeHealthAPI) DescribeAffectedEntitiesWithContext(arg1 context.Cont
 		arg2 *health.DescribeAffectedEntitiesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeAffectedEntitiesWithContextStub
+	fakeReturns := fake.describeAffectedEntitiesWithContextReturns
 	fake.recordInvocation("DescribeAffectedEntitiesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeAffectedEntitiesWithContextMutex.Unlock()
-	if fake.DescribeAffectedEntitiesWithContextStub != nil {
-		return fake.DescribeAffectedEntitiesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAffectedEntitiesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1681,15 +1696,16 @@ func (fake *FakeHealthAPI) DescribeEntityAggregates(arg1 *health.DescribeEntityA
 	fake.describeEntityAggregatesArgsForCall = append(fake.describeEntityAggregatesArgsForCall, struct {
 		arg1 *health.DescribeEntityAggregatesInput
 	}{arg1})
+	stub := fake.DescribeEntityAggregatesStub
+	fakeReturns := fake.describeEntityAggregatesReturns
 	fake.recordInvocation("DescribeEntityAggregates", []interface{}{arg1})
 	fake.describeEntityAggregatesMutex.Unlock()
-	if fake.DescribeEntityAggregatesStub != nil {
-		return fake.DescribeEntityAggregatesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEntityAggregatesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1744,15 +1760,16 @@ func (fake *FakeHealthAPI) DescribeEntityAggregatesRequest(arg1 *health.Describe
 	fake.describeEntityAggregatesRequestArgsForCall = append(fake.describeEntityAggregatesRequestArgsForCall, struct {
 		arg1 *health.DescribeEntityAggregatesInput
 	}{arg1})
+	stub := fake.DescribeEntityAggregatesRequestStub
+	fakeReturns := fake.describeEntityAggregatesRequestReturns
 	fake.recordInvocation("DescribeEntityAggregatesRequest", []interface{}{arg1})
 	fake.describeEntityAggregatesRequestMutex.Unlock()
-	if fake.DescribeEntityAggregatesRequestStub != nil {
-		return fake.DescribeEntityAggregatesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEntityAggregatesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1809,15 +1826,16 @@ func (fake *FakeHealthAPI) DescribeEntityAggregatesWithContext(arg1 context.Cont
 		arg2 *health.DescribeEntityAggregatesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEntityAggregatesWithContextStub
+	fakeReturns := fake.describeEntityAggregatesWithContextReturns
 	fake.recordInvocation("DescribeEntityAggregatesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEntityAggregatesWithContextMutex.Unlock()
-	if fake.DescribeEntityAggregatesWithContextStub != nil {
-		return fake.DescribeEntityAggregatesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEntityAggregatesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1872,15 +1890,16 @@ func (fake *FakeHealthAPI) DescribeEventAggregates(arg1 *health.DescribeEventAgg
 	fake.describeEventAggregatesArgsForCall = append(fake.describeEventAggregatesArgsForCall, struct {
 		arg1 *health.DescribeEventAggregatesInput
 	}{arg1})
+	stub := fake.DescribeEventAggregatesStub
+	fakeReturns := fake.describeEventAggregatesReturns
 	fake.recordInvocation("DescribeEventAggregates", []interface{}{arg1})
 	fake.describeEventAggregatesMutex.Unlock()
-	if fake.DescribeEventAggregatesStub != nil {
-		return fake.DescribeEventAggregatesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventAggregatesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -1936,15 +1955,16 @@ func (fake *FakeHealthAPI) DescribeEventAggregatesPages(arg1 *health.DescribeEve
 		arg1 *health.DescribeEventAggregatesInput
 		arg2 func(*health.DescribeEventAggregatesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeEventAggregatesPagesStub
+	fakeReturns := fake.describeEventAggregatesPagesReturns
 	fake.recordInvocation("DescribeEventAggregatesPages", []interface{}{arg1, arg2})
 	fake.describeEventAggregatesPagesMutex.Unlock()
-	if fake.DescribeEventAggregatesPagesStub != nil {
-		return fake.DescribeEventAggregatesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventAggregatesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -1999,15 +2019,16 @@ func (fake *FakeHealthAPI) DescribeEventAggregatesPagesWithContext(arg1 context.
 		arg3 func(*health.DescribeEventAggregatesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeEventAggregatesPagesWithContextStub
+	fakeReturns := fake.describeEventAggregatesPagesWithContextReturns
 	fake.recordInvocation("DescribeEventAggregatesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeEventAggregatesPagesWithContextMutex.Unlock()
-	if fake.DescribeEventAggregatesPagesWithContextStub != nil {
-		return fake.DescribeEventAggregatesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventAggregatesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -2059,15 +2080,16 @@ func (fake *FakeHealthAPI) DescribeEventAggregatesRequest(arg1 *health.DescribeE
 	fake.describeEventAggregatesRequestArgsForCall = append(fake.describeEventAggregatesRequestArgsForCall, struct {
 		arg1 *health.DescribeEventAggregatesInput
 	}{arg1})
+	stub := fake.DescribeEventAggregatesRequestStub
+	fakeReturns := fake.describeEventAggregatesRequestReturns
 	fake.recordInvocation("DescribeEventAggregatesRequest", []interface{}{arg1})
 	fake.describeEventAggregatesRequestMutex.Unlock()
-	if fake.DescribeEventAggregatesRequestStub != nil {
-		return fake.DescribeEventAggregatesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventAggregatesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2124,15 +2146,16 @@ func (fake *FakeHealthAPI) DescribeEventAggregatesWithContext(arg1 context.Conte
 		arg2 *health.DescribeEventAggregatesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventAggregatesWithContextStub
+	fakeReturns := fake.describeEventAggregatesWithContextReturns
 	fake.recordInvocation("DescribeEventAggregatesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventAggregatesWithContextMutex.Unlock()
-	if fake.DescribeEventAggregatesWithContextStub != nil {
-		return fake.DescribeEventAggregatesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventAggregatesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2187,15 +2210,16 @@ func (fake *FakeHealthAPI) DescribeEventDetails(arg1 *health.DescribeEventDetail
 	fake.describeEventDetailsArgsForCall = append(fake.describeEventDetailsArgsForCall, struct {
 		arg1 *health.DescribeEventDetailsInput
 	}{arg1})
+	stub := fake.DescribeEventDetailsStub
+	fakeReturns := fake.describeEventDetailsReturns
 	fake.recordInvocation("DescribeEventDetails", []interface{}{arg1})
 	fake.describeEventDetailsMutex.Unlock()
-	if fake.DescribeEventDetailsStub != nil {
-		return fake.DescribeEventDetailsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventDetailsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2250,15 +2274,16 @@ func (fake *FakeHealthAPI) DescribeEventDetailsForOrganization(arg1 *health.Desc
 	fake.describeEventDetailsForOrganizationArgsForCall = append(fake.describeEventDetailsForOrganizationArgsForCall, struct {
 		arg1 *health.DescribeEventDetailsForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeEventDetailsForOrganizationStub
+	fakeReturns := fake.describeEventDetailsForOrganizationReturns
 	fake.recordInvocation("DescribeEventDetailsForOrganization", []interface{}{arg1})
 	fake.describeEventDetailsForOrganizationMutex.Unlock()
-	if fake.DescribeEventDetailsForOrganizationStub != nil {
-		return fake.DescribeEventDetailsForOrganizationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventDetailsForOrganizationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2313,15 +2338,16 @@ func (fake *FakeHealthAPI) DescribeEventDetailsForOrganizationRequest(arg1 *heal
 	fake.describeEventDetailsForOrganizationRequestArgsForCall = append(fake.describeEventDetailsForOrganizationRequestArgsForCall, struct {
 		arg1 *health.DescribeEventDetailsForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeEventDetailsForOrganizationRequestStub
+	fakeReturns := fake.describeEventDetailsForOrganizationRequestReturns
 	fake.recordInvocation("DescribeEventDetailsForOrganizationRequest", []interface{}{arg1})
 	fake.describeEventDetailsForOrganizationRequestMutex.Unlock()
-	if fake.DescribeEventDetailsForOrganizationRequestStub != nil {
-		return fake.DescribeEventDetailsForOrganizationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventDetailsForOrganizationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2378,15 +2404,16 @@ func (fake *FakeHealthAPI) DescribeEventDetailsForOrganizationWithContext(arg1 c
 		arg2 *health.DescribeEventDetailsForOrganizationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventDetailsForOrganizationWithContextStub
+	fakeReturns := fake.describeEventDetailsForOrganizationWithContextReturns
 	fake.recordInvocation("DescribeEventDetailsForOrganizationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventDetailsForOrganizationWithContextMutex.Unlock()
-	if fake.DescribeEventDetailsForOrganizationWithContextStub != nil {
-		return fake.DescribeEventDetailsForOrganizationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventDetailsForOrganizationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2441,15 +2468,16 @@ func (fake *FakeHealthAPI) DescribeEventDetailsRequest(arg1 *health.DescribeEven
 	fake.describeEventDetailsRequestArgsForCall = append(fake.describeEventDetailsRequestArgsForCall, struct {
 		arg1 *health.DescribeEventDetailsInput
 	}{arg1})
+	stub := fake.DescribeEventDetailsRequestStub
+	fakeReturns := fake.describeEventDetailsRequestReturns
 	fake.recordInvocation("DescribeEventDetailsRequest", []interface{}{arg1})
 	fake.describeEventDetailsRequestMutex.Unlock()
-	if fake.DescribeEventDetailsRequestStub != nil {
-		return fake.DescribeEventDetailsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventDetailsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2506,15 +2534,16 @@ func (fake *FakeHealthAPI) DescribeEventDetailsWithContext(arg1 context.Context,
 		arg2 *health.DescribeEventDetailsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventDetailsWithContextStub
+	fakeReturns := fake.describeEventDetailsWithContextReturns
 	fake.recordInvocation("DescribeEventDetailsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventDetailsWithContextMutex.Unlock()
-	if fake.DescribeEventDetailsWithContextStub != nil {
-		return fake.DescribeEventDetailsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventDetailsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2569,15 +2598,16 @@ func (fake *FakeHealthAPI) DescribeEventTypes(arg1 *health.DescribeEventTypesInp
 	fake.describeEventTypesArgsForCall = append(fake.describeEventTypesArgsForCall, struct {
 		arg1 *health.DescribeEventTypesInput
 	}{arg1})
+	stub := fake.DescribeEventTypesStub
+	fakeReturns := fake.describeEventTypesReturns
 	fake.recordInvocation("DescribeEventTypes", []interface{}{arg1})
 	fake.describeEventTypesMutex.Unlock()
-	if fake.DescribeEventTypesStub != nil {
-		return fake.DescribeEventTypesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventTypesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2633,15 +2663,16 @@ func (fake *FakeHealthAPI) DescribeEventTypesPages(arg1 *health.DescribeEventTyp
 		arg1 *health.DescribeEventTypesInput
 		arg2 func(*health.DescribeEventTypesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeEventTypesPagesStub
+	fakeReturns := fake.describeEventTypesPagesReturns
 	fake.recordInvocation("DescribeEventTypesPages", []interface{}{arg1, arg2})
 	fake.describeEventTypesPagesMutex.Unlock()
-	if fake.DescribeEventTypesPagesStub != nil {
-		return fake.DescribeEventTypesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventTypesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -2696,15 +2727,16 @@ func (fake *FakeHealthAPI) DescribeEventTypesPagesWithContext(arg1 context.Conte
 		arg3 func(*health.DescribeEventTypesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeEventTypesPagesWithContextStub
+	fakeReturns := fake.describeEventTypesPagesWithContextReturns
 	fake.recordInvocation("DescribeEventTypesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeEventTypesPagesWithContextMutex.Unlock()
-	if fake.DescribeEventTypesPagesWithContextStub != nil {
-		return fake.DescribeEventTypesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventTypesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -2756,15 +2788,16 @@ func (fake *FakeHealthAPI) DescribeEventTypesRequest(arg1 *health.DescribeEventT
 	fake.describeEventTypesRequestArgsForCall = append(fake.describeEventTypesRequestArgsForCall, struct {
 		arg1 *health.DescribeEventTypesInput
 	}{arg1})
+	stub := fake.DescribeEventTypesRequestStub
+	fakeReturns := fake.describeEventTypesRequestReturns
 	fake.recordInvocation("DescribeEventTypesRequest", []interface{}{arg1})
 	fake.describeEventTypesRequestMutex.Unlock()
-	if fake.DescribeEventTypesRequestStub != nil {
-		return fake.DescribeEventTypesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventTypesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2821,15 +2854,16 @@ func (fake *FakeHealthAPI) DescribeEventTypesWithContext(arg1 context.Context, a
 		arg2 *health.DescribeEventTypesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventTypesWithContextStub
+	fakeReturns := fake.describeEventTypesWithContextReturns
 	fake.recordInvocation("DescribeEventTypesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventTypesWithContextMutex.Unlock()
-	if fake.DescribeEventTypesWithContextStub != nil {
-		return fake.DescribeEventTypesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventTypesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2884,15 +2918,16 @@ func (fake *FakeHealthAPI) DescribeEvents(arg1 *health.DescribeEventsInput) (*he
 	fake.describeEventsArgsForCall = append(fake.describeEventsArgsForCall, struct {
 		arg1 *health.DescribeEventsInput
 	}{arg1})
+	stub := fake.DescribeEventsStub
+	fakeReturns := fake.describeEventsReturns
 	fake.recordInvocation("DescribeEvents", []interface{}{arg1})
 	fake.describeEventsMutex.Unlock()
-	if fake.DescribeEventsStub != nil {
-		return fake.DescribeEventsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2947,15 +2982,16 @@ func (fake *FakeHealthAPI) DescribeEventsForOrganization(arg1 *health.DescribeEv
 	fake.describeEventsForOrganizationArgsForCall = append(fake.describeEventsForOrganizationArgsForCall, struct {
 		arg1 *health.DescribeEventsForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeEventsForOrganizationStub
+	fakeReturns := fake.describeEventsForOrganizationReturns
 	fake.recordInvocation("DescribeEventsForOrganization", []interface{}{arg1})
 	fake.describeEventsForOrganizationMutex.Unlock()
-	if fake.DescribeEventsForOrganizationStub != nil {
-		return fake.DescribeEventsForOrganizationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsForOrganizationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3011,15 +3047,16 @@ func (fake *FakeHealthAPI) DescribeEventsForOrganizationPages(arg1 *health.Descr
 		arg1 *health.DescribeEventsForOrganizationInput
 		arg2 func(*health.DescribeEventsForOrganizationOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeEventsForOrganizationPagesStub
+	fakeReturns := fake.describeEventsForOrganizationPagesReturns
 	fake.recordInvocation("DescribeEventsForOrganizationPages", []interface{}{arg1, arg2})
 	fake.describeEventsForOrganizationPagesMutex.Unlock()
-	if fake.DescribeEventsForOrganizationPagesStub != nil {
-		return fake.DescribeEventsForOrganizationPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventsForOrganizationPagesReturns
 	return fakeReturns.result1
 }
 
@@ -3074,15 +3111,16 @@ func (fake *FakeHealthAPI) DescribeEventsForOrganizationPagesWithContext(arg1 co
 		arg3 func(*health.DescribeEventsForOrganizationOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeEventsForOrganizationPagesWithContextStub
+	fakeReturns := fake.describeEventsForOrganizationPagesWithContextReturns
 	fake.recordInvocation("DescribeEventsForOrganizationPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeEventsForOrganizationPagesWithContextMutex.Unlock()
-	if fake.DescribeEventsForOrganizationPagesWithContextStub != nil {
-		return fake.DescribeEventsForOrganizationPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventsForOrganizationPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -3134,15 +3172,16 @@ func (fake *FakeHealthAPI) DescribeEventsForOrganizationRequest(arg1 *health.Des
 	fake.describeEventsForOrganizationRequestArgsForCall = append(fake.describeEventsForOrganizationRequestArgsForCall, struct {
 		arg1 *health.DescribeEventsForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeEventsForOrganizationRequestStub
+	fakeReturns := fake.describeEventsForOrganizationRequestReturns
 	fake.recordInvocation("DescribeEventsForOrganizationRequest", []interface{}{arg1})
 	fake.describeEventsForOrganizationRequestMutex.Unlock()
-	if fake.DescribeEventsForOrganizationRequestStub != nil {
-		return fake.DescribeEventsForOrganizationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsForOrganizationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3199,15 +3238,16 @@ func (fake *FakeHealthAPI) DescribeEventsForOrganizationWithContext(arg1 context
 		arg2 *health.DescribeEventsForOrganizationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventsForOrganizationWithContextStub
+	fakeReturns := fake.describeEventsForOrganizationWithContextReturns
 	fake.recordInvocation("DescribeEventsForOrganizationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventsForOrganizationWithContextMutex.Unlock()
-	if fake.DescribeEventsForOrganizationWithContextStub != nil {
-		return fake.DescribeEventsForOrganizationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsForOrganizationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3263,15 +3303,16 @@ func (fake *FakeHealthAPI) DescribeEventsPages(arg1 *health.DescribeEventsInput,
 		arg1 *health.DescribeEventsInput
 		arg2 func(*health.DescribeEventsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeEventsPagesStub
+	fakeReturns := fake.describeEventsPagesReturns
 	fake.recordInvocation("DescribeEventsPages", []interface{}{arg1, arg2})
 	fake.describeEventsPagesMutex.Unlock()
-	if fake.DescribeEventsPagesStub != nil {
-		return fake.DescribeEventsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -3326,15 +3367,16 @@ func (fake *FakeHealthAPI) DescribeEventsPagesWithContext(arg1 context.Context, 
 		arg3 func(*health.DescribeEventsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeEventsPagesWithContextStub
+	fakeReturns := fake.describeEventsPagesWithContextReturns
 	fake.recordInvocation("DescribeEventsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeEventsPagesWithContextMutex.Unlock()
-	if fake.DescribeEventsPagesWithContextStub != nil {
-		return fake.DescribeEventsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -3386,15 +3428,16 @@ func (fake *FakeHealthAPI) DescribeEventsRequest(arg1 *health.DescribeEventsInpu
 	fake.describeEventsRequestArgsForCall = append(fake.describeEventsRequestArgsForCall, struct {
 		arg1 *health.DescribeEventsInput
 	}{arg1})
+	stub := fake.DescribeEventsRequestStub
+	fakeReturns := fake.describeEventsRequestReturns
 	fake.recordInvocation("DescribeEventsRequest", []interface{}{arg1})
 	fake.describeEventsRequestMutex.Unlock()
-	if fake.DescribeEventsRequestStub != nil {
-		return fake.DescribeEventsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3451,15 +3494,16 @@ func (fake *FakeHealthAPI) DescribeEventsWithContext(arg1 context.Context, arg2 
 		arg2 *health.DescribeEventsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventsWithContextStub
+	fakeReturns := fake.describeEventsWithContextReturns
 	fake.recordInvocation("DescribeEventsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventsWithContextMutex.Unlock()
-	if fake.DescribeEventsWithContextStub != nil {
-		return fake.DescribeEventsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3514,15 +3558,16 @@ func (fake *FakeHealthAPI) DescribeHealthServiceStatusForOrganization(arg1 *heal
 	fake.describeHealthServiceStatusForOrganizationArgsForCall = append(fake.describeHealthServiceStatusForOrganizationArgsForCall, struct {
 		arg1 *health.DescribeHealthServiceStatusForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeHealthServiceStatusForOrganizationStub
+	fakeReturns := fake.describeHealthServiceStatusForOrganizationReturns
 	fake.recordInvocation("DescribeHealthServiceStatusForOrganization", []interface{}{arg1})
 	fake.describeHealthServiceStatusForOrganizationMutex.Unlock()
-	if fake.DescribeHealthServiceStatusForOrganizationStub != nil {
-		return fake.DescribeHealthServiceStatusForOrganizationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeHealthServiceStatusForOrganizationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3577,15 +3622,16 @@ func (fake *FakeHealthAPI) DescribeHealthServiceStatusForOrganizationRequest(arg
 	fake.describeHealthServiceStatusForOrganizationRequestArgsForCall = append(fake.describeHealthServiceStatusForOrganizationRequestArgsForCall, struct {
 		arg1 *health.DescribeHealthServiceStatusForOrganizationInput
 	}{arg1})
+	stub := fake.DescribeHealthServiceStatusForOrganizationRequestStub
+	fakeReturns := fake.describeHealthServiceStatusForOrganizationRequestReturns
 	fake.recordInvocation("DescribeHealthServiceStatusForOrganizationRequest", []interface{}{arg1})
 	fake.describeHealthServiceStatusForOrganizationRequestMutex.Unlock()
-	if fake.DescribeHealthServiceStatusForOrganizationRequestStub != nil {
-		return fake.DescribeHealthServiceStatusForOrganizationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeHealthServiceStatusForOrganizationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3642,15 +3688,16 @@ func (fake *FakeHealthAPI) DescribeHealthServiceStatusForOrganizationWithContext
 		arg2 *health.DescribeHealthServiceStatusForOrganizationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeHealthServiceStatusForOrganizationWithContextStub
+	fakeReturns := fake.describeHealthServiceStatusForOrganizationWithContextReturns
 	fake.recordInvocation("DescribeHealthServiceStatusForOrganizationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeHealthServiceStatusForOrganizationWithContextMutex.Unlock()
-	if fake.DescribeHealthServiceStatusForOrganizationWithContextStub != nil {
-		return fake.DescribeHealthServiceStatusForOrganizationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeHealthServiceStatusForOrganizationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3705,15 +3752,16 @@ func (fake *FakeHealthAPI) DisableHealthServiceAccessForOrganization(arg1 *healt
 	fake.disableHealthServiceAccessForOrganizationArgsForCall = append(fake.disableHealthServiceAccessForOrganizationArgsForCall, struct {
 		arg1 *health.DisableHealthServiceAccessForOrganizationInput
 	}{arg1})
+	stub := fake.DisableHealthServiceAccessForOrganizationStub
+	fakeReturns := fake.disableHealthServiceAccessForOrganizationReturns
 	fake.recordInvocation("DisableHealthServiceAccessForOrganization", []interface{}{arg1})
 	fake.disableHealthServiceAccessForOrganizationMutex.Unlock()
-	if fake.DisableHealthServiceAccessForOrganizationStub != nil {
-		return fake.DisableHealthServiceAccessForOrganizationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.disableHealthServiceAccessForOrganizationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3768,15 +3816,16 @@ func (fake *FakeHealthAPI) DisableHealthServiceAccessForOrganizationRequest(arg1
 	fake.disableHealthServiceAccessForOrganizationRequestArgsForCall = append(fake.disableHealthServiceAccessForOrganizationRequestArgsForCall, struct {
 		arg1 *health.DisableHealthServiceAccessForOrganizationInput
 	}{arg1})
+	stub := fake.DisableHealthServiceAccessForOrganizationRequestStub
+	fakeReturns := fake.disableHealthServiceAccessForOrganizationRequestReturns
 	fake.recordInvocation("DisableHealthServiceAccessForOrganizationRequest", []interface{}{arg1})
 	fake.disableHealthServiceAccessForOrganizationRequestMutex.Unlock()
-	if fake.DisableHealthServiceAccessForOrganizationRequestStub != nil {
-		return fake.DisableHealthServiceAccessForOrganizationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.disableHealthServiceAccessForOrganizationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3833,15 +3882,16 @@ func (fake *FakeHealthAPI) DisableHealthServiceAccessForOrganizationWithContext(
 		arg2 *health.DisableHealthServiceAccessForOrganizationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DisableHealthServiceAccessForOrganizationWithContextStub
+	fakeReturns := fake.disableHealthServiceAccessForOrganizationWithContextReturns
 	fake.recordInvocation("DisableHealthServiceAccessForOrganizationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.disableHealthServiceAccessForOrganizationWithContextMutex.Unlock()
-	if fake.DisableHealthServiceAccessForOrganizationWithContextStub != nil {
-		return fake.DisableHealthServiceAccessForOrganizationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.disableHealthServiceAccessForOrganizationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3896,15 +3946,16 @@ func (fake *FakeHealthAPI) EnableHealthServiceAccessForOrganization(arg1 *health
 	fake.enableHealthServiceAccessForOrganizationArgsForCall = append(fake.enableHealthServiceAccessForOrganizationArgsForCall, struct {
 		arg1 *health.EnableHealthServiceAccessForOrganizationInput
 	}{arg1})
+	stub := fake.EnableHealthServiceAccessForOrganizationStub
+	fakeReturns := fake.enableHealthServiceAccessForOrganizationReturns
 	fake.recordInvocation("EnableHealthServiceAccessForOrganization", []interface{}{arg1})
 	fake.enableHealthServiceAccessForOrganizationMutex.Unlock()
-	if fake.EnableHealthServiceAccessForOrganizationStub != nil {
-		return fake.EnableHealthServiceAccessForOrganizationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.enableHealthServiceAccessForOrganizationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3959,15 +4010,16 @@ func (fake *FakeHealthAPI) EnableHealthServiceAccessForOrganizationRequest(arg1 
 	fake.enableHealthServiceAccessForOrganizationRequestArgsForCall = append(fake.enableHealthServiceAccessForOrganizationRequestArgsForCall, struct {
 		arg1 *health.EnableHealthServiceAccessForOrganizationInput
 	}{arg1})
+	stub := fake.EnableHealthServiceAccessForOrganizationRequestStub
+	fakeReturns := fake.enableHealthServiceAccessForOrganizationRequestReturns
 	fake.recordInvocation("EnableHealthServiceAccessForOrganizationRequest", []interface{}{arg1})
 	fake.enableHealthServiceAccessForOrganizationRequestMutex.Unlock()
-	if fake.EnableHealthServiceAccessForOrganizationRequestStub != nil {
-		return fake.EnableHealthServiceAccessForOrganizationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.enableHealthServiceAccessForOrganizationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4024,15 +4076,16 @@ func (fake *FakeHealthAPI) EnableHealthServiceAccessForOrganizationWithContext(a
 		arg2 *health.EnableHealthServiceAccessForOrganizationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.EnableHealthServiceAccessForOrganizationWithContextStub
+	fakeReturns := fake.enableHealthServiceAccessForOrganizationWithContextReturns
 	fake.recordInvocation("EnableHealthServiceAccessForOrganizationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.enableHealthServiceAccessForOrganizationWithContextMutex.Unlock()
-	if fake.EnableHealthServiceAccessForOrganizationWithContextStub != nil {
-		return fake.EnableHealthServiceAccessForOrganizationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.enableHealthServiceAccessForOrganizationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 

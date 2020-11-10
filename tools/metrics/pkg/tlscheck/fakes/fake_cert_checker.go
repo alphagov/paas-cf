@@ -48,15 +48,16 @@ func (fake *FakeCertChecker) CertificateAuthority(arg1 string, arg2 *tls.Config)
 		arg1 string
 		arg2 *tls.Config
 	}{arg1, arg2})
+	stub := fake.CertificateAuthorityStub
+	fakeReturns := fake.certificateAuthorityReturns
 	fake.recordInvocation("CertificateAuthority", []interface{}{arg1, arg2})
 	fake.certificateAuthorityMutex.Unlock()
-	if fake.CertificateAuthorityStub != nil {
-		return fake.CertificateAuthorityStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.certificateAuthorityReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -112,15 +113,16 @@ func (fake *FakeCertChecker) DaysUntilExpiry(arg1 string, arg2 *tls.Config) (flo
 		arg1 string
 		arg2 *tls.Config
 	}{arg1, arg2})
+	stub := fake.DaysUntilExpiryStub
+	fakeReturns := fake.daysUntilExpiryReturns
 	fake.recordInvocation("DaysUntilExpiry", []interface{}{arg1, arg2})
 	fake.daysUntilExpiryMutex.Unlock()
-	if fake.DaysUntilExpiryStub != nil {
-		return fake.DaysUntilExpiryStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.daysUntilExpiryReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 

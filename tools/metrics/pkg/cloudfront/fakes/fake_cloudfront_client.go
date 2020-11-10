@@ -2042,15 +2042,16 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentity(arg1 *cloudf
 	fake.createCloudFrontOriginAccessIdentityArgsForCall = append(fake.createCloudFrontOriginAccessIdentityArgsForCall, struct {
 		arg1 *cloudfront.CreateCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.CreateCloudFrontOriginAccessIdentityStub
+	fakeReturns := fake.createCloudFrontOriginAccessIdentityReturns
 	fake.recordInvocation("CreateCloudFrontOriginAccessIdentity", []interface{}{arg1})
 	fake.createCloudFrontOriginAccessIdentityMutex.Unlock()
-	if fake.CreateCloudFrontOriginAccessIdentityStub != nil {
-		return fake.CreateCloudFrontOriginAccessIdentityStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createCloudFrontOriginAccessIdentityReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2105,15 +2106,16 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityRequest(arg1 
 	fake.createCloudFrontOriginAccessIdentityRequestArgsForCall = append(fake.createCloudFrontOriginAccessIdentityRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.CreateCloudFrontOriginAccessIdentityRequestStub
+	fakeReturns := fake.createCloudFrontOriginAccessIdentityRequestReturns
 	fake.recordInvocation("CreateCloudFrontOriginAccessIdentityRequest", []interface{}{arg1})
 	fake.createCloudFrontOriginAccessIdentityRequestMutex.Unlock()
-	if fake.CreateCloudFrontOriginAccessIdentityRequestStub != nil {
-		return fake.CreateCloudFrontOriginAccessIdentityRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createCloudFrontOriginAccessIdentityRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2170,15 +2172,16 @@ func (fake *FakeCloudFrontAPI) CreateCloudFrontOriginAccessIdentityWithContext(a
 		arg2 *cloudfront.CreateCloudFrontOriginAccessIdentityInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateCloudFrontOriginAccessIdentityWithContextStub
+	fakeReturns := fake.createCloudFrontOriginAccessIdentityWithContextReturns
 	fake.recordInvocation("CreateCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.CreateCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.CreateCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createCloudFrontOriginAccessIdentityWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2233,15 +2236,16 @@ func (fake *FakeCloudFrontAPI) CreateDistribution(arg1 *cloudfront.CreateDistrib
 	fake.createDistributionArgsForCall = append(fake.createDistributionArgsForCall, struct {
 		arg1 *cloudfront.CreateDistributionInput
 	}{arg1})
+	stub := fake.CreateDistributionStub
+	fakeReturns := fake.createDistributionReturns
 	fake.recordInvocation("CreateDistribution", []interface{}{arg1})
 	fake.createDistributionMutex.Unlock()
-	if fake.CreateDistributionStub != nil {
-		return fake.CreateDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2296,15 +2300,16 @@ func (fake *FakeCloudFrontAPI) CreateDistributionRequest(arg1 *cloudfront.Create
 	fake.createDistributionRequestArgsForCall = append(fake.createDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateDistributionInput
 	}{arg1})
+	stub := fake.CreateDistributionRequestStub
+	fakeReturns := fake.createDistributionRequestReturns
 	fake.recordInvocation("CreateDistributionRequest", []interface{}{arg1})
 	fake.createDistributionRequestMutex.Unlock()
-	if fake.CreateDistributionRequestStub != nil {
-		return fake.CreateDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2361,15 +2366,16 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithContext(arg1 context.Contex
 		arg2 *cloudfront.CreateDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDistributionWithContextStub
+	fakeReturns := fake.createDistributionWithContextReturns
 	fake.recordInvocation("CreateDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDistributionWithContextMutex.Unlock()
-	if fake.CreateDistributionWithContextStub != nil {
-		return fake.CreateDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2424,15 +2430,16 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTags(arg1 *cloudfront.Creat
 	fake.createDistributionWithTagsArgsForCall = append(fake.createDistributionWithTagsArgsForCall, struct {
 		arg1 *cloudfront.CreateDistributionWithTagsInput
 	}{arg1})
+	stub := fake.CreateDistributionWithTagsStub
+	fakeReturns := fake.createDistributionWithTagsReturns
 	fake.recordInvocation("CreateDistributionWithTags", []interface{}{arg1})
 	fake.createDistributionWithTagsMutex.Unlock()
-	if fake.CreateDistributionWithTagsStub != nil {
-		return fake.CreateDistributionWithTagsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDistributionWithTagsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2487,15 +2494,16 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsRequest(arg1 *cloudfron
 	fake.createDistributionWithTagsRequestArgsForCall = append(fake.createDistributionWithTagsRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateDistributionWithTagsInput
 	}{arg1})
+	stub := fake.CreateDistributionWithTagsRequestStub
+	fakeReturns := fake.createDistributionWithTagsRequestReturns
 	fake.recordInvocation("CreateDistributionWithTagsRequest", []interface{}{arg1})
 	fake.createDistributionWithTagsRequestMutex.Unlock()
-	if fake.CreateDistributionWithTagsRequestStub != nil {
-		return fake.CreateDistributionWithTagsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDistributionWithTagsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2552,15 +2560,16 @@ func (fake *FakeCloudFrontAPI) CreateDistributionWithTagsWithContext(arg1 contex
 		arg2 *cloudfront.CreateDistributionWithTagsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDistributionWithTagsWithContextStub
+	fakeReturns := fake.createDistributionWithTagsWithContextReturns
 	fake.recordInvocation("CreateDistributionWithTagsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDistributionWithTagsWithContextMutex.Unlock()
-	if fake.CreateDistributionWithTagsWithContextStub != nil {
-		return fake.CreateDistributionWithTagsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDistributionWithTagsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2615,15 +2624,16 @@ func (fake *FakeCloudFrontAPI) CreateFieldLevelEncryptionConfig(arg1 *cloudfront
 	fake.createFieldLevelEncryptionConfigArgsForCall = append(fake.createFieldLevelEncryptionConfigArgsForCall, struct {
 		arg1 *cloudfront.CreateFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.CreateFieldLevelEncryptionConfigStub
+	fakeReturns := fake.createFieldLevelEncryptionConfigReturns
 	fake.recordInvocation("CreateFieldLevelEncryptionConfig", []interface{}{arg1})
 	fake.createFieldLevelEncryptionConfigMutex.Unlock()
-	if fake.CreateFieldLevelEncryptionConfigStub != nil {
-		return fake.CreateFieldLevelEncryptionConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createFieldLevelEncryptionConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2678,15 +2688,16 @@ func (fake *FakeCloudFrontAPI) CreateFieldLevelEncryptionConfigRequest(arg1 *clo
 	fake.createFieldLevelEncryptionConfigRequestArgsForCall = append(fake.createFieldLevelEncryptionConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.CreateFieldLevelEncryptionConfigRequestStub
+	fakeReturns := fake.createFieldLevelEncryptionConfigRequestReturns
 	fake.recordInvocation("CreateFieldLevelEncryptionConfigRequest", []interface{}{arg1})
 	fake.createFieldLevelEncryptionConfigRequestMutex.Unlock()
-	if fake.CreateFieldLevelEncryptionConfigRequestStub != nil {
-		return fake.CreateFieldLevelEncryptionConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createFieldLevelEncryptionConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2743,15 +2754,16 @@ func (fake *FakeCloudFrontAPI) CreateFieldLevelEncryptionConfigWithContext(arg1 
 		arg2 *cloudfront.CreateFieldLevelEncryptionConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateFieldLevelEncryptionConfigWithContextStub
+	fakeReturns := fake.createFieldLevelEncryptionConfigWithContextReturns
 	fake.recordInvocation("CreateFieldLevelEncryptionConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createFieldLevelEncryptionConfigWithContextMutex.Unlock()
-	if fake.CreateFieldLevelEncryptionConfigWithContextStub != nil {
-		return fake.CreateFieldLevelEncryptionConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createFieldLevelEncryptionConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2806,15 +2818,16 @@ func (fake *FakeCloudFrontAPI) CreateFieldLevelEncryptionProfile(arg1 *cloudfron
 	fake.createFieldLevelEncryptionProfileArgsForCall = append(fake.createFieldLevelEncryptionProfileArgsForCall, struct {
 		arg1 *cloudfront.CreateFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.CreateFieldLevelEncryptionProfileStub
+	fakeReturns := fake.createFieldLevelEncryptionProfileReturns
 	fake.recordInvocation("CreateFieldLevelEncryptionProfile", []interface{}{arg1})
 	fake.createFieldLevelEncryptionProfileMutex.Unlock()
-	if fake.CreateFieldLevelEncryptionProfileStub != nil {
-		return fake.CreateFieldLevelEncryptionProfileStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createFieldLevelEncryptionProfileReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2869,15 +2882,16 @@ func (fake *FakeCloudFrontAPI) CreateFieldLevelEncryptionProfileRequest(arg1 *cl
 	fake.createFieldLevelEncryptionProfileRequestArgsForCall = append(fake.createFieldLevelEncryptionProfileRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.CreateFieldLevelEncryptionProfileRequestStub
+	fakeReturns := fake.createFieldLevelEncryptionProfileRequestReturns
 	fake.recordInvocation("CreateFieldLevelEncryptionProfileRequest", []interface{}{arg1})
 	fake.createFieldLevelEncryptionProfileRequestMutex.Unlock()
-	if fake.CreateFieldLevelEncryptionProfileRequestStub != nil {
-		return fake.CreateFieldLevelEncryptionProfileRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createFieldLevelEncryptionProfileRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2934,15 +2948,16 @@ func (fake *FakeCloudFrontAPI) CreateFieldLevelEncryptionProfileWithContext(arg1
 		arg2 *cloudfront.CreateFieldLevelEncryptionProfileInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateFieldLevelEncryptionProfileWithContextStub
+	fakeReturns := fake.createFieldLevelEncryptionProfileWithContextReturns
 	fake.recordInvocation("CreateFieldLevelEncryptionProfileWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createFieldLevelEncryptionProfileWithContextMutex.Unlock()
-	if fake.CreateFieldLevelEncryptionProfileWithContextStub != nil {
-		return fake.CreateFieldLevelEncryptionProfileWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createFieldLevelEncryptionProfileWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -2997,15 +3012,16 @@ func (fake *FakeCloudFrontAPI) CreateInvalidation(arg1 *cloudfront.CreateInvalid
 	fake.createInvalidationArgsForCall = append(fake.createInvalidationArgsForCall, struct {
 		arg1 *cloudfront.CreateInvalidationInput
 	}{arg1})
+	stub := fake.CreateInvalidationStub
+	fakeReturns := fake.createInvalidationReturns
 	fake.recordInvocation("CreateInvalidation", []interface{}{arg1})
 	fake.createInvalidationMutex.Unlock()
-	if fake.CreateInvalidationStub != nil {
-		return fake.CreateInvalidationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createInvalidationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3060,15 +3076,16 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationRequest(arg1 *cloudfront.Create
 	fake.createInvalidationRequestArgsForCall = append(fake.createInvalidationRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateInvalidationInput
 	}{arg1})
+	stub := fake.CreateInvalidationRequestStub
+	fakeReturns := fake.createInvalidationRequestReturns
 	fake.recordInvocation("CreateInvalidationRequest", []interface{}{arg1})
 	fake.createInvalidationRequestMutex.Unlock()
-	if fake.CreateInvalidationRequestStub != nil {
-		return fake.CreateInvalidationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createInvalidationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3125,15 +3142,16 @@ func (fake *FakeCloudFrontAPI) CreateInvalidationWithContext(arg1 context.Contex
 		arg2 *cloudfront.CreateInvalidationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateInvalidationWithContextStub
+	fakeReturns := fake.createInvalidationWithContextReturns
 	fake.recordInvocation("CreateInvalidationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createInvalidationWithContextMutex.Unlock()
-	if fake.CreateInvalidationWithContextStub != nil {
-		return fake.CreateInvalidationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createInvalidationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3188,15 +3206,16 @@ func (fake *FakeCloudFrontAPI) CreatePublicKey(arg1 *cloudfront.CreatePublicKeyI
 	fake.createPublicKeyArgsForCall = append(fake.createPublicKeyArgsForCall, struct {
 		arg1 *cloudfront.CreatePublicKeyInput
 	}{arg1})
+	stub := fake.CreatePublicKeyStub
+	fakeReturns := fake.createPublicKeyReturns
 	fake.recordInvocation("CreatePublicKey", []interface{}{arg1})
 	fake.createPublicKeyMutex.Unlock()
-	if fake.CreatePublicKeyStub != nil {
-		return fake.CreatePublicKeyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createPublicKeyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3251,15 +3270,16 @@ func (fake *FakeCloudFrontAPI) CreatePublicKeyRequest(arg1 *cloudfront.CreatePub
 	fake.createPublicKeyRequestArgsForCall = append(fake.createPublicKeyRequestArgsForCall, struct {
 		arg1 *cloudfront.CreatePublicKeyInput
 	}{arg1})
+	stub := fake.CreatePublicKeyRequestStub
+	fakeReturns := fake.createPublicKeyRequestReturns
 	fake.recordInvocation("CreatePublicKeyRequest", []interface{}{arg1})
 	fake.createPublicKeyRequestMutex.Unlock()
-	if fake.CreatePublicKeyRequestStub != nil {
-		return fake.CreatePublicKeyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createPublicKeyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3316,15 +3336,16 @@ func (fake *FakeCloudFrontAPI) CreatePublicKeyWithContext(arg1 context.Context, 
 		arg2 *cloudfront.CreatePublicKeyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreatePublicKeyWithContextStub
+	fakeReturns := fake.createPublicKeyWithContextReturns
 	fake.recordInvocation("CreatePublicKeyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createPublicKeyWithContextMutex.Unlock()
-	if fake.CreatePublicKeyWithContextStub != nil {
-		return fake.CreatePublicKeyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createPublicKeyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3379,15 +3400,16 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistribution(arg1 *cloudfront.Crea
 	fake.createStreamingDistributionArgsForCall = append(fake.createStreamingDistributionArgsForCall, struct {
 		arg1 *cloudfront.CreateStreamingDistributionInput
 	}{arg1})
+	stub := fake.CreateStreamingDistributionStub
+	fakeReturns := fake.createStreamingDistributionReturns
 	fake.recordInvocation("CreateStreamingDistribution", []interface{}{arg1})
 	fake.createStreamingDistributionMutex.Unlock()
-	if fake.CreateStreamingDistributionStub != nil {
-		return fake.CreateStreamingDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createStreamingDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3442,15 +3464,16 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionRequest(arg1 *cloudfro
 	fake.createStreamingDistributionRequestArgsForCall = append(fake.createStreamingDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateStreamingDistributionInput
 	}{arg1})
+	stub := fake.CreateStreamingDistributionRequestStub
+	fakeReturns := fake.createStreamingDistributionRequestReturns
 	fake.recordInvocation("CreateStreamingDistributionRequest", []interface{}{arg1})
 	fake.createStreamingDistributionRequestMutex.Unlock()
-	if fake.CreateStreamingDistributionRequestStub != nil {
-		return fake.CreateStreamingDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createStreamingDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3507,15 +3530,16 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithContext(arg1 conte
 		arg2 *cloudfront.CreateStreamingDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateStreamingDistributionWithContextStub
+	fakeReturns := fake.createStreamingDistributionWithContextReturns
 	fake.recordInvocation("CreateStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createStreamingDistributionWithContextMutex.Unlock()
-	if fake.CreateStreamingDistributionWithContextStub != nil {
-		return fake.CreateStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createStreamingDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3570,15 +3594,16 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTags(arg1 *cloudfr
 	fake.createStreamingDistributionWithTagsArgsForCall = append(fake.createStreamingDistributionWithTagsArgsForCall, struct {
 		arg1 *cloudfront.CreateStreamingDistributionWithTagsInput
 	}{arg1})
+	stub := fake.CreateStreamingDistributionWithTagsStub
+	fakeReturns := fake.createStreamingDistributionWithTagsReturns
 	fake.recordInvocation("CreateStreamingDistributionWithTags", []interface{}{arg1})
 	fake.createStreamingDistributionWithTagsMutex.Unlock()
-	if fake.CreateStreamingDistributionWithTagsStub != nil {
-		return fake.CreateStreamingDistributionWithTagsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createStreamingDistributionWithTagsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3633,15 +3658,16 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsRequest(arg1 *
 	fake.createStreamingDistributionWithTagsRequestArgsForCall = append(fake.createStreamingDistributionWithTagsRequestArgsForCall, struct {
 		arg1 *cloudfront.CreateStreamingDistributionWithTagsInput
 	}{arg1})
+	stub := fake.CreateStreamingDistributionWithTagsRequestStub
+	fakeReturns := fake.createStreamingDistributionWithTagsRequestReturns
 	fake.recordInvocation("CreateStreamingDistributionWithTagsRequest", []interface{}{arg1})
 	fake.createStreamingDistributionWithTagsRequestMutex.Unlock()
-	if fake.CreateStreamingDistributionWithTagsRequestStub != nil {
-		return fake.CreateStreamingDistributionWithTagsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createStreamingDistributionWithTagsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3698,15 +3724,16 @@ func (fake *FakeCloudFrontAPI) CreateStreamingDistributionWithTagsWithContext(ar
 		arg2 *cloudfront.CreateStreamingDistributionWithTagsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateStreamingDistributionWithTagsWithContextStub
+	fakeReturns := fake.createStreamingDistributionWithTagsWithContextReturns
 	fake.recordInvocation("CreateStreamingDistributionWithTagsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createStreamingDistributionWithTagsWithContextMutex.Unlock()
-	if fake.CreateStreamingDistributionWithTagsWithContextStub != nil {
-		return fake.CreateStreamingDistributionWithTagsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createStreamingDistributionWithTagsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3761,15 +3788,16 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentity(arg1 *cloudf
 	fake.deleteCloudFrontOriginAccessIdentityArgsForCall = append(fake.deleteCloudFrontOriginAccessIdentityArgsForCall, struct {
 		arg1 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.DeleteCloudFrontOriginAccessIdentityStub
+	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityReturns
 	fake.recordInvocation("DeleteCloudFrontOriginAccessIdentity", []interface{}{arg1})
 	fake.deleteCloudFrontOriginAccessIdentityMutex.Unlock()
-	if fake.DeleteCloudFrontOriginAccessIdentityStub != nil {
-		return fake.DeleteCloudFrontOriginAccessIdentityStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3824,15 +3852,16 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityRequest(arg1 
 	fake.deleteCloudFrontOriginAccessIdentityRequestArgsForCall = append(fake.deleteCloudFrontOriginAccessIdentityRequestArgsForCall, struct {
 		arg1 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.DeleteCloudFrontOriginAccessIdentityRequestStub
+	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityRequestReturns
 	fake.recordInvocation("DeleteCloudFrontOriginAccessIdentityRequest", []interface{}{arg1})
 	fake.deleteCloudFrontOriginAccessIdentityRequestMutex.Unlock()
-	if fake.DeleteCloudFrontOriginAccessIdentityRequestStub != nil {
-		return fake.DeleteCloudFrontOriginAccessIdentityRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3889,15 +3918,16 @@ func (fake *FakeCloudFrontAPI) DeleteCloudFrontOriginAccessIdentityWithContext(a
 		arg2 *cloudfront.DeleteCloudFrontOriginAccessIdentityInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteCloudFrontOriginAccessIdentityWithContextStub
+	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityWithContextReturns
 	fake.recordInvocation("DeleteCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.DeleteCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.DeleteCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteCloudFrontOriginAccessIdentityWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3952,15 +3982,16 @@ func (fake *FakeCloudFrontAPI) DeleteDistribution(arg1 *cloudfront.DeleteDistrib
 	fake.deleteDistributionArgsForCall = append(fake.deleteDistributionArgsForCall, struct {
 		arg1 *cloudfront.DeleteDistributionInput
 	}{arg1})
+	stub := fake.DeleteDistributionStub
+	fakeReturns := fake.deleteDistributionReturns
 	fake.recordInvocation("DeleteDistribution", []interface{}{arg1})
 	fake.deleteDistributionMutex.Unlock()
-	if fake.DeleteDistributionStub != nil {
-		return fake.DeleteDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4015,15 +4046,16 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionRequest(arg1 *cloudfront.Delete
 	fake.deleteDistributionRequestArgsForCall = append(fake.deleteDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.DeleteDistributionInput
 	}{arg1})
+	stub := fake.DeleteDistributionRequestStub
+	fakeReturns := fake.deleteDistributionRequestReturns
 	fake.recordInvocation("DeleteDistributionRequest", []interface{}{arg1})
 	fake.deleteDistributionRequestMutex.Unlock()
-	if fake.DeleteDistributionRequestStub != nil {
-		return fake.DeleteDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4080,15 +4112,16 @@ func (fake *FakeCloudFrontAPI) DeleteDistributionWithContext(arg1 context.Contex
 		arg2 *cloudfront.DeleteDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDistributionWithContextStub
+	fakeReturns := fake.deleteDistributionWithContextReturns
 	fake.recordInvocation("DeleteDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDistributionWithContextMutex.Unlock()
-	if fake.DeleteDistributionWithContextStub != nil {
-		return fake.DeleteDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4143,15 +4176,16 @@ func (fake *FakeCloudFrontAPI) DeleteFieldLevelEncryptionConfig(arg1 *cloudfront
 	fake.deleteFieldLevelEncryptionConfigArgsForCall = append(fake.deleteFieldLevelEncryptionConfigArgsForCall, struct {
 		arg1 *cloudfront.DeleteFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.DeleteFieldLevelEncryptionConfigStub
+	fakeReturns := fake.deleteFieldLevelEncryptionConfigReturns
 	fake.recordInvocation("DeleteFieldLevelEncryptionConfig", []interface{}{arg1})
 	fake.deleteFieldLevelEncryptionConfigMutex.Unlock()
-	if fake.DeleteFieldLevelEncryptionConfigStub != nil {
-		return fake.DeleteFieldLevelEncryptionConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteFieldLevelEncryptionConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4206,15 +4240,16 @@ func (fake *FakeCloudFrontAPI) DeleteFieldLevelEncryptionConfigRequest(arg1 *clo
 	fake.deleteFieldLevelEncryptionConfigRequestArgsForCall = append(fake.deleteFieldLevelEncryptionConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.DeleteFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.DeleteFieldLevelEncryptionConfigRequestStub
+	fakeReturns := fake.deleteFieldLevelEncryptionConfigRequestReturns
 	fake.recordInvocation("DeleteFieldLevelEncryptionConfigRequest", []interface{}{arg1})
 	fake.deleteFieldLevelEncryptionConfigRequestMutex.Unlock()
-	if fake.DeleteFieldLevelEncryptionConfigRequestStub != nil {
-		return fake.DeleteFieldLevelEncryptionConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteFieldLevelEncryptionConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4271,15 +4306,16 @@ func (fake *FakeCloudFrontAPI) DeleteFieldLevelEncryptionConfigWithContext(arg1 
 		arg2 *cloudfront.DeleteFieldLevelEncryptionConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteFieldLevelEncryptionConfigWithContextStub
+	fakeReturns := fake.deleteFieldLevelEncryptionConfigWithContextReturns
 	fake.recordInvocation("DeleteFieldLevelEncryptionConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteFieldLevelEncryptionConfigWithContextMutex.Unlock()
-	if fake.DeleteFieldLevelEncryptionConfigWithContextStub != nil {
-		return fake.DeleteFieldLevelEncryptionConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteFieldLevelEncryptionConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4334,15 +4370,16 @@ func (fake *FakeCloudFrontAPI) DeleteFieldLevelEncryptionProfile(arg1 *cloudfron
 	fake.deleteFieldLevelEncryptionProfileArgsForCall = append(fake.deleteFieldLevelEncryptionProfileArgsForCall, struct {
 		arg1 *cloudfront.DeleteFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.DeleteFieldLevelEncryptionProfileStub
+	fakeReturns := fake.deleteFieldLevelEncryptionProfileReturns
 	fake.recordInvocation("DeleteFieldLevelEncryptionProfile", []interface{}{arg1})
 	fake.deleteFieldLevelEncryptionProfileMutex.Unlock()
-	if fake.DeleteFieldLevelEncryptionProfileStub != nil {
-		return fake.DeleteFieldLevelEncryptionProfileStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteFieldLevelEncryptionProfileReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4397,15 +4434,16 @@ func (fake *FakeCloudFrontAPI) DeleteFieldLevelEncryptionProfileRequest(arg1 *cl
 	fake.deleteFieldLevelEncryptionProfileRequestArgsForCall = append(fake.deleteFieldLevelEncryptionProfileRequestArgsForCall, struct {
 		arg1 *cloudfront.DeleteFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.DeleteFieldLevelEncryptionProfileRequestStub
+	fakeReturns := fake.deleteFieldLevelEncryptionProfileRequestReturns
 	fake.recordInvocation("DeleteFieldLevelEncryptionProfileRequest", []interface{}{arg1})
 	fake.deleteFieldLevelEncryptionProfileRequestMutex.Unlock()
-	if fake.DeleteFieldLevelEncryptionProfileRequestStub != nil {
-		return fake.DeleteFieldLevelEncryptionProfileRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteFieldLevelEncryptionProfileRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4462,15 +4500,16 @@ func (fake *FakeCloudFrontAPI) DeleteFieldLevelEncryptionProfileWithContext(arg1
 		arg2 *cloudfront.DeleteFieldLevelEncryptionProfileInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteFieldLevelEncryptionProfileWithContextStub
+	fakeReturns := fake.deleteFieldLevelEncryptionProfileWithContextReturns
 	fake.recordInvocation("DeleteFieldLevelEncryptionProfileWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteFieldLevelEncryptionProfileWithContextMutex.Unlock()
-	if fake.DeleteFieldLevelEncryptionProfileWithContextStub != nil {
-		return fake.DeleteFieldLevelEncryptionProfileWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteFieldLevelEncryptionProfileWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4525,15 +4564,16 @@ func (fake *FakeCloudFrontAPI) DeletePublicKey(arg1 *cloudfront.DeletePublicKeyI
 	fake.deletePublicKeyArgsForCall = append(fake.deletePublicKeyArgsForCall, struct {
 		arg1 *cloudfront.DeletePublicKeyInput
 	}{arg1})
+	stub := fake.DeletePublicKeyStub
+	fakeReturns := fake.deletePublicKeyReturns
 	fake.recordInvocation("DeletePublicKey", []interface{}{arg1})
 	fake.deletePublicKeyMutex.Unlock()
-	if fake.DeletePublicKeyStub != nil {
-		return fake.DeletePublicKeyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deletePublicKeyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4588,15 +4628,16 @@ func (fake *FakeCloudFrontAPI) DeletePublicKeyRequest(arg1 *cloudfront.DeletePub
 	fake.deletePublicKeyRequestArgsForCall = append(fake.deletePublicKeyRequestArgsForCall, struct {
 		arg1 *cloudfront.DeletePublicKeyInput
 	}{arg1})
+	stub := fake.DeletePublicKeyRequestStub
+	fakeReturns := fake.deletePublicKeyRequestReturns
 	fake.recordInvocation("DeletePublicKeyRequest", []interface{}{arg1})
 	fake.deletePublicKeyRequestMutex.Unlock()
-	if fake.DeletePublicKeyRequestStub != nil {
-		return fake.DeletePublicKeyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deletePublicKeyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4653,15 +4694,16 @@ func (fake *FakeCloudFrontAPI) DeletePublicKeyWithContext(arg1 context.Context, 
 		arg2 *cloudfront.DeletePublicKeyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeletePublicKeyWithContextStub
+	fakeReturns := fake.deletePublicKeyWithContextReturns
 	fake.recordInvocation("DeletePublicKeyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deletePublicKeyWithContextMutex.Unlock()
-	if fake.DeletePublicKeyWithContextStub != nil {
-		return fake.DeletePublicKeyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deletePublicKeyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4716,15 +4758,16 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistribution(arg1 *cloudfront.Dele
 	fake.deleteStreamingDistributionArgsForCall = append(fake.deleteStreamingDistributionArgsForCall, struct {
 		arg1 *cloudfront.DeleteStreamingDistributionInput
 	}{arg1})
+	stub := fake.DeleteStreamingDistributionStub
+	fakeReturns := fake.deleteStreamingDistributionReturns
 	fake.recordInvocation("DeleteStreamingDistribution", []interface{}{arg1})
 	fake.deleteStreamingDistributionMutex.Unlock()
-	if fake.DeleteStreamingDistributionStub != nil {
-		return fake.DeleteStreamingDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteStreamingDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4779,15 +4822,16 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionRequest(arg1 *cloudfro
 	fake.deleteStreamingDistributionRequestArgsForCall = append(fake.deleteStreamingDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.DeleteStreamingDistributionInput
 	}{arg1})
+	stub := fake.DeleteStreamingDistributionRequestStub
+	fakeReturns := fake.deleteStreamingDistributionRequestReturns
 	fake.recordInvocation("DeleteStreamingDistributionRequest", []interface{}{arg1})
 	fake.deleteStreamingDistributionRequestMutex.Unlock()
-	if fake.DeleteStreamingDistributionRequestStub != nil {
-		return fake.DeleteStreamingDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteStreamingDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4844,15 +4888,16 @@ func (fake *FakeCloudFrontAPI) DeleteStreamingDistributionWithContext(arg1 conte
 		arg2 *cloudfront.DeleteStreamingDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteStreamingDistributionWithContextStub
+	fakeReturns := fake.deleteStreamingDistributionWithContextReturns
 	fake.recordInvocation("DeleteStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteStreamingDistributionWithContextMutex.Unlock()
-	if fake.DeleteStreamingDistributionWithContextStub != nil {
-		return fake.DeleteStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteStreamingDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4907,15 +4952,16 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentity(arg1 *cloudfron
 	fake.getCloudFrontOriginAccessIdentityArgsForCall = append(fake.getCloudFrontOriginAccessIdentityArgsForCall, struct {
 		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.GetCloudFrontOriginAccessIdentityStub
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityReturns
 	fake.recordInvocation("GetCloudFrontOriginAccessIdentity", []interface{}{arg1})
 	fake.getCloudFrontOriginAccessIdentityMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getCloudFrontOriginAccessIdentityReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4970,15 +5016,16 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfig(arg1 *clo
 	fake.getCloudFrontOriginAccessIdentityConfigArgsForCall = append(fake.getCloudFrontOriginAccessIdentityConfigArgsForCall, struct {
 		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput
 	}{arg1})
+	stub := fake.GetCloudFrontOriginAccessIdentityConfigStub
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigReturns
 	fake.recordInvocation("GetCloudFrontOriginAccessIdentityConfig", []interface{}{arg1})
 	fake.getCloudFrontOriginAccessIdentityConfigMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityConfigStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5033,15 +5080,16 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigRequest(ar
 	fake.getCloudFrontOriginAccessIdentityConfigRequestArgsForCall = append(fake.getCloudFrontOriginAccessIdentityConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput
 	}{arg1})
+	stub := fake.GetCloudFrontOriginAccessIdentityConfigRequestStub
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigRequestReturns
 	fake.recordInvocation("GetCloudFrontOriginAccessIdentityConfigRequest", []interface{}{arg1})
 	fake.getCloudFrontOriginAccessIdentityConfigRequestMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityConfigRequestStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5098,15 +5146,16 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityConfigWithContex
 		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigWithContextReturns
 	fake.recordInvocation("GetCloudFrontOriginAccessIdentityConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getCloudFrontOriginAccessIdentityConfigWithContextMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getCloudFrontOriginAccessIdentityConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5161,15 +5210,16 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityRequest(arg1 *cl
 	fake.getCloudFrontOriginAccessIdentityRequestArgsForCall = append(fake.getCloudFrontOriginAccessIdentityRequestArgsForCall, struct {
 		arg1 *cloudfront.GetCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.GetCloudFrontOriginAccessIdentityRequestStub
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityRequestReturns
 	fake.recordInvocation("GetCloudFrontOriginAccessIdentityRequest", []interface{}{arg1})
 	fake.getCloudFrontOriginAccessIdentityRequestMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityRequestStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getCloudFrontOriginAccessIdentityRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5226,15 +5276,16 @@ func (fake *FakeCloudFrontAPI) GetCloudFrontOriginAccessIdentityWithContext(arg1
 		arg2 *cloudfront.GetCloudFrontOriginAccessIdentityInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetCloudFrontOriginAccessIdentityWithContextStub
+	fakeReturns := fake.getCloudFrontOriginAccessIdentityWithContextReturns
 	fake.recordInvocation("GetCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.GetCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.GetCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getCloudFrontOriginAccessIdentityWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5289,15 +5340,16 @@ func (fake *FakeCloudFrontAPI) GetDistribution(arg1 *cloudfront.GetDistributionI
 	fake.getDistributionArgsForCall = append(fake.getDistributionArgsForCall, struct {
 		arg1 *cloudfront.GetDistributionInput
 	}{arg1})
+	stub := fake.GetDistributionStub
+	fakeReturns := fake.getDistributionReturns
 	fake.recordInvocation("GetDistribution", []interface{}{arg1})
 	fake.getDistributionMutex.Unlock()
-	if fake.GetDistributionStub != nil {
-		return fake.GetDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5352,15 +5404,16 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfig(arg1 *cloudfront.GetDistrib
 	fake.getDistributionConfigArgsForCall = append(fake.getDistributionConfigArgsForCall, struct {
 		arg1 *cloudfront.GetDistributionConfigInput
 	}{arg1})
+	stub := fake.GetDistributionConfigStub
+	fakeReturns := fake.getDistributionConfigReturns
 	fake.recordInvocation("GetDistributionConfig", []interface{}{arg1})
 	fake.getDistributionConfigMutex.Unlock()
-	if fake.GetDistributionConfigStub != nil {
-		return fake.GetDistributionConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getDistributionConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5415,15 +5468,16 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigRequest(arg1 *cloudfront.Get
 	fake.getDistributionConfigRequestArgsForCall = append(fake.getDistributionConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.GetDistributionConfigInput
 	}{arg1})
+	stub := fake.GetDistributionConfigRequestStub
+	fakeReturns := fake.getDistributionConfigRequestReturns
 	fake.recordInvocation("GetDistributionConfigRequest", []interface{}{arg1})
 	fake.getDistributionConfigRequestMutex.Unlock()
-	if fake.GetDistributionConfigRequestStub != nil {
-		return fake.GetDistributionConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getDistributionConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5480,15 +5534,16 @@ func (fake *FakeCloudFrontAPI) GetDistributionConfigWithContext(arg1 context.Con
 		arg2 *cloudfront.GetDistributionConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetDistributionConfigWithContextStub
+	fakeReturns := fake.getDistributionConfigWithContextReturns
 	fake.recordInvocation("GetDistributionConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getDistributionConfigWithContextMutex.Unlock()
-	if fake.GetDistributionConfigWithContextStub != nil {
-		return fake.GetDistributionConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getDistributionConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5543,15 +5598,16 @@ func (fake *FakeCloudFrontAPI) GetDistributionRequest(arg1 *cloudfront.GetDistri
 	fake.getDistributionRequestArgsForCall = append(fake.getDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.GetDistributionInput
 	}{arg1})
+	stub := fake.GetDistributionRequestStub
+	fakeReturns := fake.getDistributionRequestReturns
 	fake.recordInvocation("GetDistributionRequest", []interface{}{arg1})
 	fake.getDistributionRequestMutex.Unlock()
-	if fake.GetDistributionRequestStub != nil {
-		return fake.GetDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5608,15 +5664,16 @@ func (fake *FakeCloudFrontAPI) GetDistributionWithContext(arg1 context.Context, 
 		arg2 *cloudfront.GetDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetDistributionWithContextStub
+	fakeReturns := fake.getDistributionWithContextReturns
 	fake.recordInvocation("GetDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getDistributionWithContextMutex.Unlock()
-	if fake.GetDistributionWithContextStub != nil {
-		return fake.GetDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5671,15 +5728,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryption(arg1 *cloudfront.GetField
 	fake.getFieldLevelEncryptionArgsForCall = append(fake.getFieldLevelEncryptionArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionStub
+	fakeReturns := fake.getFieldLevelEncryptionReturns
 	fake.recordInvocation("GetFieldLevelEncryption", []interface{}{arg1})
 	fake.getFieldLevelEncryptionMutex.Unlock()
-	if fake.GetFieldLevelEncryptionStub != nil {
-		return fake.GetFieldLevelEncryptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5734,15 +5792,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionConfig(arg1 *cloudfront.Ge
 	fake.getFieldLevelEncryptionConfigArgsForCall = append(fake.getFieldLevelEncryptionConfigArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionConfigStub
+	fakeReturns := fake.getFieldLevelEncryptionConfigReturns
 	fake.recordInvocation("GetFieldLevelEncryptionConfig", []interface{}{arg1})
 	fake.getFieldLevelEncryptionConfigMutex.Unlock()
-	if fake.GetFieldLevelEncryptionConfigStub != nil {
-		return fake.GetFieldLevelEncryptionConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5797,15 +5856,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionConfigRequest(arg1 *cloudf
 	fake.getFieldLevelEncryptionConfigRequestArgsForCall = append(fake.getFieldLevelEncryptionConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionConfigRequestStub
+	fakeReturns := fake.getFieldLevelEncryptionConfigRequestReturns
 	fake.recordInvocation("GetFieldLevelEncryptionConfigRequest", []interface{}{arg1})
 	fake.getFieldLevelEncryptionConfigRequestMutex.Unlock()
-	if fake.GetFieldLevelEncryptionConfigRequestStub != nil {
-		return fake.GetFieldLevelEncryptionConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5862,15 +5922,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionConfigWithContext(arg1 con
 		arg2 *cloudfront.GetFieldLevelEncryptionConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetFieldLevelEncryptionConfigWithContextStub
+	fakeReturns := fake.getFieldLevelEncryptionConfigWithContextReturns
 	fake.recordInvocation("GetFieldLevelEncryptionConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getFieldLevelEncryptionConfigWithContextMutex.Unlock()
-	if fake.GetFieldLevelEncryptionConfigWithContextStub != nil {
-		return fake.GetFieldLevelEncryptionConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5925,15 +5986,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionProfile(arg1 *cloudfront.G
 	fake.getFieldLevelEncryptionProfileArgsForCall = append(fake.getFieldLevelEncryptionProfileArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionProfileStub
+	fakeReturns := fake.getFieldLevelEncryptionProfileReturns
 	fake.recordInvocation("GetFieldLevelEncryptionProfile", []interface{}{arg1})
 	fake.getFieldLevelEncryptionProfileMutex.Unlock()
-	if fake.GetFieldLevelEncryptionProfileStub != nil {
-		return fake.GetFieldLevelEncryptionProfileStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionProfileReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5988,15 +6050,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionProfileConfig(arg1 *cloudf
 	fake.getFieldLevelEncryptionProfileConfigArgsForCall = append(fake.getFieldLevelEncryptionProfileConfigArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionProfileConfigInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionProfileConfigStub
+	fakeReturns := fake.getFieldLevelEncryptionProfileConfigReturns
 	fake.recordInvocation("GetFieldLevelEncryptionProfileConfig", []interface{}{arg1})
 	fake.getFieldLevelEncryptionProfileConfigMutex.Unlock()
-	if fake.GetFieldLevelEncryptionProfileConfigStub != nil {
-		return fake.GetFieldLevelEncryptionProfileConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionProfileConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6051,15 +6114,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionProfileConfigRequest(arg1 
 	fake.getFieldLevelEncryptionProfileConfigRequestArgsForCall = append(fake.getFieldLevelEncryptionProfileConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionProfileConfigInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionProfileConfigRequestStub
+	fakeReturns := fake.getFieldLevelEncryptionProfileConfigRequestReturns
 	fake.recordInvocation("GetFieldLevelEncryptionProfileConfigRequest", []interface{}{arg1})
 	fake.getFieldLevelEncryptionProfileConfigRequestMutex.Unlock()
-	if fake.GetFieldLevelEncryptionProfileConfigRequestStub != nil {
-		return fake.GetFieldLevelEncryptionProfileConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionProfileConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6116,15 +6180,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionProfileConfigWithContext(a
 		arg2 *cloudfront.GetFieldLevelEncryptionProfileConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetFieldLevelEncryptionProfileConfigWithContextStub
+	fakeReturns := fake.getFieldLevelEncryptionProfileConfigWithContextReturns
 	fake.recordInvocation("GetFieldLevelEncryptionProfileConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getFieldLevelEncryptionProfileConfigWithContextMutex.Unlock()
-	if fake.GetFieldLevelEncryptionProfileConfigWithContextStub != nil {
-		return fake.GetFieldLevelEncryptionProfileConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionProfileConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6179,15 +6244,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionProfileRequest(arg1 *cloud
 	fake.getFieldLevelEncryptionProfileRequestArgsForCall = append(fake.getFieldLevelEncryptionProfileRequestArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionProfileRequestStub
+	fakeReturns := fake.getFieldLevelEncryptionProfileRequestReturns
 	fake.recordInvocation("GetFieldLevelEncryptionProfileRequest", []interface{}{arg1})
 	fake.getFieldLevelEncryptionProfileRequestMutex.Unlock()
-	if fake.GetFieldLevelEncryptionProfileRequestStub != nil {
-		return fake.GetFieldLevelEncryptionProfileRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionProfileRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6244,15 +6310,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionProfileWithContext(arg1 co
 		arg2 *cloudfront.GetFieldLevelEncryptionProfileInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetFieldLevelEncryptionProfileWithContextStub
+	fakeReturns := fake.getFieldLevelEncryptionProfileWithContextReturns
 	fake.recordInvocation("GetFieldLevelEncryptionProfileWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getFieldLevelEncryptionProfileWithContextMutex.Unlock()
-	if fake.GetFieldLevelEncryptionProfileWithContextStub != nil {
-		return fake.GetFieldLevelEncryptionProfileWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionProfileWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6307,15 +6374,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionRequest(arg1 *cloudfront.G
 	fake.getFieldLevelEncryptionRequestArgsForCall = append(fake.getFieldLevelEncryptionRequestArgsForCall, struct {
 		arg1 *cloudfront.GetFieldLevelEncryptionInput
 	}{arg1})
+	stub := fake.GetFieldLevelEncryptionRequestStub
+	fakeReturns := fake.getFieldLevelEncryptionRequestReturns
 	fake.recordInvocation("GetFieldLevelEncryptionRequest", []interface{}{arg1})
 	fake.getFieldLevelEncryptionRequestMutex.Unlock()
-	if fake.GetFieldLevelEncryptionRequestStub != nil {
-		return fake.GetFieldLevelEncryptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6372,15 +6440,16 @@ func (fake *FakeCloudFrontAPI) GetFieldLevelEncryptionWithContext(arg1 context.C
 		arg2 *cloudfront.GetFieldLevelEncryptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetFieldLevelEncryptionWithContextStub
+	fakeReturns := fake.getFieldLevelEncryptionWithContextReturns
 	fake.recordInvocation("GetFieldLevelEncryptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getFieldLevelEncryptionWithContextMutex.Unlock()
-	if fake.GetFieldLevelEncryptionWithContextStub != nil {
-		return fake.GetFieldLevelEncryptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getFieldLevelEncryptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6435,15 +6504,16 @@ func (fake *FakeCloudFrontAPI) GetInvalidation(arg1 *cloudfront.GetInvalidationI
 	fake.getInvalidationArgsForCall = append(fake.getInvalidationArgsForCall, struct {
 		arg1 *cloudfront.GetInvalidationInput
 	}{arg1})
+	stub := fake.GetInvalidationStub
+	fakeReturns := fake.getInvalidationReturns
 	fake.recordInvocation("GetInvalidation", []interface{}{arg1})
 	fake.getInvalidationMutex.Unlock()
-	if fake.GetInvalidationStub != nil {
-		return fake.GetInvalidationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getInvalidationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6498,15 +6568,16 @@ func (fake *FakeCloudFrontAPI) GetInvalidationRequest(arg1 *cloudfront.GetInvali
 	fake.getInvalidationRequestArgsForCall = append(fake.getInvalidationRequestArgsForCall, struct {
 		arg1 *cloudfront.GetInvalidationInput
 	}{arg1})
+	stub := fake.GetInvalidationRequestStub
+	fakeReturns := fake.getInvalidationRequestReturns
 	fake.recordInvocation("GetInvalidationRequest", []interface{}{arg1})
 	fake.getInvalidationRequestMutex.Unlock()
-	if fake.GetInvalidationRequestStub != nil {
-		return fake.GetInvalidationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getInvalidationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6563,15 +6634,16 @@ func (fake *FakeCloudFrontAPI) GetInvalidationWithContext(arg1 context.Context, 
 		arg2 *cloudfront.GetInvalidationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetInvalidationWithContextStub
+	fakeReturns := fake.getInvalidationWithContextReturns
 	fake.recordInvocation("GetInvalidationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getInvalidationWithContextMutex.Unlock()
-	if fake.GetInvalidationWithContextStub != nil {
-		return fake.GetInvalidationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getInvalidationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6626,15 +6698,16 @@ func (fake *FakeCloudFrontAPI) GetPublicKey(arg1 *cloudfront.GetPublicKeyInput) 
 	fake.getPublicKeyArgsForCall = append(fake.getPublicKeyArgsForCall, struct {
 		arg1 *cloudfront.GetPublicKeyInput
 	}{arg1})
+	stub := fake.GetPublicKeyStub
+	fakeReturns := fake.getPublicKeyReturns
 	fake.recordInvocation("GetPublicKey", []interface{}{arg1})
 	fake.getPublicKeyMutex.Unlock()
-	if fake.GetPublicKeyStub != nil {
-		return fake.GetPublicKeyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicKeyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6689,15 +6762,16 @@ func (fake *FakeCloudFrontAPI) GetPublicKeyConfig(arg1 *cloudfront.GetPublicKeyC
 	fake.getPublicKeyConfigArgsForCall = append(fake.getPublicKeyConfigArgsForCall, struct {
 		arg1 *cloudfront.GetPublicKeyConfigInput
 	}{arg1})
+	stub := fake.GetPublicKeyConfigStub
+	fakeReturns := fake.getPublicKeyConfigReturns
 	fake.recordInvocation("GetPublicKeyConfig", []interface{}{arg1})
 	fake.getPublicKeyConfigMutex.Unlock()
-	if fake.GetPublicKeyConfigStub != nil {
-		return fake.GetPublicKeyConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicKeyConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6752,15 +6826,16 @@ func (fake *FakeCloudFrontAPI) GetPublicKeyConfigRequest(arg1 *cloudfront.GetPub
 	fake.getPublicKeyConfigRequestArgsForCall = append(fake.getPublicKeyConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.GetPublicKeyConfigInput
 	}{arg1})
+	stub := fake.GetPublicKeyConfigRequestStub
+	fakeReturns := fake.getPublicKeyConfigRequestReturns
 	fake.recordInvocation("GetPublicKeyConfigRequest", []interface{}{arg1})
 	fake.getPublicKeyConfigRequestMutex.Unlock()
-	if fake.GetPublicKeyConfigRequestStub != nil {
-		return fake.GetPublicKeyConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicKeyConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6817,15 +6892,16 @@ func (fake *FakeCloudFrontAPI) GetPublicKeyConfigWithContext(arg1 context.Contex
 		arg2 *cloudfront.GetPublicKeyConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetPublicKeyConfigWithContextStub
+	fakeReturns := fake.getPublicKeyConfigWithContextReturns
 	fake.recordInvocation("GetPublicKeyConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getPublicKeyConfigWithContextMutex.Unlock()
-	if fake.GetPublicKeyConfigWithContextStub != nil {
-		return fake.GetPublicKeyConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicKeyConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6880,15 +6956,16 @@ func (fake *FakeCloudFrontAPI) GetPublicKeyRequest(arg1 *cloudfront.GetPublicKey
 	fake.getPublicKeyRequestArgsForCall = append(fake.getPublicKeyRequestArgsForCall, struct {
 		arg1 *cloudfront.GetPublicKeyInput
 	}{arg1})
+	stub := fake.GetPublicKeyRequestStub
+	fakeReturns := fake.getPublicKeyRequestReturns
 	fake.recordInvocation("GetPublicKeyRequest", []interface{}{arg1})
 	fake.getPublicKeyRequestMutex.Unlock()
-	if fake.GetPublicKeyRequestStub != nil {
-		return fake.GetPublicKeyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicKeyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6945,15 +7022,16 @@ func (fake *FakeCloudFrontAPI) GetPublicKeyWithContext(arg1 context.Context, arg
 		arg2 *cloudfront.GetPublicKeyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetPublicKeyWithContextStub
+	fakeReturns := fake.getPublicKeyWithContextReturns
 	fake.recordInvocation("GetPublicKeyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getPublicKeyWithContextMutex.Unlock()
-	if fake.GetPublicKeyWithContextStub != nil {
-		return fake.GetPublicKeyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicKeyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7008,15 +7086,16 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistribution(arg1 *cloudfront.GetStre
 	fake.getStreamingDistributionArgsForCall = append(fake.getStreamingDistributionArgsForCall, struct {
 		arg1 *cloudfront.GetStreamingDistributionInput
 	}{arg1})
+	stub := fake.GetStreamingDistributionStub
+	fakeReturns := fake.getStreamingDistributionReturns
 	fake.recordInvocation("GetStreamingDistribution", []interface{}{arg1})
 	fake.getStreamingDistributionMutex.Unlock()
-	if fake.GetStreamingDistributionStub != nil {
-		return fake.GetStreamingDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getStreamingDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7071,15 +7150,16 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfig(arg1 *cloudfront.G
 	fake.getStreamingDistributionConfigArgsForCall = append(fake.getStreamingDistributionConfigArgsForCall, struct {
 		arg1 *cloudfront.GetStreamingDistributionConfigInput
 	}{arg1})
+	stub := fake.GetStreamingDistributionConfigStub
+	fakeReturns := fake.getStreamingDistributionConfigReturns
 	fake.recordInvocation("GetStreamingDistributionConfig", []interface{}{arg1})
 	fake.getStreamingDistributionConfigMutex.Unlock()
-	if fake.GetStreamingDistributionConfigStub != nil {
-		return fake.GetStreamingDistributionConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getStreamingDistributionConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7134,15 +7214,16 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigRequest(arg1 *cloud
 	fake.getStreamingDistributionConfigRequestArgsForCall = append(fake.getStreamingDistributionConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.GetStreamingDistributionConfigInput
 	}{arg1})
+	stub := fake.GetStreamingDistributionConfigRequestStub
+	fakeReturns := fake.getStreamingDistributionConfigRequestReturns
 	fake.recordInvocation("GetStreamingDistributionConfigRequest", []interface{}{arg1})
 	fake.getStreamingDistributionConfigRequestMutex.Unlock()
-	if fake.GetStreamingDistributionConfigRequestStub != nil {
-		return fake.GetStreamingDistributionConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getStreamingDistributionConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7199,15 +7280,16 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionConfigWithContext(arg1 co
 		arg2 *cloudfront.GetStreamingDistributionConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetStreamingDistributionConfigWithContextStub
+	fakeReturns := fake.getStreamingDistributionConfigWithContextReturns
 	fake.recordInvocation("GetStreamingDistributionConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getStreamingDistributionConfigWithContextMutex.Unlock()
-	if fake.GetStreamingDistributionConfigWithContextStub != nil {
-		return fake.GetStreamingDistributionConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getStreamingDistributionConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7262,15 +7344,16 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionRequest(arg1 *cloudfront.
 	fake.getStreamingDistributionRequestArgsForCall = append(fake.getStreamingDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.GetStreamingDistributionInput
 	}{arg1})
+	stub := fake.GetStreamingDistributionRequestStub
+	fakeReturns := fake.getStreamingDistributionRequestReturns
 	fake.recordInvocation("GetStreamingDistributionRequest", []interface{}{arg1})
 	fake.getStreamingDistributionRequestMutex.Unlock()
-	if fake.GetStreamingDistributionRequestStub != nil {
-		return fake.GetStreamingDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getStreamingDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7327,15 +7410,16 @@ func (fake *FakeCloudFrontAPI) GetStreamingDistributionWithContext(arg1 context.
 		arg2 *cloudfront.GetStreamingDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetStreamingDistributionWithContextStub
+	fakeReturns := fake.getStreamingDistributionWithContextReturns
 	fake.recordInvocation("GetStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getStreamingDistributionWithContextMutex.Unlock()
-	if fake.GetStreamingDistributionWithContextStub != nil {
-		return fake.GetStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getStreamingDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7390,15 +7474,16 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentities(arg1 *cloudf
 	fake.listCloudFrontOriginAccessIdentitiesArgsForCall = append(fake.listCloudFrontOriginAccessIdentitiesArgsForCall, struct {
 		arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
 	}{arg1})
+	stub := fake.ListCloudFrontOriginAccessIdentitiesStub
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesReturns
 	fake.recordInvocation("ListCloudFrontOriginAccessIdentities", []interface{}{arg1})
 	fake.listCloudFrontOriginAccessIdentitiesMutex.Unlock()
-	if fake.ListCloudFrontOriginAccessIdentitiesStub != nil {
-		return fake.ListCloudFrontOriginAccessIdentitiesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7454,15 +7539,16 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPages(arg1 *c
 		arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
 		arg2 func(*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListCloudFrontOriginAccessIdentitiesPagesStub
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesPagesReturns
 	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesPages", []interface{}{arg1, arg2})
 	fake.listCloudFrontOriginAccessIdentitiesPagesMutex.Unlock()
-	if fake.ListCloudFrontOriginAccessIdentitiesPagesStub != nil {
-		return fake.ListCloudFrontOriginAccessIdentitiesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -7517,15 +7603,16 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesPagesWithCont
 		arg3 func(*cloudfront.ListCloudFrontOriginAccessIdentitiesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListCloudFrontOriginAccessIdentitiesPagesWithContextStub
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturns
 	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listCloudFrontOriginAccessIdentitiesPagesWithContextMutex.Unlock()
-	if fake.ListCloudFrontOriginAccessIdentitiesPagesWithContextStub != nil {
-		return fake.ListCloudFrontOriginAccessIdentitiesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -7577,15 +7664,16 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesRequest(arg1 
 	fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall = append(fake.listCloudFrontOriginAccessIdentitiesRequestArgsForCall, struct {
 		arg1 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
 	}{arg1})
+	stub := fake.ListCloudFrontOriginAccessIdentitiesRequestStub
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesRequestReturns
 	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesRequest", []interface{}{arg1})
 	fake.listCloudFrontOriginAccessIdentitiesRequestMutex.Unlock()
-	if fake.ListCloudFrontOriginAccessIdentitiesRequestStub != nil {
-		return fake.ListCloudFrontOriginAccessIdentitiesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7642,15 +7730,16 @@ func (fake *FakeCloudFrontAPI) ListCloudFrontOriginAccessIdentitiesWithContext(a
 		arg2 *cloudfront.ListCloudFrontOriginAccessIdentitiesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListCloudFrontOriginAccessIdentitiesWithContextStub
+	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesWithContextReturns
 	fake.recordInvocation("ListCloudFrontOriginAccessIdentitiesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listCloudFrontOriginAccessIdentitiesWithContextMutex.Unlock()
-	if fake.ListCloudFrontOriginAccessIdentitiesWithContextStub != nil {
-		return fake.ListCloudFrontOriginAccessIdentitiesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listCloudFrontOriginAccessIdentitiesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7705,15 +7794,16 @@ func (fake *FakeCloudFrontAPI) ListDistributions(arg1 *cloudfront.ListDistributi
 	fake.listDistributionsArgsForCall = append(fake.listDistributionsArgsForCall, struct {
 		arg1 *cloudfront.ListDistributionsInput
 	}{arg1})
+	stub := fake.ListDistributionsStub
+	fakeReturns := fake.listDistributionsReturns
 	fake.recordInvocation("ListDistributions", []interface{}{arg1})
 	fake.listDistributionsMutex.Unlock()
-	if fake.ListDistributionsStub != nil {
-		return fake.ListDistributionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listDistributionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7768,15 +7858,16 @@ func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLId(arg1 *cloudfront.List
 	fake.listDistributionsByWebACLIdArgsForCall = append(fake.listDistributionsByWebACLIdArgsForCall, struct {
 		arg1 *cloudfront.ListDistributionsByWebACLIdInput
 	}{arg1})
+	stub := fake.ListDistributionsByWebACLIdStub
+	fakeReturns := fake.listDistributionsByWebACLIdReturns
 	fake.recordInvocation("ListDistributionsByWebACLId", []interface{}{arg1})
 	fake.listDistributionsByWebACLIdMutex.Unlock()
-	if fake.ListDistributionsByWebACLIdStub != nil {
-		return fake.ListDistributionsByWebACLIdStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listDistributionsByWebACLIdReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7831,15 +7922,16 @@ func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdRequest(arg1 *cloudfro
 	fake.listDistributionsByWebACLIdRequestArgsForCall = append(fake.listDistributionsByWebACLIdRequestArgsForCall, struct {
 		arg1 *cloudfront.ListDistributionsByWebACLIdInput
 	}{arg1})
+	stub := fake.ListDistributionsByWebACLIdRequestStub
+	fakeReturns := fake.listDistributionsByWebACLIdRequestReturns
 	fake.recordInvocation("ListDistributionsByWebACLIdRequest", []interface{}{arg1})
 	fake.listDistributionsByWebACLIdRequestMutex.Unlock()
-	if fake.ListDistributionsByWebACLIdRequestStub != nil {
-		return fake.ListDistributionsByWebACLIdRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listDistributionsByWebACLIdRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7896,15 +7988,16 @@ func (fake *FakeCloudFrontAPI) ListDistributionsByWebACLIdWithContext(arg1 conte
 		arg2 *cloudfront.ListDistributionsByWebACLIdInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListDistributionsByWebACLIdWithContextStub
+	fakeReturns := fake.listDistributionsByWebACLIdWithContextReturns
 	fake.recordInvocation("ListDistributionsByWebACLIdWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listDistributionsByWebACLIdWithContextMutex.Unlock()
-	if fake.ListDistributionsByWebACLIdWithContextStub != nil {
-		return fake.ListDistributionsByWebACLIdWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listDistributionsByWebACLIdWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7960,15 +8053,16 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPages(arg1 *cloudfront.ListDistr
 		arg1 *cloudfront.ListDistributionsInput
 		arg2 func(*cloudfront.ListDistributionsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListDistributionsPagesStub
+	fakeReturns := fake.listDistributionsPagesReturns
 	fake.recordInvocation("ListDistributionsPages", []interface{}{arg1, arg2})
 	fake.listDistributionsPagesMutex.Unlock()
-	if fake.ListDistributionsPagesStub != nil {
-		return fake.ListDistributionsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listDistributionsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -8023,15 +8117,16 @@ func (fake *FakeCloudFrontAPI) ListDistributionsPagesWithContext(arg1 context.Co
 		arg3 func(*cloudfront.ListDistributionsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListDistributionsPagesWithContextStub
+	fakeReturns := fake.listDistributionsPagesWithContextReturns
 	fake.recordInvocation("ListDistributionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listDistributionsPagesWithContextMutex.Unlock()
-	if fake.ListDistributionsPagesWithContextStub != nil {
-		return fake.ListDistributionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listDistributionsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -8083,15 +8178,16 @@ func (fake *FakeCloudFrontAPI) ListDistributionsRequest(arg1 *cloudfront.ListDis
 	fake.listDistributionsRequestArgsForCall = append(fake.listDistributionsRequestArgsForCall, struct {
 		arg1 *cloudfront.ListDistributionsInput
 	}{arg1})
+	stub := fake.ListDistributionsRequestStub
+	fakeReturns := fake.listDistributionsRequestReturns
 	fake.recordInvocation("ListDistributionsRequest", []interface{}{arg1})
 	fake.listDistributionsRequestMutex.Unlock()
-	if fake.ListDistributionsRequestStub != nil {
-		return fake.ListDistributionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listDistributionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8148,15 +8244,16 @@ func (fake *FakeCloudFrontAPI) ListDistributionsWithContext(arg1 context.Context
 		arg2 *cloudfront.ListDistributionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListDistributionsWithContextStub
+	fakeReturns := fake.listDistributionsWithContextReturns
 	fake.recordInvocation("ListDistributionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listDistributionsWithContextMutex.Unlock()
-	if fake.ListDistributionsWithContextStub != nil {
-		return fake.ListDistributionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listDistributionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8211,15 +8308,16 @@ func (fake *FakeCloudFrontAPI) ListFieldLevelEncryptionConfigs(arg1 *cloudfront.
 	fake.listFieldLevelEncryptionConfigsArgsForCall = append(fake.listFieldLevelEncryptionConfigsArgsForCall, struct {
 		arg1 *cloudfront.ListFieldLevelEncryptionConfigsInput
 	}{arg1})
+	stub := fake.ListFieldLevelEncryptionConfigsStub
+	fakeReturns := fake.listFieldLevelEncryptionConfigsReturns
 	fake.recordInvocation("ListFieldLevelEncryptionConfigs", []interface{}{arg1})
 	fake.listFieldLevelEncryptionConfigsMutex.Unlock()
-	if fake.ListFieldLevelEncryptionConfigsStub != nil {
-		return fake.ListFieldLevelEncryptionConfigsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listFieldLevelEncryptionConfigsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8274,15 +8372,16 @@ func (fake *FakeCloudFrontAPI) ListFieldLevelEncryptionConfigsRequest(arg1 *clou
 	fake.listFieldLevelEncryptionConfigsRequestArgsForCall = append(fake.listFieldLevelEncryptionConfigsRequestArgsForCall, struct {
 		arg1 *cloudfront.ListFieldLevelEncryptionConfigsInput
 	}{arg1})
+	stub := fake.ListFieldLevelEncryptionConfigsRequestStub
+	fakeReturns := fake.listFieldLevelEncryptionConfigsRequestReturns
 	fake.recordInvocation("ListFieldLevelEncryptionConfigsRequest", []interface{}{arg1})
 	fake.listFieldLevelEncryptionConfigsRequestMutex.Unlock()
-	if fake.ListFieldLevelEncryptionConfigsRequestStub != nil {
-		return fake.ListFieldLevelEncryptionConfigsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listFieldLevelEncryptionConfigsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8339,15 +8438,16 @@ func (fake *FakeCloudFrontAPI) ListFieldLevelEncryptionConfigsWithContext(arg1 c
 		arg2 *cloudfront.ListFieldLevelEncryptionConfigsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListFieldLevelEncryptionConfigsWithContextStub
+	fakeReturns := fake.listFieldLevelEncryptionConfigsWithContextReturns
 	fake.recordInvocation("ListFieldLevelEncryptionConfigsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listFieldLevelEncryptionConfigsWithContextMutex.Unlock()
-	if fake.ListFieldLevelEncryptionConfigsWithContextStub != nil {
-		return fake.ListFieldLevelEncryptionConfigsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listFieldLevelEncryptionConfigsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8402,15 +8502,16 @@ func (fake *FakeCloudFrontAPI) ListFieldLevelEncryptionProfiles(arg1 *cloudfront
 	fake.listFieldLevelEncryptionProfilesArgsForCall = append(fake.listFieldLevelEncryptionProfilesArgsForCall, struct {
 		arg1 *cloudfront.ListFieldLevelEncryptionProfilesInput
 	}{arg1})
+	stub := fake.ListFieldLevelEncryptionProfilesStub
+	fakeReturns := fake.listFieldLevelEncryptionProfilesReturns
 	fake.recordInvocation("ListFieldLevelEncryptionProfiles", []interface{}{arg1})
 	fake.listFieldLevelEncryptionProfilesMutex.Unlock()
-	if fake.ListFieldLevelEncryptionProfilesStub != nil {
-		return fake.ListFieldLevelEncryptionProfilesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listFieldLevelEncryptionProfilesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8465,15 +8566,16 @@ func (fake *FakeCloudFrontAPI) ListFieldLevelEncryptionProfilesRequest(arg1 *clo
 	fake.listFieldLevelEncryptionProfilesRequestArgsForCall = append(fake.listFieldLevelEncryptionProfilesRequestArgsForCall, struct {
 		arg1 *cloudfront.ListFieldLevelEncryptionProfilesInput
 	}{arg1})
+	stub := fake.ListFieldLevelEncryptionProfilesRequestStub
+	fakeReturns := fake.listFieldLevelEncryptionProfilesRequestReturns
 	fake.recordInvocation("ListFieldLevelEncryptionProfilesRequest", []interface{}{arg1})
 	fake.listFieldLevelEncryptionProfilesRequestMutex.Unlock()
-	if fake.ListFieldLevelEncryptionProfilesRequestStub != nil {
-		return fake.ListFieldLevelEncryptionProfilesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listFieldLevelEncryptionProfilesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8530,15 +8632,16 @@ func (fake *FakeCloudFrontAPI) ListFieldLevelEncryptionProfilesWithContext(arg1 
 		arg2 *cloudfront.ListFieldLevelEncryptionProfilesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListFieldLevelEncryptionProfilesWithContextStub
+	fakeReturns := fake.listFieldLevelEncryptionProfilesWithContextReturns
 	fake.recordInvocation("ListFieldLevelEncryptionProfilesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listFieldLevelEncryptionProfilesWithContextMutex.Unlock()
-	if fake.ListFieldLevelEncryptionProfilesWithContextStub != nil {
-		return fake.ListFieldLevelEncryptionProfilesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listFieldLevelEncryptionProfilesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8593,15 +8696,16 @@ func (fake *FakeCloudFrontAPI) ListInvalidations(arg1 *cloudfront.ListInvalidati
 	fake.listInvalidationsArgsForCall = append(fake.listInvalidationsArgsForCall, struct {
 		arg1 *cloudfront.ListInvalidationsInput
 	}{arg1})
+	stub := fake.ListInvalidationsStub
+	fakeReturns := fake.listInvalidationsReturns
 	fake.recordInvocation("ListInvalidations", []interface{}{arg1})
 	fake.listInvalidationsMutex.Unlock()
-	if fake.ListInvalidationsStub != nil {
-		return fake.ListInvalidationsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listInvalidationsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8657,15 +8761,16 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPages(arg1 *cloudfront.ListInval
 		arg1 *cloudfront.ListInvalidationsInput
 		arg2 func(*cloudfront.ListInvalidationsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListInvalidationsPagesStub
+	fakeReturns := fake.listInvalidationsPagesReturns
 	fake.recordInvocation("ListInvalidationsPages", []interface{}{arg1, arg2})
 	fake.listInvalidationsPagesMutex.Unlock()
-	if fake.ListInvalidationsPagesStub != nil {
-		return fake.ListInvalidationsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listInvalidationsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -8720,15 +8825,16 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsPagesWithContext(arg1 context.Co
 		arg3 func(*cloudfront.ListInvalidationsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListInvalidationsPagesWithContextStub
+	fakeReturns := fake.listInvalidationsPagesWithContextReturns
 	fake.recordInvocation("ListInvalidationsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listInvalidationsPagesWithContextMutex.Unlock()
-	if fake.ListInvalidationsPagesWithContextStub != nil {
-		return fake.ListInvalidationsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listInvalidationsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -8780,15 +8886,16 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsRequest(arg1 *cloudfront.ListInv
 	fake.listInvalidationsRequestArgsForCall = append(fake.listInvalidationsRequestArgsForCall, struct {
 		arg1 *cloudfront.ListInvalidationsInput
 	}{arg1})
+	stub := fake.ListInvalidationsRequestStub
+	fakeReturns := fake.listInvalidationsRequestReturns
 	fake.recordInvocation("ListInvalidationsRequest", []interface{}{arg1})
 	fake.listInvalidationsRequestMutex.Unlock()
-	if fake.ListInvalidationsRequestStub != nil {
-		return fake.ListInvalidationsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listInvalidationsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8845,15 +8952,16 @@ func (fake *FakeCloudFrontAPI) ListInvalidationsWithContext(arg1 context.Context
 		arg2 *cloudfront.ListInvalidationsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListInvalidationsWithContextStub
+	fakeReturns := fake.listInvalidationsWithContextReturns
 	fake.recordInvocation("ListInvalidationsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listInvalidationsWithContextMutex.Unlock()
-	if fake.ListInvalidationsWithContextStub != nil {
-		return fake.ListInvalidationsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listInvalidationsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8908,15 +9016,16 @@ func (fake *FakeCloudFrontAPI) ListPublicKeys(arg1 *cloudfront.ListPublicKeysInp
 	fake.listPublicKeysArgsForCall = append(fake.listPublicKeysArgsForCall, struct {
 		arg1 *cloudfront.ListPublicKeysInput
 	}{arg1})
+	stub := fake.ListPublicKeysStub
+	fakeReturns := fake.listPublicKeysReturns
 	fake.recordInvocation("ListPublicKeys", []interface{}{arg1})
 	fake.listPublicKeysMutex.Unlock()
-	if fake.ListPublicKeysStub != nil {
-		return fake.ListPublicKeysStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listPublicKeysReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8971,15 +9080,16 @@ func (fake *FakeCloudFrontAPI) ListPublicKeysRequest(arg1 *cloudfront.ListPublic
 	fake.listPublicKeysRequestArgsForCall = append(fake.listPublicKeysRequestArgsForCall, struct {
 		arg1 *cloudfront.ListPublicKeysInput
 	}{arg1})
+	stub := fake.ListPublicKeysRequestStub
+	fakeReturns := fake.listPublicKeysRequestReturns
 	fake.recordInvocation("ListPublicKeysRequest", []interface{}{arg1})
 	fake.listPublicKeysRequestMutex.Unlock()
-	if fake.ListPublicKeysRequestStub != nil {
-		return fake.ListPublicKeysRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listPublicKeysRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9036,15 +9146,16 @@ func (fake *FakeCloudFrontAPI) ListPublicKeysWithContext(arg1 context.Context, a
 		arg2 *cloudfront.ListPublicKeysInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListPublicKeysWithContextStub
+	fakeReturns := fake.listPublicKeysWithContextReturns
 	fake.recordInvocation("ListPublicKeysWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listPublicKeysWithContextMutex.Unlock()
-	if fake.ListPublicKeysWithContextStub != nil {
-		return fake.ListPublicKeysWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listPublicKeysWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9099,15 +9210,16 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributions(arg1 *cloudfront.ListS
 	fake.listStreamingDistributionsArgsForCall = append(fake.listStreamingDistributionsArgsForCall, struct {
 		arg1 *cloudfront.ListStreamingDistributionsInput
 	}{arg1})
+	stub := fake.ListStreamingDistributionsStub
+	fakeReturns := fake.listStreamingDistributionsReturns
 	fake.recordInvocation("ListStreamingDistributions", []interface{}{arg1})
 	fake.listStreamingDistributionsMutex.Unlock()
-	if fake.ListStreamingDistributionsStub != nil {
-		return fake.ListStreamingDistributionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listStreamingDistributionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9163,15 +9275,16 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPages(arg1 *cloudfront.
 		arg1 *cloudfront.ListStreamingDistributionsInput
 		arg2 func(*cloudfront.ListStreamingDistributionsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListStreamingDistributionsPagesStub
+	fakeReturns := fake.listStreamingDistributionsPagesReturns
 	fake.recordInvocation("ListStreamingDistributionsPages", []interface{}{arg1, arg2})
 	fake.listStreamingDistributionsPagesMutex.Unlock()
-	if fake.ListStreamingDistributionsPagesStub != nil {
-		return fake.ListStreamingDistributionsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listStreamingDistributionsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -9226,15 +9339,16 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsPagesWithContext(arg1 c
 		arg3 func(*cloudfront.ListStreamingDistributionsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListStreamingDistributionsPagesWithContextStub
+	fakeReturns := fake.listStreamingDistributionsPagesWithContextReturns
 	fake.recordInvocation("ListStreamingDistributionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listStreamingDistributionsPagesWithContextMutex.Unlock()
-	if fake.ListStreamingDistributionsPagesWithContextStub != nil {
-		return fake.ListStreamingDistributionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listStreamingDistributionsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -9286,15 +9400,16 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsRequest(arg1 *cloudfron
 	fake.listStreamingDistributionsRequestArgsForCall = append(fake.listStreamingDistributionsRequestArgsForCall, struct {
 		arg1 *cloudfront.ListStreamingDistributionsInput
 	}{arg1})
+	stub := fake.ListStreamingDistributionsRequestStub
+	fakeReturns := fake.listStreamingDistributionsRequestReturns
 	fake.recordInvocation("ListStreamingDistributionsRequest", []interface{}{arg1})
 	fake.listStreamingDistributionsRequestMutex.Unlock()
-	if fake.ListStreamingDistributionsRequestStub != nil {
-		return fake.ListStreamingDistributionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listStreamingDistributionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9351,15 +9466,16 @@ func (fake *FakeCloudFrontAPI) ListStreamingDistributionsWithContext(arg1 contex
 		arg2 *cloudfront.ListStreamingDistributionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListStreamingDistributionsWithContextStub
+	fakeReturns := fake.listStreamingDistributionsWithContextReturns
 	fake.recordInvocation("ListStreamingDistributionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listStreamingDistributionsWithContextMutex.Unlock()
-	if fake.ListStreamingDistributionsWithContextStub != nil {
-		return fake.ListStreamingDistributionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listStreamingDistributionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9414,15 +9530,16 @@ func (fake *FakeCloudFrontAPI) ListTagsForResource(arg1 *cloudfront.ListTagsForR
 	fake.listTagsForResourceArgsForCall = append(fake.listTagsForResourceArgsForCall, struct {
 		arg1 *cloudfront.ListTagsForResourceInput
 	}{arg1})
+	stub := fake.ListTagsForResourceStub
+	fakeReturns := fake.listTagsForResourceReturns
 	fake.recordInvocation("ListTagsForResource", []interface{}{arg1})
 	fake.listTagsForResourceMutex.Unlock()
-	if fake.ListTagsForResourceStub != nil {
-		return fake.ListTagsForResourceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listTagsForResourceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9477,15 +9594,16 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceRequest(arg1 *cloudfront.ListT
 	fake.listTagsForResourceRequestArgsForCall = append(fake.listTagsForResourceRequestArgsForCall, struct {
 		arg1 *cloudfront.ListTagsForResourceInput
 	}{arg1})
+	stub := fake.ListTagsForResourceRequestStub
+	fakeReturns := fake.listTagsForResourceRequestReturns
 	fake.recordInvocation("ListTagsForResourceRequest", []interface{}{arg1})
 	fake.listTagsForResourceRequestMutex.Unlock()
-	if fake.ListTagsForResourceRequestStub != nil {
-		return fake.ListTagsForResourceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listTagsForResourceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9542,15 +9660,16 @@ func (fake *FakeCloudFrontAPI) ListTagsForResourceWithContext(arg1 context.Conte
 		arg2 *cloudfront.ListTagsForResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListTagsForResourceWithContextStub
+	fakeReturns := fake.listTagsForResourceWithContextReturns
 	fake.recordInvocation("ListTagsForResourceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listTagsForResourceWithContextMutex.Unlock()
-	if fake.ListTagsForResourceWithContextStub != nil {
-		return fake.ListTagsForResourceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listTagsForResourceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9605,15 +9724,16 @@ func (fake *FakeCloudFrontAPI) TagResource(arg1 *cloudfront.TagResourceInput) (*
 	fake.tagResourceArgsForCall = append(fake.tagResourceArgsForCall, struct {
 		arg1 *cloudfront.TagResourceInput
 	}{arg1})
+	stub := fake.TagResourceStub
+	fakeReturns := fake.tagResourceReturns
 	fake.recordInvocation("TagResource", []interface{}{arg1})
 	fake.tagResourceMutex.Unlock()
-	if fake.TagResourceStub != nil {
-		return fake.TagResourceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.tagResourceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9668,15 +9788,16 @@ func (fake *FakeCloudFrontAPI) TagResourceRequest(arg1 *cloudfront.TagResourceIn
 	fake.tagResourceRequestArgsForCall = append(fake.tagResourceRequestArgsForCall, struct {
 		arg1 *cloudfront.TagResourceInput
 	}{arg1})
+	stub := fake.TagResourceRequestStub
+	fakeReturns := fake.tagResourceRequestReturns
 	fake.recordInvocation("TagResourceRequest", []interface{}{arg1})
 	fake.tagResourceRequestMutex.Unlock()
-	if fake.TagResourceRequestStub != nil {
-		return fake.TagResourceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.tagResourceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9733,15 +9854,16 @@ func (fake *FakeCloudFrontAPI) TagResourceWithContext(arg1 context.Context, arg2
 		arg2 *cloudfront.TagResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.TagResourceWithContextStub
+	fakeReturns := fake.tagResourceWithContextReturns
 	fake.recordInvocation("TagResourceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.tagResourceWithContextMutex.Unlock()
-	if fake.TagResourceWithContextStub != nil {
-		return fake.TagResourceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.tagResourceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9796,15 +9918,16 @@ func (fake *FakeCloudFrontAPI) UntagResource(arg1 *cloudfront.UntagResourceInput
 	fake.untagResourceArgsForCall = append(fake.untagResourceArgsForCall, struct {
 		arg1 *cloudfront.UntagResourceInput
 	}{arg1})
+	stub := fake.UntagResourceStub
+	fakeReturns := fake.untagResourceReturns
 	fake.recordInvocation("UntagResource", []interface{}{arg1})
 	fake.untagResourceMutex.Unlock()
-	if fake.UntagResourceStub != nil {
-		return fake.UntagResourceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.untagResourceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9859,15 +9982,16 @@ func (fake *FakeCloudFrontAPI) UntagResourceRequest(arg1 *cloudfront.UntagResour
 	fake.untagResourceRequestArgsForCall = append(fake.untagResourceRequestArgsForCall, struct {
 		arg1 *cloudfront.UntagResourceInput
 	}{arg1})
+	stub := fake.UntagResourceRequestStub
+	fakeReturns := fake.untagResourceRequestReturns
 	fake.recordInvocation("UntagResourceRequest", []interface{}{arg1})
 	fake.untagResourceRequestMutex.Unlock()
-	if fake.UntagResourceRequestStub != nil {
-		return fake.UntagResourceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.untagResourceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9924,15 +10048,16 @@ func (fake *FakeCloudFrontAPI) UntagResourceWithContext(arg1 context.Context, ar
 		arg2 *cloudfront.UntagResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UntagResourceWithContextStub
+	fakeReturns := fake.untagResourceWithContextReturns
 	fake.recordInvocation("UntagResourceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.untagResourceWithContextMutex.Unlock()
-	if fake.UntagResourceWithContextStub != nil {
-		return fake.UntagResourceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.untagResourceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9987,15 +10112,16 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentity(arg1 *cloudf
 	fake.updateCloudFrontOriginAccessIdentityArgsForCall = append(fake.updateCloudFrontOriginAccessIdentityArgsForCall, struct {
 		arg1 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.UpdateCloudFrontOriginAccessIdentityStub
+	fakeReturns := fake.updateCloudFrontOriginAccessIdentityReturns
 	fake.recordInvocation("UpdateCloudFrontOriginAccessIdentity", []interface{}{arg1})
 	fake.updateCloudFrontOriginAccessIdentityMutex.Unlock()
-	if fake.UpdateCloudFrontOriginAccessIdentityStub != nil {
-		return fake.UpdateCloudFrontOriginAccessIdentityStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateCloudFrontOriginAccessIdentityReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10050,15 +10176,16 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityRequest(arg1 
 	fake.updateCloudFrontOriginAccessIdentityRequestArgsForCall = append(fake.updateCloudFrontOriginAccessIdentityRequestArgsForCall, struct {
 		arg1 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput
 	}{arg1})
+	stub := fake.UpdateCloudFrontOriginAccessIdentityRequestStub
+	fakeReturns := fake.updateCloudFrontOriginAccessIdentityRequestReturns
 	fake.recordInvocation("UpdateCloudFrontOriginAccessIdentityRequest", []interface{}{arg1})
 	fake.updateCloudFrontOriginAccessIdentityRequestMutex.Unlock()
-	if fake.UpdateCloudFrontOriginAccessIdentityRequestStub != nil {
-		return fake.UpdateCloudFrontOriginAccessIdentityRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateCloudFrontOriginAccessIdentityRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10115,15 +10242,16 @@ func (fake *FakeCloudFrontAPI) UpdateCloudFrontOriginAccessIdentityWithContext(a
 		arg2 *cloudfront.UpdateCloudFrontOriginAccessIdentityInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UpdateCloudFrontOriginAccessIdentityWithContextStub
+	fakeReturns := fake.updateCloudFrontOriginAccessIdentityWithContextReturns
 	fake.recordInvocation("UpdateCloudFrontOriginAccessIdentityWithContext", []interface{}{arg1, arg2, arg3})
 	fake.updateCloudFrontOriginAccessIdentityWithContextMutex.Unlock()
-	if fake.UpdateCloudFrontOriginAccessIdentityWithContextStub != nil {
-		return fake.UpdateCloudFrontOriginAccessIdentityWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateCloudFrontOriginAccessIdentityWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10178,15 +10306,16 @@ func (fake *FakeCloudFrontAPI) UpdateDistribution(arg1 *cloudfront.UpdateDistrib
 	fake.updateDistributionArgsForCall = append(fake.updateDistributionArgsForCall, struct {
 		arg1 *cloudfront.UpdateDistributionInput
 	}{arg1})
+	stub := fake.UpdateDistributionStub
+	fakeReturns := fake.updateDistributionReturns
 	fake.recordInvocation("UpdateDistribution", []interface{}{arg1})
 	fake.updateDistributionMutex.Unlock()
-	if fake.UpdateDistributionStub != nil {
-		return fake.UpdateDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10241,15 +10370,16 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionRequest(arg1 *cloudfront.Update
 	fake.updateDistributionRequestArgsForCall = append(fake.updateDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.UpdateDistributionInput
 	}{arg1})
+	stub := fake.UpdateDistributionRequestStub
+	fakeReturns := fake.updateDistributionRequestReturns
 	fake.recordInvocation("UpdateDistributionRequest", []interface{}{arg1})
 	fake.updateDistributionRequestMutex.Unlock()
-	if fake.UpdateDistributionRequestStub != nil {
-		return fake.UpdateDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10306,15 +10436,16 @@ func (fake *FakeCloudFrontAPI) UpdateDistributionWithContext(arg1 context.Contex
 		arg2 *cloudfront.UpdateDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UpdateDistributionWithContextStub
+	fakeReturns := fake.updateDistributionWithContextReturns
 	fake.recordInvocation("UpdateDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.updateDistributionWithContextMutex.Unlock()
-	if fake.UpdateDistributionWithContextStub != nil {
-		return fake.UpdateDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10369,15 +10500,16 @@ func (fake *FakeCloudFrontAPI) UpdateFieldLevelEncryptionConfig(arg1 *cloudfront
 	fake.updateFieldLevelEncryptionConfigArgsForCall = append(fake.updateFieldLevelEncryptionConfigArgsForCall, struct {
 		arg1 *cloudfront.UpdateFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.UpdateFieldLevelEncryptionConfigStub
+	fakeReturns := fake.updateFieldLevelEncryptionConfigReturns
 	fake.recordInvocation("UpdateFieldLevelEncryptionConfig", []interface{}{arg1})
 	fake.updateFieldLevelEncryptionConfigMutex.Unlock()
-	if fake.UpdateFieldLevelEncryptionConfigStub != nil {
-		return fake.UpdateFieldLevelEncryptionConfigStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateFieldLevelEncryptionConfigReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10432,15 +10564,16 @@ func (fake *FakeCloudFrontAPI) UpdateFieldLevelEncryptionConfigRequest(arg1 *clo
 	fake.updateFieldLevelEncryptionConfigRequestArgsForCall = append(fake.updateFieldLevelEncryptionConfigRequestArgsForCall, struct {
 		arg1 *cloudfront.UpdateFieldLevelEncryptionConfigInput
 	}{arg1})
+	stub := fake.UpdateFieldLevelEncryptionConfigRequestStub
+	fakeReturns := fake.updateFieldLevelEncryptionConfigRequestReturns
 	fake.recordInvocation("UpdateFieldLevelEncryptionConfigRequest", []interface{}{arg1})
 	fake.updateFieldLevelEncryptionConfigRequestMutex.Unlock()
-	if fake.UpdateFieldLevelEncryptionConfigRequestStub != nil {
-		return fake.UpdateFieldLevelEncryptionConfigRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateFieldLevelEncryptionConfigRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10497,15 +10630,16 @@ func (fake *FakeCloudFrontAPI) UpdateFieldLevelEncryptionConfigWithContext(arg1 
 		arg2 *cloudfront.UpdateFieldLevelEncryptionConfigInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UpdateFieldLevelEncryptionConfigWithContextStub
+	fakeReturns := fake.updateFieldLevelEncryptionConfigWithContextReturns
 	fake.recordInvocation("UpdateFieldLevelEncryptionConfigWithContext", []interface{}{arg1, arg2, arg3})
 	fake.updateFieldLevelEncryptionConfigWithContextMutex.Unlock()
-	if fake.UpdateFieldLevelEncryptionConfigWithContextStub != nil {
-		return fake.UpdateFieldLevelEncryptionConfigWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateFieldLevelEncryptionConfigWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10560,15 +10694,16 @@ func (fake *FakeCloudFrontAPI) UpdateFieldLevelEncryptionProfile(arg1 *cloudfron
 	fake.updateFieldLevelEncryptionProfileArgsForCall = append(fake.updateFieldLevelEncryptionProfileArgsForCall, struct {
 		arg1 *cloudfront.UpdateFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.UpdateFieldLevelEncryptionProfileStub
+	fakeReturns := fake.updateFieldLevelEncryptionProfileReturns
 	fake.recordInvocation("UpdateFieldLevelEncryptionProfile", []interface{}{arg1})
 	fake.updateFieldLevelEncryptionProfileMutex.Unlock()
-	if fake.UpdateFieldLevelEncryptionProfileStub != nil {
-		return fake.UpdateFieldLevelEncryptionProfileStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateFieldLevelEncryptionProfileReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10623,15 +10758,16 @@ func (fake *FakeCloudFrontAPI) UpdateFieldLevelEncryptionProfileRequest(arg1 *cl
 	fake.updateFieldLevelEncryptionProfileRequestArgsForCall = append(fake.updateFieldLevelEncryptionProfileRequestArgsForCall, struct {
 		arg1 *cloudfront.UpdateFieldLevelEncryptionProfileInput
 	}{arg1})
+	stub := fake.UpdateFieldLevelEncryptionProfileRequestStub
+	fakeReturns := fake.updateFieldLevelEncryptionProfileRequestReturns
 	fake.recordInvocation("UpdateFieldLevelEncryptionProfileRequest", []interface{}{arg1})
 	fake.updateFieldLevelEncryptionProfileRequestMutex.Unlock()
-	if fake.UpdateFieldLevelEncryptionProfileRequestStub != nil {
-		return fake.UpdateFieldLevelEncryptionProfileRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateFieldLevelEncryptionProfileRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10688,15 +10824,16 @@ func (fake *FakeCloudFrontAPI) UpdateFieldLevelEncryptionProfileWithContext(arg1
 		arg2 *cloudfront.UpdateFieldLevelEncryptionProfileInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UpdateFieldLevelEncryptionProfileWithContextStub
+	fakeReturns := fake.updateFieldLevelEncryptionProfileWithContextReturns
 	fake.recordInvocation("UpdateFieldLevelEncryptionProfileWithContext", []interface{}{arg1, arg2, arg3})
 	fake.updateFieldLevelEncryptionProfileWithContextMutex.Unlock()
-	if fake.UpdateFieldLevelEncryptionProfileWithContextStub != nil {
-		return fake.UpdateFieldLevelEncryptionProfileWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateFieldLevelEncryptionProfileWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10751,15 +10888,16 @@ func (fake *FakeCloudFrontAPI) UpdatePublicKey(arg1 *cloudfront.UpdatePublicKeyI
 	fake.updatePublicKeyArgsForCall = append(fake.updatePublicKeyArgsForCall, struct {
 		arg1 *cloudfront.UpdatePublicKeyInput
 	}{arg1})
+	stub := fake.UpdatePublicKeyStub
+	fakeReturns := fake.updatePublicKeyReturns
 	fake.recordInvocation("UpdatePublicKey", []interface{}{arg1})
 	fake.updatePublicKeyMutex.Unlock()
-	if fake.UpdatePublicKeyStub != nil {
-		return fake.UpdatePublicKeyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updatePublicKeyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10814,15 +10952,16 @@ func (fake *FakeCloudFrontAPI) UpdatePublicKeyRequest(arg1 *cloudfront.UpdatePub
 	fake.updatePublicKeyRequestArgsForCall = append(fake.updatePublicKeyRequestArgsForCall, struct {
 		arg1 *cloudfront.UpdatePublicKeyInput
 	}{arg1})
+	stub := fake.UpdatePublicKeyRequestStub
+	fakeReturns := fake.updatePublicKeyRequestReturns
 	fake.recordInvocation("UpdatePublicKeyRequest", []interface{}{arg1})
 	fake.updatePublicKeyRequestMutex.Unlock()
-	if fake.UpdatePublicKeyRequestStub != nil {
-		return fake.UpdatePublicKeyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updatePublicKeyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10879,15 +11018,16 @@ func (fake *FakeCloudFrontAPI) UpdatePublicKeyWithContext(arg1 context.Context, 
 		arg2 *cloudfront.UpdatePublicKeyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UpdatePublicKeyWithContextStub
+	fakeReturns := fake.updatePublicKeyWithContextReturns
 	fake.recordInvocation("UpdatePublicKeyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.updatePublicKeyWithContextMutex.Unlock()
-	if fake.UpdatePublicKeyWithContextStub != nil {
-		return fake.UpdatePublicKeyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updatePublicKeyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10942,15 +11082,16 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistribution(arg1 *cloudfront.Upda
 	fake.updateStreamingDistributionArgsForCall = append(fake.updateStreamingDistributionArgsForCall, struct {
 		arg1 *cloudfront.UpdateStreamingDistributionInput
 	}{arg1})
+	stub := fake.UpdateStreamingDistributionStub
+	fakeReturns := fake.updateStreamingDistributionReturns
 	fake.recordInvocation("UpdateStreamingDistribution", []interface{}{arg1})
 	fake.updateStreamingDistributionMutex.Unlock()
-	if fake.UpdateStreamingDistributionStub != nil {
-		return fake.UpdateStreamingDistributionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateStreamingDistributionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11005,15 +11146,16 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionRequest(arg1 *cloudfro
 	fake.updateStreamingDistributionRequestArgsForCall = append(fake.updateStreamingDistributionRequestArgsForCall, struct {
 		arg1 *cloudfront.UpdateStreamingDistributionInput
 	}{arg1})
+	stub := fake.UpdateStreamingDistributionRequestStub
+	fakeReturns := fake.updateStreamingDistributionRequestReturns
 	fake.recordInvocation("UpdateStreamingDistributionRequest", []interface{}{arg1})
 	fake.updateStreamingDistributionRequestMutex.Unlock()
-	if fake.UpdateStreamingDistributionRequestStub != nil {
-		return fake.UpdateStreamingDistributionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateStreamingDistributionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11070,15 +11212,16 @@ func (fake *FakeCloudFrontAPI) UpdateStreamingDistributionWithContext(arg1 conte
 		arg2 *cloudfront.UpdateStreamingDistributionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UpdateStreamingDistributionWithContextStub
+	fakeReturns := fake.updateStreamingDistributionWithContextReturns
 	fake.recordInvocation("UpdateStreamingDistributionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.updateStreamingDistributionWithContextMutex.Unlock()
-	if fake.UpdateStreamingDistributionWithContextStub != nil {
-		return fake.UpdateStreamingDistributionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.updateStreamingDistributionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11133,15 +11276,16 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployed(arg1 *cloudfront.Ge
 	fake.waitUntilDistributionDeployedArgsForCall = append(fake.waitUntilDistributionDeployedArgsForCall, struct {
 		arg1 *cloudfront.GetDistributionInput
 	}{arg1})
+	stub := fake.WaitUntilDistributionDeployedStub
+	fakeReturns := fake.waitUntilDistributionDeployedReturns
 	fake.recordInvocation("WaitUntilDistributionDeployed", []interface{}{arg1})
 	fake.waitUntilDistributionDeployedMutex.Unlock()
-	if fake.WaitUntilDistributionDeployedStub != nil {
-		return fake.WaitUntilDistributionDeployedStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDistributionDeployedReturns
 	return fakeReturns.result1
 }
 
@@ -11195,15 +11339,16 @@ func (fake *FakeCloudFrontAPI) WaitUntilDistributionDeployedWithContext(arg1 con
 		arg2 *cloudfront.GetDistributionInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilDistributionDeployedWithContextStub
+	fakeReturns := fake.waitUntilDistributionDeployedWithContextReturns
 	fake.recordInvocation("WaitUntilDistributionDeployedWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilDistributionDeployedWithContextMutex.Unlock()
-	if fake.WaitUntilDistributionDeployedWithContextStub != nil {
-		return fake.WaitUntilDistributionDeployedWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDistributionDeployedWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -11255,15 +11400,16 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompleted(arg1 *cloudfront.G
 	fake.waitUntilInvalidationCompletedArgsForCall = append(fake.waitUntilInvalidationCompletedArgsForCall, struct {
 		arg1 *cloudfront.GetInvalidationInput
 	}{arg1})
+	stub := fake.WaitUntilInvalidationCompletedStub
+	fakeReturns := fake.waitUntilInvalidationCompletedReturns
 	fake.recordInvocation("WaitUntilInvalidationCompleted", []interface{}{arg1})
 	fake.waitUntilInvalidationCompletedMutex.Unlock()
-	if fake.WaitUntilInvalidationCompletedStub != nil {
-		return fake.WaitUntilInvalidationCompletedStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilInvalidationCompletedReturns
 	return fakeReturns.result1
 }
 
@@ -11317,15 +11463,16 @@ func (fake *FakeCloudFrontAPI) WaitUntilInvalidationCompletedWithContext(arg1 co
 		arg2 *cloudfront.GetInvalidationInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilInvalidationCompletedWithContextStub
+	fakeReturns := fake.waitUntilInvalidationCompletedWithContextReturns
 	fake.recordInvocation("WaitUntilInvalidationCompletedWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilInvalidationCompletedWithContextMutex.Unlock()
-	if fake.WaitUntilInvalidationCompletedWithContextStub != nil {
-		return fake.WaitUntilInvalidationCompletedWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilInvalidationCompletedWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -11377,15 +11524,16 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployed(arg1 *clou
 	fake.waitUntilStreamingDistributionDeployedArgsForCall = append(fake.waitUntilStreamingDistributionDeployedArgsForCall, struct {
 		arg1 *cloudfront.GetStreamingDistributionInput
 	}{arg1})
+	stub := fake.WaitUntilStreamingDistributionDeployedStub
+	fakeReturns := fake.waitUntilStreamingDistributionDeployedReturns
 	fake.recordInvocation("WaitUntilStreamingDistributionDeployed", []interface{}{arg1})
 	fake.waitUntilStreamingDistributionDeployedMutex.Unlock()
-	if fake.WaitUntilStreamingDistributionDeployedStub != nil {
-		return fake.WaitUntilStreamingDistributionDeployedStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilStreamingDistributionDeployedReturns
 	return fakeReturns.result1
 }
 
@@ -11439,15 +11587,16 @@ func (fake *FakeCloudFrontAPI) WaitUntilStreamingDistributionDeployedWithContext
 		arg2 *cloudfront.GetStreamingDistributionInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilStreamingDistributionDeployedWithContextStub
+	fakeReturns := fake.waitUntilStreamingDistributionDeployedWithContextReturns
 	fake.recordInvocation("WaitUntilStreamingDistributionDeployedWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilStreamingDistributionDeployedWithContextMutex.Unlock()
-	if fake.WaitUntilStreamingDistributionDeployedWithContextStub != nil {
-		return fake.WaitUntilStreamingDistributionDeployedWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilStreamingDistributionDeployedWithContextReturns
 	return fakeReturns.result1
 }
 

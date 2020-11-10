@@ -6171,15 +6171,16 @@ func (fake *FakeRDSAPI) AddRoleToDBCluster(arg1 *rds.AddRoleToDBClusterInput) (*
 	fake.addRoleToDBClusterArgsForCall = append(fake.addRoleToDBClusterArgsForCall, struct {
 		arg1 *rds.AddRoleToDBClusterInput
 	}{arg1})
+	stub := fake.AddRoleToDBClusterStub
+	fakeReturns := fake.addRoleToDBClusterReturns
 	fake.recordInvocation("AddRoleToDBCluster", []interface{}{arg1})
 	fake.addRoleToDBClusterMutex.Unlock()
-	if fake.AddRoleToDBClusterStub != nil {
-		return fake.AddRoleToDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addRoleToDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6234,15 +6235,16 @@ func (fake *FakeRDSAPI) AddRoleToDBClusterRequest(arg1 *rds.AddRoleToDBClusterIn
 	fake.addRoleToDBClusterRequestArgsForCall = append(fake.addRoleToDBClusterRequestArgsForCall, struct {
 		arg1 *rds.AddRoleToDBClusterInput
 	}{arg1})
+	stub := fake.AddRoleToDBClusterRequestStub
+	fakeReturns := fake.addRoleToDBClusterRequestReturns
 	fake.recordInvocation("AddRoleToDBClusterRequest", []interface{}{arg1})
 	fake.addRoleToDBClusterRequestMutex.Unlock()
-	if fake.AddRoleToDBClusterRequestStub != nil {
-		return fake.AddRoleToDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addRoleToDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6299,15 +6301,16 @@ func (fake *FakeRDSAPI) AddRoleToDBClusterWithContext(arg1 context.Context, arg2
 		arg2 *rds.AddRoleToDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.AddRoleToDBClusterWithContextStub
+	fakeReturns := fake.addRoleToDBClusterWithContextReturns
 	fake.recordInvocation("AddRoleToDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.addRoleToDBClusterWithContextMutex.Unlock()
-	if fake.AddRoleToDBClusterWithContextStub != nil {
-		return fake.AddRoleToDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addRoleToDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6362,15 +6365,16 @@ func (fake *FakeRDSAPI) AddRoleToDBInstance(arg1 *rds.AddRoleToDBInstanceInput) 
 	fake.addRoleToDBInstanceArgsForCall = append(fake.addRoleToDBInstanceArgsForCall, struct {
 		arg1 *rds.AddRoleToDBInstanceInput
 	}{arg1})
+	stub := fake.AddRoleToDBInstanceStub
+	fakeReturns := fake.addRoleToDBInstanceReturns
 	fake.recordInvocation("AddRoleToDBInstance", []interface{}{arg1})
 	fake.addRoleToDBInstanceMutex.Unlock()
-	if fake.AddRoleToDBInstanceStub != nil {
-		return fake.AddRoleToDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addRoleToDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6425,15 +6429,16 @@ func (fake *FakeRDSAPI) AddRoleToDBInstanceRequest(arg1 *rds.AddRoleToDBInstance
 	fake.addRoleToDBInstanceRequestArgsForCall = append(fake.addRoleToDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.AddRoleToDBInstanceInput
 	}{arg1})
+	stub := fake.AddRoleToDBInstanceRequestStub
+	fakeReturns := fake.addRoleToDBInstanceRequestReturns
 	fake.recordInvocation("AddRoleToDBInstanceRequest", []interface{}{arg1})
 	fake.addRoleToDBInstanceRequestMutex.Unlock()
-	if fake.AddRoleToDBInstanceRequestStub != nil {
-		return fake.AddRoleToDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addRoleToDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6490,15 +6495,16 @@ func (fake *FakeRDSAPI) AddRoleToDBInstanceWithContext(arg1 context.Context, arg
 		arg2 *rds.AddRoleToDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.AddRoleToDBInstanceWithContextStub
+	fakeReturns := fake.addRoleToDBInstanceWithContextReturns
 	fake.recordInvocation("AddRoleToDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.addRoleToDBInstanceWithContextMutex.Unlock()
-	if fake.AddRoleToDBInstanceWithContextStub != nil {
-		return fake.AddRoleToDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addRoleToDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6553,15 +6559,16 @@ func (fake *FakeRDSAPI) AddSourceIdentifierToSubscription(arg1 *rds.AddSourceIde
 	fake.addSourceIdentifierToSubscriptionArgsForCall = append(fake.addSourceIdentifierToSubscriptionArgsForCall, struct {
 		arg1 *rds.AddSourceIdentifierToSubscriptionInput
 	}{arg1})
+	stub := fake.AddSourceIdentifierToSubscriptionStub
+	fakeReturns := fake.addSourceIdentifierToSubscriptionReturns
 	fake.recordInvocation("AddSourceIdentifierToSubscription", []interface{}{arg1})
 	fake.addSourceIdentifierToSubscriptionMutex.Unlock()
-	if fake.AddSourceIdentifierToSubscriptionStub != nil {
-		return fake.AddSourceIdentifierToSubscriptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addSourceIdentifierToSubscriptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6616,15 +6623,16 @@ func (fake *FakeRDSAPI) AddSourceIdentifierToSubscriptionRequest(arg1 *rds.AddSo
 	fake.addSourceIdentifierToSubscriptionRequestArgsForCall = append(fake.addSourceIdentifierToSubscriptionRequestArgsForCall, struct {
 		arg1 *rds.AddSourceIdentifierToSubscriptionInput
 	}{arg1})
+	stub := fake.AddSourceIdentifierToSubscriptionRequestStub
+	fakeReturns := fake.addSourceIdentifierToSubscriptionRequestReturns
 	fake.recordInvocation("AddSourceIdentifierToSubscriptionRequest", []interface{}{arg1})
 	fake.addSourceIdentifierToSubscriptionRequestMutex.Unlock()
-	if fake.AddSourceIdentifierToSubscriptionRequestStub != nil {
-		return fake.AddSourceIdentifierToSubscriptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addSourceIdentifierToSubscriptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6681,15 +6689,16 @@ func (fake *FakeRDSAPI) AddSourceIdentifierToSubscriptionWithContext(arg1 contex
 		arg2 *rds.AddSourceIdentifierToSubscriptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.AddSourceIdentifierToSubscriptionWithContextStub
+	fakeReturns := fake.addSourceIdentifierToSubscriptionWithContextReturns
 	fake.recordInvocation("AddSourceIdentifierToSubscriptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.addSourceIdentifierToSubscriptionWithContextMutex.Unlock()
-	if fake.AddSourceIdentifierToSubscriptionWithContextStub != nil {
-		return fake.AddSourceIdentifierToSubscriptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addSourceIdentifierToSubscriptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6744,15 +6753,16 @@ func (fake *FakeRDSAPI) AddTagsToResource(arg1 *rds.AddTagsToResourceInput) (*rd
 	fake.addTagsToResourceArgsForCall = append(fake.addTagsToResourceArgsForCall, struct {
 		arg1 *rds.AddTagsToResourceInput
 	}{arg1})
+	stub := fake.AddTagsToResourceStub
+	fakeReturns := fake.addTagsToResourceReturns
 	fake.recordInvocation("AddTagsToResource", []interface{}{arg1})
 	fake.addTagsToResourceMutex.Unlock()
-	if fake.AddTagsToResourceStub != nil {
-		return fake.AddTagsToResourceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addTagsToResourceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6807,15 +6817,16 @@ func (fake *FakeRDSAPI) AddTagsToResourceRequest(arg1 *rds.AddTagsToResourceInpu
 	fake.addTagsToResourceRequestArgsForCall = append(fake.addTagsToResourceRequestArgsForCall, struct {
 		arg1 *rds.AddTagsToResourceInput
 	}{arg1})
+	stub := fake.AddTagsToResourceRequestStub
+	fakeReturns := fake.addTagsToResourceRequestReturns
 	fake.recordInvocation("AddTagsToResourceRequest", []interface{}{arg1})
 	fake.addTagsToResourceRequestMutex.Unlock()
-	if fake.AddTagsToResourceRequestStub != nil {
-		return fake.AddTagsToResourceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addTagsToResourceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6872,15 +6883,16 @@ func (fake *FakeRDSAPI) AddTagsToResourceWithContext(arg1 context.Context, arg2 
 		arg2 *rds.AddTagsToResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.AddTagsToResourceWithContextStub
+	fakeReturns := fake.addTagsToResourceWithContextReturns
 	fake.recordInvocation("AddTagsToResourceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.addTagsToResourceWithContextMutex.Unlock()
-	if fake.AddTagsToResourceWithContextStub != nil {
-		return fake.AddTagsToResourceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.addTagsToResourceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6935,15 +6947,16 @@ func (fake *FakeRDSAPI) ApplyPendingMaintenanceAction(arg1 *rds.ApplyPendingMain
 	fake.applyPendingMaintenanceActionArgsForCall = append(fake.applyPendingMaintenanceActionArgsForCall, struct {
 		arg1 *rds.ApplyPendingMaintenanceActionInput
 	}{arg1})
+	stub := fake.ApplyPendingMaintenanceActionStub
+	fakeReturns := fake.applyPendingMaintenanceActionReturns
 	fake.recordInvocation("ApplyPendingMaintenanceAction", []interface{}{arg1})
 	fake.applyPendingMaintenanceActionMutex.Unlock()
-	if fake.ApplyPendingMaintenanceActionStub != nil {
-		return fake.ApplyPendingMaintenanceActionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.applyPendingMaintenanceActionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6998,15 +7011,16 @@ func (fake *FakeRDSAPI) ApplyPendingMaintenanceActionRequest(arg1 *rds.ApplyPend
 	fake.applyPendingMaintenanceActionRequestArgsForCall = append(fake.applyPendingMaintenanceActionRequestArgsForCall, struct {
 		arg1 *rds.ApplyPendingMaintenanceActionInput
 	}{arg1})
+	stub := fake.ApplyPendingMaintenanceActionRequestStub
+	fakeReturns := fake.applyPendingMaintenanceActionRequestReturns
 	fake.recordInvocation("ApplyPendingMaintenanceActionRequest", []interface{}{arg1})
 	fake.applyPendingMaintenanceActionRequestMutex.Unlock()
-	if fake.ApplyPendingMaintenanceActionRequestStub != nil {
-		return fake.ApplyPendingMaintenanceActionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.applyPendingMaintenanceActionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7063,15 +7077,16 @@ func (fake *FakeRDSAPI) ApplyPendingMaintenanceActionWithContext(arg1 context.Co
 		arg2 *rds.ApplyPendingMaintenanceActionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ApplyPendingMaintenanceActionWithContextStub
+	fakeReturns := fake.applyPendingMaintenanceActionWithContextReturns
 	fake.recordInvocation("ApplyPendingMaintenanceActionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.applyPendingMaintenanceActionWithContextMutex.Unlock()
-	if fake.ApplyPendingMaintenanceActionWithContextStub != nil {
-		return fake.ApplyPendingMaintenanceActionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.applyPendingMaintenanceActionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7126,15 +7141,16 @@ func (fake *FakeRDSAPI) AuthorizeDBSecurityGroupIngress(arg1 *rds.AuthorizeDBSec
 	fake.authorizeDBSecurityGroupIngressArgsForCall = append(fake.authorizeDBSecurityGroupIngressArgsForCall, struct {
 		arg1 *rds.AuthorizeDBSecurityGroupIngressInput
 	}{arg1})
+	stub := fake.AuthorizeDBSecurityGroupIngressStub
+	fakeReturns := fake.authorizeDBSecurityGroupIngressReturns
 	fake.recordInvocation("AuthorizeDBSecurityGroupIngress", []interface{}{arg1})
 	fake.authorizeDBSecurityGroupIngressMutex.Unlock()
-	if fake.AuthorizeDBSecurityGroupIngressStub != nil {
-		return fake.AuthorizeDBSecurityGroupIngressStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.authorizeDBSecurityGroupIngressReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7189,15 +7205,16 @@ func (fake *FakeRDSAPI) AuthorizeDBSecurityGroupIngressRequest(arg1 *rds.Authori
 	fake.authorizeDBSecurityGroupIngressRequestArgsForCall = append(fake.authorizeDBSecurityGroupIngressRequestArgsForCall, struct {
 		arg1 *rds.AuthorizeDBSecurityGroupIngressInput
 	}{arg1})
+	stub := fake.AuthorizeDBSecurityGroupIngressRequestStub
+	fakeReturns := fake.authorizeDBSecurityGroupIngressRequestReturns
 	fake.recordInvocation("AuthorizeDBSecurityGroupIngressRequest", []interface{}{arg1})
 	fake.authorizeDBSecurityGroupIngressRequestMutex.Unlock()
-	if fake.AuthorizeDBSecurityGroupIngressRequestStub != nil {
-		return fake.AuthorizeDBSecurityGroupIngressRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.authorizeDBSecurityGroupIngressRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7254,15 +7271,16 @@ func (fake *FakeRDSAPI) AuthorizeDBSecurityGroupIngressWithContext(arg1 context.
 		arg2 *rds.AuthorizeDBSecurityGroupIngressInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.AuthorizeDBSecurityGroupIngressWithContextStub
+	fakeReturns := fake.authorizeDBSecurityGroupIngressWithContextReturns
 	fake.recordInvocation("AuthorizeDBSecurityGroupIngressWithContext", []interface{}{arg1, arg2, arg3})
 	fake.authorizeDBSecurityGroupIngressWithContextMutex.Unlock()
-	if fake.AuthorizeDBSecurityGroupIngressWithContextStub != nil {
-		return fake.AuthorizeDBSecurityGroupIngressWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.authorizeDBSecurityGroupIngressWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7317,15 +7335,16 @@ func (fake *FakeRDSAPI) BacktrackDBCluster(arg1 *rds.BacktrackDBClusterInput) (*
 	fake.backtrackDBClusterArgsForCall = append(fake.backtrackDBClusterArgsForCall, struct {
 		arg1 *rds.BacktrackDBClusterInput
 	}{arg1})
+	stub := fake.BacktrackDBClusterStub
+	fakeReturns := fake.backtrackDBClusterReturns
 	fake.recordInvocation("BacktrackDBCluster", []interface{}{arg1})
 	fake.backtrackDBClusterMutex.Unlock()
-	if fake.BacktrackDBClusterStub != nil {
-		return fake.BacktrackDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.backtrackDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7380,15 +7399,16 @@ func (fake *FakeRDSAPI) BacktrackDBClusterRequest(arg1 *rds.BacktrackDBClusterIn
 	fake.backtrackDBClusterRequestArgsForCall = append(fake.backtrackDBClusterRequestArgsForCall, struct {
 		arg1 *rds.BacktrackDBClusterInput
 	}{arg1})
+	stub := fake.BacktrackDBClusterRequestStub
+	fakeReturns := fake.backtrackDBClusterRequestReturns
 	fake.recordInvocation("BacktrackDBClusterRequest", []interface{}{arg1})
 	fake.backtrackDBClusterRequestMutex.Unlock()
-	if fake.BacktrackDBClusterRequestStub != nil {
-		return fake.BacktrackDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.backtrackDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7445,15 +7465,16 @@ func (fake *FakeRDSAPI) BacktrackDBClusterWithContext(arg1 context.Context, arg2
 		arg2 *rds.BacktrackDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.BacktrackDBClusterWithContextStub
+	fakeReturns := fake.backtrackDBClusterWithContextReturns
 	fake.recordInvocation("BacktrackDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.backtrackDBClusterWithContextMutex.Unlock()
-	if fake.BacktrackDBClusterWithContextStub != nil {
-		return fake.BacktrackDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.backtrackDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7508,15 +7529,16 @@ func (fake *FakeRDSAPI) CancelExportTask(arg1 *rds.CancelExportTaskInput) (*rds.
 	fake.cancelExportTaskArgsForCall = append(fake.cancelExportTaskArgsForCall, struct {
 		arg1 *rds.CancelExportTaskInput
 	}{arg1})
+	stub := fake.CancelExportTaskStub
+	fakeReturns := fake.cancelExportTaskReturns
 	fake.recordInvocation("CancelExportTask", []interface{}{arg1})
 	fake.cancelExportTaskMutex.Unlock()
-	if fake.CancelExportTaskStub != nil {
-		return fake.CancelExportTaskStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.cancelExportTaskReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7571,15 +7593,16 @@ func (fake *FakeRDSAPI) CancelExportTaskRequest(arg1 *rds.CancelExportTaskInput)
 	fake.cancelExportTaskRequestArgsForCall = append(fake.cancelExportTaskRequestArgsForCall, struct {
 		arg1 *rds.CancelExportTaskInput
 	}{arg1})
+	stub := fake.CancelExportTaskRequestStub
+	fakeReturns := fake.cancelExportTaskRequestReturns
 	fake.recordInvocation("CancelExportTaskRequest", []interface{}{arg1})
 	fake.cancelExportTaskRequestMutex.Unlock()
-	if fake.CancelExportTaskRequestStub != nil {
-		return fake.CancelExportTaskRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.cancelExportTaskRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7636,15 +7659,16 @@ func (fake *FakeRDSAPI) CancelExportTaskWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.CancelExportTaskInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CancelExportTaskWithContextStub
+	fakeReturns := fake.cancelExportTaskWithContextReturns
 	fake.recordInvocation("CancelExportTaskWithContext", []interface{}{arg1, arg2, arg3})
 	fake.cancelExportTaskWithContextMutex.Unlock()
-	if fake.CancelExportTaskWithContextStub != nil {
-		return fake.CancelExportTaskWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.cancelExportTaskWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7699,15 +7723,16 @@ func (fake *FakeRDSAPI) CopyDBClusterParameterGroup(arg1 *rds.CopyDBClusterParam
 	fake.copyDBClusterParameterGroupArgsForCall = append(fake.copyDBClusterParameterGroupArgsForCall, struct {
 		arg1 *rds.CopyDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.CopyDBClusterParameterGroupStub
+	fakeReturns := fake.copyDBClusterParameterGroupReturns
 	fake.recordInvocation("CopyDBClusterParameterGroup", []interface{}{arg1})
 	fake.copyDBClusterParameterGroupMutex.Unlock()
-	if fake.CopyDBClusterParameterGroupStub != nil {
-		return fake.CopyDBClusterParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBClusterParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7762,15 +7787,16 @@ func (fake *FakeRDSAPI) CopyDBClusterParameterGroupRequest(arg1 *rds.CopyDBClust
 	fake.copyDBClusterParameterGroupRequestArgsForCall = append(fake.copyDBClusterParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.CopyDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.CopyDBClusterParameterGroupRequestStub
+	fakeReturns := fake.copyDBClusterParameterGroupRequestReturns
 	fake.recordInvocation("CopyDBClusterParameterGroupRequest", []interface{}{arg1})
 	fake.copyDBClusterParameterGroupRequestMutex.Unlock()
-	if fake.CopyDBClusterParameterGroupRequestStub != nil {
-		return fake.CopyDBClusterParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBClusterParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7827,15 +7853,16 @@ func (fake *FakeRDSAPI) CopyDBClusterParameterGroupWithContext(arg1 context.Cont
 		arg2 *rds.CopyDBClusterParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CopyDBClusterParameterGroupWithContextStub
+	fakeReturns := fake.copyDBClusterParameterGroupWithContextReturns
 	fake.recordInvocation("CopyDBClusterParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.copyDBClusterParameterGroupWithContextMutex.Unlock()
-	if fake.CopyDBClusterParameterGroupWithContextStub != nil {
-		return fake.CopyDBClusterParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBClusterParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7890,15 +7917,16 @@ func (fake *FakeRDSAPI) CopyDBClusterSnapshot(arg1 *rds.CopyDBClusterSnapshotInp
 	fake.copyDBClusterSnapshotArgsForCall = append(fake.copyDBClusterSnapshotArgsForCall, struct {
 		arg1 *rds.CopyDBClusterSnapshotInput
 	}{arg1})
+	stub := fake.CopyDBClusterSnapshotStub
+	fakeReturns := fake.copyDBClusterSnapshotReturns
 	fake.recordInvocation("CopyDBClusterSnapshot", []interface{}{arg1})
 	fake.copyDBClusterSnapshotMutex.Unlock()
-	if fake.CopyDBClusterSnapshotStub != nil {
-		return fake.CopyDBClusterSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBClusterSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7953,15 +7981,16 @@ func (fake *FakeRDSAPI) CopyDBClusterSnapshotRequest(arg1 *rds.CopyDBClusterSnap
 	fake.copyDBClusterSnapshotRequestArgsForCall = append(fake.copyDBClusterSnapshotRequestArgsForCall, struct {
 		arg1 *rds.CopyDBClusterSnapshotInput
 	}{arg1})
+	stub := fake.CopyDBClusterSnapshotRequestStub
+	fakeReturns := fake.copyDBClusterSnapshotRequestReturns
 	fake.recordInvocation("CopyDBClusterSnapshotRequest", []interface{}{arg1})
 	fake.copyDBClusterSnapshotRequestMutex.Unlock()
-	if fake.CopyDBClusterSnapshotRequestStub != nil {
-		return fake.CopyDBClusterSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBClusterSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8018,15 +8047,16 @@ func (fake *FakeRDSAPI) CopyDBClusterSnapshotWithContext(arg1 context.Context, a
 		arg2 *rds.CopyDBClusterSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CopyDBClusterSnapshotWithContextStub
+	fakeReturns := fake.copyDBClusterSnapshotWithContextReturns
 	fake.recordInvocation("CopyDBClusterSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.copyDBClusterSnapshotWithContextMutex.Unlock()
-	if fake.CopyDBClusterSnapshotWithContextStub != nil {
-		return fake.CopyDBClusterSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBClusterSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8081,15 +8111,16 @@ func (fake *FakeRDSAPI) CopyDBParameterGroup(arg1 *rds.CopyDBParameterGroupInput
 	fake.copyDBParameterGroupArgsForCall = append(fake.copyDBParameterGroupArgsForCall, struct {
 		arg1 *rds.CopyDBParameterGroupInput
 	}{arg1})
+	stub := fake.CopyDBParameterGroupStub
+	fakeReturns := fake.copyDBParameterGroupReturns
 	fake.recordInvocation("CopyDBParameterGroup", []interface{}{arg1})
 	fake.copyDBParameterGroupMutex.Unlock()
-	if fake.CopyDBParameterGroupStub != nil {
-		return fake.CopyDBParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8144,15 +8175,16 @@ func (fake *FakeRDSAPI) CopyDBParameterGroupRequest(arg1 *rds.CopyDBParameterGro
 	fake.copyDBParameterGroupRequestArgsForCall = append(fake.copyDBParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.CopyDBParameterGroupInput
 	}{arg1})
+	stub := fake.CopyDBParameterGroupRequestStub
+	fakeReturns := fake.copyDBParameterGroupRequestReturns
 	fake.recordInvocation("CopyDBParameterGroupRequest", []interface{}{arg1})
 	fake.copyDBParameterGroupRequestMutex.Unlock()
-	if fake.CopyDBParameterGroupRequestStub != nil {
-		return fake.CopyDBParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8209,15 +8241,16 @@ func (fake *FakeRDSAPI) CopyDBParameterGroupWithContext(arg1 context.Context, ar
 		arg2 *rds.CopyDBParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CopyDBParameterGroupWithContextStub
+	fakeReturns := fake.copyDBParameterGroupWithContextReturns
 	fake.recordInvocation("CopyDBParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.copyDBParameterGroupWithContextMutex.Unlock()
-	if fake.CopyDBParameterGroupWithContextStub != nil {
-		return fake.CopyDBParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8272,15 +8305,16 @@ func (fake *FakeRDSAPI) CopyDBSnapshot(arg1 *rds.CopyDBSnapshotInput) (*rds.Copy
 	fake.copyDBSnapshotArgsForCall = append(fake.copyDBSnapshotArgsForCall, struct {
 		arg1 *rds.CopyDBSnapshotInput
 	}{arg1})
+	stub := fake.CopyDBSnapshotStub
+	fakeReturns := fake.copyDBSnapshotReturns
 	fake.recordInvocation("CopyDBSnapshot", []interface{}{arg1})
 	fake.copyDBSnapshotMutex.Unlock()
-	if fake.CopyDBSnapshotStub != nil {
-		return fake.CopyDBSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8335,15 +8369,16 @@ func (fake *FakeRDSAPI) CopyDBSnapshotRequest(arg1 *rds.CopyDBSnapshotInput) (*r
 	fake.copyDBSnapshotRequestArgsForCall = append(fake.copyDBSnapshotRequestArgsForCall, struct {
 		arg1 *rds.CopyDBSnapshotInput
 	}{arg1})
+	stub := fake.CopyDBSnapshotRequestStub
+	fakeReturns := fake.copyDBSnapshotRequestReturns
 	fake.recordInvocation("CopyDBSnapshotRequest", []interface{}{arg1})
 	fake.copyDBSnapshotRequestMutex.Unlock()
-	if fake.CopyDBSnapshotRequestStub != nil {
-		return fake.CopyDBSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8400,15 +8435,16 @@ func (fake *FakeRDSAPI) CopyDBSnapshotWithContext(arg1 context.Context, arg2 *rd
 		arg2 *rds.CopyDBSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CopyDBSnapshotWithContextStub
+	fakeReturns := fake.copyDBSnapshotWithContextReturns
 	fake.recordInvocation("CopyDBSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.copyDBSnapshotWithContextMutex.Unlock()
-	if fake.CopyDBSnapshotWithContextStub != nil {
-		return fake.CopyDBSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyDBSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8463,15 +8499,16 @@ func (fake *FakeRDSAPI) CopyOptionGroup(arg1 *rds.CopyOptionGroupInput) (*rds.Co
 	fake.copyOptionGroupArgsForCall = append(fake.copyOptionGroupArgsForCall, struct {
 		arg1 *rds.CopyOptionGroupInput
 	}{arg1})
+	stub := fake.CopyOptionGroupStub
+	fakeReturns := fake.copyOptionGroupReturns
 	fake.recordInvocation("CopyOptionGroup", []interface{}{arg1})
 	fake.copyOptionGroupMutex.Unlock()
-	if fake.CopyOptionGroupStub != nil {
-		return fake.CopyOptionGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyOptionGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8526,15 +8563,16 @@ func (fake *FakeRDSAPI) CopyOptionGroupRequest(arg1 *rds.CopyOptionGroupInput) (
 	fake.copyOptionGroupRequestArgsForCall = append(fake.copyOptionGroupRequestArgsForCall, struct {
 		arg1 *rds.CopyOptionGroupInput
 	}{arg1})
+	stub := fake.CopyOptionGroupRequestStub
+	fakeReturns := fake.copyOptionGroupRequestReturns
 	fake.recordInvocation("CopyOptionGroupRequest", []interface{}{arg1})
 	fake.copyOptionGroupRequestMutex.Unlock()
-	if fake.CopyOptionGroupRequestStub != nil {
-		return fake.CopyOptionGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyOptionGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8591,15 +8629,16 @@ func (fake *FakeRDSAPI) CopyOptionGroupWithContext(arg1 context.Context, arg2 *r
 		arg2 *rds.CopyOptionGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CopyOptionGroupWithContextStub
+	fakeReturns := fake.copyOptionGroupWithContextReturns
 	fake.recordInvocation("CopyOptionGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.copyOptionGroupWithContextMutex.Unlock()
-	if fake.CopyOptionGroupWithContextStub != nil {
-		return fake.CopyOptionGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyOptionGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8654,15 +8693,16 @@ func (fake *FakeRDSAPI) CreateCustomAvailabilityZone(arg1 *rds.CreateCustomAvail
 	fake.createCustomAvailabilityZoneArgsForCall = append(fake.createCustomAvailabilityZoneArgsForCall, struct {
 		arg1 *rds.CreateCustomAvailabilityZoneInput
 	}{arg1})
+	stub := fake.CreateCustomAvailabilityZoneStub
+	fakeReturns := fake.createCustomAvailabilityZoneReturns
 	fake.recordInvocation("CreateCustomAvailabilityZone", []interface{}{arg1})
 	fake.createCustomAvailabilityZoneMutex.Unlock()
-	if fake.CreateCustomAvailabilityZoneStub != nil {
-		return fake.CreateCustomAvailabilityZoneStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createCustomAvailabilityZoneReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8717,15 +8757,16 @@ func (fake *FakeRDSAPI) CreateCustomAvailabilityZoneRequest(arg1 *rds.CreateCust
 	fake.createCustomAvailabilityZoneRequestArgsForCall = append(fake.createCustomAvailabilityZoneRequestArgsForCall, struct {
 		arg1 *rds.CreateCustomAvailabilityZoneInput
 	}{arg1})
+	stub := fake.CreateCustomAvailabilityZoneRequestStub
+	fakeReturns := fake.createCustomAvailabilityZoneRequestReturns
 	fake.recordInvocation("CreateCustomAvailabilityZoneRequest", []interface{}{arg1})
 	fake.createCustomAvailabilityZoneRequestMutex.Unlock()
-	if fake.CreateCustomAvailabilityZoneRequestStub != nil {
-		return fake.CreateCustomAvailabilityZoneRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createCustomAvailabilityZoneRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8782,15 +8823,16 @@ func (fake *FakeRDSAPI) CreateCustomAvailabilityZoneWithContext(arg1 context.Con
 		arg2 *rds.CreateCustomAvailabilityZoneInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateCustomAvailabilityZoneWithContextStub
+	fakeReturns := fake.createCustomAvailabilityZoneWithContextReturns
 	fake.recordInvocation("CreateCustomAvailabilityZoneWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createCustomAvailabilityZoneWithContextMutex.Unlock()
-	if fake.CreateCustomAvailabilityZoneWithContextStub != nil {
-		return fake.CreateCustomAvailabilityZoneWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createCustomAvailabilityZoneWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8845,15 +8887,16 @@ func (fake *FakeRDSAPI) CreateDBCluster(arg1 *rds.CreateDBClusterInput) (*rds.Cr
 	fake.createDBClusterArgsForCall = append(fake.createDBClusterArgsForCall, struct {
 		arg1 *rds.CreateDBClusterInput
 	}{arg1})
+	stub := fake.CreateDBClusterStub
+	fakeReturns := fake.createDBClusterReturns
 	fake.recordInvocation("CreateDBCluster", []interface{}{arg1})
 	fake.createDBClusterMutex.Unlock()
-	if fake.CreateDBClusterStub != nil {
-		return fake.CreateDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8908,15 +8951,16 @@ func (fake *FakeRDSAPI) CreateDBClusterEndpoint(arg1 *rds.CreateDBClusterEndpoin
 	fake.createDBClusterEndpointArgsForCall = append(fake.createDBClusterEndpointArgsForCall, struct {
 		arg1 *rds.CreateDBClusterEndpointInput
 	}{arg1})
+	stub := fake.CreateDBClusterEndpointStub
+	fakeReturns := fake.createDBClusterEndpointReturns
 	fake.recordInvocation("CreateDBClusterEndpoint", []interface{}{arg1})
 	fake.createDBClusterEndpointMutex.Unlock()
-	if fake.CreateDBClusterEndpointStub != nil {
-		return fake.CreateDBClusterEndpointStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterEndpointReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8971,15 +9015,16 @@ func (fake *FakeRDSAPI) CreateDBClusterEndpointRequest(arg1 *rds.CreateDBCluster
 	fake.createDBClusterEndpointRequestArgsForCall = append(fake.createDBClusterEndpointRequestArgsForCall, struct {
 		arg1 *rds.CreateDBClusterEndpointInput
 	}{arg1})
+	stub := fake.CreateDBClusterEndpointRequestStub
+	fakeReturns := fake.createDBClusterEndpointRequestReturns
 	fake.recordInvocation("CreateDBClusterEndpointRequest", []interface{}{arg1})
 	fake.createDBClusterEndpointRequestMutex.Unlock()
-	if fake.CreateDBClusterEndpointRequestStub != nil {
-		return fake.CreateDBClusterEndpointRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterEndpointRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9036,15 +9081,16 @@ func (fake *FakeRDSAPI) CreateDBClusterEndpointWithContext(arg1 context.Context,
 		arg2 *rds.CreateDBClusterEndpointInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBClusterEndpointWithContextStub
+	fakeReturns := fake.createDBClusterEndpointWithContextReturns
 	fake.recordInvocation("CreateDBClusterEndpointWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBClusterEndpointWithContextMutex.Unlock()
-	if fake.CreateDBClusterEndpointWithContextStub != nil {
-		return fake.CreateDBClusterEndpointWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterEndpointWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9099,15 +9145,16 @@ func (fake *FakeRDSAPI) CreateDBClusterParameterGroup(arg1 *rds.CreateDBClusterP
 	fake.createDBClusterParameterGroupArgsForCall = append(fake.createDBClusterParameterGroupArgsForCall, struct {
 		arg1 *rds.CreateDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.CreateDBClusterParameterGroupStub
+	fakeReturns := fake.createDBClusterParameterGroupReturns
 	fake.recordInvocation("CreateDBClusterParameterGroup", []interface{}{arg1})
 	fake.createDBClusterParameterGroupMutex.Unlock()
-	if fake.CreateDBClusterParameterGroupStub != nil {
-		return fake.CreateDBClusterParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9162,15 +9209,16 @@ func (fake *FakeRDSAPI) CreateDBClusterParameterGroupRequest(arg1 *rds.CreateDBC
 	fake.createDBClusterParameterGroupRequestArgsForCall = append(fake.createDBClusterParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.CreateDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.CreateDBClusterParameterGroupRequestStub
+	fakeReturns := fake.createDBClusterParameterGroupRequestReturns
 	fake.recordInvocation("CreateDBClusterParameterGroupRequest", []interface{}{arg1})
 	fake.createDBClusterParameterGroupRequestMutex.Unlock()
-	if fake.CreateDBClusterParameterGroupRequestStub != nil {
-		return fake.CreateDBClusterParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9227,15 +9275,16 @@ func (fake *FakeRDSAPI) CreateDBClusterParameterGroupWithContext(arg1 context.Co
 		arg2 *rds.CreateDBClusterParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBClusterParameterGroupWithContextStub
+	fakeReturns := fake.createDBClusterParameterGroupWithContextReturns
 	fake.recordInvocation("CreateDBClusterParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBClusterParameterGroupWithContextMutex.Unlock()
-	if fake.CreateDBClusterParameterGroupWithContextStub != nil {
-		return fake.CreateDBClusterParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9290,15 +9339,16 @@ func (fake *FakeRDSAPI) CreateDBClusterRequest(arg1 *rds.CreateDBClusterInput) (
 	fake.createDBClusterRequestArgsForCall = append(fake.createDBClusterRequestArgsForCall, struct {
 		arg1 *rds.CreateDBClusterInput
 	}{arg1})
+	stub := fake.CreateDBClusterRequestStub
+	fakeReturns := fake.createDBClusterRequestReturns
 	fake.recordInvocation("CreateDBClusterRequest", []interface{}{arg1})
 	fake.createDBClusterRequestMutex.Unlock()
-	if fake.CreateDBClusterRequestStub != nil {
-		return fake.CreateDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9353,15 +9403,16 @@ func (fake *FakeRDSAPI) CreateDBClusterSnapshot(arg1 *rds.CreateDBClusterSnapsho
 	fake.createDBClusterSnapshotArgsForCall = append(fake.createDBClusterSnapshotArgsForCall, struct {
 		arg1 *rds.CreateDBClusterSnapshotInput
 	}{arg1})
+	stub := fake.CreateDBClusterSnapshotStub
+	fakeReturns := fake.createDBClusterSnapshotReturns
 	fake.recordInvocation("CreateDBClusterSnapshot", []interface{}{arg1})
 	fake.createDBClusterSnapshotMutex.Unlock()
-	if fake.CreateDBClusterSnapshotStub != nil {
-		return fake.CreateDBClusterSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9416,15 +9467,16 @@ func (fake *FakeRDSAPI) CreateDBClusterSnapshotRequest(arg1 *rds.CreateDBCluster
 	fake.createDBClusterSnapshotRequestArgsForCall = append(fake.createDBClusterSnapshotRequestArgsForCall, struct {
 		arg1 *rds.CreateDBClusterSnapshotInput
 	}{arg1})
+	stub := fake.CreateDBClusterSnapshotRequestStub
+	fakeReturns := fake.createDBClusterSnapshotRequestReturns
 	fake.recordInvocation("CreateDBClusterSnapshotRequest", []interface{}{arg1})
 	fake.createDBClusterSnapshotRequestMutex.Unlock()
-	if fake.CreateDBClusterSnapshotRequestStub != nil {
-		return fake.CreateDBClusterSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9481,15 +9533,16 @@ func (fake *FakeRDSAPI) CreateDBClusterSnapshotWithContext(arg1 context.Context,
 		arg2 *rds.CreateDBClusterSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBClusterSnapshotWithContextStub
+	fakeReturns := fake.createDBClusterSnapshotWithContextReturns
 	fake.recordInvocation("CreateDBClusterSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBClusterSnapshotWithContextMutex.Unlock()
-	if fake.CreateDBClusterSnapshotWithContextStub != nil {
-		return fake.CreateDBClusterSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9546,15 +9599,16 @@ func (fake *FakeRDSAPI) CreateDBClusterWithContext(arg1 context.Context, arg2 *r
 		arg2 *rds.CreateDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBClusterWithContextStub
+	fakeReturns := fake.createDBClusterWithContextReturns
 	fake.recordInvocation("CreateDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBClusterWithContextMutex.Unlock()
-	if fake.CreateDBClusterWithContextStub != nil {
-		return fake.CreateDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9609,15 +9663,16 @@ func (fake *FakeRDSAPI) CreateDBInstance(arg1 *rds.CreateDBInstanceInput) (*rds.
 	fake.createDBInstanceArgsForCall = append(fake.createDBInstanceArgsForCall, struct {
 		arg1 *rds.CreateDBInstanceInput
 	}{arg1})
+	stub := fake.CreateDBInstanceStub
+	fakeReturns := fake.createDBInstanceReturns
 	fake.recordInvocation("CreateDBInstance", []interface{}{arg1})
 	fake.createDBInstanceMutex.Unlock()
-	if fake.CreateDBInstanceStub != nil {
-		return fake.CreateDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9672,15 +9727,16 @@ func (fake *FakeRDSAPI) CreateDBInstanceReadReplica(arg1 *rds.CreateDBInstanceRe
 	fake.createDBInstanceReadReplicaArgsForCall = append(fake.createDBInstanceReadReplicaArgsForCall, struct {
 		arg1 *rds.CreateDBInstanceReadReplicaInput
 	}{arg1})
+	stub := fake.CreateDBInstanceReadReplicaStub
+	fakeReturns := fake.createDBInstanceReadReplicaReturns
 	fake.recordInvocation("CreateDBInstanceReadReplica", []interface{}{arg1})
 	fake.createDBInstanceReadReplicaMutex.Unlock()
-	if fake.CreateDBInstanceReadReplicaStub != nil {
-		return fake.CreateDBInstanceReadReplicaStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBInstanceReadReplicaReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9735,15 +9791,16 @@ func (fake *FakeRDSAPI) CreateDBInstanceReadReplicaRequest(arg1 *rds.CreateDBIns
 	fake.createDBInstanceReadReplicaRequestArgsForCall = append(fake.createDBInstanceReadReplicaRequestArgsForCall, struct {
 		arg1 *rds.CreateDBInstanceReadReplicaInput
 	}{arg1})
+	stub := fake.CreateDBInstanceReadReplicaRequestStub
+	fakeReturns := fake.createDBInstanceReadReplicaRequestReturns
 	fake.recordInvocation("CreateDBInstanceReadReplicaRequest", []interface{}{arg1})
 	fake.createDBInstanceReadReplicaRequestMutex.Unlock()
-	if fake.CreateDBInstanceReadReplicaRequestStub != nil {
-		return fake.CreateDBInstanceReadReplicaRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBInstanceReadReplicaRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9800,15 +9857,16 @@ func (fake *FakeRDSAPI) CreateDBInstanceReadReplicaWithContext(arg1 context.Cont
 		arg2 *rds.CreateDBInstanceReadReplicaInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBInstanceReadReplicaWithContextStub
+	fakeReturns := fake.createDBInstanceReadReplicaWithContextReturns
 	fake.recordInvocation("CreateDBInstanceReadReplicaWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBInstanceReadReplicaWithContextMutex.Unlock()
-	if fake.CreateDBInstanceReadReplicaWithContextStub != nil {
-		return fake.CreateDBInstanceReadReplicaWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBInstanceReadReplicaWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9863,15 +9921,16 @@ func (fake *FakeRDSAPI) CreateDBInstanceRequest(arg1 *rds.CreateDBInstanceInput)
 	fake.createDBInstanceRequestArgsForCall = append(fake.createDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.CreateDBInstanceInput
 	}{arg1})
+	stub := fake.CreateDBInstanceRequestStub
+	fakeReturns := fake.createDBInstanceRequestReturns
 	fake.recordInvocation("CreateDBInstanceRequest", []interface{}{arg1})
 	fake.createDBInstanceRequestMutex.Unlock()
-	if fake.CreateDBInstanceRequestStub != nil {
-		return fake.CreateDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9928,15 +9987,16 @@ func (fake *FakeRDSAPI) CreateDBInstanceWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.CreateDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBInstanceWithContextStub
+	fakeReturns := fake.createDBInstanceWithContextReturns
 	fake.recordInvocation("CreateDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBInstanceWithContextMutex.Unlock()
-	if fake.CreateDBInstanceWithContextStub != nil {
-		return fake.CreateDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9991,15 +10051,16 @@ func (fake *FakeRDSAPI) CreateDBParameterGroup(arg1 *rds.CreateDBParameterGroupI
 	fake.createDBParameterGroupArgsForCall = append(fake.createDBParameterGroupArgsForCall, struct {
 		arg1 *rds.CreateDBParameterGroupInput
 	}{arg1})
+	stub := fake.CreateDBParameterGroupStub
+	fakeReturns := fake.createDBParameterGroupReturns
 	fake.recordInvocation("CreateDBParameterGroup", []interface{}{arg1})
 	fake.createDBParameterGroupMutex.Unlock()
-	if fake.CreateDBParameterGroupStub != nil {
-		return fake.CreateDBParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10054,15 +10115,16 @@ func (fake *FakeRDSAPI) CreateDBParameterGroupRequest(arg1 *rds.CreateDBParamete
 	fake.createDBParameterGroupRequestArgsForCall = append(fake.createDBParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.CreateDBParameterGroupInput
 	}{arg1})
+	stub := fake.CreateDBParameterGroupRequestStub
+	fakeReturns := fake.createDBParameterGroupRequestReturns
 	fake.recordInvocation("CreateDBParameterGroupRequest", []interface{}{arg1})
 	fake.createDBParameterGroupRequestMutex.Unlock()
-	if fake.CreateDBParameterGroupRequestStub != nil {
-		return fake.CreateDBParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10119,15 +10181,16 @@ func (fake *FakeRDSAPI) CreateDBParameterGroupWithContext(arg1 context.Context, 
 		arg2 *rds.CreateDBParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBParameterGroupWithContextStub
+	fakeReturns := fake.createDBParameterGroupWithContextReturns
 	fake.recordInvocation("CreateDBParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBParameterGroupWithContextMutex.Unlock()
-	if fake.CreateDBParameterGroupWithContextStub != nil {
-		return fake.CreateDBParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10182,15 +10245,16 @@ func (fake *FakeRDSAPI) CreateDBProxy(arg1 *rds.CreateDBProxyInput) (*rds.Create
 	fake.createDBProxyArgsForCall = append(fake.createDBProxyArgsForCall, struct {
 		arg1 *rds.CreateDBProxyInput
 	}{arg1})
+	stub := fake.CreateDBProxyStub
+	fakeReturns := fake.createDBProxyReturns
 	fake.recordInvocation("CreateDBProxy", []interface{}{arg1})
 	fake.createDBProxyMutex.Unlock()
-	if fake.CreateDBProxyStub != nil {
-		return fake.CreateDBProxyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBProxyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10245,15 +10309,16 @@ func (fake *FakeRDSAPI) CreateDBProxyRequest(arg1 *rds.CreateDBProxyInput) (*req
 	fake.createDBProxyRequestArgsForCall = append(fake.createDBProxyRequestArgsForCall, struct {
 		arg1 *rds.CreateDBProxyInput
 	}{arg1})
+	stub := fake.CreateDBProxyRequestStub
+	fakeReturns := fake.createDBProxyRequestReturns
 	fake.recordInvocation("CreateDBProxyRequest", []interface{}{arg1})
 	fake.createDBProxyRequestMutex.Unlock()
-	if fake.CreateDBProxyRequestStub != nil {
-		return fake.CreateDBProxyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBProxyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10310,15 +10375,16 @@ func (fake *FakeRDSAPI) CreateDBProxyWithContext(arg1 context.Context, arg2 *rds
 		arg2 *rds.CreateDBProxyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBProxyWithContextStub
+	fakeReturns := fake.createDBProxyWithContextReturns
 	fake.recordInvocation("CreateDBProxyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBProxyWithContextMutex.Unlock()
-	if fake.CreateDBProxyWithContextStub != nil {
-		return fake.CreateDBProxyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBProxyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10373,15 +10439,16 @@ func (fake *FakeRDSAPI) CreateDBSecurityGroup(arg1 *rds.CreateDBSecurityGroupInp
 	fake.createDBSecurityGroupArgsForCall = append(fake.createDBSecurityGroupArgsForCall, struct {
 		arg1 *rds.CreateDBSecurityGroupInput
 	}{arg1})
+	stub := fake.CreateDBSecurityGroupStub
+	fakeReturns := fake.createDBSecurityGroupReturns
 	fake.recordInvocation("CreateDBSecurityGroup", []interface{}{arg1})
 	fake.createDBSecurityGroupMutex.Unlock()
-	if fake.CreateDBSecurityGroupStub != nil {
-		return fake.CreateDBSecurityGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSecurityGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10436,15 +10503,16 @@ func (fake *FakeRDSAPI) CreateDBSecurityGroupRequest(arg1 *rds.CreateDBSecurityG
 	fake.createDBSecurityGroupRequestArgsForCall = append(fake.createDBSecurityGroupRequestArgsForCall, struct {
 		arg1 *rds.CreateDBSecurityGroupInput
 	}{arg1})
+	stub := fake.CreateDBSecurityGroupRequestStub
+	fakeReturns := fake.createDBSecurityGroupRequestReturns
 	fake.recordInvocation("CreateDBSecurityGroupRequest", []interface{}{arg1})
 	fake.createDBSecurityGroupRequestMutex.Unlock()
-	if fake.CreateDBSecurityGroupRequestStub != nil {
-		return fake.CreateDBSecurityGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSecurityGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10501,15 +10569,16 @@ func (fake *FakeRDSAPI) CreateDBSecurityGroupWithContext(arg1 context.Context, a
 		arg2 *rds.CreateDBSecurityGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBSecurityGroupWithContextStub
+	fakeReturns := fake.createDBSecurityGroupWithContextReturns
 	fake.recordInvocation("CreateDBSecurityGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBSecurityGroupWithContextMutex.Unlock()
-	if fake.CreateDBSecurityGroupWithContextStub != nil {
-		return fake.CreateDBSecurityGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSecurityGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10564,15 +10633,16 @@ func (fake *FakeRDSAPI) CreateDBSnapshot(arg1 *rds.CreateDBSnapshotInput) (*rds.
 	fake.createDBSnapshotArgsForCall = append(fake.createDBSnapshotArgsForCall, struct {
 		arg1 *rds.CreateDBSnapshotInput
 	}{arg1})
+	stub := fake.CreateDBSnapshotStub
+	fakeReturns := fake.createDBSnapshotReturns
 	fake.recordInvocation("CreateDBSnapshot", []interface{}{arg1})
 	fake.createDBSnapshotMutex.Unlock()
-	if fake.CreateDBSnapshotStub != nil {
-		return fake.CreateDBSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10627,15 +10697,16 @@ func (fake *FakeRDSAPI) CreateDBSnapshotRequest(arg1 *rds.CreateDBSnapshotInput)
 	fake.createDBSnapshotRequestArgsForCall = append(fake.createDBSnapshotRequestArgsForCall, struct {
 		arg1 *rds.CreateDBSnapshotInput
 	}{arg1})
+	stub := fake.CreateDBSnapshotRequestStub
+	fakeReturns := fake.createDBSnapshotRequestReturns
 	fake.recordInvocation("CreateDBSnapshotRequest", []interface{}{arg1})
 	fake.createDBSnapshotRequestMutex.Unlock()
-	if fake.CreateDBSnapshotRequestStub != nil {
-		return fake.CreateDBSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10692,15 +10763,16 @@ func (fake *FakeRDSAPI) CreateDBSnapshotWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.CreateDBSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBSnapshotWithContextStub
+	fakeReturns := fake.createDBSnapshotWithContextReturns
 	fake.recordInvocation("CreateDBSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBSnapshotWithContextMutex.Unlock()
-	if fake.CreateDBSnapshotWithContextStub != nil {
-		return fake.CreateDBSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10755,15 +10827,16 @@ func (fake *FakeRDSAPI) CreateDBSubnetGroup(arg1 *rds.CreateDBSubnetGroupInput) 
 	fake.createDBSubnetGroupArgsForCall = append(fake.createDBSubnetGroupArgsForCall, struct {
 		arg1 *rds.CreateDBSubnetGroupInput
 	}{arg1})
+	stub := fake.CreateDBSubnetGroupStub
+	fakeReturns := fake.createDBSubnetGroupReturns
 	fake.recordInvocation("CreateDBSubnetGroup", []interface{}{arg1})
 	fake.createDBSubnetGroupMutex.Unlock()
-	if fake.CreateDBSubnetGroupStub != nil {
-		return fake.CreateDBSubnetGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSubnetGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10818,15 +10891,16 @@ func (fake *FakeRDSAPI) CreateDBSubnetGroupRequest(arg1 *rds.CreateDBSubnetGroup
 	fake.createDBSubnetGroupRequestArgsForCall = append(fake.createDBSubnetGroupRequestArgsForCall, struct {
 		arg1 *rds.CreateDBSubnetGroupInput
 	}{arg1})
+	stub := fake.CreateDBSubnetGroupRequestStub
+	fakeReturns := fake.createDBSubnetGroupRequestReturns
 	fake.recordInvocation("CreateDBSubnetGroupRequest", []interface{}{arg1})
 	fake.createDBSubnetGroupRequestMutex.Unlock()
-	if fake.CreateDBSubnetGroupRequestStub != nil {
-		return fake.CreateDBSubnetGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSubnetGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10883,15 +10957,16 @@ func (fake *FakeRDSAPI) CreateDBSubnetGroupWithContext(arg1 context.Context, arg
 		arg2 *rds.CreateDBSubnetGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateDBSubnetGroupWithContextStub
+	fakeReturns := fake.createDBSubnetGroupWithContextReturns
 	fake.recordInvocation("CreateDBSubnetGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createDBSubnetGroupWithContextMutex.Unlock()
-	if fake.CreateDBSubnetGroupWithContextStub != nil {
-		return fake.CreateDBSubnetGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createDBSubnetGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10946,15 +11021,16 @@ func (fake *FakeRDSAPI) CreateEventSubscription(arg1 *rds.CreateEventSubscriptio
 	fake.createEventSubscriptionArgsForCall = append(fake.createEventSubscriptionArgsForCall, struct {
 		arg1 *rds.CreateEventSubscriptionInput
 	}{arg1})
+	stub := fake.CreateEventSubscriptionStub
+	fakeReturns := fake.createEventSubscriptionReturns
 	fake.recordInvocation("CreateEventSubscription", []interface{}{arg1})
 	fake.createEventSubscriptionMutex.Unlock()
-	if fake.CreateEventSubscriptionStub != nil {
-		return fake.CreateEventSubscriptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createEventSubscriptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11009,15 +11085,16 @@ func (fake *FakeRDSAPI) CreateEventSubscriptionRequest(arg1 *rds.CreateEventSubs
 	fake.createEventSubscriptionRequestArgsForCall = append(fake.createEventSubscriptionRequestArgsForCall, struct {
 		arg1 *rds.CreateEventSubscriptionInput
 	}{arg1})
+	stub := fake.CreateEventSubscriptionRequestStub
+	fakeReturns := fake.createEventSubscriptionRequestReturns
 	fake.recordInvocation("CreateEventSubscriptionRequest", []interface{}{arg1})
 	fake.createEventSubscriptionRequestMutex.Unlock()
-	if fake.CreateEventSubscriptionRequestStub != nil {
-		return fake.CreateEventSubscriptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createEventSubscriptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11074,15 +11151,16 @@ func (fake *FakeRDSAPI) CreateEventSubscriptionWithContext(arg1 context.Context,
 		arg2 *rds.CreateEventSubscriptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateEventSubscriptionWithContextStub
+	fakeReturns := fake.createEventSubscriptionWithContextReturns
 	fake.recordInvocation("CreateEventSubscriptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createEventSubscriptionWithContextMutex.Unlock()
-	if fake.CreateEventSubscriptionWithContextStub != nil {
-		return fake.CreateEventSubscriptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createEventSubscriptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11137,15 +11215,16 @@ func (fake *FakeRDSAPI) CreateGlobalCluster(arg1 *rds.CreateGlobalClusterInput) 
 	fake.createGlobalClusterArgsForCall = append(fake.createGlobalClusterArgsForCall, struct {
 		arg1 *rds.CreateGlobalClusterInput
 	}{arg1})
+	stub := fake.CreateGlobalClusterStub
+	fakeReturns := fake.createGlobalClusterReturns
 	fake.recordInvocation("CreateGlobalCluster", []interface{}{arg1})
 	fake.createGlobalClusterMutex.Unlock()
-	if fake.CreateGlobalClusterStub != nil {
-		return fake.CreateGlobalClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createGlobalClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11200,15 +11279,16 @@ func (fake *FakeRDSAPI) CreateGlobalClusterRequest(arg1 *rds.CreateGlobalCluster
 	fake.createGlobalClusterRequestArgsForCall = append(fake.createGlobalClusterRequestArgsForCall, struct {
 		arg1 *rds.CreateGlobalClusterInput
 	}{arg1})
+	stub := fake.CreateGlobalClusterRequestStub
+	fakeReturns := fake.createGlobalClusterRequestReturns
 	fake.recordInvocation("CreateGlobalClusterRequest", []interface{}{arg1})
 	fake.createGlobalClusterRequestMutex.Unlock()
-	if fake.CreateGlobalClusterRequestStub != nil {
-		return fake.CreateGlobalClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createGlobalClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11265,15 +11345,16 @@ func (fake *FakeRDSAPI) CreateGlobalClusterWithContext(arg1 context.Context, arg
 		arg2 *rds.CreateGlobalClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateGlobalClusterWithContextStub
+	fakeReturns := fake.createGlobalClusterWithContextReturns
 	fake.recordInvocation("CreateGlobalClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createGlobalClusterWithContextMutex.Unlock()
-	if fake.CreateGlobalClusterWithContextStub != nil {
-		return fake.CreateGlobalClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createGlobalClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11328,15 +11409,16 @@ func (fake *FakeRDSAPI) CreateOptionGroup(arg1 *rds.CreateOptionGroupInput) (*rd
 	fake.createOptionGroupArgsForCall = append(fake.createOptionGroupArgsForCall, struct {
 		arg1 *rds.CreateOptionGroupInput
 	}{arg1})
+	stub := fake.CreateOptionGroupStub
+	fakeReturns := fake.createOptionGroupReturns
 	fake.recordInvocation("CreateOptionGroup", []interface{}{arg1})
 	fake.createOptionGroupMutex.Unlock()
-	if fake.CreateOptionGroupStub != nil {
-		return fake.CreateOptionGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createOptionGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11391,15 +11473,16 @@ func (fake *FakeRDSAPI) CreateOptionGroupRequest(arg1 *rds.CreateOptionGroupInpu
 	fake.createOptionGroupRequestArgsForCall = append(fake.createOptionGroupRequestArgsForCall, struct {
 		arg1 *rds.CreateOptionGroupInput
 	}{arg1})
+	stub := fake.CreateOptionGroupRequestStub
+	fakeReturns := fake.createOptionGroupRequestReturns
 	fake.recordInvocation("CreateOptionGroupRequest", []interface{}{arg1})
 	fake.createOptionGroupRequestMutex.Unlock()
-	if fake.CreateOptionGroupRequestStub != nil {
-		return fake.CreateOptionGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createOptionGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11456,15 +11539,16 @@ func (fake *FakeRDSAPI) CreateOptionGroupWithContext(arg1 context.Context, arg2 
 		arg2 *rds.CreateOptionGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateOptionGroupWithContextStub
+	fakeReturns := fake.createOptionGroupWithContextReturns
 	fake.recordInvocation("CreateOptionGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createOptionGroupWithContextMutex.Unlock()
-	if fake.CreateOptionGroupWithContextStub != nil {
-		return fake.CreateOptionGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createOptionGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11519,15 +11603,16 @@ func (fake *FakeRDSAPI) DeleteCustomAvailabilityZone(arg1 *rds.DeleteCustomAvail
 	fake.deleteCustomAvailabilityZoneArgsForCall = append(fake.deleteCustomAvailabilityZoneArgsForCall, struct {
 		arg1 *rds.DeleteCustomAvailabilityZoneInput
 	}{arg1})
+	stub := fake.DeleteCustomAvailabilityZoneStub
+	fakeReturns := fake.deleteCustomAvailabilityZoneReturns
 	fake.recordInvocation("DeleteCustomAvailabilityZone", []interface{}{arg1})
 	fake.deleteCustomAvailabilityZoneMutex.Unlock()
-	if fake.DeleteCustomAvailabilityZoneStub != nil {
-		return fake.DeleteCustomAvailabilityZoneStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteCustomAvailabilityZoneReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11582,15 +11667,16 @@ func (fake *FakeRDSAPI) DeleteCustomAvailabilityZoneRequest(arg1 *rds.DeleteCust
 	fake.deleteCustomAvailabilityZoneRequestArgsForCall = append(fake.deleteCustomAvailabilityZoneRequestArgsForCall, struct {
 		arg1 *rds.DeleteCustomAvailabilityZoneInput
 	}{arg1})
+	stub := fake.DeleteCustomAvailabilityZoneRequestStub
+	fakeReturns := fake.deleteCustomAvailabilityZoneRequestReturns
 	fake.recordInvocation("DeleteCustomAvailabilityZoneRequest", []interface{}{arg1})
 	fake.deleteCustomAvailabilityZoneRequestMutex.Unlock()
-	if fake.DeleteCustomAvailabilityZoneRequestStub != nil {
-		return fake.DeleteCustomAvailabilityZoneRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteCustomAvailabilityZoneRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11647,15 +11733,16 @@ func (fake *FakeRDSAPI) DeleteCustomAvailabilityZoneWithContext(arg1 context.Con
 		arg2 *rds.DeleteCustomAvailabilityZoneInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteCustomAvailabilityZoneWithContextStub
+	fakeReturns := fake.deleteCustomAvailabilityZoneWithContextReturns
 	fake.recordInvocation("DeleteCustomAvailabilityZoneWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteCustomAvailabilityZoneWithContextMutex.Unlock()
-	if fake.DeleteCustomAvailabilityZoneWithContextStub != nil {
-		return fake.DeleteCustomAvailabilityZoneWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteCustomAvailabilityZoneWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11710,15 +11797,16 @@ func (fake *FakeRDSAPI) DeleteDBCluster(arg1 *rds.DeleteDBClusterInput) (*rds.De
 	fake.deleteDBClusterArgsForCall = append(fake.deleteDBClusterArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterInput
 	}{arg1})
+	stub := fake.DeleteDBClusterStub
+	fakeReturns := fake.deleteDBClusterReturns
 	fake.recordInvocation("DeleteDBCluster", []interface{}{arg1})
 	fake.deleteDBClusterMutex.Unlock()
-	if fake.DeleteDBClusterStub != nil {
-		return fake.DeleteDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11773,15 +11861,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterEndpoint(arg1 *rds.DeleteDBClusterEndpoin
 	fake.deleteDBClusterEndpointArgsForCall = append(fake.deleteDBClusterEndpointArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterEndpointInput
 	}{arg1})
+	stub := fake.DeleteDBClusterEndpointStub
+	fakeReturns := fake.deleteDBClusterEndpointReturns
 	fake.recordInvocation("DeleteDBClusterEndpoint", []interface{}{arg1})
 	fake.deleteDBClusterEndpointMutex.Unlock()
-	if fake.DeleteDBClusterEndpointStub != nil {
-		return fake.DeleteDBClusterEndpointStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterEndpointReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11836,15 +11925,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterEndpointRequest(arg1 *rds.DeleteDBCluster
 	fake.deleteDBClusterEndpointRequestArgsForCall = append(fake.deleteDBClusterEndpointRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterEndpointInput
 	}{arg1})
+	stub := fake.DeleteDBClusterEndpointRequestStub
+	fakeReturns := fake.deleteDBClusterEndpointRequestReturns
 	fake.recordInvocation("DeleteDBClusterEndpointRequest", []interface{}{arg1})
 	fake.deleteDBClusterEndpointRequestMutex.Unlock()
-	if fake.DeleteDBClusterEndpointRequestStub != nil {
-		return fake.DeleteDBClusterEndpointRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterEndpointRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11901,15 +11991,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterEndpointWithContext(arg1 context.Context,
 		arg2 *rds.DeleteDBClusterEndpointInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBClusterEndpointWithContextStub
+	fakeReturns := fake.deleteDBClusterEndpointWithContextReturns
 	fake.recordInvocation("DeleteDBClusterEndpointWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBClusterEndpointWithContextMutex.Unlock()
-	if fake.DeleteDBClusterEndpointWithContextStub != nil {
-		return fake.DeleteDBClusterEndpointWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterEndpointWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11964,15 +12055,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterParameterGroup(arg1 *rds.DeleteDBClusterP
 	fake.deleteDBClusterParameterGroupArgsForCall = append(fake.deleteDBClusterParameterGroupArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.DeleteDBClusterParameterGroupStub
+	fakeReturns := fake.deleteDBClusterParameterGroupReturns
 	fake.recordInvocation("DeleteDBClusterParameterGroup", []interface{}{arg1})
 	fake.deleteDBClusterParameterGroupMutex.Unlock()
-	if fake.DeleteDBClusterParameterGroupStub != nil {
-		return fake.DeleteDBClusterParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12027,15 +12119,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterParameterGroupRequest(arg1 *rds.DeleteDBC
 	fake.deleteDBClusterParameterGroupRequestArgsForCall = append(fake.deleteDBClusterParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.DeleteDBClusterParameterGroupRequestStub
+	fakeReturns := fake.deleteDBClusterParameterGroupRequestReturns
 	fake.recordInvocation("DeleteDBClusterParameterGroupRequest", []interface{}{arg1})
 	fake.deleteDBClusterParameterGroupRequestMutex.Unlock()
-	if fake.DeleteDBClusterParameterGroupRequestStub != nil {
-		return fake.DeleteDBClusterParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12092,15 +12185,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterParameterGroupWithContext(arg1 context.Co
 		arg2 *rds.DeleteDBClusterParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBClusterParameterGroupWithContextStub
+	fakeReturns := fake.deleteDBClusterParameterGroupWithContextReturns
 	fake.recordInvocation("DeleteDBClusterParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBClusterParameterGroupWithContextMutex.Unlock()
-	if fake.DeleteDBClusterParameterGroupWithContextStub != nil {
-		return fake.DeleteDBClusterParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12155,15 +12249,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterRequest(arg1 *rds.DeleteDBClusterInput) (
 	fake.deleteDBClusterRequestArgsForCall = append(fake.deleteDBClusterRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterInput
 	}{arg1})
+	stub := fake.DeleteDBClusterRequestStub
+	fakeReturns := fake.deleteDBClusterRequestReturns
 	fake.recordInvocation("DeleteDBClusterRequest", []interface{}{arg1})
 	fake.deleteDBClusterRequestMutex.Unlock()
-	if fake.DeleteDBClusterRequestStub != nil {
-		return fake.DeleteDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12218,15 +12313,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterSnapshot(arg1 *rds.DeleteDBClusterSnapsho
 	fake.deleteDBClusterSnapshotArgsForCall = append(fake.deleteDBClusterSnapshotArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterSnapshotInput
 	}{arg1})
+	stub := fake.DeleteDBClusterSnapshotStub
+	fakeReturns := fake.deleteDBClusterSnapshotReturns
 	fake.recordInvocation("DeleteDBClusterSnapshot", []interface{}{arg1})
 	fake.deleteDBClusterSnapshotMutex.Unlock()
-	if fake.DeleteDBClusterSnapshotStub != nil {
-		return fake.DeleteDBClusterSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12281,15 +12377,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterSnapshotRequest(arg1 *rds.DeleteDBCluster
 	fake.deleteDBClusterSnapshotRequestArgsForCall = append(fake.deleteDBClusterSnapshotRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBClusterSnapshotInput
 	}{arg1})
+	stub := fake.DeleteDBClusterSnapshotRequestStub
+	fakeReturns := fake.deleteDBClusterSnapshotRequestReturns
 	fake.recordInvocation("DeleteDBClusterSnapshotRequest", []interface{}{arg1})
 	fake.deleteDBClusterSnapshotRequestMutex.Unlock()
-	if fake.DeleteDBClusterSnapshotRequestStub != nil {
-		return fake.DeleteDBClusterSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12346,15 +12443,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterSnapshotWithContext(arg1 context.Context,
 		arg2 *rds.DeleteDBClusterSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBClusterSnapshotWithContextStub
+	fakeReturns := fake.deleteDBClusterSnapshotWithContextReturns
 	fake.recordInvocation("DeleteDBClusterSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBClusterSnapshotWithContextMutex.Unlock()
-	if fake.DeleteDBClusterSnapshotWithContextStub != nil {
-		return fake.DeleteDBClusterSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12411,15 +12509,16 @@ func (fake *FakeRDSAPI) DeleteDBClusterWithContext(arg1 context.Context, arg2 *r
 		arg2 *rds.DeleteDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBClusterWithContextStub
+	fakeReturns := fake.deleteDBClusterWithContextReturns
 	fake.recordInvocation("DeleteDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBClusterWithContextMutex.Unlock()
-	if fake.DeleteDBClusterWithContextStub != nil {
-		return fake.DeleteDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12474,15 +12573,16 @@ func (fake *FakeRDSAPI) DeleteDBInstance(arg1 *rds.DeleteDBInstanceInput) (*rds.
 	fake.deleteDBInstanceArgsForCall = append(fake.deleteDBInstanceArgsForCall, struct {
 		arg1 *rds.DeleteDBInstanceInput
 	}{arg1})
+	stub := fake.DeleteDBInstanceStub
+	fakeReturns := fake.deleteDBInstanceReturns
 	fake.recordInvocation("DeleteDBInstance", []interface{}{arg1})
 	fake.deleteDBInstanceMutex.Unlock()
-	if fake.DeleteDBInstanceStub != nil {
-		return fake.DeleteDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12537,15 +12637,16 @@ func (fake *FakeRDSAPI) DeleteDBInstanceAutomatedBackup(arg1 *rds.DeleteDBInstan
 	fake.deleteDBInstanceAutomatedBackupArgsForCall = append(fake.deleteDBInstanceAutomatedBackupArgsForCall, struct {
 		arg1 *rds.DeleteDBInstanceAutomatedBackupInput
 	}{arg1})
+	stub := fake.DeleteDBInstanceAutomatedBackupStub
+	fakeReturns := fake.deleteDBInstanceAutomatedBackupReturns
 	fake.recordInvocation("DeleteDBInstanceAutomatedBackup", []interface{}{arg1})
 	fake.deleteDBInstanceAutomatedBackupMutex.Unlock()
-	if fake.DeleteDBInstanceAutomatedBackupStub != nil {
-		return fake.DeleteDBInstanceAutomatedBackupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBInstanceAutomatedBackupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12600,15 +12701,16 @@ func (fake *FakeRDSAPI) DeleteDBInstanceAutomatedBackupRequest(arg1 *rds.DeleteD
 	fake.deleteDBInstanceAutomatedBackupRequestArgsForCall = append(fake.deleteDBInstanceAutomatedBackupRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBInstanceAutomatedBackupInput
 	}{arg1})
+	stub := fake.DeleteDBInstanceAutomatedBackupRequestStub
+	fakeReturns := fake.deleteDBInstanceAutomatedBackupRequestReturns
 	fake.recordInvocation("DeleteDBInstanceAutomatedBackupRequest", []interface{}{arg1})
 	fake.deleteDBInstanceAutomatedBackupRequestMutex.Unlock()
-	if fake.DeleteDBInstanceAutomatedBackupRequestStub != nil {
-		return fake.DeleteDBInstanceAutomatedBackupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBInstanceAutomatedBackupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12665,15 +12767,16 @@ func (fake *FakeRDSAPI) DeleteDBInstanceAutomatedBackupWithContext(arg1 context.
 		arg2 *rds.DeleteDBInstanceAutomatedBackupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBInstanceAutomatedBackupWithContextStub
+	fakeReturns := fake.deleteDBInstanceAutomatedBackupWithContextReturns
 	fake.recordInvocation("DeleteDBInstanceAutomatedBackupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBInstanceAutomatedBackupWithContextMutex.Unlock()
-	if fake.DeleteDBInstanceAutomatedBackupWithContextStub != nil {
-		return fake.DeleteDBInstanceAutomatedBackupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBInstanceAutomatedBackupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12728,15 +12831,16 @@ func (fake *FakeRDSAPI) DeleteDBInstanceRequest(arg1 *rds.DeleteDBInstanceInput)
 	fake.deleteDBInstanceRequestArgsForCall = append(fake.deleteDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBInstanceInput
 	}{arg1})
+	stub := fake.DeleteDBInstanceRequestStub
+	fakeReturns := fake.deleteDBInstanceRequestReturns
 	fake.recordInvocation("DeleteDBInstanceRequest", []interface{}{arg1})
 	fake.deleteDBInstanceRequestMutex.Unlock()
-	if fake.DeleteDBInstanceRequestStub != nil {
-		return fake.DeleteDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12793,15 +12897,16 @@ func (fake *FakeRDSAPI) DeleteDBInstanceWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.DeleteDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBInstanceWithContextStub
+	fakeReturns := fake.deleteDBInstanceWithContextReturns
 	fake.recordInvocation("DeleteDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBInstanceWithContextMutex.Unlock()
-	if fake.DeleteDBInstanceWithContextStub != nil {
-		return fake.DeleteDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12856,15 +12961,16 @@ func (fake *FakeRDSAPI) DeleteDBParameterGroup(arg1 *rds.DeleteDBParameterGroupI
 	fake.deleteDBParameterGroupArgsForCall = append(fake.deleteDBParameterGroupArgsForCall, struct {
 		arg1 *rds.DeleteDBParameterGroupInput
 	}{arg1})
+	stub := fake.DeleteDBParameterGroupStub
+	fakeReturns := fake.deleteDBParameterGroupReturns
 	fake.recordInvocation("DeleteDBParameterGroup", []interface{}{arg1})
 	fake.deleteDBParameterGroupMutex.Unlock()
-	if fake.DeleteDBParameterGroupStub != nil {
-		return fake.DeleteDBParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12919,15 +13025,16 @@ func (fake *FakeRDSAPI) DeleteDBParameterGroupRequest(arg1 *rds.DeleteDBParamete
 	fake.deleteDBParameterGroupRequestArgsForCall = append(fake.deleteDBParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBParameterGroupInput
 	}{arg1})
+	stub := fake.DeleteDBParameterGroupRequestStub
+	fakeReturns := fake.deleteDBParameterGroupRequestReturns
 	fake.recordInvocation("DeleteDBParameterGroupRequest", []interface{}{arg1})
 	fake.deleteDBParameterGroupRequestMutex.Unlock()
-	if fake.DeleteDBParameterGroupRequestStub != nil {
-		return fake.DeleteDBParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12984,15 +13091,16 @@ func (fake *FakeRDSAPI) DeleteDBParameterGroupWithContext(arg1 context.Context, 
 		arg2 *rds.DeleteDBParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBParameterGroupWithContextStub
+	fakeReturns := fake.deleteDBParameterGroupWithContextReturns
 	fake.recordInvocation("DeleteDBParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBParameterGroupWithContextMutex.Unlock()
-	if fake.DeleteDBParameterGroupWithContextStub != nil {
-		return fake.DeleteDBParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13047,15 +13155,16 @@ func (fake *FakeRDSAPI) DeleteDBProxy(arg1 *rds.DeleteDBProxyInput) (*rds.Delete
 	fake.deleteDBProxyArgsForCall = append(fake.deleteDBProxyArgsForCall, struct {
 		arg1 *rds.DeleteDBProxyInput
 	}{arg1})
+	stub := fake.DeleteDBProxyStub
+	fakeReturns := fake.deleteDBProxyReturns
 	fake.recordInvocation("DeleteDBProxy", []interface{}{arg1})
 	fake.deleteDBProxyMutex.Unlock()
-	if fake.DeleteDBProxyStub != nil {
-		return fake.DeleteDBProxyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBProxyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13110,15 +13219,16 @@ func (fake *FakeRDSAPI) DeleteDBProxyRequest(arg1 *rds.DeleteDBProxyInput) (*req
 	fake.deleteDBProxyRequestArgsForCall = append(fake.deleteDBProxyRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBProxyInput
 	}{arg1})
+	stub := fake.DeleteDBProxyRequestStub
+	fakeReturns := fake.deleteDBProxyRequestReturns
 	fake.recordInvocation("DeleteDBProxyRequest", []interface{}{arg1})
 	fake.deleteDBProxyRequestMutex.Unlock()
-	if fake.DeleteDBProxyRequestStub != nil {
-		return fake.DeleteDBProxyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBProxyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13175,15 +13285,16 @@ func (fake *FakeRDSAPI) DeleteDBProxyWithContext(arg1 context.Context, arg2 *rds
 		arg2 *rds.DeleteDBProxyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBProxyWithContextStub
+	fakeReturns := fake.deleteDBProxyWithContextReturns
 	fake.recordInvocation("DeleteDBProxyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBProxyWithContextMutex.Unlock()
-	if fake.DeleteDBProxyWithContextStub != nil {
-		return fake.DeleteDBProxyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBProxyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13238,15 +13349,16 @@ func (fake *FakeRDSAPI) DeleteDBSecurityGroup(arg1 *rds.DeleteDBSecurityGroupInp
 	fake.deleteDBSecurityGroupArgsForCall = append(fake.deleteDBSecurityGroupArgsForCall, struct {
 		arg1 *rds.DeleteDBSecurityGroupInput
 	}{arg1})
+	stub := fake.DeleteDBSecurityGroupStub
+	fakeReturns := fake.deleteDBSecurityGroupReturns
 	fake.recordInvocation("DeleteDBSecurityGroup", []interface{}{arg1})
 	fake.deleteDBSecurityGroupMutex.Unlock()
-	if fake.DeleteDBSecurityGroupStub != nil {
-		return fake.DeleteDBSecurityGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSecurityGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13301,15 +13413,16 @@ func (fake *FakeRDSAPI) DeleteDBSecurityGroupRequest(arg1 *rds.DeleteDBSecurityG
 	fake.deleteDBSecurityGroupRequestArgsForCall = append(fake.deleteDBSecurityGroupRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBSecurityGroupInput
 	}{arg1})
+	stub := fake.DeleteDBSecurityGroupRequestStub
+	fakeReturns := fake.deleteDBSecurityGroupRequestReturns
 	fake.recordInvocation("DeleteDBSecurityGroupRequest", []interface{}{arg1})
 	fake.deleteDBSecurityGroupRequestMutex.Unlock()
-	if fake.DeleteDBSecurityGroupRequestStub != nil {
-		return fake.DeleteDBSecurityGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSecurityGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13366,15 +13479,16 @@ func (fake *FakeRDSAPI) DeleteDBSecurityGroupWithContext(arg1 context.Context, a
 		arg2 *rds.DeleteDBSecurityGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBSecurityGroupWithContextStub
+	fakeReturns := fake.deleteDBSecurityGroupWithContextReturns
 	fake.recordInvocation("DeleteDBSecurityGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBSecurityGroupWithContextMutex.Unlock()
-	if fake.DeleteDBSecurityGroupWithContextStub != nil {
-		return fake.DeleteDBSecurityGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSecurityGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13429,15 +13543,16 @@ func (fake *FakeRDSAPI) DeleteDBSnapshot(arg1 *rds.DeleteDBSnapshotInput) (*rds.
 	fake.deleteDBSnapshotArgsForCall = append(fake.deleteDBSnapshotArgsForCall, struct {
 		arg1 *rds.DeleteDBSnapshotInput
 	}{arg1})
+	stub := fake.DeleteDBSnapshotStub
+	fakeReturns := fake.deleteDBSnapshotReturns
 	fake.recordInvocation("DeleteDBSnapshot", []interface{}{arg1})
 	fake.deleteDBSnapshotMutex.Unlock()
-	if fake.DeleteDBSnapshotStub != nil {
-		return fake.DeleteDBSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13492,15 +13607,16 @@ func (fake *FakeRDSAPI) DeleteDBSnapshotRequest(arg1 *rds.DeleteDBSnapshotInput)
 	fake.deleteDBSnapshotRequestArgsForCall = append(fake.deleteDBSnapshotRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBSnapshotInput
 	}{arg1})
+	stub := fake.DeleteDBSnapshotRequestStub
+	fakeReturns := fake.deleteDBSnapshotRequestReturns
 	fake.recordInvocation("DeleteDBSnapshotRequest", []interface{}{arg1})
 	fake.deleteDBSnapshotRequestMutex.Unlock()
-	if fake.DeleteDBSnapshotRequestStub != nil {
-		return fake.DeleteDBSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13557,15 +13673,16 @@ func (fake *FakeRDSAPI) DeleteDBSnapshotWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.DeleteDBSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBSnapshotWithContextStub
+	fakeReturns := fake.deleteDBSnapshotWithContextReturns
 	fake.recordInvocation("DeleteDBSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBSnapshotWithContextMutex.Unlock()
-	if fake.DeleteDBSnapshotWithContextStub != nil {
-		return fake.DeleteDBSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13620,15 +13737,16 @@ func (fake *FakeRDSAPI) DeleteDBSubnetGroup(arg1 *rds.DeleteDBSubnetGroupInput) 
 	fake.deleteDBSubnetGroupArgsForCall = append(fake.deleteDBSubnetGroupArgsForCall, struct {
 		arg1 *rds.DeleteDBSubnetGroupInput
 	}{arg1})
+	stub := fake.DeleteDBSubnetGroupStub
+	fakeReturns := fake.deleteDBSubnetGroupReturns
 	fake.recordInvocation("DeleteDBSubnetGroup", []interface{}{arg1})
 	fake.deleteDBSubnetGroupMutex.Unlock()
-	if fake.DeleteDBSubnetGroupStub != nil {
-		return fake.DeleteDBSubnetGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSubnetGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13683,15 +13801,16 @@ func (fake *FakeRDSAPI) DeleteDBSubnetGroupRequest(arg1 *rds.DeleteDBSubnetGroup
 	fake.deleteDBSubnetGroupRequestArgsForCall = append(fake.deleteDBSubnetGroupRequestArgsForCall, struct {
 		arg1 *rds.DeleteDBSubnetGroupInput
 	}{arg1})
+	stub := fake.DeleteDBSubnetGroupRequestStub
+	fakeReturns := fake.deleteDBSubnetGroupRequestReturns
 	fake.recordInvocation("DeleteDBSubnetGroupRequest", []interface{}{arg1})
 	fake.deleteDBSubnetGroupRequestMutex.Unlock()
-	if fake.DeleteDBSubnetGroupRequestStub != nil {
-		return fake.DeleteDBSubnetGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSubnetGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13748,15 +13867,16 @@ func (fake *FakeRDSAPI) DeleteDBSubnetGroupWithContext(arg1 context.Context, arg
 		arg2 *rds.DeleteDBSubnetGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteDBSubnetGroupWithContextStub
+	fakeReturns := fake.deleteDBSubnetGroupWithContextReturns
 	fake.recordInvocation("DeleteDBSubnetGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteDBSubnetGroupWithContextMutex.Unlock()
-	if fake.DeleteDBSubnetGroupWithContextStub != nil {
-		return fake.DeleteDBSubnetGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteDBSubnetGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13811,15 +13931,16 @@ func (fake *FakeRDSAPI) DeleteEventSubscription(arg1 *rds.DeleteEventSubscriptio
 	fake.deleteEventSubscriptionArgsForCall = append(fake.deleteEventSubscriptionArgsForCall, struct {
 		arg1 *rds.DeleteEventSubscriptionInput
 	}{arg1})
+	stub := fake.DeleteEventSubscriptionStub
+	fakeReturns := fake.deleteEventSubscriptionReturns
 	fake.recordInvocation("DeleteEventSubscription", []interface{}{arg1})
 	fake.deleteEventSubscriptionMutex.Unlock()
-	if fake.DeleteEventSubscriptionStub != nil {
-		return fake.DeleteEventSubscriptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteEventSubscriptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13874,15 +13995,16 @@ func (fake *FakeRDSAPI) DeleteEventSubscriptionRequest(arg1 *rds.DeleteEventSubs
 	fake.deleteEventSubscriptionRequestArgsForCall = append(fake.deleteEventSubscriptionRequestArgsForCall, struct {
 		arg1 *rds.DeleteEventSubscriptionInput
 	}{arg1})
+	stub := fake.DeleteEventSubscriptionRequestStub
+	fakeReturns := fake.deleteEventSubscriptionRequestReturns
 	fake.recordInvocation("DeleteEventSubscriptionRequest", []interface{}{arg1})
 	fake.deleteEventSubscriptionRequestMutex.Unlock()
-	if fake.DeleteEventSubscriptionRequestStub != nil {
-		return fake.DeleteEventSubscriptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteEventSubscriptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13939,15 +14061,16 @@ func (fake *FakeRDSAPI) DeleteEventSubscriptionWithContext(arg1 context.Context,
 		arg2 *rds.DeleteEventSubscriptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteEventSubscriptionWithContextStub
+	fakeReturns := fake.deleteEventSubscriptionWithContextReturns
 	fake.recordInvocation("DeleteEventSubscriptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteEventSubscriptionWithContextMutex.Unlock()
-	if fake.DeleteEventSubscriptionWithContextStub != nil {
-		return fake.DeleteEventSubscriptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteEventSubscriptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14002,15 +14125,16 @@ func (fake *FakeRDSAPI) DeleteGlobalCluster(arg1 *rds.DeleteGlobalClusterInput) 
 	fake.deleteGlobalClusterArgsForCall = append(fake.deleteGlobalClusterArgsForCall, struct {
 		arg1 *rds.DeleteGlobalClusterInput
 	}{arg1})
+	stub := fake.DeleteGlobalClusterStub
+	fakeReturns := fake.deleteGlobalClusterReturns
 	fake.recordInvocation("DeleteGlobalCluster", []interface{}{arg1})
 	fake.deleteGlobalClusterMutex.Unlock()
-	if fake.DeleteGlobalClusterStub != nil {
-		return fake.DeleteGlobalClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteGlobalClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14065,15 +14189,16 @@ func (fake *FakeRDSAPI) DeleteGlobalClusterRequest(arg1 *rds.DeleteGlobalCluster
 	fake.deleteGlobalClusterRequestArgsForCall = append(fake.deleteGlobalClusterRequestArgsForCall, struct {
 		arg1 *rds.DeleteGlobalClusterInput
 	}{arg1})
+	stub := fake.DeleteGlobalClusterRequestStub
+	fakeReturns := fake.deleteGlobalClusterRequestReturns
 	fake.recordInvocation("DeleteGlobalClusterRequest", []interface{}{arg1})
 	fake.deleteGlobalClusterRequestMutex.Unlock()
-	if fake.DeleteGlobalClusterRequestStub != nil {
-		return fake.DeleteGlobalClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteGlobalClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14130,15 +14255,16 @@ func (fake *FakeRDSAPI) DeleteGlobalClusterWithContext(arg1 context.Context, arg
 		arg2 *rds.DeleteGlobalClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteGlobalClusterWithContextStub
+	fakeReturns := fake.deleteGlobalClusterWithContextReturns
 	fake.recordInvocation("DeleteGlobalClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteGlobalClusterWithContextMutex.Unlock()
-	if fake.DeleteGlobalClusterWithContextStub != nil {
-		return fake.DeleteGlobalClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteGlobalClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14193,15 +14319,16 @@ func (fake *FakeRDSAPI) DeleteInstallationMedia(arg1 *rds.DeleteInstallationMedi
 	fake.deleteInstallationMediaArgsForCall = append(fake.deleteInstallationMediaArgsForCall, struct {
 		arg1 *rds.DeleteInstallationMediaInput
 	}{arg1})
+	stub := fake.DeleteInstallationMediaStub
+	fakeReturns := fake.deleteInstallationMediaReturns
 	fake.recordInvocation("DeleteInstallationMedia", []interface{}{arg1})
 	fake.deleteInstallationMediaMutex.Unlock()
-	if fake.DeleteInstallationMediaStub != nil {
-		return fake.DeleteInstallationMediaStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteInstallationMediaReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14256,15 +14383,16 @@ func (fake *FakeRDSAPI) DeleteInstallationMediaRequest(arg1 *rds.DeleteInstallat
 	fake.deleteInstallationMediaRequestArgsForCall = append(fake.deleteInstallationMediaRequestArgsForCall, struct {
 		arg1 *rds.DeleteInstallationMediaInput
 	}{arg1})
+	stub := fake.DeleteInstallationMediaRequestStub
+	fakeReturns := fake.deleteInstallationMediaRequestReturns
 	fake.recordInvocation("DeleteInstallationMediaRequest", []interface{}{arg1})
 	fake.deleteInstallationMediaRequestMutex.Unlock()
-	if fake.DeleteInstallationMediaRequestStub != nil {
-		return fake.DeleteInstallationMediaRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteInstallationMediaRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14321,15 +14449,16 @@ func (fake *FakeRDSAPI) DeleteInstallationMediaWithContext(arg1 context.Context,
 		arg2 *rds.DeleteInstallationMediaInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteInstallationMediaWithContextStub
+	fakeReturns := fake.deleteInstallationMediaWithContextReturns
 	fake.recordInvocation("DeleteInstallationMediaWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteInstallationMediaWithContextMutex.Unlock()
-	if fake.DeleteInstallationMediaWithContextStub != nil {
-		return fake.DeleteInstallationMediaWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteInstallationMediaWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14384,15 +14513,16 @@ func (fake *FakeRDSAPI) DeleteOptionGroup(arg1 *rds.DeleteOptionGroupInput) (*rd
 	fake.deleteOptionGroupArgsForCall = append(fake.deleteOptionGroupArgsForCall, struct {
 		arg1 *rds.DeleteOptionGroupInput
 	}{arg1})
+	stub := fake.DeleteOptionGroupStub
+	fakeReturns := fake.deleteOptionGroupReturns
 	fake.recordInvocation("DeleteOptionGroup", []interface{}{arg1})
 	fake.deleteOptionGroupMutex.Unlock()
-	if fake.DeleteOptionGroupStub != nil {
-		return fake.DeleteOptionGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteOptionGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14447,15 +14577,16 @@ func (fake *FakeRDSAPI) DeleteOptionGroupRequest(arg1 *rds.DeleteOptionGroupInpu
 	fake.deleteOptionGroupRequestArgsForCall = append(fake.deleteOptionGroupRequestArgsForCall, struct {
 		arg1 *rds.DeleteOptionGroupInput
 	}{arg1})
+	stub := fake.DeleteOptionGroupRequestStub
+	fakeReturns := fake.deleteOptionGroupRequestReturns
 	fake.recordInvocation("DeleteOptionGroupRequest", []interface{}{arg1})
 	fake.deleteOptionGroupRequestMutex.Unlock()
-	if fake.DeleteOptionGroupRequestStub != nil {
-		return fake.DeleteOptionGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteOptionGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14512,15 +14643,16 @@ func (fake *FakeRDSAPI) DeleteOptionGroupWithContext(arg1 context.Context, arg2 
 		arg2 *rds.DeleteOptionGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteOptionGroupWithContextStub
+	fakeReturns := fake.deleteOptionGroupWithContextReturns
 	fake.recordInvocation("DeleteOptionGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteOptionGroupWithContextMutex.Unlock()
-	if fake.DeleteOptionGroupWithContextStub != nil {
-		return fake.DeleteOptionGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteOptionGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14575,15 +14707,16 @@ func (fake *FakeRDSAPI) DeregisterDBProxyTargets(arg1 *rds.DeregisterDBProxyTarg
 	fake.deregisterDBProxyTargetsArgsForCall = append(fake.deregisterDBProxyTargetsArgsForCall, struct {
 		arg1 *rds.DeregisterDBProxyTargetsInput
 	}{arg1})
+	stub := fake.DeregisterDBProxyTargetsStub
+	fakeReturns := fake.deregisterDBProxyTargetsReturns
 	fake.recordInvocation("DeregisterDBProxyTargets", []interface{}{arg1})
 	fake.deregisterDBProxyTargetsMutex.Unlock()
-	if fake.DeregisterDBProxyTargetsStub != nil {
-		return fake.DeregisterDBProxyTargetsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deregisterDBProxyTargetsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14638,15 +14771,16 @@ func (fake *FakeRDSAPI) DeregisterDBProxyTargetsRequest(arg1 *rds.DeregisterDBPr
 	fake.deregisterDBProxyTargetsRequestArgsForCall = append(fake.deregisterDBProxyTargetsRequestArgsForCall, struct {
 		arg1 *rds.DeregisterDBProxyTargetsInput
 	}{arg1})
+	stub := fake.DeregisterDBProxyTargetsRequestStub
+	fakeReturns := fake.deregisterDBProxyTargetsRequestReturns
 	fake.recordInvocation("DeregisterDBProxyTargetsRequest", []interface{}{arg1})
 	fake.deregisterDBProxyTargetsRequestMutex.Unlock()
-	if fake.DeregisterDBProxyTargetsRequestStub != nil {
-		return fake.DeregisterDBProxyTargetsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deregisterDBProxyTargetsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14703,15 +14837,16 @@ func (fake *FakeRDSAPI) DeregisterDBProxyTargetsWithContext(arg1 context.Context
 		arg2 *rds.DeregisterDBProxyTargetsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeregisterDBProxyTargetsWithContextStub
+	fakeReturns := fake.deregisterDBProxyTargetsWithContextReturns
 	fake.recordInvocation("DeregisterDBProxyTargetsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deregisterDBProxyTargetsWithContextMutex.Unlock()
-	if fake.DeregisterDBProxyTargetsWithContextStub != nil {
-		return fake.DeregisterDBProxyTargetsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deregisterDBProxyTargetsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14766,15 +14901,16 @@ func (fake *FakeRDSAPI) DescribeAccountAttributes(arg1 *rds.DescribeAccountAttri
 	fake.describeAccountAttributesArgsForCall = append(fake.describeAccountAttributesArgsForCall, struct {
 		arg1 *rds.DescribeAccountAttributesInput
 	}{arg1})
+	stub := fake.DescribeAccountAttributesStub
+	fakeReturns := fake.describeAccountAttributesReturns
 	fake.recordInvocation("DescribeAccountAttributes", []interface{}{arg1})
 	fake.describeAccountAttributesMutex.Unlock()
-	if fake.DescribeAccountAttributesStub != nil {
-		return fake.DescribeAccountAttributesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAccountAttributesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14829,15 +14965,16 @@ func (fake *FakeRDSAPI) DescribeAccountAttributesRequest(arg1 *rds.DescribeAccou
 	fake.describeAccountAttributesRequestArgsForCall = append(fake.describeAccountAttributesRequestArgsForCall, struct {
 		arg1 *rds.DescribeAccountAttributesInput
 	}{arg1})
+	stub := fake.DescribeAccountAttributesRequestStub
+	fakeReturns := fake.describeAccountAttributesRequestReturns
 	fake.recordInvocation("DescribeAccountAttributesRequest", []interface{}{arg1})
 	fake.describeAccountAttributesRequestMutex.Unlock()
-	if fake.DescribeAccountAttributesRequestStub != nil {
-		return fake.DescribeAccountAttributesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAccountAttributesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14894,15 +15031,16 @@ func (fake *FakeRDSAPI) DescribeAccountAttributesWithContext(arg1 context.Contex
 		arg2 *rds.DescribeAccountAttributesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeAccountAttributesWithContextStub
+	fakeReturns := fake.describeAccountAttributesWithContextReturns
 	fake.recordInvocation("DescribeAccountAttributesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeAccountAttributesWithContextMutex.Unlock()
-	if fake.DescribeAccountAttributesWithContextStub != nil {
-		return fake.DescribeAccountAttributesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeAccountAttributesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14957,15 +15095,16 @@ func (fake *FakeRDSAPI) DescribeCertificates(arg1 *rds.DescribeCertificatesInput
 	fake.describeCertificatesArgsForCall = append(fake.describeCertificatesArgsForCall, struct {
 		arg1 *rds.DescribeCertificatesInput
 	}{arg1})
+	stub := fake.DescribeCertificatesStub
+	fakeReturns := fake.describeCertificatesReturns
 	fake.recordInvocation("DescribeCertificates", []interface{}{arg1})
 	fake.describeCertificatesMutex.Unlock()
-	if fake.DescribeCertificatesStub != nil {
-		return fake.DescribeCertificatesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeCertificatesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15020,15 +15159,16 @@ func (fake *FakeRDSAPI) DescribeCertificatesRequest(arg1 *rds.DescribeCertificat
 	fake.describeCertificatesRequestArgsForCall = append(fake.describeCertificatesRequestArgsForCall, struct {
 		arg1 *rds.DescribeCertificatesInput
 	}{arg1})
+	stub := fake.DescribeCertificatesRequestStub
+	fakeReturns := fake.describeCertificatesRequestReturns
 	fake.recordInvocation("DescribeCertificatesRequest", []interface{}{arg1})
 	fake.describeCertificatesRequestMutex.Unlock()
-	if fake.DescribeCertificatesRequestStub != nil {
-		return fake.DescribeCertificatesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeCertificatesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15085,15 +15225,16 @@ func (fake *FakeRDSAPI) DescribeCertificatesWithContext(arg1 context.Context, ar
 		arg2 *rds.DescribeCertificatesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeCertificatesWithContextStub
+	fakeReturns := fake.describeCertificatesWithContextReturns
 	fake.recordInvocation("DescribeCertificatesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeCertificatesWithContextMutex.Unlock()
-	if fake.DescribeCertificatesWithContextStub != nil {
-		return fake.DescribeCertificatesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeCertificatesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15148,15 +15289,16 @@ func (fake *FakeRDSAPI) DescribeCustomAvailabilityZones(arg1 *rds.DescribeCustom
 	fake.describeCustomAvailabilityZonesArgsForCall = append(fake.describeCustomAvailabilityZonesArgsForCall, struct {
 		arg1 *rds.DescribeCustomAvailabilityZonesInput
 	}{arg1})
+	stub := fake.DescribeCustomAvailabilityZonesStub
+	fakeReturns := fake.describeCustomAvailabilityZonesReturns
 	fake.recordInvocation("DescribeCustomAvailabilityZones", []interface{}{arg1})
 	fake.describeCustomAvailabilityZonesMutex.Unlock()
-	if fake.DescribeCustomAvailabilityZonesStub != nil {
-		return fake.DescribeCustomAvailabilityZonesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeCustomAvailabilityZonesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15212,15 +15354,16 @@ func (fake *FakeRDSAPI) DescribeCustomAvailabilityZonesPages(arg1 *rds.DescribeC
 		arg1 *rds.DescribeCustomAvailabilityZonesInput
 		arg2 func(*rds.DescribeCustomAvailabilityZonesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeCustomAvailabilityZonesPagesStub
+	fakeReturns := fake.describeCustomAvailabilityZonesPagesReturns
 	fake.recordInvocation("DescribeCustomAvailabilityZonesPages", []interface{}{arg1, arg2})
 	fake.describeCustomAvailabilityZonesPagesMutex.Unlock()
-	if fake.DescribeCustomAvailabilityZonesPagesStub != nil {
-		return fake.DescribeCustomAvailabilityZonesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeCustomAvailabilityZonesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -15275,15 +15418,16 @@ func (fake *FakeRDSAPI) DescribeCustomAvailabilityZonesPagesWithContext(arg1 con
 		arg3 func(*rds.DescribeCustomAvailabilityZonesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeCustomAvailabilityZonesPagesWithContextStub
+	fakeReturns := fake.describeCustomAvailabilityZonesPagesWithContextReturns
 	fake.recordInvocation("DescribeCustomAvailabilityZonesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeCustomAvailabilityZonesPagesWithContextMutex.Unlock()
-	if fake.DescribeCustomAvailabilityZonesPagesWithContextStub != nil {
-		return fake.DescribeCustomAvailabilityZonesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeCustomAvailabilityZonesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -15335,15 +15479,16 @@ func (fake *FakeRDSAPI) DescribeCustomAvailabilityZonesRequest(arg1 *rds.Describ
 	fake.describeCustomAvailabilityZonesRequestArgsForCall = append(fake.describeCustomAvailabilityZonesRequestArgsForCall, struct {
 		arg1 *rds.DescribeCustomAvailabilityZonesInput
 	}{arg1})
+	stub := fake.DescribeCustomAvailabilityZonesRequestStub
+	fakeReturns := fake.describeCustomAvailabilityZonesRequestReturns
 	fake.recordInvocation("DescribeCustomAvailabilityZonesRequest", []interface{}{arg1})
 	fake.describeCustomAvailabilityZonesRequestMutex.Unlock()
-	if fake.DescribeCustomAvailabilityZonesRequestStub != nil {
-		return fake.DescribeCustomAvailabilityZonesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeCustomAvailabilityZonesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15400,15 +15545,16 @@ func (fake *FakeRDSAPI) DescribeCustomAvailabilityZonesWithContext(arg1 context.
 		arg2 *rds.DescribeCustomAvailabilityZonesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeCustomAvailabilityZonesWithContextStub
+	fakeReturns := fake.describeCustomAvailabilityZonesWithContextReturns
 	fake.recordInvocation("DescribeCustomAvailabilityZonesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeCustomAvailabilityZonesWithContextMutex.Unlock()
-	if fake.DescribeCustomAvailabilityZonesWithContextStub != nil {
-		return fake.DescribeCustomAvailabilityZonesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeCustomAvailabilityZonesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15463,15 +15609,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterBacktracks(arg1 *rds.DescribeDBClusterB
 	fake.describeDBClusterBacktracksArgsForCall = append(fake.describeDBClusterBacktracksArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterBacktracksInput
 	}{arg1})
+	stub := fake.DescribeDBClusterBacktracksStub
+	fakeReturns := fake.describeDBClusterBacktracksReturns
 	fake.recordInvocation("DescribeDBClusterBacktracks", []interface{}{arg1})
 	fake.describeDBClusterBacktracksMutex.Unlock()
-	if fake.DescribeDBClusterBacktracksStub != nil {
-		return fake.DescribeDBClusterBacktracksStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterBacktracksReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15526,15 +15673,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterBacktracksRequest(arg1 *rds.DescribeDBC
 	fake.describeDBClusterBacktracksRequestArgsForCall = append(fake.describeDBClusterBacktracksRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterBacktracksInput
 	}{arg1})
+	stub := fake.DescribeDBClusterBacktracksRequestStub
+	fakeReturns := fake.describeDBClusterBacktracksRequestReturns
 	fake.recordInvocation("DescribeDBClusterBacktracksRequest", []interface{}{arg1})
 	fake.describeDBClusterBacktracksRequestMutex.Unlock()
-	if fake.DescribeDBClusterBacktracksRequestStub != nil {
-		return fake.DescribeDBClusterBacktracksRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterBacktracksRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15591,15 +15739,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterBacktracksWithContext(arg1 context.Cont
 		arg2 *rds.DescribeDBClusterBacktracksInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBClusterBacktracksWithContextStub
+	fakeReturns := fake.describeDBClusterBacktracksWithContextReturns
 	fake.recordInvocation("DescribeDBClusterBacktracksWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBClusterBacktracksWithContextMutex.Unlock()
-	if fake.DescribeDBClusterBacktracksWithContextStub != nil {
-		return fake.DescribeDBClusterBacktracksWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterBacktracksWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15654,15 +15803,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterEndpoints(arg1 *rds.DescribeDBClusterEn
 	fake.describeDBClusterEndpointsArgsForCall = append(fake.describeDBClusterEndpointsArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterEndpointsInput
 	}{arg1})
+	stub := fake.DescribeDBClusterEndpointsStub
+	fakeReturns := fake.describeDBClusterEndpointsReturns
 	fake.recordInvocation("DescribeDBClusterEndpoints", []interface{}{arg1})
 	fake.describeDBClusterEndpointsMutex.Unlock()
-	if fake.DescribeDBClusterEndpointsStub != nil {
-		return fake.DescribeDBClusterEndpointsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterEndpointsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15717,15 +15867,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterEndpointsRequest(arg1 *rds.DescribeDBCl
 	fake.describeDBClusterEndpointsRequestArgsForCall = append(fake.describeDBClusterEndpointsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterEndpointsInput
 	}{arg1})
+	stub := fake.DescribeDBClusterEndpointsRequestStub
+	fakeReturns := fake.describeDBClusterEndpointsRequestReturns
 	fake.recordInvocation("DescribeDBClusterEndpointsRequest", []interface{}{arg1})
 	fake.describeDBClusterEndpointsRequestMutex.Unlock()
-	if fake.DescribeDBClusterEndpointsRequestStub != nil {
-		return fake.DescribeDBClusterEndpointsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterEndpointsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15782,15 +15933,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterEndpointsWithContext(arg1 context.Conte
 		arg2 *rds.DescribeDBClusterEndpointsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBClusterEndpointsWithContextStub
+	fakeReturns := fake.describeDBClusterEndpointsWithContextReturns
 	fake.recordInvocation("DescribeDBClusterEndpointsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBClusterEndpointsWithContextMutex.Unlock()
-	if fake.DescribeDBClusterEndpointsWithContextStub != nil {
-		return fake.DescribeDBClusterEndpointsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterEndpointsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15845,15 +15997,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterParameterGroups(arg1 *rds.DescribeDBClu
 	fake.describeDBClusterParameterGroupsArgsForCall = append(fake.describeDBClusterParameterGroupsArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterParameterGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBClusterParameterGroupsStub
+	fakeReturns := fake.describeDBClusterParameterGroupsReturns
 	fake.recordInvocation("DescribeDBClusterParameterGroups", []interface{}{arg1})
 	fake.describeDBClusterParameterGroupsMutex.Unlock()
-	if fake.DescribeDBClusterParameterGroupsStub != nil {
-		return fake.DescribeDBClusterParameterGroupsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterParameterGroupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15908,15 +16061,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsRequest(arg1 *rds.Descri
 	fake.describeDBClusterParameterGroupsRequestArgsForCall = append(fake.describeDBClusterParameterGroupsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterParameterGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBClusterParameterGroupsRequestStub
+	fakeReturns := fake.describeDBClusterParameterGroupsRequestReturns
 	fake.recordInvocation("DescribeDBClusterParameterGroupsRequest", []interface{}{arg1})
 	fake.describeDBClusterParameterGroupsRequestMutex.Unlock()
-	if fake.DescribeDBClusterParameterGroupsRequestStub != nil {
-		return fake.DescribeDBClusterParameterGroupsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterParameterGroupsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15973,15 +16127,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsWithContext(arg1 context
 		arg2 *rds.DescribeDBClusterParameterGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBClusterParameterGroupsWithContextStub
+	fakeReturns := fake.describeDBClusterParameterGroupsWithContextReturns
 	fake.recordInvocation("DescribeDBClusterParameterGroupsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBClusterParameterGroupsWithContextMutex.Unlock()
-	if fake.DescribeDBClusterParameterGroupsWithContextStub != nil {
-		return fake.DescribeDBClusterParameterGroupsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterParameterGroupsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16036,15 +16191,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterParameters(arg1 *rds.DescribeDBClusterP
 	fake.describeDBClusterParametersArgsForCall = append(fake.describeDBClusterParametersArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterParametersInput
 	}{arg1})
+	stub := fake.DescribeDBClusterParametersStub
+	fakeReturns := fake.describeDBClusterParametersReturns
 	fake.recordInvocation("DescribeDBClusterParameters", []interface{}{arg1})
 	fake.describeDBClusterParametersMutex.Unlock()
-	if fake.DescribeDBClusterParametersStub != nil {
-		return fake.DescribeDBClusterParametersStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterParametersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16099,15 +16255,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterParametersRequest(arg1 *rds.DescribeDBC
 	fake.describeDBClusterParametersRequestArgsForCall = append(fake.describeDBClusterParametersRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterParametersInput
 	}{arg1})
+	stub := fake.DescribeDBClusterParametersRequestStub
+	fakeReturns := fake.describeDBClusterParametersRequestReturns
 	fake.recordInvocation("DescribeDBClusterParametersRequest", []interface{}{arg1})
 	fake.describeDBClusterParametersRequestMutex.Unlock()
-	if fake.DescribeDBClusterParametersRequestStub != nil {
-		return fake.DescribeDBClusterParametersRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterParametersRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16164,15 +16321,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterParametersWithContext(arg1 context.Cont
 		arg2 *rds.DescribeDBClusterParametersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBClusterParametersWithContextStub
+	fakeReturns := fake.describeDBClusterParametersWithContextReturns
 	fake.recordInvocation("DescribeDBClusterParametersWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBClusterParametersWithContextMutex.Unlock()
-	if fake.DescribeDBClusterParametersWithContextStub != nil {
-		return fake.DescribeDBClusterParametersWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterParametersWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16227,15 +16385,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterSnapshotAttributes(arg1 *rds.DescribeDB
 	fake.describeDBClusterSnapshotAttributesArgsForCall = append(fake.describeDBClusterSnapshotAttributesArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterSnapshotAttributesInput
 	}{arg1})
+	stub := fake.DescribeDBClusterSnapshotAttributesStub
+	fakeReturns := fake.describeDBClusterSnapshotAttributesReturns
 	fake.recordInvocation("DescribeDBClusterSnapshotAttributes", []interface{}{arg1})
 	fake.describeDBClusterSnapshotAttributesMutex.Unlock()
-	if fake.DescribeDBClusterSnapshotAttributesStub != nil {
-		return fake.DescribeDBClusterSnapshotAttributesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterSnapshotAttributesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16290,15 +16449,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterSnapshotAttributesRequest(arg1 *rds.Des
 	fake.describeDBClusterSnapshotAttributesRequestArgsForCall = append(fake.describeDBClusterSnapshotAttributesRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterSnapshotAttributesInput
 	}{arg1})
+	stub := fake.DescribeDBClusterSnapshotAttributesRequestStub
+	fakeReturns := fake.describeDBClusterSnapshotAttributesRequestReturns
 	fake.recordInvocation("DescribeDBClusterSnapshotAttributesRequest", []interface{}{arg1})
 	fake.describeDBClusterSnapshotAttributesRequestMutex.Unlock()
-	if fake.DescribeDBClusterSnapshotAttributesRequestStub != nil {
-		return fake.DescribeDBClusterSnapshotAttributesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterSnapshotAttributesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16355,15 +16515,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterSnapshotAttributesWithContext(arg1 cont
 		arg2 *rds.DescribeDBClusterSnapshotAttributesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBClusterSnapshotAttributesWithContextStub
+	fakeReturns := fake.describeDBClusterSnapshotAttributesWithContextReturns
 	fake.recordInvocation("DescribeDBClusterSnapshotAttributesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBClusterSnapshotAttributesWithContextMutex.Unlock()
-	if fake.DescribeDBClusterSnapshotAttributesWithContextStub != nil {
-		return fake.DescribeDBClusterSnapshotAttributesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterSnapshotAttributesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16418,15 +16579,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterSnapshots(arg1 *rds.DescribeDBClusterSn
 	fake.describeDBClusterSnapshotsArgsForCall = append(fake.describeDBClusterSnapshotsArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterSnapshotsInput
 	}{arg1})
+	stub := fake.DescribeDBClusterSnapshotsStub
+	fakeReturns := fake.describeDBClusterSnapshotsReturns
 	fake.recordInvocation("DescribeDBClusterSnapshots", []interface{}{arg1})
 	fake.describeDBClusterSnapshotsMutex.Unlock()
-	if fake.DescribeDBClusterSnapshotsStub != nil {
-		return fake.DescribeDBClusterSnapshotsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterSnapshotsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16481,15 +16643,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsRequest(arg1 *rds.DescribeDBCl
 	fake.describeDBClusterSnapshotsRequestArgsForCall = append(fake.describeDBClusterSnapshotsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterSnapshotsInput
 	}{arg1})
+	stub := fake.DescribeDBClusterSnapshotsRequestStub
+	fakeReturns := fake.describeDBClusterSnapshotsRequestReturns
 	fake.recordInvocation("DescribeDBClusterSnapshotsRequest", []interface{}{arg1})
 	fake.describeDBClusterSnapshotsRequestMutex.Unlock()
-	if fake.DescribeDBClusterSnapshotsRequestStub != nil {
-		return fake.DescribeDBClusterSnapshotsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterSnapshotsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16546,15 +16709,16 @@ func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsWithContext(arg1 context.Conte
 		arg2 *rds.DescribeDBClusterSnapshotsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBClusterSnapshotsWithContextStub
+	fakeReturns := fake.describeDBClusterSnapshotsWithContextReturns
 	fake.recordInvocation("DescribeDBClusterSnapshotsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBClusterSnapshotsWithContextMutex.Unlock()
-	if fake.DescribeDBClusterSnapshotsWithContextStub != nil {
-		return fake.DescribeDBClusterSnapshotsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClusterSnapshotsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16609,15 +16773,16 @@ func (fake *FakeRDSAPI) DescribeDBClusters(arg1 *rds.DescribeDBClustersInput) (*
 	fake.describeDBClustersArgsForCall = append(fake.describeDBClustersArgsForCall, struct {
 		arg1 *rds.DescribeDBClustersInput
 	}{arg1})
+	stub := fake.DescribeDBClustersStub
+	fakeReturns := fake.describeDBClustersReturns
 	fake.recordInvocation("DescribeDBClusters", []interface{}{arg1})
 	fake.describeDBClustersMutex.Unlock()
-	if fake.DescribeDBClustersStub != nil {
-		return fake.DescribeDBClustersStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClustersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16673,15 +16838,16 @@ func (fake *FakeRDSAPI) DescribeDBClustersPages(arg1 *rds.DescribeDBClustersInpu
 		arg1 *rds.DescribeDBClustersInput
 		arg2 func(*rds.DescribeDBClustersOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBClustersPagesStub
+	fakeReturns := fake.describeDBClustersPagesReturns
 	fake.recordInvocation("DescribeDBClustersPages", []interface{}{arg1, arg2})
 	fake.describeDBClustersPagesMutex.Unlock()
-	if fake.DescribeDBClustersPagesStub != nil {
-		return fake.DescribeDBClustersPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBClustersPagesReturns
 	return fakeReturns.result1
 }
 
@@ -16736,15 +16902,16 @@ func (fake *FakeRDSAPI) DescribeDBClustersPagesWithContext(arg1 context.Context,
 		arg3 func(*rds.DescribeDBClustersOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBClustersPagesWithContextStub
+	fakeReturns := fake.describeDBClustersPagesWithContextReturns
 	fake.recordInvocation("DescribeDBClustersPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBClustersPagesWithContextMutex.Unlock()
-	if fake.DescribeDBClustersPagesWithContextStub != nil {
-		return fake.DescribeDBClustersPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBClustersPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -16796,15 +16963,16 @@ func (fake *FakeRDSAPI) DescribeDBClustersRequest(arg1 *rds.DescribeDBClustersIn
 	fake.describeDBClustersRequestArgsForCall = append(fake.describeDBClustersRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBClustersInput
 	}{arg1})
+	stub := fake.DescribeDBClustersRequestStub
+	fakeReturns := fake.describeDBClustersRequestReturns
 	fake.recordInvocation("DescribeDBClustersRequest", []interface{}{arg1})
 	fake.describeDBClustersRequestMutex.Unlock()
-	if fake.DescribeDBClustersRequestStub != nil {
-		return fake.DescribeDBClustersRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClustersRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16861,15 +17029,16 @@ func (fake *FakeRDSAPI) DescribeDBClustersWithContext(arg1 context.Context, arg2
 		arg2 *rds.DescribeDBClustersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBClustersWithContextStub
+	fakeReturns := fake.describeDBClustersWithContextReturns
 	fake.recordInvocation("DescribeDBClustersWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBClustersWithContextMutex.Unlock()
-	if fake.DescribeDBClustersWithContextStub != nil {
-		return fake.DescribeDBClustersWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBClustersWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16924,15 +17093,16 @@ func (fake *FakeRDSAPI) DescribeDBEngineVersions(arg1 *rds.DescribeDBEngineVersi
 	fake.describeDBEngineVersionsArgsForCall = append(fake.describeDBEngineVersionsArgsForCall, struct {
 		arg1 *rds.DescribeDBEngineVersionsInput
 	}{arg1})
+	stub := fake.DescribeDBEngineVersionsStub
+	fakeReturns := fake.describeDBEngineVersionsReturns
 	fake.recordInvocation("DescribeDBEngineVersions", []interface{}{arg1})
 	fake.describeDBEngineVersionsMutex.Unlock()
-	if fake.DescribeDBEngineVersionsStub != nil {
-		return fake.DescribeDBEngineVersionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBEngineVersionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16988,15 +17158,16 @@ func (fake *FakeRDSAPI) DescribeDBEngineVersionsPages(arg1 *rds.DescribeDBEngine
 		arg1 *rds.DescribeDBEngineVersionsInput
 		arg2 func(*rds.DescribeDBEngineVersionsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBEngineVersionsPagesStub
+	fakeReturns := fake.describeDBEngineVersionsPagesReturns
 	fake.recordInvocation("DescribeDBEngineVersionsPages", []interface{}{arg1, arg2})
 	fake.describeDBEngineVersionsPagesMutex.Unlock()
-	if fake.DescribeDBEngineVersionsPagesStub != nil {
-		return fake.DescribeDBEngineVersionsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBEngineVersionsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -17051,15 +17222,16 @@ func (fake *FakeRDSAPI) DescribeDBEngineVersionsPagesWithContext(arg1 context.Co
 		arg3 func(*rds.DescribeDBEngineVersionsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBEngineVersionsPagesWithContextStub
+	fakeReturns := fake.describeDBEngineVersionsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBEngineVersionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBEngineVersionsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBEngineVersionsPagesWithContextStub != nil {
-		return fake.DescribeDBEngineVersionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBEngineVersionsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -17111,15 +17283,16 @@ func (fake *FakeRDSAPI) DescribeDBEngineVersionsRequest(arg1 *rds.DescribeDBEngi
 	fake.describeDBEngineVersionsRequestArgsForCall = append(fake.describeDBEngineVersionsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBEngineVersionsInput
 	}{arg1})
+	stub := fake.DescribeDBEngineVersionsRequestStub
+	fakeReturns := fake.describeDBEngineVersionsRequestReturns
 	fake.recordInvocation("DescribeDBEngineVersionsRequest", []interface{}{arg1})
 	fake.describeDBEngineVersionsRequestMutex.Unlock()
-	if fake.DescribeDBEngineVersionsRequestStub != nil {
-		return fake.DescribeDBEngineVersionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBEngineVersionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17176,15 +17349,16 @@ func (fake *FakeRDSAPI) DescribeDBEngineVersionsWithContext(arg1 context.Context
 		arg2 *rds.DescribeDBEngineVersionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBEngineVersionsWithContextStub
+	fakeReturns := fake.describeDBEngineVersionsWithContextReturns
 	fake.recordInvocation("DescribeDBEngineVersionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBEngineVersionsWithContextMutex.Unlock()
-	if fake.DescribeDBEngineVersionsWithContextStub != nil {
-		return fake.DescribeDBEngineVersionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBEngineVersionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17239,15 +17413,16 @@ func (fake *FakeRDSAPI) DescribeDBInstanceAutomatedBackups(arg1 *rds.DescribeDBI
 	fake.describeDBInstanceAutomatedBackupsArgsForCall = append(fake.describeDBInstanceAutomatedBackupsArgsForCall, struct {
 		arg1 *rds.DescribeDBInstanceAutomatedBackupsInput
 	}{arg1})
+	stub := fake.DescribeDBInstanceAutomatedBackupsStub
+	fakeReturns := fake.describeDBInstanceAutomatedBackupsReturns
 	fake.recordInvocation("DescribeDBInstanceAutomatedBackups", []interface{}{arg1})
 	fake.describeDBInstanceAutomatedBackupsMutex.Unlock()
-	if fake.DescribeDBInstanceAutomatedBackupsStub != nil {
-		return fake.DescribeDBInstanceAutomatedBackupsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBInstanceAutomatedBackupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17303,15 +17478,16 @@ func (fake *FakeRDSAPI) DescribeDBInstanceAutomatedBackupsPages(arg1 *rds.Descri
 		arg1 *rds.DescribeDBInstanceAutomatedBackupsInput
 		arg2 func(*rds.DescribeDBInstanceAutomatedBackupsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBInstanceAutomatedBackupsPagesStub
+	fakeReturns := fake.describeDBInstanceAutomatedBackupsPagesReturns
 	fake.recordInvocation("DescribeDBInstanceAutomatedBackupsPages", []interface{}{arg1, arg2})
 	fake.describeDBInstanceAutomatedBackupsPagesMutex.Unlock()
-	if fake.DescribeDBInstanceAutomatedBackupsPagesStub != nil {
-		return fake.DescribeDBInstanceAutomatedBackupsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBInstanceAutomatedBackupsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -17366,15 +17542,16 @@ func (fake *FakeRDSAPI) DescribeDBInstanceAutomatedBackupsPagesWithContext(arg1 
 		arg3 func(*rds.DescribeDBInstanceAutomatedBackupsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBInstanceAutomatedBackupsPagesWithContextStub
+	fakeReturns := fake.describeDBInstanceAutomatedBackupsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBInstanceAutomatedBackupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBInstanceAutomatedBackupsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBInstanceAutomatedBackupsPagesWithContextStub != nil {
-		return fake.DescribeDBInstanceAutomatedBackupsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBInstanceAutomatedBackupsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -17426,15 +17603,16 @@ func (fake *FakeRDSAPI) DescribeDBInstanceAutomatedBackupsRequest(arg1 *rds.Desc
 	fake.describeDBInstanceAutomatedBackupsRequestArgsForCall = append(fake.describeDBInstanceAutomatedBackupsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBInstanceAutomatedBackupsInput
 	}{arg1})
+	stub := fake.DescribeDBInstanceAutomatedBackupsRequestStub
+	fakeReturns := fake.describeDBInstanceAutomatedBackupsRequestReturns
 	fake.recordInvocation("DescribeDBInstanceAutomatedBackupsRequest", []interface{}{arg1})
 	fake.describeDBInstanceAutomatedBackupsRequestMutex.Unlock()
-	if fake.DescribeDBInstanceAutomatedBackupsRequestStub != nil {
-		return fake.DescribeDBInstanceAutomatedBackupsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBInstanceAutomatedBackupsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17491,15 +17669,16 @@ func (fake *FakeRDSAPI) DescribeDBInstanceAutomatedBackupsWithContext(arg1 conte
 		arg2 *rds.DescribeDBInstanceAutomatedBackupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBInstanceAutomatedBackupsWithContextStub
+	fakeReturns := fake.describeDBInstanceAutomatedBackupsWithContextReturns
 	fake.recordInvocation("DescribeDBInstanceAutomatedBackupsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBInstanceAutomatedBackupsWithContextMutex.Unlock()
-	if fake.DescribeDBInstanceAutomatedBackupsWithContextStub != nil {
-		return fake.DescribeDBInstanceAutomatedBackupsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBInstanceAutomatedBackupsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17554,15 +17733,16 @@ func (fake *FakeRDSAPI) DescribeDBInstances(arg1 *rds.DescribeDBInstancesInput) 
 	fake.describeDBInstancesArgsForCall = append(fake.describeDBInstancesArgsForCall, struct {
 		arg1 *rds.DescribeDBInstancesInput
 	}{arg1})
+	stub := fake.DescribeDBInstancesStub
+	fakeReturns := fake.describeDBInstancesReturns
 	fake.recordInvocation("DescribeDBInstances", []interface{}{arg1})
 	fake.describeDBInstancesMutex.Unlock()
-	if fake.DescribeDBInstancesStub != nil {
-		return fake.DescribeDBInstancesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBInstancesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17618,15 +17798,16 @@ func (fake *FakeRDSAPI) DescribeDBInstancesPages(arg1 *rds.DescribeDBInstancesIn
 		arg1 *rds.DescribeDBInstancesInput
 		arg2 func(*rds.DescribeDBInstancesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBInstancesPagesStub
+	fakeReturns := fake.describeDBInstancesPagesReturns
 	fake.recordInvocation("DescribeDBInstancesPages", []interface{}{arg1, arg2})
 	fake.describeDBInstancesPagesMutex.Unlock()
-	if fake.DescribeDBInstancesPagesStub != nil {
-		return fake.DescribeDBInstancesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBInstancesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -17681,15 +17862,16 @@ func (fake *FakeRDSAPI) DescribeDBInstancesPagesWithContext(arg1 context.Context
 		arg3 func(*rds.DescribeDBInstancesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBInstancesPagesWithContextStub
+	fakeReturns := fake.describeDBInstancesPagesWithContextReturns
 	fake.recordInvocation("DescribeDBInstancesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBInstancesPagesWithContextMutex.Unlock()
-	if fake.DescribeDBInstancesPagesWithContextStub != nil {
-		return fake.DescribeDBInstancesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBInstancesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -17741,15 +17923,16 @@ func (fake *FakeRDSAPI) DescribeDBInstancesRequest(arg1 *rds.DescribeDBInstances
 	fake.describeDBInstancesRequestArgsForCall = append(fake.describeDBInstancesRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBInstancesInput
 	}{arg1})
+	stub := fake.DescribeDBInstancesRequestStub
+	fakeReturns := fake.describeDBInstancesRequestReturns
 	fake.recordInvocation("DescribeDBInstancesRequest", []interface{}{arg1})
 	fake.describeDBInstancesRequestMutex.Unlock()
-	if fake.DescribeDBInstancesRequestStub != nil {
-		return fake.DescribeDBInstancesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBInstancesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17806,15 +17989,16 @@ func (fake *FakeRDSAPI) DescribeDBInstancesWithContext(arg1 context.Context, arg
 		arg2 *rds.DescribeDBInstancesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBInstancesWithContextStub
+	fakeReturns := fake.describeDBInstancesWithContextReturns
 	fake.recordInvocation("DescribeDBInstancesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBInstancesWithContextMutex.Unlock()
-	if fake.DescribeDBInstancesWithContextStub != nil {
-		return fake.DescribeDBInstancesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBInstancesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17869,15 +18053,16 @@ func (fake *FakeRDSAPI) DescribeDBLogFiles(arg1 *rds.DescribeDBLogFilesInput) (*
 	fake.describeDBLogFilesArgsForCall = append(fake.describeDBLogFilesArgsForCall, struct {
 		arg1 *rds.DescribeDBLogFilesInput
 	}{arg1})
+	stub := fake.DescribeDBLogFilesStub
+	fakeReturns := fake.describeDBLogFilesReturns
 	fake.recordInvocation("DescribeDBLogFiles", []interface{}{arg1})
 	fake.describeDBLogFilesMutex.Unlock()
-	if fake.DescribeDBLogFilesStub != nil {
-		return fake.DescribeDBLogFilesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBLogFilesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17933,15 +18118,16 @@ func (fake *FakeRDSAPI) DescribeDBLogFilesPages(arg1 *rds.DescribeDBLogFilesInpu
 		arg1 *rds.DescribeDBLogFilesInput
 		arg2 func(*rds.DescribeDBLogFilesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBLogFilesPagesStub
+	fakeReturns := fake.describeDBLogFilesPagesReturns
 	fake.recordInvocation("DescribeDBLogFilesPages", []interface{}{arg1, arg2})
 	fake.describeDBLogFilesPagesMutex.Unlock()
-	if fake.DescribeDBLogFilesPagesStub != nil {
-		return fake.DescribeDBLogFilesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBLogFilesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -17996,15 +18182,16 @@ func (fake *FakeRDSAPI) DescribeDBLogFilesPagesWithContext(arg1 context.Context,
 		arg3 func(*rds.DescribeDBLogFilesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBLogFilesPagesWithContextStub
+	fakeReturns := fake.describeDBLogFilesPagesWithContextReturns
 	fake.recordInvocation("DescribeDBLogFilesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBLogFilesPagesWithContextMutex.Unlock()
-	if fake.DescribeDBLogFilesPagesWithContextStub != nil {
-		return fake.DescribeDBLogFilesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBLogFilesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -18056,15 +18243,16 @@ func (fake *FakeRDSAPI) DescribeDBLogFilesRequest(arg1 *rds.DescribeDBLogFilesIn
 	fake.describeDBLogFilesRequestArgsForCall = append(fake.describeDBLogFilesRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBLogFilesInput
 	}{arg1})
+	stub := fake.DescribeDBLogFilesRequestStub
+	fakeReturns := fake.describeDBLogFilesRequestReturns
 	fake.recordInvocation("DescribeDBLogFilesRequest", []interface{}{arg1})
 	fake.describeDBLogFilesRequestMutex.Unlock()
-	if fake.DescribeDBLogFilesRequestStub != nil {
-		return fake.DescribeDBLogFilesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBLogFilesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18121,15 +18309,16 @@ func (fake *FakeRDSAPI) DescribeDBLogFilesWithContext(arg1 context.Context, arg2
 		arg2 *rds.DescribeDBLogFilesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBLogFilesWithContextStub
+	fakeReturns := fake.describeDBLogFilesWithContextReturns
 	fake.recordInvocation("DescribeDBLogFilesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBLogFilesWithContextMutex.Unlock()
-	if fake.DescribeDBLogFilesWithContextStub != nil {
-		return fake.DescribeDBLogFilesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBLogFilesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18184,15 +18373,16 @@ func (fake *FakeRDSAPI) DescribeDBParameterGroups(arg1 *rds.DescribeDBParameterG
 	fake.describeDBParameterGroupsArgsForCall = append(fake.describeDBParameterGroupsArgsForCall, struct {
 		arg1 *rds.DescribeDBParameterGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBParameterGroupsStub
+	fakeReturns := fake.describeDBParameterGroupsReturns
 	fake.recordInvocation("DescribeDBParameterGroups", []interface{}{arg1})
 	fake.describeDBParameterGroupsMutex.Unlock()
-	if fake.DescribeDBParameterGroupsStub != nil {
-		return fake.DescribeDBParameterGroupsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBParameterGroupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18248,15 +18438,16 @@ func (fake *FakeRDSAPI) DescribeDBParameterGroupsPages(arg1 *rds.DescribeDBParam
 		arg1 *rds.DescribeDBParameterGroupsInput
 		arg2 func(*rds.DescribeDBParameterGroupsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBParameterGroupsPagesStub
+	fakeReturns := fake.describeDBParameterGroupsPagesReturns
 	fake.recordInvocation("DescribeDBParameterGroupsPages", []interface{}{arg1, arg2})
 	fake.describeDBParameterGroupsPagesMutex.Unlock()
-	if fake.DescribeDBParameterGroupsPagesStub != nil {
-		return fake.DescribeDBParameterGroupsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBParameterGroupsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -18311,15 +18502,16 @@ func (fake *FakeRDSAPI) DescribeDBParameterGroupsPagesWithContext(arg1 context.C
 		arg3 func(*rds.DescribeDBParameterGroupsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBParameterGroupsPagesWithContextStub
+	fakeReturns := fake.describeDBParameterGroupsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBParameterGroupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBParameterGroupsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBParameterGroupsPagesWithContextStub != nil {
-		return fake.DescribeDBParameterGroupsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBParameterGroupsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -18371,15 +18563,16 @@ func (fake *FakeRDSAPI) DescribeDBParameterGroupsRequest(arg1 *rds.DescribeDBPar
 	fake.describeDBParameterGroupsRequestArgsForCall = append(fake.describeDBParameterGroupsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBParameterGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBParameterGroupsRequestStub
+	fakeReturns := fake.describeDBParameterGroupsRequestReturns
 	fake.recordInvocation("DescribeDBParameterGroupsRequest", []interface{}{arg1})
 	fake.describeDBParameterGroupsRequestMutex.Unlock()
-	if fake.DescribeDBParameterGroupsRequestStub != nil {
-		return fake.DescribeDBParameterGroupsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBParameterGroupsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18436,15 +18629,16 @@ func (fake *FakeRDSAPI) DescribeDBParameterGroupsWithContext(arg1 context.Contex
 		arg2 *rds.DescribeDBParameterGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBParameterGroupsWithContextStub
+	fakeReturns := fake.describeDBParameterGroupsWithContextReturns
 	fake.recordInvocation("DescribeDBParameterGroupsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBParameterGroupsWithContextMutex.Unlock()
-	if fake.DescribeDBParameterGroupsWithContextStub != nil {
-		return fake.DescribeDBParameterGroupsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBParameterGroupsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18499,15 +18693,16 @@ func (fake *FakeRDSAPI) DescribeDBParameters(arg1 *rds.DescribeDBParametersInput
 	fake.describeDBParametersArgsForCall = append(fake.describeDBParametersArgsForCall, struct {
 		arg1 *rds.DescribeDBParametersInput
 	}{arg1})
+	stub := fake.DescribeDBParametersStub
+	fakeReturns := fake.describeDBParametersReturns
 	fake.recordInvocation("DescribeDBParameters", []interface{}{arg1})
 	fake.describeDBParametersMutex.Unlock()
-	if fake.DescribeDBParametersStub != nil {
-		return fake.DescribeDBParametersStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBParametersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18563,15 +18758,16 @@ func (fake *FakeRDSAPI) DescribeDBParametersPages(arg1 *rds.DescribeDBParameters
 		arg1 *rds.DescribeDBParametersInput
 		arg2 func(*rds.DescribeDBParametersOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBParametersPagesStub
+	fakeReturns := fake.describeDBParametersPagesReturns
 	fake.recordInvocation("DescribeDBParametersPages", []interface{}{arg1, arg2})
 	fake.describeDBParametersPagesMutex.Unlock()
-	if fake.DescribeDBParametersPagesStub != nil {
-		return fake.DescribeDBParametersPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBParametersPagesReturns
 	return fakeReturns.result1
 }
 
@@ -18626,15 +18822,16 @@ func (fake *FakeRDSAPI) DescribeDBParametersPagesWithContext(arg1 context.Contex
 		arg3 func(*rds.DescribeDBParametersOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBParametersPagesWithContextStub
+	fakeReturns := fake.describeDBParametersPagesWithContextReturns
 	fake.recordInvocation("DescribeDBParametersPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBParametersPagesWithContextMutex.Unlock()
-	if fake.DescribeDBParametersPagesWithContextStub != nil {
-		return fake.DescribeDBParametersPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBParametersPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -18686,15 +18883,16 @@ func (fake *FakeRDSAPI) DescribeDBParametersRequest(arg1 *rds.DescribeDBParamete
 	fake.describeDBParametersRequestArgsForCall = append(fake.describeDBParametersRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBParametersInput
 	}{arg1})
+	stub := fake.DescribeDBParametersRequestStub
+	fakeReturns := fake.describeDBParametersRequestReturns
 	fake.recordInvocation("DescribeDBParametersRequest", []interface{}{arg1})
 	fake.describeDBParametersRequestMutex.Unlock()
-	if fake.DescribeDBParametersRequestStub != nil {
-		return fake.DescribeDBParametersRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBParametersRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18751,15 +18949,16 @@ func (fake *FakeRDSAPI) DescribeDBParametersWithContext(arg1 context.Context, ar
 		arg2 *rds.DescribeDBParametersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBParametersWithContextStub
+	fakeReturns := fake.describeDBParametersWithContextReturns
 	fake.recordInvocation("DescribeDBParametersWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBParametersWithContextMutex.Unlock()
-	if fake.DescribeDBParametersWithContextStub != nil {
-		return fake.DescribeDBParametersWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBParametersWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18814,15 +19013,16 @@ func (fake *FakeRDSAPI) DescribeDBProxies(arg1 *rds.DescribeDBProxiesInput) (*rd
 	fake.describeDBProxiesArgsForCall = append(fake.describeDBProxiesArgsForCall, struct {
 		arg1 *rds.DescribeDBProxiesInput
 	}{arg1})
+	stub := fake.DescribeDBProxiesStub
+	fakeReturns := fake.describeDBProxiesReturns
 	fake.recordInvocation("DescribeDBProxies", []interface{}{arg1})
 	fake.describeDBProxiesMutex.Unlock()
-	if fake.DescribeDBProxiesStub != nil {
-		return fake.DescribeDBProxiesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxiesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18878,15 +19078,16 @@ func (fake *FakeRDSAPI) DescribeDBProxiesPages(arg1 *rds.DescribeDBProxiesInput,
 		arg1 *rds.DescribeDBProxiesInput
 		arg2 func(*rds.DescribeDBProxiesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBProxiesPagesStub
+	fakeReturns := fake.describeDBProxiesPagesReturns
 	fake.recordInvocation("DescribeDBProxiesPages", []interface{}{arg1, arg2})
 	fake.describeDBProxiesPagesMutex.Unlock()
-	if fake.DescribeDBProxiesPagesStub != nil {
-		return fake.DescribeDBProxiesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBProxiesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -18941,15 +19142,16 @@ func (fake *FakeRDSAPI) DescribeDBProxiesPagesWithContext(arg1 context.Context, 
 		arg3 func(*rds.DescribeDBProxiesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBProxiesPagesWithContextStub
+	fakeReturns := fake.describeDBProxiesPagesWithContextReturns
 	fake.recordInvocation("DescribeDBProxiesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBProxiesPagesWithContextMutex.Unlock()
-	if fake.DescribeDBProxiesPagesWithContextStub != nil {
-		return fake.DescribeDBProxiesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBProxiesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -19001,15 +19203,16 @@ func (fake *FakeRDSAPI) DescribeDBProxiesRequest(arg1 *rds.DescribeDBProxiesInpu
 	fake.describeDBProxiesRequestArgsForCall = append(fake.describeDBProxiesRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBProxiesInput
 	}{arg1})
+	stub := fake.DescribeDBProxiesRequestStub
+	fakeReturns := fake.describeDBProxiesRequestReturns
 	fake.recordInvocation("DescribeDBProxiesRequest", []interface{}{arg1})
 	fake.describeDBProxiesRequestMutex.Unlock()
-	if fake.DescribeDBProxiesRequestStub != nil {
-		return fake.DescribeDBProxiesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxiesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19066,15 +19269,16 @@ func (fake *FakeRDSAPI) DescribeDBProxiesWithContext(arg1 context.Context, arg2 
 		arg2 *rds.DescribeDBProxiesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBProxiesWithContextStub
+	fakeReturns := fake.describeDBProxiesWithContextReturns
 	fake.recordInvocation("DescribeDBProxiesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBProxiesWithContextMutex.Unlock()
-	if fake.DescribeDBProxiesWithContextStub != nil {
-		return fake.DescribeDBProxiesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxiesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19129,15 +19333,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetGroups(arg1 *rds.DescribeDBProxyTar
 	fake.describeDBProxyTargetGroupsArgsForCall = append(fake.describeDBProxyTargetGroupsArgsForCall, struct {
 		arg1 *rds.DescribeDBProxyTargetGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBProxyTargetGroupsStub
+	fakeReturns := fake.describeDBProxyTargetGroupsReturns
 	fake.recordInvocation("DescribeDBProxyTargetGroups", []interface{}{arg1})
 	fake.describeDBProxyTargetGroupsMutex.Unlock()
-	if fake.DescribeDBProxyTargetGroupsStub != nil {
-		return fake.DescribeDBProxyTargetGroupsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxyTargetGroupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19193,15 +19398,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetGroupsPages(arg1 *rds.DescribeDBPro
 		arg1 *rds.DescribeDBProxyTargetGroupsInput
 		arg2 func(*rds.DescribeDBProxyTargetGroupsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBProxyTargetGroupsPagesStub
+	fakeReturns := fake.describeDBProxyTargetGroupsPagesReturns
 	fake.recordInvocation("DescribeDBProxyTargetGroupsPages", []interface{}{arg1, arg2})
 	fake.describeDBProxyTargetGroupsPagesMutex.Unlock()
-	if fake.DescribeDBProxyTargetGroupsPagesStub != nil {
-		return fake.DescribeDBProxyTargetGroupsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBProxyTargetGroupsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -19256,15 +19462,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetGroupsPagesWithContext(arg1 context
 		arg3 func(*rds.DescribeDBProxyTargetGroupsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBProxyTargetGroupsPagesWithContextStub
+	fakeReturns := fake.describeDBProxyTargetGroupsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBProxyTargetGroupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBProxyTargetGroupsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBProxyTargetGroupsPagesWithContextStub != nil {
-		return fake.DescribeDBProxyTargetGroupsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBProxyTargetGroupsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -19316,15 +19523,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetGroupsRequest(arg1 *rds.DescribeDBP
 	fake.describeDBProxyTargetGroupsRequestArgsForCall = append(fake.describeDBProxyTargetGroupsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBProxyTargetGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBProxyTargetGroupsRequestStub
+	fakeReturns := fake.describeDBProxyTargetGroupsRequestReturns
 	fake.recordInvocation("DescribeDBProxyTargetGroupsRequest", []interface{}{arg1})
 	fake.describeDBProxyTargetGroupsRequestMutex.Unlock()
-	if fake.DescribeDBProxyTargetGroupsRequestStub != nil {
-		return fake.DescribeDBProxyTargetGroupsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxyTargetGroupsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19381,15 +19589,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetGroupsWithContext(arg1 context.Cont
 		arg2 *rds.DescribeDBProxyTargetGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBProxyTargetGroupsWithContextStub
+	fakeReturns := fake.describeDBProxyTargetGroupsWithContextReturns
 	fake.recordInvocation("DescribeDBProxyTargetGroupsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBProxyTargetGroupsWithContextMutex.Unlock()
-	if fake.DescribeDBProxyTargetGroupsWithContextStub != nil {
-		return fake.DescribeDBProxyTargetGroupsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxyTargetGroupsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19444,15 +19653,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargets(arg1 *rds.DescribeDBProxyTargetsI
 	fake.describeDBProxyTargetsArgsForCall = append(fake.describeDBProxyTargetsArgsForCall, struct {
 		arg1 *rds.DescribeDBProxyTargetsInput
 	}{arg1})
+	stub := fake.DescribeDBProxyTargetsStub
+	fakeReturns := fake.describeDBProxyTargetsReturns
 	fake.recordInvocation("DescribeDBProxyTargets", []interface{}{arg1})
 	fake.describeDBProxyTargetsMutex.Unlock()
-	if fake.DescribeDBProxyTargetsStub != nil {
-		return fake.DescribeDBProxyTargetsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxyTargetsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19508,15 +19718,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetsPages(arg1 *rds.DescribeDBProxyTar
 		arg1 *rds.DescribeDBProxyTargetsInput
 		arg2 func(*rds.DescribeDBProxyTargetsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBProxyTargetsPagesStub
+	fakeReturns := fake.describeDBProxyTargetsPagesReturns
 	fake.recordInvocation("DescribeDBProxyTargetsPages", []interface{}{arg1, arg2})
 	fake.describeDBProxyTargetsPagesMutex.Unlock()
-	if fake.DescribeDBProxyTargetsPagesStub != nil {
-		return fake.DescribeDBProxyTargetsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBProxyTargetsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -19571,15 +19782,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetsPagesWithContext(arg1 context.Cont
 		arg3 func(*rds.DescribeDBProxyTargetsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBProxyTargetsPagesWithContextStub
+	fakeReturns := fake.describeDBProxyTargetsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBProxyTargetsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBProxyTargetsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBProxyTargetsPagesWithContextStub != nil {
-		return fake.DescribeDBProxyTargetsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBProxyTargetsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -19631,15 +19843,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetsRequest(arg1 *rds.DescribeDBProxyT
 	fake.describeDBProxyTargetsRequestArgsForCall = append(fake.describeDBProxyTargetsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBProxyTargetsInput
 	}{arg1})
+	stub := fake.DescribeDBProxyTargetsRequestStub
+	fakeReturns := fake.describeDBProxyTargetsRequestReturns
 	fake.recordInvocation("DescribeDBProxyTargetsRequest", []interface{}{arg1})
 	fake.describeDBProxyTargetsRequestMutex.Unlock()
-	if fake.DescribeDBProxyTargetsRequestStub != nil {
-		return fake.DescribeDBProxyTargetsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxyTargetsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19696,15 +19909,16 @@ func (fake *FakeRDSAPI) DescribeDBProxyTargetsWithContext(arg1 context.Context, 
 		arg2 *rds.DescribeDBProxyTargetsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBProxyTargetsWithContextStub
+	fakeReturns := fake.describeDBProxyTargetsWithContextReturns
 	fake.recordInvocation("DescribeDBProxyTargetsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBProxyTargetsWithContextMutex.Unlock()
-	if fake.DescribeDBProxyTargetsWithContextStub != nil {
-		return fake.DescribeDBProxyTargetsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBProxyTargetsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19759,15 +19973,16 @@ func (fake *FakeRDSAPI) DescribeDBSecurityGroups(arg1 *rds.DescribeDBSecurityGro
 	fake.describeDBSecurityGroupsArgsForCall = append(fake.describeDBSecurityGroupsArgsForCall, struct {
 		arg1 *rds.DescribeDBSecurityGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBSecurityGroupsStub
+	fakeReturns := fake.describeDBSecurityGroupsReturns
 	fake.recordInvocation("DescribeDBSecurityGroups", []interface{}{arg1})
 	fake.describeDBSecurityGroupsMutex.Unlock()
-	if fake.DescribeDBSecurityGroupsStub != nil {
-		return fake.DescribeDBSecurityGroupsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSecurityGroupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19823,15 +20038,16 @@ func (fake *FakeRDSAPI) DescribeDBSecurityGroupsPages(arg1 *rds.DescribeDBSecuri
 		arg1 *rds.DescribeDBSecurityGroupsInput
 		arg2 func(*rds.DescribeDBSecurityGroupsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBSecurityGroupsPagesStub
+	fakeReturns := fake.describeDBSecurityGroupsPagesReturns
 	fake.recordInvocation("DescribeDBSecurityGroupsPages", []interface{}{arg1, arg2})
 	fake.describeDBSecurityGroupsPagesMutex.Unlock()
-	if fake.DescribeDBSecurityGroupsPagesStub != nil {
-		return fake.DescribeDBSecurityGroupsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBSecurityGroupsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -19886,15 +20102,16 @@ func (fake *FakeRDSAPI) DescribeDBSecurityGroupsPagesWithContext(arg1 context.Co
 		arg3 func(*rds.DescribeDBSecurityGroupsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBSecurityGroupsPagesWithContextStub
+	fakeReturns := fake.describeDBSecurityGroupsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBSecurityGroupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBSecurityGroupsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBSecurityGroupsPagesWithContextStub != nil {
-		return fake.DescribeDBSecurityGroupsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBSecurityGroupsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -19946,15 +20163,16 @@ func (fake *FakeRDSAPI) DescribeDBSecurityGroupsRequest(arg1 *rds.DescribeDBSecu
 	fake.describeDBSecurityGroupsRequestArgsForCall = append(fake.describeDBSecurityGroupsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBSecurityGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBSecurityGroupsRequestStub
+	fakeReturns := fake.describeDBSecurityGroupsRequestReturns
 	fake.recordInvocation("DescribeDBSecurityGroupsRequest", []interface{}{arg1})
 	fake.describeDBSecurityGroupsRequestMutex.Unlock()
-	if fake.DescribeDBSecurityGroupsRequestStub != nil {
-		return fake.DescribeDBSecurityGroupsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSecurityGroupsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20011,15 +20229,16 @@ func (fake *FakeRDSAPI) DescribeDBSecurityGroupsWithContext(arg1 context.Context
 		arg2 *rds.DescribeDBSecurityGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBSecurityGroupsWithContextStub
+	fakeReturns := fake.describeDBSecurityGroupsWithContextReturns
 	fake.recordInvocation("DescribeDBSecurityGroupsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBSecurityGroupsWithContextMutex.Unlock()
-	if fake.DescribeDBSecurityGroupsWithContextStub != nil {
-		return fake.DescribeDBSecurityGroupsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSecurityGroupsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20074,15 +20293,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshotAttributes(arg1 *rds.DescribeDBSnapsho
 	fake.describeDBSnapshotAttributesArgsForCall = append(fake.describeDBSnapshotAttributesArgsForCall, struct {
 		arg1 *rds.DescribeDBSnapshotAttributesInput
 	}{arg1})
+	stub := fake.DescribeDBSnapshotAttributesStub
+	fakeReturns := fake.describeDBSnapshotAttributesReturns
 	fake.recordInvocation("DescribeDBSnapshotAttributes", []interface{}{arg1})
 	fake.describeDBSnapshotAttributesMutex.Unlock()
-	if fake.DescribeDBSnapshotAttributesStub != nil {
-		return fake.DescribeDBSnapshotAttributesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSnapshotAttributesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20137,15 +20357,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshotAttributesRequest(arg1 *rds.DescribeDB
 	fake.describeDBSnapshotAttributesRequestArgsForCall = append(fake.describeDBSnapshotAttributesRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBSnapshotAttributesInput
 	}{arg1})
+	stub := fake.DescribeDBSnapshotAttributesRequestStub
+	fakeReturns := fake.describeDBSnapshotAttributesRequestReturns
 	fake.recordInvocation("DescribeDBSnapshotAttributesRequest", []interface{}{arg1})
 	fake.describeDBSnapshotAttributesRequestMutex.Unlock()
-	if fake.DescribeDBSnapshotAttributesRequestStub != nil {
-		return fake.DescribeDBSnapshotAttributesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSnapshotAttributesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20202,15 +20423,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshotAttributesWithContext(arg1 context.Con
 		arg2 *rds.DescribeDBSnapshotAttributesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBSnapshotAttributesWithContextStub
+	fakeReturns := fake.describeDBSnapshotAttributesWithContextReturns
 	fake.recordInvocation("DescribeDBSnapshotAttributesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBSnapshotAttributesWithContextMutex.Unlock()
-	if fake.DescribeDBSnapshotAttributesWithContextStub != nil {
-		return fake.DescribeDBSnapshotAttributesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSnapshotAttributesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20265,15 +20487,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshots(arg1 *rds.DescribeDBSnapshotsInput) 
 	fake.describeDBSnapshotsArgsForCall = append(fake.describeDBSnapshotsArgsForCall, struct {
 		arg1 *rds.DescribeDBSnapshotsInput
 	}{arg1})
+	stub := fake.DescribeDBSnapshotsStub
+	fakeReturns := fake.describeDBSnapshotsReturns
 	fake.recordInvocation("DescribeDBSnapshots", []interface{}{arg1})
 	fake.describeDBSnapshotsMutex.Unlock()
-	if fake.DescribeDBSnapshotsStub != nil {
-		return fake.DescribeDBSnapshotsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSnapshotsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20329,15 +20552,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshotsPages(arg1 *rds.DescribeDBSnapshotsIn
 		arg1 *rds.DescribeDBSnapshotsInput
 		arg2 func(*rds.DescribeDBSnapshotsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBSnapshotsPagesStub
+	fakeReturns := fake.describeDBSnapshotsPagesReturns
 	fake.recordInvocation("DescribeDBSnapshotsPages", []interface{}{arg1, arg2})
 	fake.describeDBSnapshotsPagesMutex.Unlock()
-	if fake.DescribeDBSnapshotsPagesStub != nil {
-		return fake.DescribeDBSnapshotsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBSnapshotsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -20392,15 +20616,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshotsPagesWithContext(arg1 context.Context
 		arg3 func(*rds.DescribeDBSnapshotsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBSnapshotsPagesWithContextStub
+	fakeReturns := fake.describeDBSnapshotsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBSnapshotsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBSnapshotsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBSnapshotsPagesWithContextStub != nil {
-		return fake.DescribeDBSnapshotsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBSnapshotsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -20452,15 +20677,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshotsRequest(arg1 *rds.DescribeDBSnapshots
 	fake.describeDBSnapshotsRequestArgsForCall = append(fake.describeDBSnapshotsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBSnapshotsInput
 	}{arg1})
+	stub := fake.DescribeDBSnapshotsRequestStub
+	fakeReturns := fake.describeDBSnapshotsRequestReturns
 	fake.recordInvocation("DescribeDBSnapshotsRequest", []interface{}{arg1})
 	fake.describeDBSnapshotsRequestMutex.Unlock()
-	if fake.DescribeDBSnapshotsRequestStub != nil {
-		return fake.DescribeDBSnapshotsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSnapshotsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20517,15 +20743,16 @@ func (fake *FakeRDSAPI) DescribeDBSnapshotsWithContext(arg1 context.Context, arg
 		arg2 *rds.DescribeDBSnapshotsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBSnapshotsWithContextStub
+	fakeReturns := fake.describeDBSnapshotsWithContextReturns
 	fake.recordInvocation("DescribeDBSnapshotsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBSnapshotsWithContextMutex.Unlock()
-	if fake.DescribeDBSnapshotsWithContextStub != nil {
-		return fake.DescribeDBSnapshotsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSnapshotsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20580,15 +20807,16 @@ func (fake *FakeRDSAPI) DescribeDBSubnetGroups(arg1 *rds.DescribeDBSubnetGroupsI
 	fake.describeDBSubnetGroupsArgsForCall = append(fake.describeDBSubnetGroupsArgsForCall, struct {
 		arg1 *rds.DescribeDBSubnetGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBSubnetGroupsStub
+	fakeReturns := fake.describeDBSubnetGroupsReturns
 	fake.recordInvocation("DescribeDBSubnetGroups", []interface{}{arg1})
 	fake.describeDBSubnetGroupsMutex.Unlock()
-	if fake.DescribeDBSubnetGroupsStub != nil {
-		return fake.DescribeDBSubnetGroupsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSubnetGroupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20644,15 +20872,16 @@ func (fake *FakeRDSAPI) DescribeDBSubnetGroupsPages(arg1 *rds.DescribeDBSubnetGr
 		arg1 *rds.DescribeDBSubnetGroupsInput
 		arg2 func(*rds.DescribeDBSubnetGroupsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeDBSubnetGroupsPagesStub
+	fakeReturns := fake.describeDBSubnetGroupsPagesReturns
 	fake.recordInvocation("DescribeDBSubnetGroupsPages", []interface{}{arg1, arg2})
 	fake.describeDBSubnetGroupsPagesMutex.Unlock()
-	if fake.DescribeDBSubnetGroupsPagesStub != nil {
-		return fake.DescribeDBSubnetGroupsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBSubnetGroupsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -20707,15 +20936,16 @@ func (fake *FakeRDSAPI) DescribeDBSubnetGroupsPagesWithContext(arg1 context.Cont
 		arg3 func(*rds.DescribeDBSubnetGroupsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBSubnetGroupsPagesWithContextStub
+	fakeReturns := fake.describeDBSubnetGroupsPagesWithContextReturns
 	fake.recordInvocation("DescribeDBSubnetGroupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeDBSubnetGroupsPagesWithContextMutex.Unlock()
-	if fake.DescribeDBSubnetGroupsPagesWithContextStub != nil {
-		return fake.DescribeDBSubnetGroupsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeDBSubnetGroupsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -20767,15 +20997,16 @@ func (fake *FakeRDSAPI) DescribeDBSubnetGroupsRequest(arg1 *rds.DescribeDBSubnet
 	fake.describeDBSubnetGroupsRequestArgsForCall = append(fake.describeDBSubnetGroupsRequestArgsForCall, struct {
 		arg1 *rds.DescribeDBSubnetGroupsInput
 	}{arg1})
+	stub := fake.DescribeDBSubnetGroupsRequestStub
+	fakeReturns := fake.describeDBSubnetGroupsRequestReturns
 	fake.recordInvocation("DescribeDBSubnetGroupsRequest", []interface{}{arg1})
 	fake.describeDBSubnetGroupsRequestMutex.Unlock()
-	if fake.DescribeDBSubnetGroupsRequestStub != nil {
-		return fake.DescribeDBSubnetGroupsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSubnetGroupsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20832,15 +21063,16 @@ func (fake *FakeRDSAPI) DescribeDBSubnetGroupsWithContext(arg1 context.Context, 
 		arg2 *rds.DescribeDBSubnetGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeDBSubnetGroupsWithContextStub
+	fakeReturns := fake.describeDBSubnetGroupsWithContextReturns
 	fake.recordInvocation("DescribeDBSubnetGroupsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeDBSubnetGroupsWithContextMutex.Unlock()
-	if fake.DescribeDBSubnetGroupsWithContextStub != nil {
-		return fake.DescribeDBSubnetGroupsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeDBSubnetGroupsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20895,15 +21127,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultClusterParameters(arg1 *rds.Describ
 	fake.describeEngineDefaultClusterParametersArgsForCall = append(fake.describeEngineDefaultClusterParametersArgsForCall, struct {
 		arg1 *rds.DescribeEngineDefaultClusterParametersInput
 	}{arg1})
+	stub := fake.DescribeEngineDefaultClusterParametersStub
+	fakeReturns := fake.describeEngineDefaultClusterParametersReturns
 	fake.recordInvocation("DescribeEngineDefaultClusterParameters", []interface{}{arg1})
 	fake.describeEngineDefaultClusterParametersMutex.Unlock()
-	if fake.DescribeEngineDefaultClusterParametersStub != nil {
-		return fake.DescribeEngineDefaultClusterParametersStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEngineDefaultClusterParametersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20958,15 +21191,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultClusterParametersRequest(arg1 *rds.
 	fake.describeEngineDefaultClusterParametersRequestArgsForCall = append(fake.describeEngineDefaultClusterParametersRequestArgsForCall, struct {
 		arg1 *rds.DescribeEngineDefaultClusterParametersInput
 	}{arg1})
+	stub := fake.DescribeEngineDefaultClusterParametersRequestStub
+	fakeReturns := fake.describeEngineDefaultClusterParametersRequestReturns
 	fake.recordInvocation("DescribeEngineDefaultClusterParametersRequest", []interface{}{arg1})
 	fake.describeEngineDefaultClusterParametersRequestMutex.Unlock()
-	if fake.DescribeEngineDefaultClusterParametersRequestStub != nil {
-		return fake.DescribeEngineDefaultClusterParametersRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEngineDefaultClusterParametersRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21023,15 +21257,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultClusterParametersWithContext(arg1 c
 		arg2 *rds.DescribeEngineDefaultClusterParametersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEngineDefaultClusterParametersWithContextStub
+	fakeReturns := fake.describeEngineDefaultClusterParametersWithContextReturns
 	fake.recordInvocation("DescribeEngineDefaultClusterParametersWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEngineDefaultClusterParametersWithContextMutex.Unlock()
-	if fake.DescribeEngineDefaultClusterParametersWithContextStub != nil {
-		return fake.DescribeEngineDefaultClusterParametersWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEngineDefaultClusterParametersWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21086,15 +21321,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultParameters(arg1 *rds.DescribeEngine
 	fake.describeEngineDefaultParametersArgsForCall = append(fake.describeEngineDefaultParametersArgsForCall, struct {
 		arg1 *rds.DescribeEngineDefaultParametersInput
 	}{arg1})
+	stub := fake.DescribeEngineDefaultParametersStub
+	fakeReturns := fake.describeEngineDefaultParametersReturns
 	fake.recordInvocation("DescribeEngineDefaultParameters", []interface{}{arg1})
 	fake.describeEngineDefaultParametersMutex.Unlock()
-	if fake.DescribeEngineDefaultParametersStub != nil {
-		return fake.DescribeEngineDefaultParametersStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEngineDefaultParametersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21150,15 +21386,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultParametersPages(arg1 *rds.DescribeE
 		arg1 *rds.DescribeEngineDefaultParametersInput
 		arg2 func(*rds.DescribeEngineDefaultParametersOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeEngineDefaultParametersPagesStub
+	fakeReturns := fake.describeEngineDefaultParametersPagesReturns
 	fake.recordInvocation("DescribeEngineDefaultParametersPages", []interface{}{arg1, arg2})
 	fake.describeEngineDefaultParametersPagesMutex.Unlock()
-	if fake.DescribeEngineDefaultParametersPagesStub != nil {
-		return fake.DescribeEngineDefaultParametersPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEngineDefaultParametersPagesReturns
 	return fakeReturns.result1
 }
 
@@ -21213,15 +21450,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultParametersPagesWithContext(arg1 con
 		arg3 func(*rds.DescribeEngineDefaultParametersOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeEngineDefaultParametersPagesWithContextStub
+	fakeReturns := fake.describeEngineDefaultParametersPagesWithContextReturns
 	fake.recordInvocation("DescribeEngineDefaultParametersPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeEngineDefaultParametersPagesWithContextMutex.Unlock()
-	if fake.DescribeEngineDefaultParametersPagesWithContextStub != nil {
-		return fake.DescribeEngineDefaultParametersPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEngineDefaultParametersPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -21273,15 +21511,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultParametersRequest(arg1 *rds.Describ
 	fake.describeEngineDefaultParametersRequestArgsForCall = append(fake.describeEngineDefaultParametersRequestArgsForCall, struct {
 		arg1 *rds.DescribeEngineDefaultParametersInput
 	}{arg1})
+	stub := fake.DescribeEngineDefaultParametersRequestStub
+	fakeReturns := fake.describeEngineDefaultParametersRequestReturns
 	fake.recordInvocation("DescribeEngineDefaultParametersRequest", []interface{}{arg1})
 	fake.describeEngineDefaultParametersRequestMutex.Unlock()
-	if fake.DescribeEngineDefaultParametersRequestStub != nil {
-		return fake.DescribeEngineDefaultParametersRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEngineDefaultParametersRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21338,15 +21577,16 @@ func (fake *FakeRDSAPI) DescribeEngineDefaultParametersWithContext(arg1 context.
 		arg2 *rds.DescribeEngineDefaultParametersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEngineDefaultParametersWithContextStub
+	fakeReturns := fake.describeEngineDefaultParametersWithContextReturns
 	fake.recordInvocation("DescribeEngineDefaultParametersWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEngineDefaultParametersWithContextMutex.Unlock()
-	if fake.DescribeEngineDefaultParametersWithContextStub != nil {
-		return fake.DescribeEngineDefaultParametersWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEngineDefaultParametersWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21401,15 +21641,16 @@ func (fake *FakeRDSAPI) DescribeEventCategories(arg1 *rds.DescribeEventCategorie
 	fake.describeEventCategoriesArgsForCall = append(fake.describeEventCategoriesArgsForCall, struct {
 		arg1 *rds.DescribeEventCategoriesInput
 	}{arg1})
+	stub := fake.DescribeEventCategoriesStub
+	fakeReturns := fake.describeEventCategoriesReturns
 	fake.recordInvocation("DescribeEventCategories", []interface{}{arg1})
 	fake.describeEventCategoriesMutex.Unlock()
-	if fake.DescribeEventCategoriesStub != nil {
-		return fake.DescribeEventCategoriesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventCategoriesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21464,15 +21705,16 @@ func (fake *FakeRDSAPI) DescribeEventCategoriesRequest(arg1 *rds.DescribeEventCa
 	fake.describeEventCategoriesRequestArgsForCall = append(fake.describeEventCategoriesRequestArgsForCall, struct {
 		arg1 *rds.DescribeEventCategoriesInput
 	}{arg1})
+	stub := fake.DescribeEventCategoriesRequestStub
+	fakeReturns := fake.describeEventCategoriesRequestReturns
 	fake.recordInvocation("DescribeEventCategoriesRequest", []interface{}{arg1})
 	fake.describeEventCategoriesRequestMutex.Unlock()
-	if fake.DescribeEventCategoriesRequestStub != nil {
-		return fake.DescribeEventCategoriesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventCategoriesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21529,15 +21771,16 @@ func (fake *FakeRDSAPI) DescribeEventCategoriesWithContext(arg1 context.Context,
 		arg2 *rds.DescribeEventCategoriesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventCategoriesWithContextStub
+	fakeReturns := fake.describeEventCategoriesWithContextReturns
 	fake.recordInvocation("DescribeEventCategoriesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventCategoriesWithContextMutex.Unlock()
-	if fake.DescribeEventCategoriesWithContextStub != nil {
-		return fake.DescribeEventCategoriesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventCategoriesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21592,15 +21835,16 @@ func (fake *FakeRDSAPI) DescribeEventSubscriptions(arg1 *rds.DescribeEventSubscr
 	fake.describeEventSubscriptionsArgsForCall = append(fake.describeEventSubscriptionsArgsForCall, struct {
 		arg1 *rds.DescribeEventSubscriptionsInput
 	}{arg1})
+	stub := fake.DescribeEventSubscriptionsStub
+	fakeReturns := fake.describeEventSubscriptionsReturns
 	fake.recordInvocation("DescribeEventSubscriptions", []interface{}{arg1})
 	fake.describeEventSubscriptionsMutex.Unlock()
-	if fake.DescribeEventSubscriptionsStub != nil {
-		return fake.DescribeEventSubscriptionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventSubscriptionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21656,15 +21900,16 @@ func (fake *FakeRDSAPI) DescribeEventSubscriptionsPages(arg1 *rds.DescribeEventS
 		arg1 *rds.DescribeEventSubscriptionsInput
 		arg2 func(*rds.DescribeEventSubscriptionsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeEventSubscriptionsPagesStub
+	fakeReturns := fake.describeEventSubscriptionsPagesReturns
 	fake.recordInvocation("DescribeEventSubscriptionsPages", []interface{}{arg1, arg2})
 	fake.describeEventSubscriptionsPagesMutex.Unlock()
-	if fake.DescribeEventSubscriptionsPagesStub != nil {
-		return fake.DescribeEventSubscriptionsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventSubscriptionsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -21719,15 +21964,16 @@ func (fake *FakeRDSAPI) DescribeEventSubscriptionsPagesWithContext(arg1 context.
 		arg3 func(*rds.DescribeEventSubscriptionsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeEventSubscriptionsPagesWithContextStub
+	fakeReturns := fake.describeEventSubscriptionsPagesWithContextReturns
 	fake.recordInvocation("DescribeEventSubscriptionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeEventSubscriptionsPagesWithContextMutex.Unlock()
-	if fake.DescribeEventSubscriptionsPagesWithContextStub != nil {
-		return fake.DescribeEventSubscriptionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventSubscriptionsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -21779,15 +22025,16 @@ func (fake *FakeRDSAPI) DescribeEventSubscriptionsRequest(arg1 *rds.DescribeEven
 	fake.describeEventSubscriptionsRequestArgsForCall = append(fake.describeEventSubscriptionsRequestArgsForCall, struct {
 		arg1 *rds.DescribeEventSubscriptionsInput
 	}{arg1})
+	stub := fake.DescribeEventSubscriptionsRequestStub
+	fakeReturns := fake.describeEventSubscriptionsRequestReturns
 	fake.recordInvocation("DescribeEventSubscriptionsRequest", []interface{}{arg1})
 	fake.describeEventSubscriptionsRequestMutex.Unlock()
-	if fake.DescribeEventSubscriptionsRequestStub != nil {
-		return fake.DescribeEventSubscriptionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventSubscriptionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21844,15 +22091,16 @@ func (fake *FakeRDSAPI) DescribeEventSubscriptionsWithContext(arg1 context.Conte
 		arg2 *rds.DescribeEventSubscriptionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventSubscriptionsWithContextStub
+	fakeReturns := fake.describeEventSubscriptionsWithContextReturns
 	fake.recordInvocation("DescribeEventSubscriptionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventSubscriptionsWithContextMutex.Unlock()
-	if fake.DescribeEventSubscriptionsWithContextStub != nil {
-		return fake.DescribeEventSubscriptionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventSubscriptionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21907,15 +22155,16 @@ func (fake *FakeRDSAPI) DescribeEvents(arg1 *rds.DescribeEventsInput) (*rds.Desc
 	fake.describeEventsArgsForCall = append(fake.describeEventsArgsForCall, struct {
 		arg1 *rds.DescribeEventsInput
 	}{arg1})
+	stub := fake.DescribeEventsStub
+	fakeReturns := fake.describeEventsReturns
 	fake.recordInvocation("DescribeEvents", []interface{}{arg1})
 	fake.describeEventsMutex.Unlock()
-	if fake.DescribeEventsStub != nil {
-		return fake.DescribeEventsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21971,15 +22220,16 @@ func (fake *FakeRDSAPI) DescribeEventsPages(arg1 *rds.DescribeEventsInput, arg2 
 		arg1 *rds.DescribeEventsInput
 		arg2 func(*rds.DescribeEventsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeEventsPagesStub
+	fakeReturns := fake.describeEventsPagesReturns
 	fake.recordInvocation("DescribeEventsPages", []interface{}{arg1, arg2})
 	fake.describeEventsPagesMutex.Unlock()
-	if fake.DescribeEventsPagesStub != nil {
-		return fake.DescribeEventsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -22034,15 +22284,16 @@ func (fake *FakeRDSAPI) DescribeEventsPagesWithContext(arg1 context.Context, arg
 		arg3 func(*rds.DescribeEventsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeEventsPagesWithContextStub
+	fakeReturns := fake.describeEventsPagesWithContextReturns
 	fake.recordInvocation("DescribeEventsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeEventsPagesWithContextMutex.Unlock()
-	if fake.DescribeEventsPagesWithContextStub != nil {
-		return fake.DescribeEventsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeEventsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -22094,15 +22345,16 @@ func (fake *FakeRDSAPI) DescribeEventsRequest(arg1 *rds.DescribeEventsInput) (*r
 	fake.describeEventsRequestArgsForCall = append(fake.describeEventsRequestArgsForCall, struct {
 		arg1 *rds.DescribeEventsInput
 	}{arg1})
+	stub := fake.DescribeEventsRequestStub
+	fakeReturns := fake.describeEventsRequestReturns
 	fake.recordInvocation("DescribeEventsRequest", []interface{}{arg1})
 	fake.describeEventsRequestMutex.Unlock()
-	if fake.DescribeEventsRequestStub != nil {
-		return fake.DescribeEventsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22159,15 +22411,16 @@ func (fake *FakeRDSAPI) DescribeEventsWithContext(arg1 context.Context, arg2 *rd
 		arg2 *rds.DescribeEventsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeEventsWithContextStub
+	fakeReturns := fake.describeEventsWithContextReturns
 	fake.recordInvocation("DescribeEventsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeEventsWithContextMutex.Unlock()
-	if fake.DescribeEventsWithContextStub != nil {
-		return fake.DescribeEventsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeEventsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22222,15 +22475,16 @@ func (fake *FakeRDSAPI) DescribeExportTasks(arg1 *rds.DescribeExportTasksInput) 
 	fake.describeExportTasksArgsForCall = append(fake.describeExportTasksArgsForCall, struct {
 		arg1 *rds.DescribeExportTasksInput
 	}{arg1})
+	stub := fake.DescribeExportTasksStub
+	fakeReturns := fake.describeExportTasksReturns
 	fake.recordInvocation("DescribeExportTasks", []interface{}{arg1})
 	fake.describeExportTasksMutex.Unlock()
-	if fake.DescribeExportTasksStub != nil {
-		return fake.DescribeExportTasksStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeExportTasksReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22286,15 +22540,16 @@ func (fake *FakeRDSAPI) DescribeExportTasksPages(arg1 *rds.DescribeExportTasksIn
 		arg1 *rds.DescribeExportTasksInput
 		arg2 func(*rds.DescribeExportTasksOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeExportTasksPagesStub
+	fakeReturns := fake.describeExportTasksPagesReturns
 	fake.recordInvocation("DescribeExportTasksPages", []interface{}{arg1, arg2})
 	fake.describeExportTasksPagesMutex.Unlock()
-	if fake.DescribeExportTasksPagesStub != nil {
-		return fake.DescribeExportTasksPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeExportTasksPagesReturns
 	return fakeReturns.result1
 }
 
@@ -22349,15 +22604,16 @@ func (fake *FakeRDSAPI) DescribeExportTasksPagesWithContext(arg1 context.Context
 		arg3 func(*rds.DescribeExportTasksOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeExportTasksPagesWithContextStub
+	fakeReturns := fake.describeExportTasksPagesWithContextReturns
 	fake.recordInvocation("DescribeExportTasksPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeExportTasksPagesWithContextMutex.Unlock()
-	if fake.DescribeExportTasksPagesWithContextStub != nil {
-		return fake.DescribeExportTasksPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeExportTasksPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -22409,15 +22665,16 @@ func (fake *FakeRDSAPI) DescribeExportTasksRequest(arg1 *rds.DescribeExportTasks
 	fake.describeExportTasksRequestArgsForCall = append(fake.describeExportTasksRequestArgsForCall, struct {
 		arg1 *rds.DescribeExportTasksInput
 	}{arg1})
+	stub := fake.DescribeExportTasksRequestStub
+	fakeReturns := fake.describeExportTasksRequestReturns
 	fake.recordInvocation("DescribeExportTasksRequest", []interface{}{arg1})
 	fake.describeExportTasksRequestMutex.Unlock()
-	if fake.DescribeExportTasksRequestStub != nil {
-		return fake.DescribeExportTasksRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeExportTasksRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22474,15 +22731,16 @@ func (fake *FakeRDSAPI) DescribeExportTasksWithContext(arg1 context.Context, arg
 		arg2 *rds.DescribeExportTasksInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeExportTasksWithContextStub
+	fakeReturns := fake.describeExportTasksWithContextReturns
 	fake.recordInvocation("DescribeExportTasksWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeExportTasksWithContextMutex.Unlock()
-	if fake.DescribeExportTasksWithContextStub != nil {
-		return fake.DescribeExportTasksWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeExportTasksWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22537,15 +22795,16 @@ func (fake *FakeRDSAPI) DescribeGlobalClusters(arg1 *rds.DescribeGlobalClustersI
 	fake.describeGlobalClustersArgsForCall = append(fake.describeGlobalClustersArgsForCall, struct {
 		arg1 *rds.DescribeGlobalClustersInput
 	}{arg1})
+	stub := fake.DescribeGlobalClustersStub
+	fakeReturns := fake.describeGlobalClustersReturns
 	fake.recordInvocation("DescribeGlobalClusters", []interface{}{arg1})
 	fake.describeGlobalClustersMutex.Unlock()
-	if fake.DescribeGlobalClustersStub != nil {
-		return fake.DescribeGlobalClustersStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeGlobalClustersReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22601,15 +22860,16 @@ func (fake *FakeRDSAPI) DescribeGlobalClustersPages(arg1 *rds.DescribeGlobalClus
 		arg1 *rds.DescribeGlobalClustersInput
 		arg2 func(*rds.DescribeGlobalClustersOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeGlobalClustersPagesStub
+	fakeReturns := fake.describeGlobalClustersPagesReturns
 	fake.recordInvocation("DescribeGlobalClustersPages", []interface{}{arg1, arg2})
 	fake.describeGlobalClustersPagesMutex.Unlock()
-	if fake.DescribeGlobalClustersPagesStub != nil {
-		return fake.DescribeGlobalClustersPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeGlobalClustersPagesReturns
 	return fakeReturns.result1
 }
 
@@ -22664,15 +22924,16 @@ func (fake *FakeRDSAPI) DescribeGlobalClustersPagesWithContext(arg1 context.Cont
 		arg3 func(*rds.DescribeGlobalClustersOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeGlobalClustersPagesWithContextStub
+	fakeReturns := fake.describeGlobalClustersPagesWithContextReturns
 	fake.recordInvocation("DescribeGlobalClustersPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeGlobalClustersPagesWithContextMutex.Unlock()
-	if fake.DescribeGlobalClustersPagesWithContextStub != nil {
-		return fake.DescribeGlobalClustersPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeGlobalClustersPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -22724,15 +22985,16 @@ func (fake *FakeRDSAPI) DescribeGlobalClustersRequest(arg1 *rds.DescribeGlobalCl
 	fake.describeGlobalClustersRequestArgsForCall = append(fake.describeGlobalClustersRequestArgsForCall, struct {
 		arg1 *rds.DescribeGlobalClustersInput
 	}{arg1})
+	stub := fake.DescribeGlobalClustersRequestStub
+	fakeReturns := fake.describeGlobalClustersRequestReturns
 	fake.recordInvocation("DescribeGlobalClustersRequest", []interface{}{arg1})
 	fake.describeGlobalClustersRequestMutex.Unlock()
-	if fake.DescribeGlobalClustersRequestStub != nil {
-		return fake.DescribeGlobalClustersRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeGlobalClustersRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22789,15 +23051,16 @@ func (fake *FakeRDSAPI) DescribeGlobalClustersWithContext(arg1 context.Context, 
 		arg2 *rds.DescribeGlobalClustersInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeGlobalClustersWithContextStub
+	fakeReturns := fake.describeGlobalClustersWithContextReturns
 	fake.recordInvocation("DescribeGlobalClustersWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeGlobalClustersWithContextMutex.Unlock()
-	if fake.DescribeGlobalClustersWithContextStub != nil {
-		return fake.DescribeGlobalClustersWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeGlobalClustersWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22852,15 +23115,16 @@ func (fake *FakeRDSAPI) DescribeInstallationMedia(arg1 *rds.DescribeInstallation
 	fake.describeInstallationMediaArgsForCall = append(fake.describeInstallationMediaArgsForCall, struct {
 		arg1 *rds.DescribeInstallationMediaInput
 	}{arg1})
+	stub := fake.DescribeInstallationMediaStub
+	fakeReturns := fake.describeInstallationMediaReturns
 	fake.recordInvocation("DescribeInstallationMedia", []interface{}{arg1})
 	fake.describeInstallationMediaMutex.Unlock()
-	if fake.DescribeInstallationMediaStub != nil {
-		return fake.DescribeInstallationMediaStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeInstallationMediaReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -22916,15 +23180,16 @@ func (fake *FakeRDSAPI) DescribeInstallationMediaPages(arg1 *rds.DescribeInstall
 		arg1 *rds.DescribeInstallationMediaInput
 		arg2 func(*rds.DescribeInstallationMediaOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeInstallationMediaPagesStub
+	fakeReturns := fake.describeInstallationMediaPagesReturns
 	fake.recordInvocation("DescribeInstallationMediaPages", []interface{}{arg1, arg2})
 	fake.describeInstallationMediaPagesMutex.Unlock()
-	if fake.DescribeInstallationMediaPagesStub != nil {
-		return fake.DescribeInstallationMediaPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeInstallationMediaPagesReturns
 	return fakeReturns.result1
 }
 
@@ -22979,15 +23244,16 @@ func (fake *FakeRDSAPI) DescribeInstallationMediaPagesWithContext(arg1 context.C
 		arg3 func(*rds.DescribeInstallationMediaOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeInstallationMediaPagesWithContextStub
+	fakeReturns := fake.describeInstallationMediaPagesWithContextReturns
 	fake.recordInvocation("DescribeInstallationMediaPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeInstallationMediaPagesWithContextMutex.Unlock()
-	if fake.DescribeInstallationMediaPagesWithContextStub != nil {
-		return fake.DescribeInstallationMediaPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeInstallationMediaPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -23039,15 +23305,16 @@ func (fake *FakeRDSAPI) DescribeInstallationMediaRequest(arg1 *rds.DescribeInsta
 	fake.describeInstallationMediaRequestArgsForCall = append(fake.describeInstallationMediaRequestArgsForCall, struct {
 		arg1 *rds.DescribeInstallationMediaInput
 	}{arg1})
+	stub := fake.DescribeInstallationMediaRequestStub
+	fakeReturns := fake.describeInstallationMediaRequestReturns
 	fake.recordInvocation("DescribeInstallationMediaRequest", []interface{}{arg1})
 	fake.describeInstallationMediaRequestMutex.Unlock()
-	if fake.DescribeInstallationMediaRequestStub != nil {
-		return fake.DescribeInstallationMediaRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeInstallationMediaRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23104,15 +23371,16 @@ func (fake *FakeRDSAPI) DescribeInstallationMediaWithContext(arg1 context.Contex
 		arg2 *rds.DescribeInstallationMediaInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeInstallationMediaWithContextStub
+	fakeReturns := fake.describeInstallationMediaWithContextReturns
 	fake.recordInvocation("DescribeInstallationMediaWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeInstallationMediaWithContextMutex.Unlock()
-	if fake.DescribeInstallationMediaWithContextStub != nil {
-		return fake.DescribeInstallationMediaWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeInstallationMediaWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23167,15 +23435,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupOptions(arg1 *rds.DescribeOptionGroup
 	fake.describeOptionGroupOptionsArgsForCall = append(fake.describeOptionGroupOptionsArgsForCall, struct {
 		arg1 *rds.DescribeOptionGroupOptionsInput
 	}{arg1})
+	stub := fake.DescribeOptionGroupOptionsStub
+	fakeReturns := fake.describeOptionGroupOptionsReturns
 	fake.recordInvocation("DescribeOptionGroupOptions", []interface{}{arg1})
 	fake.describeOptionGroupOptionsMutex.Unlock()
-	if fake.DescribeOptionGroupOptionsStub != nil {
-		return fake.DescribeOptionGroupOptionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOptionGroupOptionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23231,15 +23500,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupOptionsPages(arg1 *rds.DescribeOption
 		arg1 *rds.DescribeOptionGroupOptionsInput
 		arg2 func(*rds.DescribeOptionGroupOptionsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeOptionGroupOptionsPagesStub
+	fakeReturns := fake.describeOptionGroupOptionsPagesReturns
 	fake.recordInvocation("DescribeOptionGroupOptionsPages", []interface{}{arg1, arg2})
 	fake.describeOptionGroupOptionsPagesMutex.Unlock()
-	if fake.DescribeOptionGroupOptionsPagesStub != nil {
-		return fake.DescribeOptionGroupOptionsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeOptionGroupOptionsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -23294,15 +23564,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupOptionsPagesWithContext(arg1 context.
 		arg3 func(*rds.DescribeOptionGroupOptionsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeOptionGroupOptionsPagesWithContextStub
+	fakeReturns := fake.describeOptionGroupOptionsPagesWithContextReturns
 	fake.recordInvocation("DescribeOptionGroupOptionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeOptionGroupOptionsPagesWithContextMutex.Unlock()
-	if fake.DescribeOptionGroupOptionsPagesWithContextStub != nil {
-		return fake.DescribeOptionGroupOptionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeOptionGroupOptionsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -23354,15 +23625,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupOptionsRequest(arg1 *rds.DescribeOpti
 	fake.describeOptionGroupOptionsRequestArgsForCall = append(fake.describeOptionGroupOptionsRequestArgsForCall, struct {
 		arg1 *rds.DescribeOptionGroupOptionsInput
 	}{arg1})
+	stub := fake.DescribeOptionGroupOptionsRequestStub
+	fakeReturns := fake.describeOptionGroupOptionsRequestReturns
 	fake.recordInvocation("DescribeOptionGroupOptionsRequest", []interface{}{arg1})
 	fake.describeOptionGroupOptionsRequestMutex.Unlock()
-	if fake.DescribeOptionGroupOptionsRequestStub != nil {
-		return fake.DescribeOptionGroupOptionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOptionGroupOptionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23419,15 +23691,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupOptionsWithContext(arg1 context.Conte
 		arg2 *rds.DescribeOptionGroupOptionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeOptionGroupOptionsWithContextStub
+	fakeReturns := fake.describeOptionGroupOptionsWithContextReturns
 	fake.recordInvocation("DescribeOptionGroupOptionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeOptionGroupOptionsWithContextMutex.Unlock()
-	if fake.DescribeOptionGroupOptionsWithContextStub != nil {
-		return fake.DescribeOptionGroupOptionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOptionGroupOptionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23482,15 +23755,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroups(arg1 *rds.DescribeOptionGroupsInput
 	fake.describeOptionGroupsArgsForCall = append(fake.describeOptionGroupsArgsForCall, struct {
 		arg1 *rds.DescribeOptionGroupsInput
 	}{arg1})
+	stub := fake.DescribeOptionGroupsStub
+	fakeReturns := fake.describeOptionGroupsReturns
 	fake.recordInvocation("DescribeOptionGroups", []interface{}{arg1})
 	fake.describeOptionGroupsMutex.Unlock()
-	if fake.DescribeOptionGroupsStub != nil {
-		return fake.DescribeOptionGroupsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOptionGroupsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23546,15 +23820,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupsPages(arg1 *rds.DescribeOptionGroups
 		arg1 *rds.DescribeOptionGroupsInput
 		arg2 func(*rds.DescribeOptionGroupsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeOptionGroupsPagesStub
+	fakeReturns := fake.describeOptionGroupsPagesReturns
 	fake.recordInvocation("DescribeOptionGroupsPages", []interface{}{arg1, arg2})
 	fake.describeOptionGroupsPagesMutex.Unlock()
-	if fake.DescribeOptionGroupsPagesStub != nil {
-		return fake.DescribeOptionGroupsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeOptionGroupsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -23609,15 +23884,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupsPagesWithContext(arg1 context.Contex
 		arg3 func(*rds.DescribeOptionGroupsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeOptionGroupsPagesWithContextStub
+	fakeReturns := fake.describeOptionGroupsPagesWithContextReturns
 	fake.recordInvocation("DescribeOptionGroupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeOptionGroupsPagesWithContextMutex.Unlock()
-	if fake.DescribeOptionGroupsPagesWithContextStub != nil {
-		return fake.DescribeOptionGroupsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeOptionGroupsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -23669,15 +23945,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupsRequest(arg1 *rds.DescribeOptionGrou
 	fake.describeOptionGroupsRequestArgsForCall = append(fake.describeOptionGroupsRequestArgsForCall, struct {
 		arg1 *rds.DescribeOptionGroupsInput
 	}{arg1})
+	stub := fake.DescribeOptionGroupsRequestStub
+	fakeReturns := fake.describeOptionGroupsRequestReturns
 	fake.recordInvocation("DescribeOptionGroupsRequest", []interface{}{arg1})
 	fake.describeOptionGroupsRequestMutex.Unlock()
-	if fake.DescribeOptionGroupsRequestStub != nil {
-		return fake.DescribeOptionGroupsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOptionGroupsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23734,15 +24011,16 @@ func (fake *FakeRDSAPI) DescribeOptionGroupsWithContext(arg1 context.Context, ar
 		arg2 *rds.DescribeOptionGroupsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeOptionGroupsWithContextStub
+	fakeReturns := fake.describeOptionGroupsWithContextReturns
 	fake.recordInvocation("DescribeOptionGroupsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeOptionGroupsWithContextMutex.Unlock()
-	if fake.DescribeOptionGroupsWithContextStub != nil {
-		return fake.DescribeOptionGroupsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOptionGroupsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23797,15 +24075,16 @@ func (fake *FakeRDSAPI) DescribeOrderableDBInstanceOptions(arg1 *rds.DescribeOrd
 	fake.describeOrderableDBInstanceOptionsArgsForCall = append(fake.describeOrderableDBInstanceOptionsArgsForCall, struct {
 		arg1 *rds.DescribeOrderableDBInstanceOptionsInput
 	}{arg1})
+	stub := fake.DescribeOrderableDBInstanceOptionsStub
+	fakeReturns := fake.describeOrderableDBInstanceOptionsReturns
 	fake.recordInvocation("DescribeOrderableDBInstanceOptions", []interface{}{arg1})
 	fake.describeOrderableDBInstanceOptionsMutex.Unlock()
-	if fake.DescribeOrderableDBInstanceOptionsStub != nil {
-		return fake.DescribeOrderableDBInstanceOptionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOrderableDBInstanceOptionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -23861,15 +24140,16 @@ func (fake *FakeRDSAPI) DescribeOrderableDBInstanceOptionsPages(arg1 *rds.Descri
 		arg1 *rds.DescribeOrderableDBInstanceOptionsInput
 		arg2 func(*rds.DescribeOrderableDBInstanceOptionsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeOrderableDBInstanceOptionsPagesStub
+	fakeReturns := fake.describeOrderableDBInstanceOptionsPagesReturns
 	fake.recordInvocation("DescribeOrderableDBInstanceOptionsPages", []interface{}{arg1, arg2})
 	fake.describeOrderableDBInstanceOptionsPagesMutex.Unlock()
-	if fake.DescribeOrderableDBInstanceOptionsPagesStub != nil {
-		return fake.DescribeOrderableDBInstanceOptionsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeOrderableDBInstanceOptionsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -23924,15 +24204,16 @@ func (fake *FakeRDSAPI) DescribeOrderableDBInstanceOptionsPagesWithContext(arg1 
 		arg3 func(*rds.DescribeOrderableDBInstanceOptionsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeOrderableDBInstanceOptionsPagesWithContextStub
+	fakeReturns := fake.describeOrderableDBInstanceOptionsPagesWithContextReturns
 	fake.recordInvocation("DescribeOrderableDBInstanceOptionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeOrderableDBInstanceOptionsPagesWithContextMutex.Unlock()
-	if fake.DescribeOrderableDBInstanceOptionsPagesWithContextStub != nil {
-		return fake.DescribeOrderableDBInstanceOptionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeOrderableDBInstanceOptionsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -23984,15 +24265,16 @@ func (fake *FakeRDSAPI) DescribeOrderableDBInstanceOptionsRequest(arg1 *rds.Desc
 	fake.describeOrderableDBInstanceOptionsRequestArgsForCall = append(fake.describeOrderableDBInstanceOptionsRequestArgsForCall, struct {
 		arg1 *rds.DescribeOrderableDBInstanceOptionsInput
 	}{arg1})
+	stub := fake.DescribeOrderableDBInstanceOptionsRequestStub
+	fakeReturns := fake.describeOrderableDBInstanceOptionsRequestReturns
 	fake.recordInvocation("DescribeOrderableDBInstanceOptionsRequest", []interface{}{arg1})
 	fake.describeOrderableDBInstanceOptionsRequestMutex.Unlock()
-	if fake.DescribeOrderableDBInstanceOptionsRequestStub != nil {
-		return fake.DescribeOrderableDBInstanceOptionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOrderableDBInstanceOptionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24049,15 +24331,16 @@ func (fake *FakeRDSAPI) DescribeOrderableDBInstanceOptionsWithContext(arg1 conte
 		arg2 *rds.DescribeOrderableDBInstanceOptionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeOrderableDBInstanceOptionsWithContextStub
+	fakeReturns := fake.describeOrderableDBInstanceOptionsWithContextReturns
 	fake.recordInvocation("DescribeOrderableDBInstanceOptionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeOrderableDBInstanceOptionsWithContextMutex.Unlock()
-	if fake.DescribeOrderableDBInstanceOptionsWithContextStub != nil {
-		return fake.DescribeOrderableDBInstanceOptionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeOrderableDBInstanceOptionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24112,15 +24395,16 @@ func (fake *FakeRDSAPI) DescribePendingMaintenanceActions(arg1 *rds.DescribePend
 	fake.describePendingMaintenanceActionsArgsForCall = append(fake.describePendingMaintenanceActionsArgsForCall, struct {
 		arg1 *rds.DescribePendingMaintenanceActionsInput
 	}{arg1})
+	stub := fake.DescribePendingMaintenanceActionsStub
+	fakeReturns := fake.describePendingMaintenanceActionsReturns
 	fake.recordInvocation("DescribePendingMaintenanceActions", []interface{}{arg1})
 	fake.describePendingMaintenanceActionsMutex.Unlock()
-	if fake.DescribePendingMaintenanceActionsStub != nil {
-		return fake.DescribePendingMaintenanceActionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describePendingMaintenanceActionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24175,15 +24459,16 @@ func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsRequest(arg1 *rds.Descr
 	fake.describePendingMaintenanceActionsRequestArgsForCall = append(fake.describePendingMaintenanceActionsRequestArgsForCall, struct {
 		arg1 *rds.DescribePendingMaintenanceActionsInput
 	}{arg1})
+	stub := fake.DescribePendingMaintenanceActionsRequestStub
+	fakeReturns := fake.describePendingMaintenanceActionsRequestReturns
 	fake.recordInvocation("DescribePendingMaintenanceActionsRequest", []interface{}{arg1})
 	fake.describePendingMaintenanceActionsRequestMutex.Unlock()
-	if fake.DescribePendingMaintenanceActionsRequestStub != nil {
-		return fake.DescribePendingMaintenanceActionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describePendingMaintenanceActionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24240,15 +24525,16 @@ func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsWithContext(arg1 contex
 		arg2 *rds.DescribePendingMaintenanceActionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribePendingMaintenanceActionsWithContextStub
+	fakeReturns := fake.describePendingMaintenanceActionsWithContextReturns
 	fake.recordInvocation("DescribePendingMaintenanceActionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describePendingMaintenanceActionsWithContextMutex.Unlock()
-	if fake.DescribePendingMaintenanceActionsWithContextStub != nil {
-		return fake.DescribePendingMaintenanceActionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describePendingMaintenanceActionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24303,15 +24589,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstances(arg1 *rds.DescribeReservedDB
 	fake.describeReservedDBInstancesArgsForCall = append(fake.describeReservedDBInstancesArgsForCall, struct {
 		arg1 *rds.DescribeReservedDBInstancesInput
 	}{arg1})
+	stub := fake.DescribeReservedDBInstancesStub
+	fakeReturns := fake.describeReservedDBInstancesReturns
 	fake.recordInvocation("DescribeReservedDBInstances", []interface{}{arg1})
 	fake.describeReservedDBInstancesMutex.Unlock()
-	if fake.DescribeReservedDBInstancesStub != nil {
-		return fake.DescribeReservedDBInstancesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeReservedDBInstancesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24366,15 +24653,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesOfferings(arg1 *rds.DescribeR
 	fake.describeReservedDBInstancesOfferingsArgsForCall = append(fake.describeReservedDBInstancesOfferingsArgsForCall, struct {
 		arg1 *rds.DescribeReservedDBInstancesOfferingsInput
 	}{arg1})
+	stub := fake.DescribeReservedDBInstancesOfferingsStub
+	fakeReturns := fake.describeReservedDBInstancesOfferingsReturns
 	fake.recordInvocation("DescribeReservedDBInstancesOfferings", []interface{}{arg1})
 	fake.describeReservedDBInstancesOfferingsMutex.Unlock()
-	if fake.DescribeReservedDBInstancesOfferingsStub != nil {
-		return fake.DescribeReservedDBInstancesOfferingsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeReservedDBInstancesOfferingsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24430,15 +24718,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesOfferingsPages(arg1 *rds.Desc
 		arg1 *rds.DescribeReservedDBInstancesOfferingsInput
 		arg2 func(*rds.DescribeReservedDBInstancesOfferingsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeReservedDBInstancesOfferingsPagesStub
+	fakeReturns := fake.describeReservedDBInstancesOfferingsPagesReturns
 	fake.recordInvocation("DescribeReservedDBInstancesOfferingsPages", []interface{}{arg1, arg2})
 	fake.describeReservedDBInstancesOfferingsPagesMutex.Unlock()
-	if fake.DescribeReservedDBInstancesOfferingsPagesStub != nil {
-		return fake.DescribeReservedDBInstancesOfferingsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeReservedDBInstancesOfferingsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -24493,15 +24782,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesOfferingsPagesWithContext(arg
 		arg3 func(*rds.DescribeReservedDBInstancesOfferingsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeReservedDBInstancesOfferingsPagesWithContextStub
+	fakeReturns := fake.describeReservedDBInstancesOfferingsPagesWithContextReturns
 	fake.recordInvocation("DescribeReservedDBInstancesOfferingsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeReservedDBInstancesOfferingsPagesWithContextMutex.Unlock()
-	if fake.DescribeReservedDBInstancesOfferingsPagesWithContextStub != nil {
-		return fake.DescribeReservedDBInstancesOfferingsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeReservedDBInstancesOfferingsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -24553,15 +24843,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesOfferingsRequest(arg1 *rds.De
 	fake.describeReservedDBInstancesOfferingsRequestArgsForCall = append(fake.describeReservedDBInstancesOfferingsRequestArgsForCall, struct {
 		arg1 *rds.DescribeReservedDBInstancesOfferingsInput
 	}{arg1})
+	stub := fake.DescribeReservedDBInstancesOfferingsRequestStub
+	fakeReturns := fake.describeReservedDBInstancesOfferingsRequestReturns
 	fake.recordInvocation("DescribeReservedDBInstancesOfferingsRequest", []interface{}{arg1})
 	fake.describeReservedDBInstancesOfferingsRequestMutex.Unlock()
-	if fake.DescribeReservedDBInstancesOfferingsRequestStub != nil {
-		return fake.DescribeReservedDBInstancesOfferingsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeReservedDBInstancesOfferingsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24618,15 +24909,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesOfferingsWithContext(arg1 con
 		arg2 *rds.DescribeReservedDBInstancesOfferingsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeReservedDBInstancesOfferingsWithContextStub
+	fakeReturns := fake.describeReservedDBInstancesOfferingsWithContextReturns
 	fake.recordInvocation("DescribeReservedDBInstancesOfferingsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeReservedDBInstancesOfferingsWithContextMutex.Unlock()
-	if fake.DescribeReservedDBInstancesOfferingsWithContextStub != nil {
-		return fake.DescribeReservedDBInstancesOfferingsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeReservedDBInstancesOfferingsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24682,15 +24974,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesPages(arg1 *rds.DescribeReser
 		arg1 *rds.DescribeReservedDBInstancesInput
 		arg2 func(*rds.DescribeReservedDBInstancesOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DescribeReservedDBInstancesPagesStub
+	fakeReturns := fake.describeReservedDBInstancesPagesReturns
 	fake.recordInvocation("DescribeReservedDBInstancesPages", []interface{}{arg1, arg2})
 	fake.describeReservedDBInstancesPagesMutex.Unlock()
-	if fake.DescribeReservedDBInstancesPagesStub != nil {
-		return fake.DescribeReservedDBInstancesPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeReservedDBInstancesPagesReturns
 	return fakeReturns.result1
 }
 
@@ -24745,15 +25038,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesPagesWithContext(arg1 context
 		arg3 func(*rds.DescribeReservedDBInstancesOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeReservedDBInstancesPagesWithContextStub
+	fakeReturns := fake.describeReservedDBInstancesPagesWithContextReturns
 	fake.recordInvocation("DescribeReservedDBInstancesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.describeReservedDBInstancesPagesWithContextMutex.Unlock()
-	if fake.DescribeReservedDBInstancesPagesWithContextStub != nil {
-		return fake.DescribeReservedDBInstancesPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.describeReservedDBInstancesPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -24805,15 +25099,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesRequest(arg1 *rds.DescribeRes
 	fake.describeReservedDBInstancesRequestArgsForCall = append(fake.describeReservedDBInstancesRequestArgsForCall, struct {
 		arg1 *rds.DescribeReservedDBInstancesInput
 	}{arg1})
+	stub := fake.DescribeReservedDBInstancesRequestStub
+	fakeReturns := fake.describeReservedDBInstancesRequestReturns
 	fake.recordInvocation("DescribeReservedDBInstancesRequest", []interface{}{arg1})
 	fake.describeReservedDBInstancesRequestMutex.Unlock()
-	if fake.DescribeReservedDBInstancesRequestStub != nil {
-		return fake.DescribeReservedDBInstancesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeReservedDBInstancesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24870,15 +25165,16 @@ func (fake *FakeRDSAPI) DescribeReservedDBInstancesWithContext(arg1 context.Cont
 		arg2 *rds.DescribeReservedDBInstancesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeReservedDBInstancesWithContextStub
+	fakeReturns := fake.describeReservedDBInstancesWithContextReturns
 	fake.recordInvocation("DescribeReservedDBInstancesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeReservedDBInstancesWithContextMutex.Unlock()
-	if fake.DescribeReservedDBInstancesWithContextStub != nil {
-		return fake.DescribeReservedDBInstancesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeReservedDBInstancesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24933,15 +25229,16 @@ func (fake *FakeRDSAPI) DescribeSourceRegions(arg1 *rds.DescribeSourceRegionsInp
 	fake.describeSourceRegionsArgsForCall = append(fake.describeSourceRegionsArgsForCall, struct {
 		arg1 *rds.DescribeSourceRegionsInput
 	}{arg1})
+	stub := fake.DescribeSourceRegionsStub
+	fakeReturns := fake.describeSourceRegionsReturns
 	fake.recordInvocation("DescribeSourceRegions", []interface{}{arg1})
 	fake.describeSourceRegionsMutex.Unlock()
-	if fake.DescribeSourceRegionsStub != nil {
-		return fake.DescribeSourceRegionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeSourceRegionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -24996,15 +25293,16 @@ func (fake *FakeRDSAPI) DescribeSourceRegionsRequest(arg1 *rds.DescribeSourceReg
 	fake.describeSourceRegionsRequestArgsForCall = append(fake.describeSourceRegionsRequestArgsForCall, struct {
 		arg1 *rds.DescribeSourceRegionsInput
 	}{arg1})
+	stub := fake.DescribeSourceRegionsRequestStub
+	fakeReturns := fake.describeSourceRegionsRequestReturns
 	fake.recordInvocation("DescribeSourceRegionsRequest", []interface{}{arg1})
 	fake.describeSourceRegionsRequestMutex.Unlock()
-	if fake.DescribeSourceRegionsRequestStub != nil {
-		return fake.DescribeSourceRegionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeSourceRegionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25061,15 +25359,16 @@ func (fake *FakeRDSAPI) DescribeSourceRegionsWithContext(arg1 context.Context, a
 		arg2 *rds.DescribeSourceRegionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeSourceRegionsWithContextStub
+	fakeReturns := fake.describeSourceRegionsWithContextReturns
 	fake.recordInvocation("DescribeSourceRegionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeSourceRegionsWithContextMutex.Unlock()
-	if fake.DescribeSourceRegionsWithContextStub != nil {
-		return fake.DescribeSourceRegionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeSourceRegionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25124,15 +25423,16 @@ func (fake *FakeRDSAPI) DescribeValidDBInstanceModifications(arg1 *rds.DescribeV
 	fake.describeValidDBInstanceModificationsArgsForCall = append(fake.describeValidDBInstanceModificationsArgsForCall, struct {
 		arg1 *rds.DescribeValidDBInstanceModificationsInput
 	}{arg1})
+	stub := fake.DescribeValidDBInstanceModificationsStub
+	fakeReturns := fake.describeValidDBInstanceModificationsReturns
 	fake.recordInvocation("DescribeValidDBInstanceModifications", []interface{}{arg1})
 	fake.describeValidDBInstanceModificationsMutex.Unlock()
-	if fake.DescribeValidDBInstanceModificationsStub != nil {
-		return fake.DescribeValidDBInstanceModificationsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeValidDBInstanceModificationsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25187,15 +25487,16 @@ func (fake *FakeRDSAPI) DescribeValidDBInstanceModificationsRequest(arg1 *rds.De
 	fake.describeValidDBInstanceModificationsRequestArgsForCall = append(fake.describeValidDBInstanceModificationsRequestArgsForCall, struct {
 		arg1 *rds.DescribeValidDBInstanceModificationsInput
 	}{arg1})
+	stub := fake.DescribeValidDBInstanceModificationsRequestStub
+	fakeReturns := fake.describeValidDBInstanceModificationsRequestReturns
 	fake.recordInvocation("DescribeValidDBInstanceModificationsRequest", []interface{}{arg1})
 	fake.describeValidDBInstanceModificationsRequestMutex.Unlock()
-	if fake.DescribeValidDBInstanceModificationsRequestStub != nil {
-		return fake.DescribeValidDBInstanceModificationsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeValidDBInstanceModificationsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25252,15 +25553,16 @@ func (fake *FakeRDSAPI) DescribeValidDBInstanceModificationsWithContext(arg1 con
 		arg2 *rds.DescribeValidDBInstanceModificationsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DescribeValidDBInstanceModificationsWithContextStub
+	fakeReturns := fake.describeValidDBInstanceModificationsWithContextReturns
 	fake.recordInvocation("DescribeValidDBInstanceModificationsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.describeValidDBInstanceModificationsWithContextMutex.Unlock()
-	if fake.DescribeValidDBInstanceModificationsWithContextStub != nil {
-		return fake.DescribeValidDBInstanceModificationsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.describeValidDBInstanceModificationsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25315,15 +25617,16 @@ func (fake *FakeRDSAPI) DownloadDBLogFilePortion(arg1 *rds.DownloadDBLogFilePort
 	fake.downloadDBLogFilePortionArgsForCall = append(fake.downloadDBLogFilePortionArgsForCall, struct {
 		arg1 *rds.DownloadDBLogFilePortionInput
 	}{arg1})
+	stub := fake.DownloadDBLogFilePortionStub
+	fakeReturns := fake.downloadDBLogFilePortionReturns
 	fake.recordInvocation("DownloadDBLogFilePortion", []interface{}{arg1})
 	fake.downloadDBLogFilePortionMutex.Unlock()
-	if fake.DownloadDBLogFilePortionStub != nil {
-		return fake.DownloadDBLogFilePortionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.downloadDBLogFilePortionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25379,15 +25682,16 @@ func (fake *FakeRDSAPI) DownloadDBLogFilePortionPages(arg1 *rds.DownloadDBLogFil
 		arg1 *rds.DownloadDBLogFilePortionInput
 		arg2 func(*rds.DownloadDBLogFilePortionOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.DownloadDBLogFilePortionPagesStub
+	fakeReturns := fake.downloadDBLogFilePortionPagesReturns
 	fake.recordInvocation("DownloadDBLogFilePortionPages", []interface{}{arg1, arg2})
 	fake.downloadDBLogFilePortionPagesMutex.Unlock()
-	if fake.DownloadDBLogFilePortionPagesStub != nil {
-		return fake.DownloadDBLogFilePortionPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.downloadDBLogFilePortionPagesReturns
 	return fakeReturns.result1
 }
 
@@ -25442,15 +25746,16 @@ func (fake *FakeRDSAPI) DownloadDBLogFilePortionPagesWithContext(arg1 context.Co
 		arg3 func(*rds.DownloadDBLogFilePortionOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.DownloadDBLogFilePortionPagesWithContextStub
+	fakeReturns := fake.downloadDBLogFilePortionPagesWithContextReturns
 	fake.recordInvocation("DownloadDBLogFilePortionPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.downloadDBLogFilePortionPagesWithContextMutex.Unlock()
-	if fake.DownloadDBLogFilePortionPagesWithContextStub != nil {
-		return fake.DownloadDBLogFilePortionPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.downloadDBLogFilePortionPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -25502,15 +25807,16 @@ func (fake *FakeRDSAPI) DownloadDBLogFilePortionRequest(arg1 *rds.DownloadDBLogF
 	fake.downloadDBLogFilePortionRequestArgsForCall = append(fake.downloadDBLogFilePortionRequestArgsForCall, struct {
 		arg1 *rds.DownloadDBLogFilePortionInput
 	}{arg1})
+	stub := fake.DownloadDBLogFilePortionRequestStub
+	fakeReturns := fake.downloadDBLogFilePortionRequestReturns
 	fake.recordInvocation("DownloadDBLogFilePortionRequest", []interface{}{arg1})
 	fake.downloadDBLogFilePortionRequestMutex.Unlock()
-	if fake.DownloadDBLogFilePortionRequestStub != nil {
-		return fake.DownloadDBLogFilePortionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.downloadDBLogFilePortionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25567,15 +25873,16 @@ func (fake *FakeRDSAPI) DownloadDBLogFilePortionWithContext(arg1 context.Context
 		arg2 *rds.DownloadDBLogFilePortionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DownloadDBLogFilePortionWithContextStub
+	fakeReturns := fake.downloadDBLogFilePortionWithContextReturns
 	fake.recordInvocation("DownloadDBLogFilePortionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.downloadDBLogFilePortionWithContextMutex.Unlock()
-	if fake.DownloadDBLogFilePortionWithContextStub != nil {
-		return fake.DownloadDBLogFilePortionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.downloadDBLogFilePortionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25630,15 +25937,16 @@ func (fake *FakeRDSAPI) FailoverDBCluster(arg1 *rds.FailoverDBClusterInput) (*rd
 	fake.failoverDBClusterArgsForCall = append(fake.failoverDBClusterArgsForCall, struct {
 		arg1 *rds.FailoverDBClusterInput
 	}{arg1})
+	stub := fake.FailoverDBClusterStub
+	fakeReturns := fake.failoverDBClusterReturns
 	fake.recordInvocation("FailoverDBCluster", []interface{}{arg1})
 	fake.failoverDBClusterMutex.Unlock()
-	if fake.FailoverDBClusterStub != nil {
-		return fake.FailoverDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.failoverDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25693,15 +26001,16 @@ func (fake *FakeRDSAPI) FailoverDBClusterRequest(arg1 *rds.FailoverDBClusterInpu
 	fake.failoverDBClusterRequestArgsForCall = append(fake.failoverDBClusterRequestArgsForCall, struct {
 		arg1 *rds.FailoverDBClusterInput
 	}{arg1})
+	stub := fake.FailoverDBClusterRequestStub
+	fakeReturns := fake.failoverDBClusterRequestReturns
 	fake.recordInvocation("FailoverDBClusterRequest", []interface{}{arg1})
 	fake.failoverDBClusterRequestMutex.Unlock()
-	if fake.FailoverDBClusterRequestStub != nil {
-		return fake.FailoverDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.failoverDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25758,15 +26067,16 @@ func (fake *FakeRDSAPI) FailoverDBClusterWithContext(arg1 context.Context, arg2 
 		arg2 *rds.FailoverDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.FailoverDBClusterWithContextStub
+	fakeReturns := fake.failoverDBClusterWithContextReturns
 	fake.recordInvocation("FailoverDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.failoverDBClusterWithContextMutex.Unlock()
-	if fake.FailoverDBClusterWithContextStub != nil {
-		return fake.FailoverDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.failoverDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25821,15 +26131,16 @@ func (fake *FakeRDSAPI) ImportInstallationMedia(arg1 *rds.ImportInstallationMedi
 	fake.importInstallationMediaArgsForCall = append(fake.importInstallationMediaArgsForCall, struct {
 		arg1 *rds.ImportInstallationMediaInput
 	}{arg1})
+	stub := fake.ImportInstallationMediaStub
+	fakeReturns := fake.importInstallationMediaReturns
 	fake.recordInvocation("ImportInstallationMedia", []interface{}{arg1})
 	fake.importInstallationMediaMutex.Unlock()
-	if fake.ImportInstallationMediaStub != nil {
-		return fake.ImportInstallationMediaStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.importInstallationMediaReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25884,15 +26195,16 @@ func (fake *FakeRDSAPI) ImportInstallationMediaRequest(arg1 *rds.ImportInstallat
 	fake.importInstallationMediaRequestArgsForCall = append(fake.importInstallationMediaRequestArgsForCall, struct {
 		arg1 *rds.ImportInstallationMediaInput
 	}{arg1})
+	stub := fake.ImportInstallationMediaRequestStub
+	fakeReturns := fake.importInstallationMediaRequestReturns
 	fake.recordInvocation("ImportInstallationMediaRequest", []interface{}{arg1})
 	fake.importInstallationMediaRequestMutex.Unlock()
-	if fake.ImportInstallationMediaRequestStub != nil {
-		return fake.ImportInstallationMediaRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.importInstallationMediaRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -25949,15 +26261,16 @@ func (fake *FakeRDSAPI) ImportInstallationMediaWithContext(arg1 context.Context,
 		arg2 *rds.ImportInstallationMediaInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ImportInstallationMediaWithContextStub
+	fakeReturns := fake.importInstallationMediaWithContextReturns
 	fake.recordInvocation("ImportInstallationMediaWithContext", []interface{}{arg1, arg2, arg3})
 	fake.importInstallationMediaWithContextMutex.Unlock()
-	if fake.ImportInstallationMediaWithContextStub != nil {
-		return fake.ImportInstallationMediaWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.importInstallationMediaWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26012,15 +26325,16 @@ func (fake *FakeRDSAPI) ListTagsForResource(arg1 *rds.ListTagsForResourceInput) 
 	fake.listTagsForResourceArgsForCall = append(fake.listTagsForResourceArgsForCall, struct {
 		arg1 *rds.ListTagsForResourceInput
 	}{arg1})
+	stub := fake.ListTagsForResourceStub
+	fakeReturns := fake.listTagsForResourceReturns
 	fake.recordInvocation("ListTagsForResource", []interface{}{arg1})
 	fake.listTagsForResourceMutex.Unlock()
-	if fake.ListTagsForResourceStub != nil {
-		return fake.ListTagsForResourceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listTagsForResourceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26075,15 +26389,16 @@ func (fake *FakeRDSAPI) ListTagsForResourceRequest(arg1 *rds.ListTagsForResource
 	fake.listTagsForResourceRequestArgsForCall = append(fake.listTagsForResourceRequestArgsForCall, struct {
 		arg1 *rds.ListTagsForResourceInput
 	}{arg1})
+	stub := fake.ListTagsForResourceRequestStub
+	fakeReturns := fake.listTagsForResourceRequestReturns
 	fake.recordInvocation("ListTagsForResourceRequest", []interface{}{arg1})
 	fake.listTagsForResourceRequestMutex.Unlock()
-	if fake.ListTagsForResourceRequestStub != nil {
-		return fake.ListTagsForResourceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listTagsForResourceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26140,15 +26455,16 @@ func (fake *FakeRDSAPI) ListTagsForResourceWithContext(arg1 context.Context, arg
 		arg2 *rds.ListTagsForResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListTagsForResourceWithContextStub
+	fakeReturns := fake.listTagsForResourceWithContextReturns
 	fake.recordInvocation("ListTagsForResourceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listTagsForResourceWithContextMutex.Unlock()
-	if fake.ListTagsForResourceWithContextStub != nil {
-		return fake.ListTagsForResourceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listTagsForResourceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26203,15 +26519,16 @@ func (fake *FakeRDSAPI) ModifyCertificates(arg1 *rds.ModifyCertificatesInput) (*
 	fake.modifyCertificatesArgsForCall = append(fake.modifyCertificatesArgsForCall, struct {
 		arg1 *rds.ModifyCertificatesInput
 	}{arg1})
+	stub := fake.ModifyCertificatesStub
+	fakeReturns := fake.modifyCertificatesReturns
 	fake.recordInvocation("ModifyCertificates", []interface{}{arg1})
 	fake.modifyCertificatesMutex.Unlock()
-	if fake.ModifyCertificatesStub != nil {
-		return fake.ModifyCertificatesStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyCertificatesReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26266,15 +26583,16 @@ func (fake *FakeRDSAPI) ModifyCertificatesRequest(arg1 *rds.ModifyCertificatesIn
 	fake.modifyCertificatesRequestArgsForCall = append(fake.modifyCertificatesRequestArgsForCall, struct {
 		arg1 *rds.ModifyCertificatesInput
 	}{arg1})
+	stub := fake.ModifyCertificatesRequestStub
+	fakeReturns := fake.modifyCertificatesRequestReturns
 	fake.recordInvocation("ModifyCertificatesRequest", []interface{}{arg1})
 	fake.modifyCertificatesRequestMutex.Unlock()
-	if fake.ModifyCertificatesRequestStub != nil {
-		return fake.ModifyCertificatesRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyCertificatesRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26331,15 +26649,16 @@ func (fake *FakeRDSAPI) ModifyCertificatesWithContext(arg1 context.Context, arg2
 		arg2 *rds.ModifyCertificatesInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyCertificatesWithContextStub
+	fakeReturns := fake.modifyCertificatesWithContextReturns
 	fake.recordInvocation("ModifyCertificatesWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyCertificatesWithContextMutex.Unlock()
-	if fake.ModifyCertificatesWithContextStub != nil {
-		return fake.ModifyCertificatesWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyCertificatesWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26394,15 +26713,16 @@ func (fake *FakeRDSAPI) ModifyCurrentDBClusterCapacity(arg1 *rds.ModifyCurrentDB
 	fake.modifyCurrentDBClusterCapacityArgsForCall = append(fake.modifyCurrentDBClusterCapacityArgsForCall, struct {
 		arg1 *rds.ModifyCurrentDBClusterCapacityInput
 	}{arg1})
+	stub := fake.ModifyCurrentDBClusterCapacityStub
+	fakeReturns := fake.modifyCurrentDBClusterCapacityReturns
 	fake.recordInvocation("ModifyCurrentDBClusterCapacity", []interface{}{arg1})
 	fake.modifyCurrentDBClusterCapacityMutex.Unlock()
-	if fake.ModifyCurrentDBClusterCapacityStub != nil {
-		return fake.ModifyCurrentDBClusterCapacityStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyCurrentDBClusterCapacityReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26457,15 +26777,16 @@ func (fake *FakeRDSAPI) ModifyCurrentDBClusterCapacityRequest(arg1 *rds.ModifyCu
 	fake.modifyCurrentDBClusterCapacityRequestArgsForCall = append(fake.modifyCurrentDBClusterCapacityRequestArgsForCall, struct {
 		arg1 *rds.ModifyCurrentDBClusterCapacityInput
 	}{arg1})
+	stub := fake.ModifyCurrentDBClusterCapacityRequestStub
+	fakeReturns := fake.modifyCurrentDBClusterCapacityRequestReturns
 	fake.recordInvocation("ModifyCurrentDBClusterCapacityRequest", []interface{}{arg1})
 	fake.modifyCurrentDBClusterCapacityRequestMutex.Unlock()
-	if fake.ModifyCurrentDBClusterCapacityRequestStub != nil {
-		return fake.ModifyCurrentDBClusterCapacityRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyCurrentDBClusterCapacityRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26522,15 +26843,16 @@ func (fake *FakeRDSAPI) ModifyCurrentDBClusterCapacityWithContext(arg1 context.C
 		arg2 *rds.ModifyCurrentDBClusterCapacityInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyCurrentDBClusterCapacityWithContextStub
+	fakeReturns := fake.modifyCurrentDBClusterCapacityWithContextReturns
 	fake.recordInvocation("ModifyCurrentDBClusterCapacityWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyCurrentDBClusterCapacityWithContextMutex.Unlock()
-	if fake.ModifyCurrentDBClusterCapacityWithContextStub != nil {
-		return fake.ModifyCurrentDBClusterCapacityWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyCurrentDBClusterCapacityWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26585,15 +26907,16 @@ func (fake *FakeRDSAPI) ModifyDBCluster(arg1 *rds.ModifyDBClusterInput) (*rds.Mo
 	fake.modifyDBClusterArgsForCall = append(fake.modifyDBClusterArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterInput
 	}{arg1})
+	stub := fake.ModifyDBClusterStub
+	fakeReturns := fake.modifyDBClusterReturns
 	fake.recordInvocation("ModifyDBCluster", []interface{}{arg1})
 	fake.modifyDBClusterMutex.Unlock()
-	if fake.ModifyDBClusterStub != nil {
-		return fake.ModifyDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26648,15 +26971,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterEndpoint(arg1 *rds.ModifyDBClusterEndpoin
 	fake.modifyDBClusterEndpointArgsForCall = append(fake.modifyDBClusterEndpointArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterEndpointInput
 	}{arg1})
+	stub := fake.ModifyDBClusterEndpointStub
+	fakeReturns := fake.modifyDBClusterEndpointReturns
 	fake.recordInvocation("ModifyDBClusterEndpoint", []interface{}{arg1})
 	fake.modifyDBClusterEndpointMutex.Unlock()
-	if fake.ModifyDBClusterEndpointStub != nil {
-		return fake.ModifyDBClusterEndpointStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterEndpointReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26711,15 +27035,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterEndpointRequest(arg1 *rds.ModifyDBCluster
 	fake.modifyDBClusterEndpointRequestArgsForCall = append(fake.modifyDBClusterEndpointRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterEndpointInput
 	}{arg1})
+	stub := fake.ModifyDBClusterEndpointRequestStub
+	fakeReturns := fake.modifyDBClusterEndpointRequestReturns
 	fake.recordInvocation("ModifyDBClusterEndpointRequest", []interface{}{arg1})
 	fake.modifyDBClusterEndpointRequestMutex.Unlock()
-	if fake.ModifyDBClusterEndpointRequestStub != nil {
-		return fake.ModifyDBClusterEndpointRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterEndpointRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26776,15 +27101,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterEndpointWithContext(arg1 context.Context,
 		arg2 *rds.ModifyDBClusterEndpointInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBClusterEndpointWithContextStub
+	fakeReturns := fake.modifyDBClusterEndpointWithContextReturns
 	fake.recordInvocation("ModifyDBClusterEndpointWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBClusterEndpointWithContextMutex.Unlock()
-	if fake.ModifyDBClusterEndpointWithContextStub != nil {
-		return fake.ModifyDBClusterEndpointWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterEndpointWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26839,15 +27165,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterParameterGroup(arg1 *rds.ModifyDBClusterP
 	fake.modifyDBClusterParameterGroupArgsForCall = append(fake.modifyDBClusterParameterGroupArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.ModifyDBClusterParameterGroupStub
+	fakeReturns := fake.modifyDBClusterParameterGroupReturns
 	fake.recordInvocation("ModifyDBClusterParameterGroup", []interface{}{arg1})
 	fake.modifyDBClusterParameterGroupMutex.Unlock()
-	if fake.ModifyDBClusterParameterGroupStub != nil {
-		return fake.ModifyDBClusterParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26902,15 +27229,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterParameterGroupRequest(arg1 *rds.ModifyDBC
 	fake.modifyDBClusterParameterGroupRequestArgsForCall = append(fake.modifyDBClusterParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.ModifyDBClusterParameterGroupRequestStub
+	fakeReturns := fake.modifyDBClusterParameterGroupRequestReturns
 	fake.recordInvocation("ModifyDBClusterParameterGroupRequest", []interface{}{arg1})
 	fake.modifyDBClusterParameterGroupRequestMutex.Unlock()
-	if fake.ModifyDBClusterParameterGroupRequestStub != nil {
-		return fake.ModifyDBClusterParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -26967,15 +27295,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterParameterGroupWithContext(arg1 context.Co
 		arg2 *rds.ModifyDBClusterParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBClusterParameterGroupWithContextStub
+	fakeReturns := fake.modifyDBClusterParameterGroupWithContextReturns
 	fake.recordInvocation("ModifyDBClusterParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBClusterParameterGroupWithContextMutex.Unlock()
-	if fake.ModifyDBClusterParameterGroupWithContextStub != nil {
-		return fake.ModifyDBClusterParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27030,15 +27359,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterRequest(arg1 *rds.ModifyDBClusterInput) (
 	fake.modifyDBClusterRequestArgsForCall = append(fake.modifyDBClusterRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterInput
 	}{arg1})
+	stub := fake.ModifyDBClusterRequestStub
+	fakeReturns := fake.modifyDBClusterRequestReturns
 	fake.recordInvocation("ModifyDBClusterRequest", []interface{}{arg1})
 	fake.modifyDBClusterRequestMutex.Unlock()
-	if fake.ModifyDBClusterRequestStub != nil {
-		return fake.ModifyDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27093,15 +27423,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterSnapshotAttribute(arg1 *rds.ModifyDBClust
 	fake.modifyDBClusterSnapshotAttributeArgsForCall = append(fake.modifyDBClusterSnapshotAttributeArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterSnapshotAttributeInput
 	}{arg1})
+	stub := fake.ModifyDBClusterSnapshotAttributeStub
+	fakeReturns := fake.modifyDBClusterSnapshotAttributeReturns
 	fake.recordInvocation("ModifyDBClusterSnapshotAttribute", []interface{}{arg1})
 	fake.modifyDBClusterSnapshotAttributeMutex.Unlock()
-	if fake.ModifyDBClusterSnapshotAttributeStub != nil {
-		return fake.ModifyDBClusterSnapshotAttributeStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterSnapshotAttributeReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27156,15 +27487,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterSnapshotAttributeRequest(arg1 *rds.Modify
 	fake.modifyDBClusterSnapshotAttributeRequestArgsForCall = append(fake.modifyDBClusterSnapshotAttributeRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBClusterSnapshotAttributeInput
 	}{arg1})
+	stub := fake.ModifyDBClusterSnapshotAttributeRequestStub
+	fakeReturns := fake.modifyDBClusterSnapshotAttributeRequestReturns
 	fake.recordInvocation("ModifyDBClusterSnapshotAttributeRequest", []interface{}{arg1})
 	fake.modifyDBClusterSnapshotAttributeRequestMutex.Unlock()
-	if fake.ModifyDBClusterSnapshotAttributeRequestStub != nil {
-		return fake.ModifyDBClusterSnapshotAttributeRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterSnapshotAttributeRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27221,15 +27553,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterSnapshotAttributeWithContext(arg1 context
 		arg2 *rds.ModifyDBClusterSnapshotAttributeInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBClusterSnapshotAttributeWithContextStub
+	fakeReturns := fake.modifyDBClusterSnapshotAttributeWithContextReturns
 	fake.recordInvocation("ModifyDBClusterSnapshotAttributeWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBClusterSnapshotAttributeWithContextMutex.Unlock()
-	if fake.ModifyDBClusterSnapshotAttributeWithContextStub != nil {
-		return fake.ModifyDBClusterSnapshotAttributeWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterSnapshotAttributeWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27286,15 +27619,16 @@ func (fake *FakeRDSAPI) ModifyDBClusterWithContext(arg1 context.Context, arg2 *r
 		arg2 *rds.ModifyDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBClusterWithContextStub
+	fakeReturns := fake.modifyDBClusterWithContextReturns
 	fake.recordInvocation("ModifyDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBClusterWithContextMutex.Unlock()
-	if fake.ModifyDBClusterWithContextStub != nil {
-		return fake.ModifyDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27349,15 +27683,16 @@ func (fake *FakeRDSAPI) ModifyDBInstance(arg1 *rds.ModifyDBInstanceInput) (*rds.
 	fake.modifyDBInstanceArgsForCall = append(fake.modifyDBInstanceArgsForCall, struct {
 		arg1 *rds.ModifyDBInstanceInput
 	}{arg1})
+	stub := fake.ModifyDBInstanceStub
+	fakeReturns := fake.modifyDBInstanceReturns
 	fake.recordInvocation("ModifyDBInstance", []interface{}{arg1})
 	fake.modifyDBInstanceMutex.Unlock()
-	if fake.ModifyDBInstanceStub != nil {
-		return fake.ModifyDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27412,15 +27747,16 @@ func (fake *FakeRDSAPI) ModifyDBInstanceRequest(arg1 *rds.ModifyDBInstanceInput)
 	fake.modifyDBInstanceRequestArgsForCall = append(fake.modifyDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBInstanceInput
 	}{arg1})
+	stub := fake.ModifyDBInstanceRequestStub
+	fakeReturns := fake.modifyDBInstanceRequestReturns
 	fake.recordInvocation("ModifyDBInstanceRequest", []interface{}{arg1})
 	fake.modifyDBInstanceRequestMutex.Unlock()
-	if fake.ModifyDBInstanceRequestStub != nil {
-		return fake.ModifyDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27477,15 +27813,16 @@ func (fake *FakeRDSAPI) ModifyDBInstanceWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.ModifyDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBInstanceWithContextStub
+	fakeReturns := fake.modifyDBInstanceWithContextReturns
 	fake.recordInvocation("ModifyDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBInstanceWithContextMutex.Unlock()
-	if fake.ModifyDBInstanceWithContextStub != nil {
-		return fake.ModifyDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27540,15 +27877,16 @@ func (fake *FakeRDSAPI) ModifyDBParameterGroup(arg1 *rds.ModifyDBParameterGroupI
 	fake.modifyDBParameterGroupArgsForCall = append(fake.modifyDBParameterGroupArgsForCall, struct {
 		arg1 *rds.ModifyDBParameterGroupInput
 	}{arg1})
+	stub := fake.ModifyDBParameterGroupStub
+	fakeReturns := fake.modifyDBParameterGroupReturns
 	fake.recordInvocation("ModifyDBParameterGroup", []interface{}{arg1})
 	fake.modifyDBParameterGroupMutex.Unlock()
-	if fake.ModifyDBParameterGroupStub != nil {
-		return fake.ModifyDBParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27603,15 +27941,16 @@ func (fake *FakeRDSAPI) ModifyDBParameterGroupRequest(arg1 *rds.ModifyDBParamete
 	fake.modifyDBParameterGroupRequestArgsForCall = append(fake.modifyDBParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBParameterGroupInput
 	}{arg1})
+	stub := fake.ModifyDBParameterGroupRequestStub
+	fakeReturns := fake.modifyDBParameterGroupRequestReturns
 	fake.recordInvocation("ModifyDBParameterGroupRequest", []interface{}{arg1})
 	fake.modifyDBParameterGroupRequestMutex.Unlock()
-	if fake.ModifyDBParameterGroupRequestStub != nil {
-		return fake.ModifyDBParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27668,15 +28007,16 @@ func (fake *FakeRDSAPI) ModifyDBParameterGroupWithContext(arg1 context.Context, 
 		arg2 *rds.ModifyDBParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBParameterGroupWithContextStub
+	fakeReturns := fake.modifyDBParameterGroupWithContextReturns
 	fake.recordInvocation("ModifyDBParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBParameterGroupWithContextMutex.Unlock()
-	if fake.ModifyDBParameterGroupWithContextStub != nil {
-		return fake.ModifyDBParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27731,15 +28071,16 @@ func (fake *FakeRDSAPI) ModifyDBProxy(arg1 *rds.ModifyDBProxyInput) (*rds.Modify
 	fake.modifyDBProxyArgsForCall = append(fake.modifyDBProxyArgsForCall, struct {
 		arg1 *rds.ModifyDBProxyInput
 	}{arg1})
+	stub := fake.ModifyDBProxyStub
+	fakeReturns := fake.modifyDBProxyReturns
 	fake.recordInvocation("ModifyDBProxy", []interface{}{arg1})
 	fake.modifyDBProxyMutex.Unlock()
-	if fake.ModifyDBProxyStub != nil {
-		return fake.ModifyDBProxyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBProxyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27794,15 +28135,16 @@ func (fake *FakeRDSAPI) ModifyDBProxyRequest(arg1 *rds.ModifyDBProxyInput) (*req
 	fake.modifyDBProxyRequestArgsForCall = append(fake.modifyDBProxyRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBProxyInput
 	}{arg1})
+	stub := fake.ModifyDBProxyRequestStub
+	fakeReturns := fake.modifyDBProxyRequestReturns
 	fake.recordInvocation("ModifyDBProxyRequest", []interface{}{arg1})
 	fake.modifyDBProxyRequestMutex.Unlock()
-	if fake.ModifyDBProxyRequestStub != nil {
-		return fake.ModifyDBProxyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBProxyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27857,15 +28199,16 @@ func (fake *FakeRDSAPI) ModifyDBProxyTargetGroup(arg1 *rds.ModifyDBProxyTargetGr
 	fake.modifyDBProxyTargetGroupArgsForCall = append(fake.modifyDBProxyTargetGroupArgsForCall, struct {
 		arg1 *rds.ModifyDBProxyTargetGroupInput
 	}{arg1})
+	stub := fake.ModifyDBProxyTargetGroupStub
+	fakeReturns := fake.modifyDBProxyTargetGroupReturns
 	fake.recordInvocation("ModifyDBProxyTargetGroup", []interface{}{arg1})
 	fake.modifyDBProxyTargetGroupMutex.Unlock()
-	if fake.ModifyDBProxyTargetGroupStub != nil {
-		return fake.ModifyDBProxyTargetGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBProxyTargetGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27920,15 +28263,16 @@ func (fake *FakeRDSAPI) ModifyDBProxyTargetGroupRequest(arg1 *rds.ModifyDBProxyT
 	fake.modifyDBProxyTargetGroupRequestArgsForCall = append(fake.modifyDBProxyTargetGroupRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBProxyTargetGroupInput
 	}{arg1})
+	stub := fake.ModifyDBProxyTargetGroupRequestStub
+	fakeReturns := fake.modifyDBProxyTargetGroupRequestReturns
 	fake.recordInvocation("ModifyDBProxyTargetGroupRequest", []interface{}{arg1})
 	fake.modifyDBProxyTargetGroupRequestMutex.Unlock()
-	if fake.ModifyDBProxyTargetGroupRequestStub != nil {
-		return fake.ModifyDBProxyTargetGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBProxyTargetGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -27985,15 +28329,16 @@ func (fake *FakeRDSAPI) ModifyDBProxyTargetGroupWithContext(arg1 context.Context
 		arg2 *rds.ModifyDBProxyTargetGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBProxyTargetGroupWithContextStub
+	fakeReturns := fake.modifyDBProxyTargetGroupWithContextReturns
 	fake.recordInvocation("ModifyDBProxyTargetGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBProxyTargetGroupWithContextMutex.Unlock()
-	if fake.ModifyDBProxyTargetGroupWithContextStub != nil {
-		return fake.ModifyDBProxyTargetGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBProxyTargetGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28050,15 +28395,16 @@ func (fake *FakeRDSAPI) ModifyDBProxyWithContext(arg1 context.Context, arg2 *rds
 		arg2 *rds.ModifyDBProxyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBProxyWithContextStub
+	fakeReturns := fake.modifyDBProxyWithContextReturns
 	fake.recordInvocation("ModifyDBProxyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBProxyWithContextMutex.Unlock()
-	if fake.ModifyDBProxyWithContextStub != nil {
-		return fake.ModifyDBProxyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBProxyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28113,15 +28459,16 @@ func (fake *FakeRDSAPI) ModifyDBSnapshot(arg1 *rds.ModifyDBSnapshotInput) (*rds.
 	fake.modifyDBSnapshotArgsForCall = append(fake.modifyDBSnapshotArgsForCall, struct {
 		arg1 *rds.ModifyDBSnapshotInput
 	}{arg1})
+	stub := fake.ModifyDBSnapshotStub
+	fakeReturns := fake.modifyDBSnapshotReturns
 	fake.recordInvocation("ModifyDBSnapshot", []interface{}{arg1})
 	fake.modifyDBSnapshotMutex.Unlock()
-	if fake.ModifyDBSnapshotStub != nil {
-		return fake.ModifyDBSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28176,15 +28523,16 @@ func (fake *FakeRDSAPI) ModifyDBSnapshotAttribute(arg1 *rds.ModifyDBSnapshotAttr
 	fake.modifyDBSnapshotAttributeArgsForCall = append(fake.modifyDBSnapshotAttributeArgsForCall, struct {
 		arg1 *rds.ModifyDBSnapshotAttributeInput
 	}{arg1})
+	stub := fake.ModifyDBSnapshotAttributeStub
+	fakeReturns := fake.modifyDBSnapshotAttributeReturns
 	fake.recordInvocation("ModifyDBSnapshotAttribute", []interface{}{arg1})
 	fake.modifyDBSnapshotAttributeMutex.Unlock()
-	if fake.ModifyDBSnapshotAttributeStub != nil {
-		return fake.ModifyDBSnapshotAttributeStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSnapshotAttributeReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28239,15 +28587,16 @@ func (fake *FakeRDSAPI) ModifyDBSnapshotAttributeRequest(arg1 *rds.ModifyDBSnaps
 	fake.modifyDBSnapshotAttributeRequestArgsForCall = append(fake.modifyDBSnapshotAttributeRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBSnapshotAttributeInput
 	}{arg1})
+	stub := fake.ModifyDBSnapshotAttributeRequestStub
+	fakeReturns := fake.modifyDBSnapshotAttributeRequestReturns
 	fake.recordInvocation("ModifyDBSnapshotAttributeRequest", []interface{}{arg1})
 	fake.modifyDBSnapshotAttributeRequestMutex.Unlock()
-	if fake.ModifyDBSnapshotAttributeRequestStub != nil {
-		return fake.ModifyDBSnapshotAttributeRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSnapshotAttributeRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28304,15 +28653,16 @@ func (fake *FakeRDSAPI) ModifyDBSnapshotAttributeWithContext(arg1 context.Contex
 		arg2 *rds.ModifyDBSnapshotAttributeInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBSnapshotAttributeWithContextStub
+	fakeReturns := fake.modifyDBSnapshotAttributeWithContextReturns
 	fake.recordInvocation("ModifyDBSnapshotAttributeWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBSnapshotAttributeWithContextMutex.Unlock()
-	if fake.ModifyDBSnapshotAttributeWithContextStub != nil {
-		return fake.ModifyDBSnapshotAttributeWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSnapshotAttributeWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28367,15 +28717,16 @@ func (fake *FakeRDSAPI) ModifyDBSnapshotRequest(arg1 *rds.ModifyDBSnapshotInput)
 	fake.modifyDBSnapshotRequestArgsForCall = append(fake.modifyDBSnapshotRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBSnapshotInput
 	}{arg1})
+	stub := fake.ModifyDBSnapshotRequestStub
+	fakeReturns := fake.modifyDBSnapshotRequestReturns
 	fake.recordInvocation("ModifyDBSnapshotRequest", []interface{}{arg1})
 	fake.modifyDBSnapshotRequestMutex.Unlock()
-	if fake.ModifyDBSnapshotRequestStub != nil {
-		return fake.ModifyDBSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28432,15 +28783,16 @@ func (fake *FakeRDSAPI) ModifyDBSnapshotWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.ModifyDBSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBSnapshotWithContextStub
+	fakeReturns := fake.modifyDBSnapshotWithContextReturns
 	fake.recordInvocation("ModifyDBSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBSnapshotWithContextMutex.Unlock()
-	if fake.ModifyDBSnapshotWithContextStub != nil {
-		return fake.ModifyDBSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28495,15 +28847,16 @@ func (fake *FakeRDSAPI) ModifyDBSubnetGroup(arg1 *rds.ModifyDBSubnetGroupInput) 
 	fake.modifyDBSubnetGroupArgsForCall = append(fake.modifyDBSubnetGroupArgsForCall, struct {
 		arg1 *rds.ModifyDBSubnetGroupInput
 	}{arg1})
+	stub := fake.ModifyDBSubnetGroupStub
+	fakeReturns := fake.modifyDBSubnetGroupReturns
 	fake.recordInvocation("ModifyDBSubnetGroup", []interface{}{arg1})
 	fake.modifyDBSubnetGroupMutex.Unlock()
-	if fake.ModifyDBSubnetGroupStub != nil {
-		return fake.ModifyDBSubnetGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSubnetGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28558,15 +28911,16 @@ func (fake *FakeRDSAPI) ModifyDBSubnetGroupRequest(arg1 *rds.ModifyDBSubnetGroup
 	fake.modifyDBSubnetGroupRequestArgsForCall = append(fake.modifyDBSubnetGroupRequestArgsForCall, struct {
 		arg1 *rds.ModifyDBSubnetGroupInput
 	}{arg1})
+	stub := fake.ModifyDBSubnetGroupRequestStub
+	fakeReturns := fake.modifyDBSubnetGroupRequestReturns
 	fake.recordInvocation("ModifyDBSubnetGroupRequest", []interface{}{arg1})
 	fake.modifyDBSubnetGroupRequestMutex.Unlock()
-	if fake.ModifyDBSubnetGroupRequestStub != nil {
-		return fake.ModifyDBSubnetGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSubnetGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28623,15 +28977,16 @@ func (fake *FakeRDSAPI) ModifyDBSubnetGroupWithContext(arg1 context.Context, arg
 		arg2 *rds.ModifyDBSubnetGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyDBSubnetGroupWithContextStub
+	fakeReturns := fake.modifyDBSubnetGroupWithContextReturns
 	fake.recordInvocation("ModifyDBSubnetGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyDBSubnetGroupWithContextMutex.Unlock()
-	if fake.ModifyDBSubnetGroupWithContextStub != nil {
-		return fake.ModifyDBSubnetGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyDBSubnetGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28686,15 +29041,16 @@ func (fake *FakeRDSAPI) ModifyEventSubscription(arg1 *rds.ModifyEventSubscriptio
 	fake.modifyEventSubscriptionArgsForCall = append(fake.modifyEventSubscriptionArgsForCall, struct {
 		arg1 *rds.ModifyEventSubscriptionInput
 	}{arg1})
+	stub := fake.ModifyEventSubscriptionStub
+	fakeReturns := fake.modifyEventSubscriptionReturns
 	fake.recordInvocation("ModifyEventSubscription", []interface{}{arg1})
 	fake.modifyEventSubscriptionMutex.Unlock()
-	if fake.ModifyEventSubscriptionStub != nil {
-		return fake.ModifyEventSubscriptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyEventSubscriptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28749,15 +29105,16 @@ func (fake *FakeRDSAPI) ModifyEventSubscriptionRequest(arg1 *rds.ModifyEventSubs
 	fake.modifyEventSubscriptionRequestArgsForCall = append(fake.modifyEventSubscriptionRequestArgsForCall, struct {
 		arg1 *rds.ModifyEventSubscriptionInput
 	}{arg1})
+	stub := fake.ModifyEventSubscriptionRequestStub
+	fakeReturns := fake.modifyEventSubscriptionRequestReturns
 	fake.recordInvocation("ModifyEventSubscriptionRequest", []interface{}{arg1})
 	fake.modifyEventSubscriptionRequestMutex.Unlock()
-	if fake.ModifyEventSubscriptionRequestStub != nil {
-		return fake.ModifyEventSubscriptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyEventSubscriptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28814,15 +29171,16 @@ func (fake *FakeRDSAPI) ModifyEventSubscriptionWithContext(arg1 context.Context,
 		arg2 *rds.ModifyEventSubscriptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyEventSubscriptionWithContextStub
+	fakeReturns := fake.modifyEventSubscriptionWithContextReturns
 	fake.recordInvocation("ModifyEventSubscriptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyEventSubscriptionWithContextMutex.Unlock()
-	if fake.ModifyEventSubscriptionWithContextStub != nil {
-		return fake.ModifyEventSubscriptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyEventSubscriptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28877,15 +29235,16 @@ func (fake *FakeRDSAPI) ModifyGlobalCluster(arg1 *rds.ModifyGlobalClusterInput) 
 	fake.modifyGlobalClusterArgsForCall = append(fake.modifyGlobalClusterArgsForCall, struct {
 		arg1 *rds.ModifyGlobalClusterInput
 	}{arg1})
+	stub := fake.ModifyGlobalClusterStub
+	fakeReturns := fake.modifyGlobalClusterReturns
 	fake.recordInvocation("ModifyGlobalCluster", []interface{}{arg1})
 	fake.modifyGlobalClusterMutex.Unlock()
-	if fake.ModifyGlobalClusterStub != nil {
-		return fake.ModifyGlobalClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyGlobalClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -28940,15 +29299,16 @@ func (fake *FakeRDSAPI) ModifyGlobalClusterRequest(arg1 *rds.ModifyGlobalCluster
 	fake.modifyGlobalClusterRequestArgsForCall = append(fake.modifyGlobalClusterRequestArgsForCall, struct {
 		arg1 *rds.ModifyGlobalClusterInput
 	}{arg1})
+	stub := fake.ModifyGlobalClusterRequestStub
+	fakeReturns := fake.modifyGlobalClusterRequestReturns
 	fake.recordInvocation("ModifyGlobalClusterRequest", []interface{}{arg1})
 	fake.modifyGlobalClusterRequestMutex.Unlock()
-	if fake.ModifyGlobalClusterRequestStub != nil {
-		return fake.ModifyGlobalClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyGlobalClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29005,15 +29365,16 @@ func (fake *FakeRDSAPI) ModifyGlobalClusterWithContext(arg1 context.Context, arg
 		arg2 *rds.ModifyGlobalClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyGlobalClusterWithContextStub
+	fakeReturns := fake.modifyGlobalClusterWithContextReturns
 	fake.recordInvocation("ModifyGlobalClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyGlobalClusterWithContextMutex.Unlock()
-	if fake.ModifyGlobalClusterWithContextStub != nil {
-		return fake.ModifyGlobalClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyGlobalClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29068,15 +29429,16 @@ func (fake *FakeRDSAPI) ModifyOptionGroup(arg1 *rds.ModifyOptionGroupInput) (*rd
 	fake.modifyOptionGroupArgsForCall = append(fake.modifyOptionGroupArgsForCall, struct {
 		arg1 *rds.ModifyOptionGroupInput
 	}{arg1})
+	stub := fake.ModifyOptionGroupStub
+	fakeReturns := fake.modifyOptionGroupReturns
 	fake.recordInvocation("ModifyOptionGroup", []interface{}{arg1})
 	fake.modifyOptionGroupMutex.Unlock()
-	if fake.ModifyOptionGroupStub != nil {
-		return fake.ModifyOptionGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyOptionGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29131,15 +29493,16 @@ func (fake *FakeRDSAPI) ModifyOptionGroupRequest(arg1 *rds.ModifyOptionGroupInpu
 	fake.modifyOptionGroupRequestArgsForCall = append(fake.modifyOptionGroupRequestArgsForCall, struct {
 		arg1 *rds.ModifyOptionGroupInput
 	}{arg1})
+	stub := fake.ModifyOptionGroupRequestStub
+	fakeReturns := fake.modifyOptionGroupRequestReturns
 	fake.recordInvocation("ModifyOptionGroupRequest", []interface{}{arg1})
 	fake.modifyOptionGroupRequestMutex.Unlock()
-	if fake.ModifyOptionGroupRequestStub != nil {
-		return fake.ModifyOptionGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyOptionGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29196,15 +29559,16 @@ func (fake *FakeRDSAPI) ModifyOptionGroupWithContext(arg1 context.Context, arg2 
 		arg2 *rds.ModifyOptionGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ModifyOptionGroupWithContextStub
+	fakeReturns := fake.modifyOptionGroupWithContextReturns
 	fake.recordInvocation("ModifyOptionGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.modifyOptionGroupWithContextMutex.Unlock()
-	if fake.ModifyOptionGroupWithContextStub != nil {
-		return fake.ModifyOptionGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.modifyOptionGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29259,15 +29623,16 @@ func (fake *FakeRDSAPI) PromoteReadReplica(arg1 *rds.PromoteReadReplicaInput) (*
 	fake.promoteReadReplicaArgsForCall = append(fake.promoteReadReplicaArgsForCall, struct {
 		arg1 *rds.PromoteReadReplicaInput
 	}{arg1})
+	stub := fake.PromoteReadReplicaStub
+	fakeReturns := fake.promoteReadReplicaReturns
 	fake.recordInvocation("PromoteReadReplica", []interface{}{arg1})
 	fake.promoteReadReplicaMutex.Unlock()
-	if fake.PromoteReadReplicaStub != nil {
-		return fake.PromoteReadReplicaStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.promoteReadReplicaReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29322,15 +29687,16 @@ func (fake *FakeRDSAPI) PromoteReadReplicaDBCluster(arg1 *rds.PromoteReadReplica
 	fake.promoteReadReplicaDBClusterArgsForCall = append(fake.promoteReadReplicaDBClusterArgsForCall, struct {
 		arg1 *rds.PromoteReadReplicaDBClusterInput
 	}{arg1})
+	stub := fake.PromoteReadReplicaDBClusterStub
+	fakeReturns := fake.promoteReadReplicaDBClusterReturns
 	fake.recordInvocation("PromoteReadReplicaDBCluster", []interface{}{arg1})
 	fake.promoteReadReplicaDBClusterMutex.Unlock()
-	if fake.PromoteReadReplicaDBClusterStub != nil {
-		return fake.PromoteReadReplicaDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.promoteReadReplicaDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29385,15 +29751,16 @@ func (fake *FakeRDSAPI) PromoteReadReplicaDBClusterRequest(arg1 *rds.PromoteRead
 	fake.promoteReadReplicaDBClusterRequestArgsForCall = append(fake.promoteReadReplicaDBClusterRequestArgsForCall, struct {
 		arg1 *rds.PromoteReadReplicaDBClusterInput
 	}{arg1})
+	stub := fake.PromoteReadReplicaDBClusterRequestStub
+	fakeReturns := fake.promoteReadReplicaDBClusterRequestReturns
 	fake.recordInvocation("PromoteReadReplicaDBClusterRequest", []interface{}{arg1})
 	fake.promoteReadReplicaDBClusterRequestMutex.Unlock()
-	if fake.PromoteReadReplicaDBClusterRequestStub != nil {
-		return fake.PromoteReadReplicaDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.promoteReadReplicaDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29450,15 +29817,16 @@ func (fake *FakeRDSAPI) PromoteReadReplicaDBClusterWithContext(arg1 context.Cont
 		arg2 *rds.PromoteReadReplicaDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PromoteReadReplicaDBClusterWithContextStub
+	fakeReturns := fake.promoteReadReplicaDBClusterWithContextReturns
 	fake.recordInvocation("PromoteReadReplicaDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.promoteReadReplicaDBClusterWithContextMutex.Unlock()
-	if fake.PromoteReadReplicaDBClusterWithContextStub != nil {
-		return fake.PromoteReadReplicaDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.promoteReadReplicaDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29513,15 +29881,16 @@ func (fake *FakeRDSAPI) PromoteReadReplicaRequest(arg1 *rds.PromoteReadReplicaIn
 	fake.promoteReadReplicaRequestArgsForCall = append(fake.promoteReadReplicaRequestArgsForCall, struct {
 		arg1 *rds.PromoteReadReplicaInput
 	}{arg1})
+	stub := fake.PromoteReadReplicaRequestStub
+	fakeReturns := fake.promoteReadReplicaRequestReturns
 	fake.recordInvocation("PromoteReadReplicaRequest", []interface{}{arg1})
 	fake.promoteReadReplicaRequestMutex.Unlock()
-	if fake.PromoteReadReplicaRequestStub != nil {
-		return fake.PromoteReadReplicaRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.promoteReadReplicaRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29578,15 +29947,16 @@ func (fake *FakeRDSAPI) PromoteReadReplicaWithContext(arg1 context.Context, arg2
 		arg2 *rds.PromoteReadReplicaInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PromoteReadReplicaWithContextStub
+	fakeReturns := fake.promoteReadReplicaWithContextReturns
 	fake.recordInvocation("PromoteReadReplicaWithContext", []interface{}{arg1, arg2, arg3})
 	fake.promoteReadReplicaWithContextMutex.Unlock()
-	if fake.PromoteReadReplicaWithContextStub != nil {
-		return fake.PromoteReadReplicaWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.promoteReadReplicaWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29641,15 +30011,16 @@ func (fake *FakeRDSAPI) PurchaseReservedDBInstancesOffering(arg1 *rds.PurchaseRe
 	fake.purchaseReservedDBInstancesOfferingArgsForCall = append(fake.purchaseReservedDBInstancesOfferingArgsForCall, struct {
 		arg1 *rds.PurchaseReservedDBInstancesOfferingInput
 	}{arg1})
+	stub := fake.PurchaseReservedDBInstancesOfferingStub
+	fakeReturns := fake.purchaseReservedDBInstancesOfferingReturns
 	fake.recordInvocation("PurchaseReservedDBInstancesOffering", []interface{}{arg1})
 	fake.purchaseReservedDBInstancesOfferingMutex.Unlock()
-	if fake.PurchaseReservedDBInstancesOfferingStub != nil {
-		return fake.PurchaseReservedDBInstancesOfferingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.purchaseReservedDBInstancesOfferingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29704,15 +30075,16 @@ func (fake *FakeRDSAPI) PurchaseReservedDBInstancesOfferingRequest(arg1 *rds.Pur
 	fake.purchaseReservedDBInstancesOfferingRequestArgsForCall = append(fake.purchaseReservedDBInstancesOfferingRequestArgsForCall, struct {
 		arg1 *rds.PurchaseReservedDBInstancesOfferingInput
 	}{arg1})
+	stub := fake.PurchaseReservedDBInstancesOfferingRequestStub
+	fakeReturns := fake.purchaseReservedDBInstancesOfferingRequestReturns
 	fake.recordInvocation("PurchaseReservedDBInstancesOfferingRequest", []interface{}{arg1})
 	fake.purchaseReservedDBInstancesOfferingRequestMutex.Unlock()
-	if fake.PurchaseReservedDBInstancesOfferingRequestStub != nil {
-		return fake.PurchaseReservedDBInstancesOfferingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.purchaseReservedDBInstancesOfferingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29769,15 +30141,16 @@ func (fake *FakeRDSAPI) PurchaseReservedDBInstancesOfferingWithContext(arg1 cont
 		arg2 *rds.PurchaseReservedDBInstancesOfferingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PurchaseReservedDBInstancesOfferingWithContextStub
+	fakeReturns := fake.purchaseReservedDBInstancesOfferingWithContextReturns
 	fake.recordInvocation("PurchaseReservedDBInstancesOfferingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.purchaseReservedDBInstancesOfferingWithContextMutex.Unlock()
-	if fake.PurchaseReservedDBInstancesOfferingWithContextStub != nil {
-		return fake.PurchaseReservedDBInstancesOfferingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.purchaseReservedDBInstancesOfferingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29832,15 +30205,16 @@ func (fake *FakeRDSAPI) RebootDBInstance(arg1 *rds.RebootDBInstanceInput) (*rds.
 	fake.rebootDBInstanceArgsForCall = append(fake.rebootDBInstanceArgsForCall, struct {
 		arg1 *rds.RebootDBInstanceInput
 	}{arg1})
+	stub := fake.RebootDBInstanceStub
+	fakeReturns := fake.rebootDBInstanceReturns
 	fake.recordInvocation("RebootDBInstance", []interface{}{arg1})
 	fake.rebootDBInstanceMutex.Unlock()
-	if fake.RebootDBInstanceStub != nil {
-		return fake.RebootDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.rebootDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29895,15 +30269,16 @@ func (fake *FakeRDSAPI) RebootDBInstanceRequest(arg1 *rds.RebootDBInstanceInput)
 	fake.rebootDBInstanceRequestArgsForCall = append(fake.rebootDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.RebootDBInstanceInput
 	}{arg1})
+	stub := fake.RebootDBInstanceRequestStub
+	fakeReturns := fake.rebootDBInstanceRequestReturns
 	fake.recordInvocation("RebootDBInstanceRequest", []interface{}{arg1})
 	fake.rebootDBInstanceRequestMutex.Unlock()
-	if fake.RebootDBInstanceRequestStub != nil {
-		return fake.RebootDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.rebootDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -29960,15 +30335,16 @@ func (fake *FakeRDSAPI) RebootDBInstanceWithContext(arg1 context.Context, arg2 *
 		arg2 *rds.RebootDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RebootDBInstanceWithContextStub
+	fakeReturns := fake.rebootDBInstanceWithContextReturns
 	fake.recordInvocation("RebootDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.rebootDBInstanceWithContextMutex.Unlock()
-	if fake.RebootDBInstanceWithContextStub != nil {
-		return fake.RebootDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.rebootDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30023,15 +30399,16 @@ func (fake *FakeRDSAPI) RegisterDBProxyTargets(arg1 *rds.RegisterDBProxyTargetsI
 	fake.registerDBProxyTargetsArgsForCall = append(fake.registerDBProxyTargetsArgsForCall, struct {
 		arg1 *rds.RegisterDBProxyTargetsInput
 	}{arg1})
+	stub := fake.RegisterDBProxyTargetsStub
+	fakeReturns := fake.registerDBProxyTargetsReturns
 	fake.recordInvocation("RegisterDBProxyTargets", []interface{}{arg1})
 	fake.registerDBProxyTargetsMutex.Unlock()
-	if fake.RegisterDBProxyTargetsStub != nil {
-		return fake.RegisterDBProxyTargetsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.registerDBProxyTargetsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30086,15 +30463,16 @@ func (fake *FakeRDSAPI) RegisterDBProxyTargetsRequest(arg1 *rds.RegisterDBProxyT
 	fake.registerDBProxyTargetsRequestArgsForCall = append(fake.registerDBProxyTargetsRequestArgsForCall, struct {
 		arg1 *rds.RegisterDBProxyTargetsInput
 	}{arg1})
+	stub := fake.RegisterDBProxyTargetsRequestStub
+	fakeReturns := fake.registerDBProxyTargetsRequestReturns
 	fake.recordInvocation("RegisterDBProxyTargetsRequest", []interface{}{arg1})
 	fake.registerDBProxyTargetsRequestMutex.Unlock()
-	if fake.RegisterDBProxyTargetsRequestStub != nil {
-		return fake.RegisterDBProxyTargetsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.registerDBProxyTargetsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30151,15 +30529,16 @@ func (fake *FakeRDSAPI) RegisterDBProxyTargetsWithContext(arg1 context.Context, 
 		arg2 *rds.RegisterDBProxyTargetsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RegisterDBProxyTargetsWithContextStub
+	fakeReturns := fake.registerDBProxyTargetsWithContextReturns
 	fake.recordInvocation("RegisterDBProxyTargetsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.registerDBProxyTargetsWithContextMutex.Unlock()
-	if fake.RegisterDBProxyTargetsWithContextStub != nil {
-		return fake.RegisterDBProxyTargetsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.registerDBProxyTargetsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30214,15 +30593,16 @@ func (fake *FakeRDSAPI) RemoveFromGlobalCluster(arg1 *rds.RemoveFromGlobalCluste
 	fake.removeFromGlobalClusterArgsForCall = append(fake.removeFromGlobalClusterArgsForCall, struct {
 		arg1 *rds.RemoveFromGlobalClusterInput
 	}{arg1})
+	stub := fake.RemoveFromGlobalClusterStub
+	fakeReturns := fake.removeFromGlobalClusterReturns
 	fake.recordInvocation("RemoveFromGlobalCluster", []interface{}{arg1})
 	fake.removeFromGlobalClusterMutex.Unlock()
-	if fake.RemoveFromGlobalClusterStub != nil {
-		return fake.RemoveFromGlobalClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeFromGlobalClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30277,15 +30657,16 @@ func (fake *FakeRDSAPI) RemoveFromGlobalClusterRequest(arg1 *rds.RemoveFromGloba
 	fake.removeFromGlobalClusterRequestArgsForCall = append(fake.removeFromGlobalClusterRequestArgsForCall, struct {
 		arg1 *rds.RemoveFromGlobalClusterInput
 	}{arg1})
+	stub := fake.RemoveFromGlobalClusterRequestStub
+	fakeReturns := fake.removeFromGlobalClusterRequestReturns
 	fake.recordInvocation("RemoveFromGlobalClusterRequest", []interface{}{arg1})
 	fake.removeFromGlobalClusterRequestMutex.Unlock()
-	if fake.RemoveFromGlobalClusterRequestStub != nil {
-		return fake.RemoveFromGlobalClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeFromGlobalClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30342,15 +30723,16 @@ func (fake *FakeRDSAPI) RemoveFromGlobalClusterWithContext(arg1 context.Context,
 		arg2 *rds.RemoveFromGlobalClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RemoveFromGlobalClusterWithContextStub
+	fakeReturns := fake.removeFromGlobalClusterWithContextReturns
 	fake.recordInvocation("RemoveFromGlobalClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.removeFromGlobalClusterWithContextMutex.Unlock()
-	if fake.RemoveFromGlobalClusterWithContextStub != nil {
-		return fake.RemoveFromGlobalClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeFromGlobalClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30405,15 +30787,16 @@ func (fake *FakeRDSAPI) RemoveRoleFromDBCluster(arg1 *rds.RemoveRoleFromDBCluste
 	fake.removeRoleFromDBClusterArgsForCall = append(fake.removeRoleFromDBClusterArgsForCall, struct {
 		arg1 *rds.RemoveRoleFromDBClusterInput
 	}{arg1})
+	stub := fake.RemoveRoleFromDBClusterStub
+	fakeReturns := fake.removeRoleFromDBClusterReturns
 	fake.recordInvocation("RemoveRoleFromDBCluster", []interface{}{arg1})
 	fake.removeRoleFromDBClusterMutex.Unlock()
-	if fake.RemoveRoleFromDBClusterStub != nil {
-		return fake.RemoveRoleFromDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeRoleFromDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30468,15 +30851,16 @@ func (fake *FakeRDSAPI) RemoveRoleFromDBClusterRequest(arg1 *rds.RemoveRoleFromD
 	fake.removeRoleFromDBClusterRequestArgsForCall = append(fake.removeRoleFromDBClusterRequestArgsForCall, struct {
 		arg1 *rds.RemoveRoleFromDBClusterInput
 	}{arg1})
+	stub := fake.RemoveRoleFromDBClusterRequestStub
+	fakeReturns := fake.removeRoleFromDBClusterRequestReturns
 	fake.recordInvocation("RemoveRoleFromDBClusterRequest", []interface{}{arg1})
 	fake.removeRoleFromDBClusterRequestMutex.Unlock()
-	if fake.RemoveRoleFromDBClusterRequestStub != nil {
-		return fake.RemoveRoleFromDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeRoleFromDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30533,15 +30917,16 @@ func (fake *FakeRDSAPI) RemoveRoleFromDBClusterWithContext(arg1 context.Context,
 		arg2 *rds.RemoveRoleFromDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RemoveRoleFromDBClusterWithContextStub
+	fakeReturns := fake.removeRoleFromDBClusterWithContextReturns
 	fake.recordInvocation("RemoveRoleFromDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.removeRoleFromDBClusterWithContextMutex.Unlock()
-	if fake.RemoveRoleFromDBClusterWithContextStub != nil {
-		return fake.RemoveRoleFromDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeRoleFromDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30596,15 +30981,16 @@ func (fake *FakeRDSAPI) RemoveRoleFromDBInstance(arg1 *rds.RemoveRoleFromDBInsta
 	fake.removeRoleFromDBInstanceArgsForCall = append(fake.removeRoleFromDBInstanceArgsForCall, struct {
 		arg1 *rds.RemoveRoleFromDBInstanceInput
 	}{arg1})
+	stub := fake.RemoveRoleFromDBInstanceStub
+	fakeReturns := fake.removeRoleFromDBInstanceReturns
 	fake.recordInvocation("RemoveRoleFromDBInstance", []interface{}{arg1})
 	fake.removeRoleFromDBInstanceMutex.Unlock()
-	if fake.RemoveRoleFromDBInstanceStub != nil {
-		return fake.RemoveRoleFromDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeRoleFromDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30659,15 +31045,16 @@ func (fake *FakeRDSAPI) RemoveRoleFromDBInstanceRequest(arg1 *rds.RemoveRoleFrom
 	fake.removeRoleFromDBInstanceRequestArgsForCall = append(fake.removeRoleFromDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.RemoveRoleFromDBInstanceInput
 	}{arg1})
+	stub := fake.RemoveRoleFromDBInstanceRequestStub
+	fakeReturns := fake.removeRoleFromDBInstanceRequestReturns
 	fake.recordInvocation("RemoveRoleFromDBInstanceRequest", []interface{}{arg1})
 	fake.removeRoleFromDBInstanceRequestMutex.Unlock()
-	if fake.RemoveRoleFromDBInstanceRequestStub != nil {
-		return fake.RemoveRoleFromDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeRoleFromDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30724,15 +31111,16 @@ func (fake *FakeRDSAPI) RemoveRoleFromDBInstanceWithContext(arg1 context.Context
 		arg2 *rds.RemoveRoleFromDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RemoveRoleFromDBInstanceWithContextStub
+	fakeReturns := fake.removeRoleFromDBInstanceWithContextReturns
 	fake.recordInvocation("RemoveRoleFromDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.removeRoleFromDBInstanceWithContextMutex.Unlock()
-	if fake.RemoveRoleFromDBInstanceWithContextStub != nil {
-		return fake.RemoveRoleFromDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeRoleFromDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30787,15 +31175,16 @@ func (fake *FakeRDSAPI) RemoveSourceIdentifierFromSubscription(arg1 *rds.RemoveS
 	fake.removeSourceIdentifierFromSubscriptionArgsForCall = append(fake.removeSourceIdentifierFromSubscriptionArgsForCall, struct {
 		arg1 *rds.RemoveSourceIdentifierFromSubscriptionInput
 	}{arg1})
+	stub := fake.RemoveSourceIdentifierFromSubscriptionStub
+	fakeReturns := fake.removeSourceIdentifierFromSubscriptionReturns
 	fake.recordInvocation("RemoveSourceIdentifierFromSubscription", []interface{}{arg1})
 	fake.removeSourceIdentifierFromSubscriptionMutex.Unlock()
-	if fake.RemoveSourceIdentifierFromSubscriptionStub != nil {
-		return fake.RemoveSourceIdentifierFromSubscriptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeSourceIdentifierFromSubscriptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30850,15 +31239,16 @@ func (fake *FakeRDSAPI) RemoveSourceIdentifierFromSubscriptionRequest(arg1 *rds.
 	fake.removeSourceIdentifierFromSubscriptionRequestArgsForCall = append(fake.removeSourceIdentifierFromSubscriptionRequestArgsForCall, struct {
 		arg1 *rds.RemoveSourceIdentifierFromSubscriptionInput
 	}{arg1})
+	stub := fake.RemoveSourceIdentifierFromSubscriptionRequestStub
+	fakeReturns := fake.removeSourceIdentifierFromSubscriptionRequestReturns
 	fake.recordInvocation("RemoveSourceIdentifierFromSubscriptionRequest", []interface{}{arg1})
 	fake.removeSourceIdentifierFromSubscriptionRequestMutex.Unlock()
-	if fake.RemoveSourceIdentifierFromSubscriptionRequestStub != nil {
-		return fake.RemoveSourceIdentifierFromSubscriptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeSourceIdentifierFromSubscriptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30915,15 +31305,16 @@ func (fake *FakeRDSAPI) RemoveSourceIdentifierFromSubscriptionWithContext(arg1 c
 		arg2 *rds.RemoveSourceIdentifierFromSubscriptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RemoveSourceIdentifierFromSubscriptionWithContextStub
+	fakeReturns := fake.removeSourceIdentifierFromSubscriptionWithContextReturns
 	fake.recordInvocation("RemoveSourceIdentifierFromSubscriptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.removeSourceIdentifierFromSubscriptionWithContextMutex.Unlock()
-	if fake.RemoveSourceIdentifierFromSubscriptionWithContextStub != nil {
-		return fake.RemoveSourceIdentifierFromSubscriptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeSourceIdentifierFromSubscriptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -30978,15 +31369,16 @@ func (fake *FakeRDSAPI) RemoveTagsFromResource(arg1 *rds.RemoveTagsFromResourceI
 	fake.removeTagsFromResourceArgsForCall = append(fake.removeTagsFromResourceArgsForCall, struct {
 		arg1 *rds.RemoveTagsFromResourceInput
 	}{arg1})
+	stub := fake.RemoveTagsFromResourceStub
+	fakeReturns := fake.removeTagsFromResourceReturns
 	fake.recordInvocation("RemoveTagsFromResource", []interface{}{arg1})
 	fake.removeTagsFromResourceMutex.Unlock()
-	if fake.RemoveTagsFromResourceStub != nil {
-		return fake.RemoveTagsFromResourceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeTagsFromResourceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31041,15 +31433,16 @@ func (fake *FakeRDSAPI) RemoveTagsFromResourceRequest(arg1 *rds.RemoveTagsFromRe
 	fake.removeTagsFromResourceRequestArgsForCall = append(fake.removeTagsFromResourceRequestArgsForCall, struct {
 		arg1 *rds.RemoveTagsFromResourceInput
 	}{arg1})
+	stub := fake.RemoveTagsFromResourceRequestStub
+	fakeReturns := fake.removeTagsFromResourceRequestReturns
 	fake.recordInvocation("RemoveTagsFromResourceRequest", []interface{}{arg1})
 	fake.removeTagsFromResourceRequestMutex.Unlock()
-	if fake.RemoveTagsFromResourceRequestStub != nil {
-		return fake.RemoveTagsFromResourceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeTagsFromResourceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31106,15 +31499,16 @@ func (fake *FakeRDSAPI) RemoveTagsFromResourceWithContext(arg1 context.Context, 
 		arg2 *rds.RemoveTagsFromResourceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RemoveTagsFromResourceWithContextStub
+	fakeReturns := fake.removeTagsFromResourceWithContextReturns
 	fake.recordInvocation("RemoveTagsFromResourceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.removeTagsFromResourceWithContextMutex.Unlock()
-	if fake.RemoveTagsFromResourceWithContextStub != nil {
-		return fake.RemoveTagsFromResourceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.removeTagsFromResourceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31169,15 +31563,16 @@ func (fake *FakeRDSAPI) ResetDBClusterParameterGroup(arg1 *rds.ResetDBClusterPar
 	fake.resetDBClusterParameterGroupArgsForCall = append(fake.resetDBClusterParameterGroupArgsForCall, struct {
 		arg1 *rds.ResetDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.ResetDBClusterParameterGroupStub
+	fakeReturns := fake.resetDBClusterParameterGroupReturns
 	fake.recordInvocation("ResetDBClusterParameterGroup", []interface{}{arg1})
 	fake.resetDBClusterParameterGroupMutex.Unlock()
-	if fake.ResetDBClusterParameterGroupStub != nil {
-		return fake.ResetDBClusterParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.resetDBClusterParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31232,15 +31627,16 @@ func (fake *FakeRDSAPI) ResetDBClusterParameterGroupRequest(arg1 *rds.ResetDBClu
 	fake.resetDBClusterParameterGroupRequestArgsForCall = append(fake.resetDBClusterParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.ResetDBClusterParameterGroupInput
 	}{arg1})
+	stub := fake.ResetDBClusterParameterGroupRequestStub
+	fakeReturns := fake.resetDBClusterParameterGroupRequestReturns
 	fake.recordInvocation("ResetDBClusterParameterGroupRequest", []interface{}{arg1})
 	fake.resetDBClusterParameterGroupRequestMutex.Unlock()
-	if fake.ResetDBClusterParameterGroupRequestStub != nil {
-		return fake.ResetDBClusterParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.resetDBClusterParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31297,15 +31693,16 @@ func (fake *FakeRDSAPI) ResetDBClusterParameterGroupWithContext(arg1 context.Con
 		arg2 *rds.ResetDBClusterParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ResetDBClusterParameterGroupWithContextStub
+	fakeReturns := fake.resetDBClusterParameterGroupWithContextReturns
 	fake.recordInvocation("ResetDBClusterParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.resetDBClusterParameterGroupWithContextMutex.Unlock()
-	if fake.ResetDBClusterParameterGroupWithContextStub != nil {
-		return fake.ResetDBClusterParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.resetDBClusterParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31360,15 +31757,16 @@ func (fake *FakeRDSAPI) ResetDBParameterGroup(arg1 *rds.ResetDBParameterGroupInp
 	fake.resetDBParameterGroupArgsForCall = append(fake.resetDBParameterGroupArgsForCall, struct {
 		arg1 *rds.ResetDBParameterGroupInput
 	}{arg1})
+	stub := fake.ResetDBParameterGroupStub
+	fakeReturns := fake.resetDBParameterGroupReturns
 	fake.recordInvocation("ResetDBParameterGroup", []interface{}{arg1})
 	fake.resetDBParameterGroupMutex.Unlock()
-	if fake.ResetDBParameterGroupStub != nil {
-		return fake.ResetDBParameterGroupStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.resetDBParameterGroupReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31423,15 +31821,16 @@ func (fake *FakeRDSAPI) ResetDBParameterGroupRequest(arg1 *rds.ResetDBParameterG
 	fake.resetDBParameterGroupRequestArgsForCall = append(fake.resetDBParameterGroupRequestArgsForCall, struct {
 		arg1 *rds.ResetDBParameterGroupInput
 	}{arg1})
+	stub := fake.ResetDBParameterGroupRequestStub
+	fakeReturns := fake.resetDBParameterGroupRequestReturns
 	fake.recordInvocation("ResetDBParameterGroupRequest", []interface{}{arg1})
 	fake.resetDBParameterGroupRequestMutex.Unlock()
-	if fake.ResetDBParameterGroupRequestStub != nil {
-		return fake.ResetDBParameterGroupRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.resetDBParameterGroupRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31488,15 +31887,16 @@ func (fake *FakeRDSAPI) ResetDBParameterGroupWithContext(arg1 context.Context, a
 		arg2 *rds.ResetDBParameterGroupInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ResetDBParameterGroupWithContextStub
+	fakeReturns := fake.resetDBParameterGroupWithContextReturns
 	fake.recordInvocation("ResetDBParameterGroupWithContext", []interface{}{arg1, arg2, arg3})
 	fake.resetDBParameterGroupWithContextMutex.Unlock()
-	if fake.ResetDBParameterGroupWithContextStub != nil {
-		return fake.ResetDBParameterGroupWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.resetDBParameterGroupWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31551,15 +31951,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterFromS3(arg1 *rds.RestoreDBClusterFromS3I
 	fake.restoreDBClusterFromS3ArgsForCall = append(fake.restoreDBClusterFromS3ArgsForCall, struct {
 		arg1 *rds.RestoreDBClusterFromS3Input
 	}{arg1})
+	stub := fake.RestoreDBClusterFromS3Stub
+	fakeReturns := fake.restoreDBClusterFromS3Returns
 	fake.recordInvocation("RestoreDBClusterFromS3", []interface{}{arg1})
 	fake.restoreDBClusterFromS3Mutex.Unlock()
-	if fake.RestoreDBClusterFromS3Stub != nil {
-		return fake.RestoreDBClusterFromS3Stub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterFromS3Returns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31614,15 +32015,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterFromS3Request(arg1 *rds.RestoreDBCluster
 	fake.restoreDBClusterFromS3RequestArgsForCall = append(fake.restoreDBClusterFromS3RequestArgsForCall, struct {
 		arg1 *rds.RestoreDBClusterFromS3Input
 	}{arg1})
+	stub := fake.RestoreDBClusterFromS3RequestStub
+	fakeReturns := fake.restoreDBClusterFromS3RequestReturns
 	fake.recordInvocation("RestoreDBClusterFromS3Request", []interface{}{arg1})
 	fake.restoreDBClusterFromS3RequestMutex.Unlock()
-	if fake.RestoreDBClusterFromS3RequestStub != nil {
-		return fake.RestoreDBClusterFromS3RequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterFromS3RequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31679,15 +32081,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterFromS3WithContext(arg1 context.Context, 
 		arg2 *rds.RestoreDBClusterFromS3Input
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RestoreDBClusterFromS3WithContextStub
+	fakeReturns := fake.restoreDBClusterFromS3WithContextReturns
 	fake.recordInvocation("RestoreDBClusterFromS3WithContext", []interface{}{arg1, arg2, arg3})
 	fake.restoreDBClusterFromS3WithContextMutex.Unlock()
-	if fake.RestoreDBClusterFromS3WithContextStub != nil {
-		return fake.RestoreDBClusterFromS3WithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterFromS3WithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31742,15 +32145,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterFromSnapshot(arg1 *rds.RestoreDBClusterF
 	fake.restoreDBClusterFromSnapshotArgsForCall = append(fake.restoreDBClusterFromSnapshotArgsForCall, struct {
 		arg1 *rds.RestoreDBClusterFromSnapshotInput
 	}{arg1})
+	stub := fake.RestoreDBClusterFromSnapshotStub
+	fakeReturns := fake.restoreDBClusterFromSnapshotReturns
 	fake.recordInvocation("RestoreDBClusterFromSnapshot", []interface{}{arg1})
 	fake.restoreDBClusterFromSnapshotMutex.Unlock()
-	if fake.RestoreDBClusterFromSnapshotStub != nil {
-		return fake.RestoreDBClusterFromSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterFromSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31805,15 +32209,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterFromSnapshotRequest(arg1 *rds.RestoreDBC
 	fake.restoreDBClusterFromSnapshotRequestArgsForCall = append(fake.restoreDBClusterFromSnapshotRequestArgsForCall, struct {
 		arg1 *rds.RestoreDBClusterFromSnapshotInput
 	}{arg1})
+	stub := fake.RestoreDBClusterFromSnapshotRequestStub
+	fakeReturns := fake.restoreDBClusterFromSnapshotRequestReturns
 	fake.recordInvocation("RestoreDBClusterFromSnapshotRequest", []interface{}{arg1})
 	fake.restoreDBClusterFromSnapshotRequestMutex.Unlock()
-	if fake.RestoreDBClusterFromSnapshotRequestStub != nil {
-		return fake.RestoreDBClusterFromSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterFromSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31870,15 +32275,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterFromSnapshotWithContext(arg1 context.Con
 		arg2 *rds.RestoreDBClusterFromSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RestoreDBClusterFromSnapshotWithContextStub
+	fakeReturns := fake.restoreDBClusterFromSnapshotWithContextReturns
 	fake.recordInvocation("RestoreDBClusterFromSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.restoreDBClusterFromSnapshotWithContextMutex.Unlock()
-	if fake.RestoreDBClusterFromSnapshotWithContextStub != nil {
-		return fake.RestoreDBClusterFromSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterFromSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31933,15 +32339,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterToPointInTime(arg1 *rds.RestoreDBCluster
 	fake.restoreDBClusterToPointInTimeArgsForCall = append(fake.restoreDBClusterToPointInTimeArgsForCall, struct {
 		arg1 *rds.RestoreDBClusterToPointInTimeInput
 	}{arg1})
+	stub := fake.RestoreDBClusterToPointInTimeStub
+	fakeReturns := fake.restoreDBClusterToPointInTimeReturns
 	fake.recordInvocation("RestoreDBClusterToPointInTime", []interface{}{arg1})
 	fake.restoreDBClusterToPointInTimeMutex.Unlock()
-	if fake.RestoreDBClusterToPointInTimeStub != nil {
-		return fake.RestoreDBClusterToPointInTimeStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterToPointInTimeReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -31996,15 +32403,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterToPointInTimeRequest(arg1 *rds.RestoreDB
 	fake.restoreDBClusterToPointInTimeRequestArgsForCall = append(fake.restoreDBClusterToPointInTimeRequestArgsForCall, struct {
 		arg1 *rds.RestoreDBClusterToPointInTimeInput
 	}{arg1})
+	stub := fake.RestoreDBClusterToPointInTimeRequestStub
+	fakeReturns := fake.restoreDBClusterToPointInTimeRequestReturns
 	fake.recordInvocation("RestoreDBClusterToPointInTimeRequest", []interface{}{arg1})
 	fake.restoreDBClusterToPointInTimeRequestMutex.Unlock()
-	if fake.RestoreDBClusterToPointInTimeRequestStub != nil {
-		return fake.RestoreDBClusterToPointInTimeRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterToPointInTimeRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32061,15 +32469,16 @@ func (fake *FakeRDSAPI) RestoreDBClusterToPointInTimeWithContext(arg1 context.Co
 		arg2 *rds.RestoreDBClusterToPointInTimeInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RestoreDBClusterToPointInTimeWithContextStub
+	fakeReturns := fake.restoreDBClusterToPointInTimeWithContextReturns
 	fake.recordInvocation("RestoreDBClusterToPointInTimeWithContext", []interface{}{arg1, arg2, arg3})
 	fake.restoreDBClusterToPointInTimeWithContextMutex.Unlock()
-	if fake.RestoreDBClusterToPointInTimeWithContextStub != nil {
-		return fake.RestoreDBClusterToPointInTimeWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBClusterToPointInTimeWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32124,15 +32533,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceFromDBSnapshot(arg1 *rds.RestoreDBInsta
 	fake.restoreDBInstanceFromDBSnapshotArgsForCall = append(fake.restoreDBInstanceFromDBSnapshotArgsForCall, struct {
 		arg1 *rds.RestoreDBInstanceFromDBSnapshotInput
 	}{arg1})
+	stub := fake.RestoreDBInstanceFromDBSnapshotStub
+	fakeReturns := fake.restoreDBInstanceFromDBSnapshotReturns
 	fake.recordInvocation("RestoreDBInstanceFromDBSnapshot", []interface{}{arg1})
 	fake.restoreDBInstanceFromDBSnapshotMutex.Unlock()
-	if fake.RestoreDBInstanceFromDBSnapshotStub != nil {
-		return fake.RestoreDBInstanceFromDBSnapshotStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceFromDBSnapshotReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32187,15 +32597,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceFromDBSnapshotRequest(arg1 *rds.Restore
 	fake.restoreDBInstanceFromDBSnapshotRequestArgsForCall = append(fake.restoreDBInstanceFromDBSnapshotRequestArgsForCall, struct {
 		arg1 *rds.RestoreDBInstanceFromDBSnapshotInput
 	}{arg1})
+	stub := fake.RestoreDBInstanceFromDBSnapshotRequestStub
+	fakeReturns := fake.restoreDBInstanceFromDBSnapshotRequestReturns
 	fake.recordInvocation("RestoreDBInstanceFromDBSnapshotRequest", []interface{}{arg1})
 	fake.restoreDBInstanceFromDBSnapshotRequestMutex.Unlock()
-	if fake.RestoreDBInstanceFromDBSnapshotRequestStub != nil {
-		return fake.RestoreDBInstanceFromDBSnapshotRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceFromDBSnapshotRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32252,15 +32663,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceFromDBSnapshotWithContext(arg1 context.
 		arg2 *rds.RestoreDBInstanceFromDBSnapshotInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RestoreDBInstanceFromDBSnapshotWithContextStub
+	fakeReturns := fake.restoreDBInstanceFromDBSnapshotWithContextReturns
 	fake.recordInvocation("RestoreDBInstanceFromDBSnapshotWithContext", []interface{}{arg1, arg2, arg3})
 	fake.restoreDBInstanceFromDBSnapshotWithContextMutex.Unlock()
-	if fake.RestoreDBInstanceFromDBSnapshotWithContextStub != nil {
-		return fake.RestoreDBInstanceFromDBSnapshotWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceFromDBSnapshotWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32315,15 +32727,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceFromS3(arg1 *rds.RestoreDBInstanceFromS
 	fake.restoreDBInstanceFromS3ArgsForCall = append(fake.restoreDBInstanceFromS3ArgsForCall, struct {
 		arg1 *rds.RestoreDBInstanceFromS3Input
 	}{arg1})
+	stub := fake.RestoreDBInstanceFromS3Stub
+	fakeReturns := fake.restoreDBInstanceFromS3Returns
 	fake.recordInvocation("RestoreDBInstanceFromS3", []interface{}{arg1})
 	fake.restoreDBInstanceFromS3Mutex.Unlock()
-	if fake.RestoreDBInstanceFromS3Stub != nil {
-		return fake.RestoreDBInstanceFromS3Stub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceFromS3Returns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32378,15 +32791,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceFromS3Request(arg1 *rds.RestoreDBInstan
 	fake.restoreDBInstanceFromS3RequestArgsForCall = append(fake.restoreDBInstanceFromS3RequestArgsForCall, struct {
 		arg1 *rds.RestoreDBInstanceFromS3Input
 	}{arg1})
+	stub := fake.RestoreDBInstanceFromS3RequestStub
+	fakeReturns := fake.restoreDBInstanceFromS3RequestReturns
 	fake.recordInvocation("RestoreDBInstanceFromS3Request", []interface{}{arg1})
 	fake.restoreDBInstanceFromS3RequestMutex.Unlock()
-	if fake.RestoreDBInstanceFromS3RequestStub != nil {
-		return fake.RestoreDBInstanceFromS3RequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceFromS3RequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32443,15 +32857,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceFromS3WithContext(arg1 context.Context,
 		arg2 *rds.RestoreDBInstanceFromS3Input
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RestoreDBInstanceFromS3WithContextStub
+	fakeReturns := fake.restoreDBInstanceFromS3WithContextReturns
 	fake.recordInvocation("RestoreDBInstanceFromS3WithContext", []interface{}{arg1, arg2, arg3})
 	fake.restoreDBInstanceFromS3WithContextMutex.Unlock()
-	if fake.RestoreDBInstanceFromS3WithContextStub != nil {
-		return fake.RestoreDBInstanceFromS3WithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceFromS3WithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32506,15 +32921,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceToPointInTime(arg1 *rds.RestoreDBInstan
 	fake.restoreDBInstanceToPointInTimeArgsForCall = append(fake.restoreDBInstanceToPointInTimeArgsForCall, struct {
 		arg1 *rds.RestoreDBInstanceToPointInTimeInput
 	}{arg1})
+	stub := fake.RestoreDBInstanceToPointInTimeStub
+	fakeReturns := fake.restoreDBInstanceToPointInTimeReturns
 	fake.recordInvocation("RestoreDBInstanceToPointInTime", []interface{}{arg1})
 	fake.restoreDBInstanceToPointInTimeMutex.Unlock()
-	if fake.RestoreDBInstanceToPointInTimeStub != nil {
-		return fake.RestoreDBInstanceToPointInTimeStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceToPointInTimeReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32569,15 +32985,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceToPointInTimeRequest(arg1 *rds.RestoreD
 	fake.restoreDBInstanceToPointInTimeRequestArgsForCall = append(fake.restoreDBInstanceToPointInTimeRequestArgsForCall, struct {
 		arg1 *rds.RestoreDBInstanceToPointInTimeInput
 	}{arg1})
+	stub := fake.RestoreDBInstanceToPointInTimeRequestStub
+	fakeReturns := fake.restoreDBInstanceToPointInTimeRequestReturns
 	fake.recordInvocation("RestoreDBInstanceToPointInTimeRequest", []interface{}{arg1})
 	fake.restoreDBInstanceToPointInTimeRequestMutex.Unlock()
-	if fake.RestoreDBInstanceToPointInTimeRequestStub != nil {
-		return fake.RestoreDBInstanceToPointInTimeRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceToPointInTimeRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32634,15 +33051,16 @@ func (fake *FakeRDSAPI) RestoreDBInstanceToPointInTimeWithContext(arg1 context.C
 		arg2 *rds.RestoreDBInstanceToPointInTimeInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RestoreDBInstanceToPointInTimeWithContextStub
+	fakeReturns := fake.restoreDBInstanceToPointInTimeWithContextReturns
 	fake.recordInvocation("RestoreDBInstanceToPointInTimeWithContext", []interface{}{arg1, arg2, arg3})
 	fake.restoreDBInstanceToPointInTimeWithContextMutex.Unlock()
-	if fake.RestoreDBInstanceToPointInTimeWithContextStub != nil {
-		return fake.RestoreDBInstanceToPointInTimeWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreDBInstanceToPointInTimeWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32697,15 +33115,16 @@ func (fake *FakeRDSAPI) RevokeDBSecurityGroupIngress(arg1 *rds.RevokeDBSecurityG
 	fake.revokeDBSecurityGroupIngressArgsForCall = append(fake.revokeDBSecurityGroupIngressArgsForCall, struct {
 		arg1 *rds.RevokeDBSecurityGroupIngressInput
 	}{arg1})
+	stub := fake.RevokeDBSecurityGroupIngressStub
+	fakeReturns := fake.revokeDBSecurityGroupIngressReturns
 	fake.recordInvocation("RevokeDBSecurityGroupIngress", []interface{}{arg1})
 	fake.revokeDBSecurityGroupIngressMutex.Unlock()
-	if fake.RevokeDBSecurityGroupIngressStub != nil {
-		return fake.RevokeDBSecurityGroupIngressStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.revokeDBSecurityGroupIngressReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32760,15 +33179,16 @@ func (fake *FakeRDSAPI) RevokeDBSecurityGroupIngressRequest(arg1 *rds.RevokeDBSe
 	fake.revokeDBSecurityGroupIngressRequestArgsForCall = append(fake.revokeDBSecurityGroupIngressRequestArgsForCall, struct {
 		arg1 *rds.RevokeDBSecurityGroupIngressInput
 	}{arg1})
+	stub := fake.RevokeDBSecurityGroupIngressRequestStub
+	fakeReturns := fake.revokeDBSecurityGroupIngressRequestReturns
 	fake.recordInvocation("RevokeDBSecurityGroupIngressRequest", []interface{}{arg1})
 	fake.revokeDBSecurityGroupIngressRequestMutex.Unlock()
-	if fake.RevokeDBSecurityGroupIngressRequestStub != nil {
-		return fake.RevokeDBSecurityGroupIngressRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.revokeDBSecurityGroupIngressRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32825,15 +33245,16 @@ func (fake *FakeRDSAPI) RevokeDBSecurityGroupIngressWithContext(arg1 context.Con
 		arg2 *rds.RevokeDBSecurityGroupIngressInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RevokeDBSecurityGroupIngressWithContextStub
+	fakeReturns := fake.revokeDBSecurityGroupIngressWithContextReturns
 	fake.recordInvocation("RevokeDBSecurityGroupIngressWithContext", []interface{}{arg1, arg2, arg3})
 	fake.revokeDBSecurityGroupIngressWithContextMutex.Unlock()
-	if fake.RevokeDBSecurityGroupIngressWithContextStub != nil {
-		return fake.RevokeDBSecurityGroupIngressWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.revokeDBSecurityGroupIngressWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32888,15 +33309,16 @@ func (fake *FakeRDSAPI) StartActivityStream(arg1 *rds.StartActivityStreamInput) 
 	fake.startActivityStreamArgsForCall = append(fake.startActivityStreamArgsForCall, struct {
 		arg1 *rds.StartActivityStreamInput
 	}{arg1})
+	stub := fake.StartActivityStreamStub
+	fakeReturns := fake.startActivityStreamReturns
 	fake.recordInvocation("StartActivityStream", []interface{}{arg1})
 	fake.startActivityStreamMutex.Unlock()
-	if fake.StartActivityStreamStub != nil {
-		return fake.StartActivityStreamStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startActivityStreamReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -32951,15 +33373,16 @@ func (fake *FakeRDSAPI) StartActivityStreamRequest(arg1 *rds.StartActivityStream
 	fake.startActivityStreamRequestArgsForCall = append(fake.startActivityStreamRequestArgsForCall, struct {
 		arg1 *rds.StartActivityStreamInput
 	}{arg1})
+	stub := fake.StartActivityStreamRequestStub
+	fakeReturns := fake.startActivityStreamRequestReturns
 	fake.recordInvocation("StartActivityStreamRequest", []interface{}{arg1})
 	fake.startActivityStreamRequestMutex.Unlock()
-	if fake.StartActivityStreamRequestStub != nil {
-		return fake.StartActivityStreamRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startActivityStreamRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33016,15 +33439,16 @@ func (fake *FakeRDSAPI) StartActivityStreamWithContext(arg1 context.Context, arg
 		arg2 *rds.StartActivityStreamInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.StartActivityStreamWithContextStub
+	fakeReturns := fake.startActivityStreamWithContextReturns
 	fake.recordInvocation("StartActivityStreamWithContext", []interface{}{arg1, arg2, arg3})
 	fake.startActivityStreamWithContextMutex.Unlock()
-	if fake.StartActivityStreamWithContextStub != nil {
-		return fake.StartActivityStreamWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startActivityStreamWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33079,15 +33503,16 @@ func (fake *FakeRDSAPI) StartDBCluster(arg1 *rds.StartDBClusterInput) (*rds.Star
 	fake.startDBClusterArgsForCall = append(fake.startDBClusterArgsForCall, struct {
 		arg1 *rds.StartDBClusterInput
 	}{arg1})
+	stub := fake.StartDBClusterStub
+	fakeReturns := fake.startDBClusterReturns
 	fake.recordInvocation("StartDBCluster", []interface{}{arg1})
 	fake.startDBClusterMutex.Unlock()
-	if fake.StartDBClusterStub != nil {
-		return fake.StartDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33142,15 +33567,16 @@ func (fake *FakeRDSAPI) StartDBClusterRequest(arg1 *rds.StartDBClusterInput) (*r
 	fake.startDBClusterRequestArgsForCall = append(fake.startDBClusterRequestArgsForCall, struct {
 		arg1 *rds.StartDBClusterInput
 	}{arg1})
+	stub := fake.StartDBClusterRequestStub
+	fakeReturns := fake.startDBClusterRequestReturns
 	fake.recordInvocation("StartDBClusterRequest", []interface{}{arg1})
 	fake.startDBClusterRequestMutex.Unlock()
-	if fake.StartDBClusterRequestStub != nil {
-		return fake.StartDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33207,15 +33633,16 @@ func (fake *FakeRDSAPI) StartDBClusterWithContext(arg1 context.Context, arg2 *rd
 		arg2 *rds.StartDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.StartDBClusterWithContextStub
+	fakeReturns := fake.startDBClusterWithContextReturns
 	fake.recordInvocation("StartDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.startDBClusterWithContextMutex.Unlock()
-	if fake.StartDBClusterWithContextStub != nil {
-		return fake.StartDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33270,15 +33697,16 @@ func (fake *FakeRDSAPI) StartDBInstance(arg1 *rds.StartDBInstanceInput) (*rds.St
 	fake.startDBInstanceArgsForCall = append(fake.startDBInstanceArgsForCall, struct {
 		arg1 *rds.StartDBInstanceInput
 	}{arg1})
+	stub := fake.StartDBInstanceStub
+	fakeReturns := fake.startDBInstanceReturns
 	fake.recordInvocation("StartDBInstance", []interface{}{arg1})
 	fake.startDBInstanceMutex.Unlock()
-	if fake.StartDBInstanceStub != nil {
-		return fake.StartDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33333,15 +33761,16 @@ func (fake *FakeRDSAPI) StartDBInstanceRequest(arg1 *rds.StartDBInstanceInput) (
 	fake.startDBInstanceRequestArgsForCall = append(fake.startDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.StartDBInstanceInput
 	}{arg1})
+	stub := fake.StartDBInstanceRequestStub
+	fakeReturns := fake.startDBInstanceRequestReturns
 	fake.recordInvocation("StartDBInstanceRequest", []interface{}{arg1})
 	fake.startDBInstanceRequestMutex.Unlock()
-	if fake.StartDBInstanceRequestStub != nil {
-		return fake.StartDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33398,15 +33827,16 @@ func (fake *FakeRDSAPI) StartDBInstanceWithContext(arg1 context.Context, arg2 *r
 		arg2 *rds.StartDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.StartDBInstanceWithContextStub
+	fakeReturns := fake.startDBInstanceWithContextReturns
 	fake.recordInvocation("StartDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.startDBInstanceWithContextMutex.Unlock()
-	if fake.StartDBInstanceWithContextStub != nil {
-		return fake.StartDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33461,15 +33891,16 @@ func (fake *FakeRDSAPI) StartExportTask(arg1 *rds.StartExportTaskInput) (*rds.St
 	fake.startExportTaskArgsForCall = append(fake.startExportTaskArgsForCall, struct {
 		arg1 *rds.StartExportTaskInput
 	}{arg1})
+	stub := fake.StartExportTaskStub
+	fakeReturns := fake.startExportTaskReturns
 	fake.recordInvocation("StartExportTask", []interface{}{arg1})
 	fake.startExportTaskMutex.Unlock()
-	if fake.StartExportTaskStub != nil {
-		return fake.StartExportTaskStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startExportTaskReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33524,15 +33955,16 @@ func (fake *FakeRDSAPI) StartExportTaskRequest(arg1 *rds.StartExportTaskInput) (
 	fake.startExportTaskRequestArgsForCall = append(fake.startExportTaskRequestArgsForCall, struct {
 		arg1 *rds.StartExportTaskInput
 	}{arg1})
+	stub := fake.StartExportTaskRequestStub
+	fakeReturns := fake.startExportTaskRequestReturns
 	fake.recordInvocation("StartExportTaskRequest", []interface{}{arg1})
 	fake.startExportTaskRequestMutex.Unlock()
-	if fake.StartExportTaskRequestStub != nil {
-		return fake.StartExportTaskRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startExportTaskRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33589,15 +34021,16 @@ func (fake *FakeRDSAPI) StartExportTaskWithContext(arg1 context.Context, arg2 *r
 		arg2 *rds.StartExportTaskInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.StartExportTaskWithContextStub
+	fakeReturns := fake.startExportTaskWithContextReturns
 	fake.recordInvocation("StartExportTaskWithContext", []interface{}{arg1, arg2, arg3})
 	fake.startExportTaskWithContextMutex.Unlock()
-	if fake.StartExportTaskWithContextStub != nil {
-		return fake.StartExportTaskWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.startExportTaskWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33652,15 +34085,16 @@ func (fake *FakeRDSAPI) StopActivityStream(arg1 *rds.StopActivityStreamInput) (*
 	fake.stopActivityStreamArgsForCall = append(fake.stopActivityStreamArgsForCall, struct {
 		arg1 *rds.StopActivityStreamInput
 	}{arg1})
+	stub := fake.StopActivityStreamStub
+	fakeReturns := fake.stopActivityStreamReturns
 	fake.recordInvocation("StopActivityStream", []interface{}{arg1})
 	fake.stopActivityStreamMutex.Unlock()
-	if fake.StopActivityStreamStub != nil {
-		return fake.StopActivityStreamStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopActivityStreamReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33715,15 +34149,16 @@ func (fake *FakeRDSAPI) StopActivityStreamRequest(arg1 *rds.StopActivityStreamIn
 	fake.stopActivityStreamRequestArgsForCall = append(fake.stopActivityStreamRequestArgsForCall, struct {
 		arg1 *rds.StopActivityStreamInput
 	}{arg1})
+	stub := fake.StopActivityStreamRequestStub
+	fakeReturns := fake.stopActivityStreamRequestReturns
 	fake.recordInvocation("StopActivityStreamRequest", []interface{}{arg1})
 	fake.stopActivityStreamRequestMutex.Unlock()
-	if fake.StopActivityStreamRequestStub != nil {
-		return fake.StopActivityStreamRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopActivityStreamRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33780,15 +34215,16 @@ func (fake *FakeRDSAPI) StopActivityStreamWithContext(arg1 context.Context, arg2
 		arg2 *rds.StopActivityStreamInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.StopActivityStreamWithContextStub
+	fakeReturns := fake.stopActivityStreamWithContextReturns
 	fake.recordInvocation("StopActivityStreamWithContext", []interface{}{arg1, arg2, arg3})
 	fake.stopActivityStreamWithContextMutex.Unlock()
-	if fake.StopActivityStreamWithContextStub != nil {
-		return fake.StopActivityStreamWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopActivityStreamWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33843,15 +34279,16 @@ func (fake *FakeRDSAPI) StopDBCluster(arg1 *rds.StopDBClusterInput) (*rds.StopDB
 	fake.stopDBClusterArgsForCall = append(fake.stopDBClusterArgsForCall, struct {
 		arg1 *rds.StopDBClusterInput
 	}{arg1})
+	stub := fake.StopDBClusterStub
+	fakeReturns := fake.stopDBClusterReturns
 	fake.recordInvocation("StopDBCluster", []interface{}{arg1})
 	fake.stopDBClusterMutex.Unlock()
-	if fake.StopDBClusterStub != nil {
-		return fake.StopDBClusterStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopDBClusterReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33906,15 +34343,16 @@ func (fake *FakeRDSAPI) StopDBClusterRequest(arg1 *rds.StopDBClusterInput) (*req
 	fake.stopDBClusterRequestArgsForCall = append(fake.stopDBClusterRequestArgsForCall, struct {
 		arg1 *rds.StopDBClusterInput
 	}{arg1})
+	stub := fake.StopDBClusterRequestStub
+	fakeReturns := fake.stopDBClusterRequestReturns
 	fake.recordInvocation("StopDBClusterRequest", []interface{}{arg1})
 	fake.stopDBClusterRequestMutex.Unlock()
-	if fake.StopDBClusterRequestStub != nil {
-		return fake.StopDBClusterRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopDBClusterRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -33971,15 +34409,16 @@ func (fake *FakeRDSAPI) StopDBClusterWithContext(arg1 context.Context, arg2 *rds
 		arg2 *rds.StopDBClusterInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.StopDBClusterWithContextStub
+	fakeReturns := fake.stopDBClusterWithContextReturns
 	fake.recordInvocation("StopDBClusterWithContext", []interface{}{arg1, arg2, arg3})
 	fake.stopDBClusterWithContextMutex.Unlock()
-	if fake.StopDBClusterWithContextStub != nil {
-		return fake.StopDBClusterWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopDBClusterWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -34034,15 +34473,16 @@ func (fake *FakeRDSAPI) StopDBInstance(arg1 *rds.StopDBInstanceInput) (*rds.Stop
 	fake.stopDBInstanceArgsForCall = append(fake.stopDBInstanceArgsForCall, struct {
 		arg1 *rds.StopDBInstanceInput
 	}{arg1})
+	stub := fake.StopDBInstanceStub
+	fakeReturns := fake.stopDBInstanceReturns
 	fake.recordInvocation("StopDBInstance", []interface{}{arg1})
 	fake.stopDBInstanceMutex.Unlock()
-	if fake.StopDBInstanceStub != nil {
-		return fake.StopDBInstanceStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopDBInstanceReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -34097,15 +34537,16 @@ func (fake *FakeRDSAPI) StopDBInstanceRequest(arg1 *rds.StopDBInstanceInput) (*r
 	fake.stopDBInstanceRequestArgsForCall = append(fake.stopDBInstanceRequestArgsForCall, struct {
 		arg1 *rds.StopDBInstanceInput
 	}{arg1})
+	stub := fake.StopDBInstanceRequestStub
+	fakeReturns := fake.stopDBInstanceRequestReturns
 	fake.recordInvocation("StopDBInstanceRequest", []interface{}{arg1})
 	fake.stopDBInstanceRequestMutex.Unlock()
-	if fake.StopDBInstanceRequestStub != nil {
-		return fake.StopDBInstanceRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopDBInstanceRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -34162,15 +34603,16 @@ func (fake *FakeRDSAPI) StopDBInstanceWithContext(arg1 context.Context, arg2 *rd
 		arg2 *rds.StopDBInstanceInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.StopDBInstanceWithContextStub
+	fakeReturns := fake.stopDBInstanceWithContextReturns
 	fake.recordInvocation("StopDBInstanceWithContext", []interface{}{arg1, arg2, arg3})
 	fake.stopDBInstanceWithContextMutex.Unlock()
-	if fake.StopDBInstanceWithContextStub != nil {
-		return fake.StopDBInstanceWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.stopDBInstanceWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -34225,15 +34667,16 @@ func (fake *FakeRDSAPI) WaitUntilDBClusterSnapshotAvailable(arg1 *rds.DescribeDB
 	fake.waitUntilDBClusterSnapshotAvailableArgsForCall = append(fake.waitUntilDBClusterSnapshotAvailableArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterSnapshotsInput
 	}{arg1})
+	stub := fake.WaitUntilDBClusterSnapshotAvailableStub
+	fakeReturns := fake.waitUntilDBClusterSnapshotAvailableReturns
 	fake.recordInvocation("WaitUntilDBClusterSnapshotAvailable", []interface{}{arg1})
 	fake.waitUntilDBClusterSnapshotAvailableMutex.Unlock()
-	if fake.WaitUntilDBClusterSnapshotAvailableStub != nil {
-		return fake.WaitUntilDBClusterSnapshotAvailableStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBClusterSnapshotAvailableReturns
 	return fakeReturns.result1
 }
 
@@ -34287,15 +34730,16 @@ func (fake *FakeRDSAPI) WaitUntilDBClusterSnapshotAvailableWithContext(arg1 cont
 		arg2 *rds.DescribeDBClusterSnapshotsInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilDBClusterSnapshotAvailableWithContextStub
+	fakeReturns := fake.waitUntilDBClusterSnapshotAvailableWithContextReturns
 	fake.recordInvocation("WaitUntilDBClusterSnapshotAvailableWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilDBClusterSnapshotAvailableWithContextMutex.Unlock()
-	if fake.WaitUntilDBClusterSnapshotAvailableWithContextStub != nil {
-		return fake.WaitUntilDBClusterSnapshotAvailableWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBClusterSnapshotAvailableWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -34347,15 +34791,16 @@ func (fake *FakeRDSAPI) WaitUntilDBClusterSnapshotDeleted(arg1 *rds.DescribeDBCl
 	fake.waitUntilDBClusterSnapshotDeletedArgsForCall = append(fake.waitUntilDBClusterSnapshotDeletedArgsForCall, struct {
 		arg1 *rds.DescribeDBClusterSnapshotsInput
 	}{arg1})
+	stub := fake.WaitUntilDBClusterSnapshotDeletedStub
+	fakeReturns := fake.waitUntilDBClusterSnapshotDeletedReturns
 	fake.recordInvocation("WaitUntilDBClusterSnapshotDeleted", []interface{}{arg1})
 	fake.waitUntilDBClusterSnapshotDeletedMutex.Unlock()
-	if fake.WaitUntilDBClusterSnapshotDeletedStub != nil {
-		return fake.WaitUntilDBClusterSnapshotDeletedStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBClusterSnapshotDeletedReturns
 	return fakeReturns.result1
 }
 
@@ -34409,15 +34854,16 @@ func (fake *FakeRDSAPI) WaitUntilDBClusterSnapshotDeletedWithContext(arg1 contex
 		arg2 *rds.DescribeDBClusterSnapshotsInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilDBClusterSnapshotDeletedWithContextStub
+	fakeReturns := fake.waitUntilDBClusterSnapshotDeletedWithContextReturns
 	fake.recordInvocation("WaitUntilDBClusterSnapshotDeletedWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilDBClusterSnapshotDeletedWithContextMutex.Unlock()
-	if fake.WaitUntilDBClusterSnapshotDeletedWithContextStub != nil {
-		return fake.WaitUntilDBClusterSnapshotDeletedWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBClusterSnapshotDeletedWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -34469,15 +34915,16 @@ func (fake *FakeRDSAPI) WaitUntilDBInstanceAvailable(arg1 *rds.DescribeDBInstanc
 	fake.waitUntilDBInstanceAvailableArgsForCall = append(fake.waitUntilDBInstanceAvailableArgsForCall, struct {
 		arg1 *rds.DescribeDBInstancesInput
 	}{arg1})
+	stub := fake.WaitUntilDBInstanceAvailableStub
+	fakeReturns := fake.waitUntilDBInstanceAvailableReturns
 	fake.recordInvocation("WaitUntilDBInstanceAvailable", []interface{}{arg1})
 	fake.waitUntilDBInstanceAvailableMutex.Unlock()
-	if fake.WaitUntilDBInstanceAvailableStub != nil {
-		return fake.WaitUntilDBInstanceAvailableStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBInstanceAvailableReturns
 	return fakeReturns.result1
 }
 
@@ -34531,15 +34978,16 @@ func (fake *FakeRDSAPI) WaitUntilDBInstanceAvailableWithContext(arg1 context.Con
 		arg2 *rds.DescribeDBInstancesInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilDBInstanceAvailableWithContextStub
+	fakeReturns := fake.waitUntilDBInstanceAvailableWithContextReturns
 	fake.recordInvocation("WaitUntilDBInstanceAvailableWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilDBInstanceAvailableWithContextMutex.Unlock()
-	if fake.WaitUntilDBInstanceAvailableWithContextStub != nil {
-		return fake.WaitUntilDBInstanceAvailableWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBInstanceAvailableWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -34591,15 +35039,16 @@ func (fake *FakeRDSAPI) WaitUntilDBInstanceDeleted(arg1 *rds.DescribeDBInstances
 	fake.waitUntilDBInstanceDeletedArgsForCall = append(fake.waitUntilDBInstanceDeletedArgsForCall, struct {
 		arg1 *rds.DescribeDBInstancesInput
 	}{arg1})
+	stub := fake.WaitUntilDBInstanceDeletedStub
+	fakeReturns := fake.waitUntilDBInstanceDeletedReturns
 	fake.recordInvocation("WaitUntilDBInstanceDeleted", []interface{}{arg1})
 	fake.waitUntilDBInstanceDeletedMutex.Unlock()
-	if fake.WaitUntilDBInstanceDeletedStub != nil {
-		return fake.WaitUntilDBInstanceDeletedStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBInstanceDeletedReturns
 	return fakeReturns.result1
 }
 
@@ -34653,15 +35102,16 @@ func (fake *FakeRDSAPI) WaitUntilDBInstanceDeletedWithContext(arg1 context.Conte
 		arg2 *rds.DescribeDBInstancesInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilDBInstanceDeletedWithContextStub
+	fakeReturns := fake.waitUntilDBInstanceDeletedWithContextReturns
 	fake.recordInvocation("WaitUntilDBInstanceDeletedWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilDBInstanceDeletedWithContextMutex.Unlock()
-	if fake.WaitUntilDBInstanceDeletedWithContextStub != nil {
-		return fake.WaitUntilDBInstanceDeletedWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBInstanceDeletedWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -34713,15 +35163,16 @@ func (fake *FakeRDSAPI) WaitUntilDBSnapshotAvailable(arg1 *rds.DescribeDBSnapsho
 	fake.waitUntilDBSnapshotAvailableArgsForCall = append(fake.waitUntilDBSnapshotAvailableArgsForCall, struct {
 		arg1 *rds.DescribeDBSnapshotsInput
 	}{arg1})
+	stub := fake.WaitUntilDBSnapshotAvailableStub
+	fakeReturns := fake.waitUntilDBSnapshotAvailableReturns
 	fake.recordInvocation("WaitUntilDBSnapshotAvailable", []interface{}{arg1})
 	fake.waitUntilDBSnapshotAvailableMutex.Unlock()
-	if fake.WaitUntilDBSnapshotAvailableStub != nil {
-		return fake.WaitUntilDBSnapshotAvailableStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBSnapshotAvailableReturns
 	return fakeReturns.result1
 }
 
@@ -34775,15 +35226,16 @@ func (fake *FakeRDSAPI) WaitUntilDBSnapshotAvailableWithContext(arg1 context.Con
 		arg2 *rds.DescribeDBSnapshotsInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilDBSnapshotAvailableWithContextStub
+	fakeReturns := fake.waitUntilDBSnapshotAvailableWithContextReturns
 	fake.recordInvocation("WaitUntilDBSnapshotAvailableWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilDBSnapshotAvailableWithContextMutex.Unlock()
-	if fake.WaitUntilDBSnapshotAvailableWithContextStub != nil {
-		return fake.WaitUntilDBSnapshotAvailableWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBSnapshotAvailableWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -34835,15 +35287,16 @@ func (fake *FakeRDSAPI) WaitUntilDBSnapshotDeleted(arg1 *rds.DescribeDBSnapshots
 	fake.waitUntilDBSnapshotDeletedArgsForCall = append(fake.waitUntilDBSnapshotDeletedArgsForCall, struct {
 		arg1 *rds.DescribeDBSnapshotsInput
 	}{arg1})
+	stub := fake.WaitUntilDBSnapshotDeletedStub
+	fakeReturns := fake.waitUntilDBSnapshotDeletedReturns
 	fake.recordInvocation("WaitUntilDBSnapshotDeleted", []interface{}{arg1})
 	fake.waitUntilDBSnapshotDeletedMutex.Unlock()
-	if fake.WaitUntilDBSnapshotDeletedStub != nil {
-		return fake.WaitUntilDBSnapshotDeletedStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBSnapshotDeletedReturns
 	return fakeReturns.result1
 }
 
@@ -34897,15 +35350,16 @@ func (fake *FakeRDSAPI) WaitUntilDBSnapshotDeletedWithContext(arg1 context.Conte
 		arg2 *rds.DescribeDBSnapshotsInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilDBSnapshotDeletedWithContextStub
+	fakeReturns := fake.waitUntilDBSnapshotDeletedWithContextReturns
 	fake.recordInvocation("WaitUntilDBSnapshotDeletedWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilDBSnapshotDeletedWithContextMutex.Unlock()
-	if fake.WaitUntilDBSnapshotDeletedWithContextStub != nil {
-		return fake.WaitUntilDBSnapshotDeletedWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilDBSnapshotDeletedWithContextReturns
 	return fakeReturns.result1
 }
 

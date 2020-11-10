@@ -33,15 +33,16 @@ func (fake *FakeHealthServiceInterface) CountOpenEventsForServiceInRegion(arg1 s
 		arg1 string
 		arg2 string
 	}{arg1, arg2})
+	stub := fake.CountOpenEventsForServiceInRegionStub
+	fakeReturns := fake.countOpenEventsForServiceInRegionReturns
 	fake.recordInvocation("CountOpenEventsForServiceInRegion", []interface{}{arg1, arg2})
 	fake.countOpenEventsForServiceInRegionMutex.Unlock()
-	if fake.CountOpenEventsForServiceInRegionStub != nil {
-		return fake.CountOpenEventsForServiceInRegionStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.countOpenEventsForServiceInRegionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
