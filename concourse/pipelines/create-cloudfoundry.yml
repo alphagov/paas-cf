@@ -5123,7 +5123,6 @@ jobs:
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
           params:
-            CRONITOR_PING_API_KEY: ((cronitor_ping_api_key))
             CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_smoke_test_monitor_code))
             CRONITOR_MONITOR_PING_ENDPOINT: "run"
             DEPLOY_ENV: ((deploy_env))
@@ -5206,7 +5205,6 @@ jobs:
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
         params:
-          CRONITOR_PING_API_KEY: ((cronitor_ping_api_key))
           CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_smoke_test_monitor_code))
           CRONITOR_MONITOR_PING_ENDPOINT: "complete"
           DEPLOY_ENV: ((deploy_env))
@@ -5219,7 +5217,6 @@ jobs:
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
         params:
-          CRONITOR_PING_API_KEY: ((cronitor_ping_api_key))
           CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_smoke_test_monitor_code))
           CRONITOR_MONITOR_PING_ENDPOINT: "fail"
           DEPLOY_ENV: ((deploy_env))
@@ -5232,7 +5229,6 @@ jobs:
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
         params:
-          CRONITOR_PING_API_KEY: ((cronitor_ping_api_key))
           CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_smoke_test_monitor_code))
           CRONITOR_MONITOR_PING_ENDPOINT: "fail"
           DEPLOY_ENV: ((deploy_env))
@@ -5245,7 +5241,6 @@ jobs:
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
         params:
-          CRONITOR_PING_API_KEY: ((cronitor_ping_api_key))
           CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_smoke_test_monitor_code))
           CRONITOR_MONITOR_PING_ENDPOINT: "fail"
           DEPLOY_ENV: ((deploy_env))

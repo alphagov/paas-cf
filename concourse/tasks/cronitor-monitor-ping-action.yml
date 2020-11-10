@@ -12,5 +12,5 @@ run:
   - -e
   - -c
   - |
-    curl -m 10 "https://cronitor.link/${CRONITOR_SMOKE_TEST_MONITOR_CODE}/${CRONITOR_MONITOR_PING_ENDPOINT}?auth_key=${CRONITOR_PING_API_KEY}&host=${DEPLOY_ENV}&series=${CCI_BUILD_NUMBER}&message=${CRONITOR_PING_MESSAGE}" || true
+    curl -m 10 "https://cronitor.link/${CRONITOR_SMOKE_TEST_MONITOR_CODE}/${CRONITOR_MONITOR_PING_ENDPOINT}?host=${DEPLOY_ENV}&series=${CCI_BUILD_NUMBER}&message=${CRONITOR_PING_MESSAGE}" || true
 
