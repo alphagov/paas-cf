@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/health"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/shield"
 	"log"
 	"net/http"
 	"os"
@@ -152,6 +153,7 @@ func Main() error {
 	}
 
 	healthService := health.NewService(sess)
+	shieldService := shield.NewService(sess)
 
 	// Combine all metrics into single stream
 	gauges := []m.MetricReader{
@@ -181,6 +183,7 @@ func Main() error {
 		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
 		RDSDBInstancesGauge(logger, rdsService, 15*time.Minute),
 		AWSHealthEventsGauge(logger, awsRegion, healthService, 15*time.Minute),
+		ShieldOngoingAttacksGauge(logger, shieldService, 5*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))

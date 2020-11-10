@@ -59,6 +59,14 @@ generate-fakes:
 		pkg/health/types.go \
 		HealthServiceInterface
 
+	counterfeiter -o pkg/shield/fakes/fake_shield_client.go \
+		vendor/github.com/aws/aws-sdk-go/service/shield/shieldiface/interface.go \
+		ShieldAPI
+
+	counterfeiter -o pkg/shield/fakes/fake_shield_service.go \
+		pkg/shield/types.go \
+		ShieldServiceInterface
+
 	find pkg -name 'fake*.go' | xargs $(SED_CMD) "s|github.com/alphagov/paas-cf/tools/metrics/vendor/||"
 
 .PHONY: run
