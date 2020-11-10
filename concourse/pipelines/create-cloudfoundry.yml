@@ -4395,6 +4395,15 @@ jobs:
 
                 cf enable-service-access elasticsearch -b aiven-broker
 
+                # Disable deprecated plans
+                cat <<EOF | xargs -n1 cf disable-service-access elasticsearch -p
+                tiny-6.x
+                small-ha-6.x
+                medium-ha-6.x
+                large-ha-6.x
+                xlarge-ha-6.x
+                EOF
+
                 cf enable-service-access influxdb -b aiven-broker
 
       - do:
