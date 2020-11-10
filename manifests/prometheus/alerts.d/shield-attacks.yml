@@ -1,0 +1,15 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: ShieldOngoingAttacks
+    rules:
+      - alert: ShieldAnyOngoingAttacks
+        expr: paas_aws_shield_ongoing_attacks > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: "AWS Shield reporting an ongoing attack"
+          description: "An ongoing attack being reported by AWS Shield could be indicative of a large traffic spike. Is a tenant load testing?"
