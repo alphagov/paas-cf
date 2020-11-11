@@ -104,6 +104,7 @@ disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
 persistent_environment: ${PERSISTENT_ENVIRONMENT}
 slim_dev_deployment: ${SLIM_DEV_DEPLOYMENT:-}
+high_cpu_cells: ${HIGH_CPU_CELLS:-}
 monitored_state_bucket: ${MONITORED_STATE_BUCKET:-}
 monitored_aws_region: ${MONITORED_AWS_REGION:-}
 monitored_deploy_env: ${MONITORED_DEPLOY_ENV:-}

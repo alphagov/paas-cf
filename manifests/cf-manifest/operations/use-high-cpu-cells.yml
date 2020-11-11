@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /instance_groups/name=diego-cell/vm_type
+  value: high_cpu_cell

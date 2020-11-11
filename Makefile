@@ -254,6 +254,7 @@ prod: ## Set Environment to Production
 	$(eval export ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR=prod)
 	$(eval export DISABLE_CF_ACCEPTANCE_TESTS=true)
 	$(eval export DEPLOY_ENV=prod)
+	$(eval export HIGH_CPU_CELLS ?= true)
 	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass-high)
 	$(eval export AWS_DEFAULT_REGION=eu-west-1)

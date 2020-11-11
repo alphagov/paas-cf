@@ -20,6 +20,10 @@ if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args="$opsfile_args -o ${CF_MANIFEST_DIR}/operations/speed-up-deployment-dev.yml"
 fi
 
+if [ "${HIGH_CPU_CELLS-}" = "true" ]; then
+  opsfile_args="$opsfile_args -o ${CF_MANIFEST_DIR}/operations/use-high-cpu-cells.yml"
+fi
+
 # We are going to generate a manifest, as if we did not have any isolation
 # segments.
 #

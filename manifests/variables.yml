@@ -19,6 +19,9 @@ xlarge_vm_spot_bid_price: 0.1
 cell_instance_type: r5.xlarge
 cell_vm_spot_bid_price: 0.15
 
+high_cpu_cell_instance_type: m5.2xlarge
+high_cpu_cell_vm_spot_bid_price: 0.30
+
 small_cell_instance_type: r5.large
 small_cell_vm_spot_bid_price: 0.06
 
