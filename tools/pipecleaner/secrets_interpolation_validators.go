@@ -47,7 +47,7 @@ func secretsCheckResource(resource atc.ResourceConfig) []error {
 	return errors
 }
 
-func secretsCheckTask(task atc.TaskConfig, params atc.Params) []error {
+func secretsCheckTask(task atc.TaskConfig, params atc.TaskEnv) []error {
 	errors := make([]error, 0)
 
 	for varName, varVal := range task.Params {

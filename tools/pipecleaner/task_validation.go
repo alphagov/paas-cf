@@ -9,7 +9,7 @@ import (
 
 type taskValidator struct {
 	Name       string
-	ValidateFn func(atc.TaskConfig, atc.Params) []error
+	ValidateFn func(atc.TaskConfig, atc.TaskEnv) []error
 }
 
 type taskErrorCollection struct {

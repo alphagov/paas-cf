@@ -16,7 +16,8 @@ var (
 func checkAllResourcesUsed(job atc.JobConfig) []error {
 	errors := make([]error, 0)
 
-	jobContainsATaskFile := false // if we see "file: true" we cannot check this
+	jobContainsATaskFile := false   // if we see "file: true" we cannot check this
+	jobContainsSetPipeline := false // if we see set_pipeline we cannot check this
 	resourcesPresent := make(map[string]bool, 0)
 
 	for _, getStep := range job.Inputs() {
@@ -37,27 +38,40 @@ func checkAllResourcesUsed(job atc.JobConfig) []error {
 		resourcesPresent[putStep.Name] = true
 	}
 
-	for _, step := range job.Plans() {
-		if step.ImageArtifactName != "" {
-			resourcesPresent[step.ImageArtifactName] = true
-		}
+	job.StepConfig().Visit(atc.StepRecursor{
+		OnTask: func(step *atc.TaskStep) error {
+			if step.Config != nil {
 
-		if step.TaskConfig != nil {
-			for _, input := range step.TaskConfig.Inputs {
-				resourcesPresent[input.Name] = true
+				if step.ImageArtifactName != "" {
+					resourcesPresent[step.ImageArtifactName] = true
+				}
+
+				for _, input := range step.Config.Inputs {
+					resourcesPresent[input.Name] = true
+				}
+
+				for _, output := range step.Config.Outputs {
+					resourcesPresent[output.Name] = true
+				}
 			}
 
-			for _, output := range step.TaskConfig.Outputs {
-				resourcesPresent[output.Name] = true
+			if step.ConfigPath != "" {
+				jobContainsATaskFile = true
 			}
-		}
 
-		if step.TaskConfigPath != "" {
-			jobContainsATaskFile = true
-		}
-	}
+			return nil
+		},
+		OnSetPipeline: func(step *atc.SetPipelineStep) error {
+			jobContainsSetPipeline = true
+			return nil
+		},
+	})
 
 	if jobContainsATaskFile {
+		return errors
+	}
+
+	if jobContainsSetPipeline {
 		return errors
 	}
 

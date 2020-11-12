@@ -114,7 +114,7 @@ func main() {
 			for _, validator := range taskValidators {
 				taskErrors = append(taskErrors, validatorErrorCollection{
 					ValidatorName:   validator.Name,
-					ValidatorErrors: validator.ValidateFn(*taskConfig, atc.Params{}),
+					ValidatorErrors: validator.ValidateFn(*taskConfig, atc.TaskEnv{}),
 				})
 			}
 
