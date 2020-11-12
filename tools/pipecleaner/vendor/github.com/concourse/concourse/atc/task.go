@@ -20,7 +20,7 @@ type TaskConfig struct {
 	ImageResource *ImageResource `json:"image_resource,omitempty"`
 
 	// Limits to set on the Task Container
-	Limits ContainerLimits `json:"container_limits,omitempty"`
+	Limits *ContainerLimits `json:"container_limits,omitempty"`
 
 	// Parameters to pass to the task via environment variables.
 	Params TaskEnv `json:"params,omitempty"`
@@ -47,8 +47,24 @@ type ImageResource struct {
 	Type   string `json:"type"`
 	Source Source `json:"source"`
 
-	Params  *Params  `json:"params,omitempty"`
-	Version *Version `json:"version,omitempty"`
+	Params  Params  `json:"params,omitempty"`
+	Version Version `json:"version,omitempty"`
+}
+
+func (ir *ImageResource) ApplySourceDefaults(resourceTypes VersionedResourceTypes) {
+	if ir == nil {
+		return
+	}
+
+	parentType, found := resourceTypes.Lookup(ir.Type)
+	if found {
+		ir.Source = parentType.Defaults.Merge(ir.Source)
+	} else {
+		brtDefaults, found := FindBaseResourceTypeDefaults(ir.Type)
+		if found {
+			ir.Source = brtDefaults.Merge(ir.Source)
+		}
+	}
 }
 
 func NewTaskConfig(configBytes []byte) (TaskConfig, error) {
@@ -66,29 +82,39 @@ func NewTaskConfig(configBytes []byte) (TaskConfig, error) {
 	return config, nil
 }
 
+type TaskValidationError struct {
+	Errors []string
+}
+
+func (err TaskValidationError) Error() string {
+	return fmt.Sprintf("invalid task configuration:\n%s", strings.Join(err.Errors, "\n"))
+}
+
 func (config TaskConfig) Validate() error {
-	messages := []string{}
+	var errors []string
 
 	if config.Platform == "" {
-		messages = append(messages, "  missing 'platform'")
+		errors = append(errors, "missing 'platform'")
 	}
 
 	if config.Run.Path == "" {
-		messages = append(messages, "  missing path to executable to run")
+		errors = append(errors, "missing path to executable to run")
 	}
 
-	messages = append(messages, config.validateInputContainsNames()...)
-	messages = append(messages, config.validateOutputContainsNames()...)
+	errors = append(errors, config.validateInputContainsNames()...)
+	errors = append(errors, config.validateOutputContainsNames()...)
 
-	if len(messages) > 0 {
-		return fmt.Errorf("invalid task configuration:\n%s", strings.Join(messages, "\n"))
+	if len(errors) > 0 {
+		return TaskValidationError{
+			Errors: errors,
+		}
 	}
 
 	return nil
 }
 
 func (config TaskConfig) validateOutputContainsNames() []string {
-	messages := []string{}
+	var messages []string
 
 	for i, output := range config.Outputs {
 		if output.Name == "" {
