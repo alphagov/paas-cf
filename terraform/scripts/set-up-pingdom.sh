@@ -1,6 +1,7 @@
 #!/bin/bash
 
 set -eu
+
 TERRAFORM_ACTION=${1}
 STATEFILE=pingdom-${AWS_ACCOUNT}.tfstate
 
@@ -19,8 +20,17 @@ trap 'rm -r "${PAAS_CF_DIR}/${WORKING_DIR}"' EXIT
 # Work in tmp dir to ensure there's no local state before we kick off terraform, it prioritises it
 cd "${PAAS_CF_DIR}"/"${WORKING_DIR}"
 
-# Update statefile
-terraform state replace-provider -state="$STATEFILE" -auto-approve  registry.terraform.io/-/pingdom registry.terraform.io/russellcardullo/pingdom
+# If the state file already exists, try migrate it
+if aws s3api head-object --bucket "gds-paas-${DEPLOY_ENV}-state" --key "${STATEFILE}" >/dev/null 2>&1; then
+  # Get state file
+  aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/${STATEFILE}" "${STATEFILE}"
+
+  # Update state file
+  terraform state replace-provider -state="$STATEFILE" -auto-approve  registry.terraform.io/-/pingdom registry.terraform.io/russellcardullo/pingdom
+
+  # Put state file
+  aws s3 cp "${STATEFILE}" "s3://gds-paas-${DEPLOY_ENV}-state/${STATEFILE}"
+fi
 
 # Initialise Terraform with remote state.
 terraform init \
