@@ -26,7 +26,7 @@
     {
       "peer_name": "dit-staging_lite",
       "account_id": "165562107270",
-      "vpc_id": "vpc-0fd43ade9a02ed7b0",
+      "vpc_id": "vpc-0507169f4a9c61bdb",
       "subnet_cidr": "172.16.16.0/22"
     },
     {
