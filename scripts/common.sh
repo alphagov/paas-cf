@@ -33,10 +33,18 @@ success() {
 
 check_aws_account_used() {
   required_account="${1}"
-  account_alias=$(aws iam list-account-aliases | grep gov-paas | tr -d '" ')
+  account_alias=$(aws iam list-account-aliases)
+  aws_exit_status=$?
+  if [ $aws_exit_status -ne 0 ]; then
+    echo
+    echo "Error talking to the AWS API. Check that you're using the VPN."
+    exit 1
+  fi
 
-  if [[ "${account_alias}" != "gov-paas-${required_account}" ]]; then
-    echo "Required AWS account is ${required_account}, but your aws-cli is using keys for ${account_alias}"
+  account_alias_name=$(echo "${account_alias}" | grep gov-paas | tr -d '" ')
+  if [[ "${account_alias_name}" != "gov-paas-${required_account}" ]]; then
+    echo
+    echo "Required AWS account is ${required_account}, but your aws-cli is using keys for ${account_alias_name}"
     exit 1
   fi
 }
