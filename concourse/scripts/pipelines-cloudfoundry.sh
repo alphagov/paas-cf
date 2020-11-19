@@ -69,15 +69,15 @@ fi
 
 case $DEPLOY_ENV in
 prod-lon)
-  # Flag of Greater London
-  BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Flag_of_the_City_of_London.svg/2880px-Flag_of_the_City_of_London.svg.png"
+  # London red phone boxes
+  BACKGROUND_IMAGE_URL="https://secretldn.com/wp-content/uploads/2017/02/london-classic-iconic-red-phoneboxes.jpg"
   ;;
 prod)
-  # Flag of the City of Dublin
-  BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/IRL_Dublin_flag.svg/1500px-IRL_Dublin_flag.svg.png"
+  # Irish clover
+  BACKGROUND_IMAGE_URL="https://www.irishcentral.com/uploads/article/20853/cropped_st_patricks_day_shamrocks___getty.jpg?t=1583226320"
   ;;
 stg-lon)
-  # The Minack Theatre in Cornwall
+  # The Minack Theatre stage in Cornwall
   BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/1/16/Minack_Theatre.jpg"
   ;;
 *)
