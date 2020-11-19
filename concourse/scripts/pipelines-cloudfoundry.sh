@@ -70,7 +70,7 @@ fi
 case $DEPLOY_ENV in
 prod-lon)
   # Flag of Greater London
-  BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/2/25/Flag_of_Greater_London.svg"
+  BACKGROUND_IMAGE_URL="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Flag_of_the_City_of_London.svg/2880px-Flag_of_the_City_of_London.svg.png"
   ;;
 prod)
   # Flag of the City of Dublin
