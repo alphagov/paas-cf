@@ -256,16 +256,34 @@ RSpec.describe "isolation_segments" do
     let(:instance_groups) { manifest.fetch("instance_groups") }
     let(:segs) { instance_groups.select { |i| i["name"] =~ /diego-cell-iso/ } }
 
-    %w[prod stg-lon].each do |env|
-      describe env do
-        let(:manifest) { manifest_for_env(env) }
+    describe "stg-lon" do
+      let(:manifest) { manifest_for_env("stg-lon") }
 
-        it "contains an empty egress restricted isolation segment" do
-          expect(segs.count).to eq(1)
-          seg = segs.first
-          expect(seg["instances"]).to eq(0)
-          expect(seg["jobs"].find { |j| j["name"] == "coredns" }).not_to be_nil
-        end
+      it "contains an empty egress restricted isolation segment" do
+        expect(segs.count).to eq(1)
+        seg = segs.first
+        expect(seg["instances"]).to eq(0)
+        expect(seg["jobs"].find { |j| j["name"] == "coredns" }).not_to be_nil
+      end
+    end
+
+    describe "prod" do
+      let(:manifest) { manifest_for_env("prod") }
+
+      it "contains an empty egress restricted isolation segment" do
+        expect(segs.count).to be >= 1
+        seg = segs.select { |s| s["name"] == "diego-cell-iso-seg-egress-restricted-1" }.first
+        expect(seg).not_to be_nil
+        expect(seg["instances"]).to eq(0)
+        expect(seg["jobs"].find { |j| j["name"] == "coredns" }).not_to be_nil
+      end
+
+      it "contains an egress-unrestricted isolation segment for GOV.UK Notify staging" do
+        expect(segs.count).to be >= 1
+        seg = segs.select { |s| s["name"] == "diego-cell-iso-seg-govuk-notify-staging" }.first
+        expect(seg).not_to be_nil
+        expect(seg["instances"]).to eq(12)
+        expect(seg["jobs"].find { |j| j["name"] == "coredns" }).to be_nil
       end
     end
 
