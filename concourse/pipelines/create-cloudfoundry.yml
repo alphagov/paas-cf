@@ -368,13 +368,13 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf13.19
+      branch: cf15.0
 
   - name: cf-smoke-tests-release
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-smoke-tests-release
-      tag_filter: "41.0.1"
+      tag_filter: "41.0.2"
       submodules:
       - "src/smoke_tests"
 
@@ -5198,7 +5198,7 @@ jobs:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
                 CF_PASS: ((cf_pass))
-    
+
     on_success:
       try:
         task: ping-cronitor-continuous-smoke-tests-completed
@@ -5210,7 +5210,7 @@ jobs:
           DEPLOY_ENV: ((deploy_env))
           CCI_BUILD_NUMBER: $BUILD_NAME
           CRONITOR_PING_MESSAGE: "Continuous+smoke+tests+job+has+completed+successfully"
-          
+
     on_failure:
       try:
         task: ping-cronitor-continuous-smoke-tests-failed
