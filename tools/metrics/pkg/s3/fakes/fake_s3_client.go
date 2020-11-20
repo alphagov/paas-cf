@@ -3855,15 +3855,16 @@ func (fake *FakeS3API) AbortMultipartUpload(arg1 *s3.AbortMultipartUploadInput) 
 	fake.abortMultipartUploadArgsForCall = append(fake.abortMultipartUploadArgsForCall, struct {
 		arg1 *s3.AbortMultipartUploadInput
 	}{arg1})
+	stub := fake.AbortMultipartUploadStub
+	fakeReturns := fake.abortMultipartUploadReturns
 	fake.recordInvocation("AbortMultipartUpload", []interface{}{arg1})
 	fake.abortMultipartUploadMutex.Unlock()
-	if fake.AbortMultipartUploadStub != nil {
-		return fake.AbortMultipartUploadStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.abortMultipartUploadReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3918,15 +3919,16 @@ func (fake *FakeS3API) AbortMultipartUploadRequest(arg1 *s3.AbortMultipartUpload
 	fake.abortMultipartUploadRequestArgsForCall = append(fake.abortMultipartUploadRequestArgsForCall, struct {
 		arg1 *s3.AbortMultipartUploadInput
 	}{arg1})
+	stub := fake.AbortMultipartUploadRequestStub
+	fakeReturns := fake.abortMultipartUploadRequestReturns
 	fake.recordInvocation("AbortMultipartUploadRequest", []interface{}{arg1})
 	fake.abortMultipartUploadRequestMutex.Unlock()
-	if fake.AbortMultipartUploadRequestStub != nil {
-		return fake.AbortMultipartUploadRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.abortMultipartUploadRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -3983,15 +3985,16 @@ func (fake *FakeS3API) AbortMultipartUploadWithContext(arg1 context.Context, arg
 		arg2 *s3.AbortMultipartUploadInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.AbortMultipartUploadWithContextStub
+	fakeReturns := fake.abortMultipartUploadWithContextReturns
 	fake.recordInvocation("AbortMultipartUploadWithContext", []interface{}{arg1, arg2, arg3})
 	fake.abortMultipartUploadWithContextMutex.Unlock()
-	if fake.AbortMultipartUploadWithContextStub != nil {
-		return fake.AbortMultipartUploadWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.abortMultipartUploadWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4046,15 +4049,16 @@ func (fake *FakeS3API) CompleteMultipartUpload(arg1 *s3.CompleteMultipartUploadI
 	fake.completeMultipartUploadArgsForCall = append(fake.completeMultipartUploadArgsForCall, struct {
 		arg1 *s3.CompleteMultipartUploadInput
 	}{arg1})
+	stub := fake.CompleteMultipartUploadStub
+	fakeReturns := fake.completeMultipartUploadReturns
 	fake.recordInvocation("CompleteMultipartUpload", []interface{}{arg1})
 	fake.completeMultipartUploadMutex.Unlock()
-	if fake.CompleteMultipartUploadStub != nil {
-		return fake.CompleteMultipartUploadStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.completeMultipartUploadReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4109,15 +4113,16 @@ func (fake *FakeS3API) CompleteMultipartUploadRequest(arg1 *s3.CompleteMultipart
 	fake.completeMultipartUploadRequestArgsForCall = append(fake.completeMultipartUploadRequestArgsForCall, struct {
 		arg1 *s3.CompleteMultipartUploadInput
 	}{arg1})
+	stub := fake.CompleteMultipartUploadRequestStub
+	fakeReturns := fake.completeMultipartUploadRequestReturns
 	fake.recordInvocation("CompleteMultipartUploadRequest", []interface{}{arg1})
 	fake.completeMultipartUploadRequestMutex.Unlock()
-	if fake.CompleteMultipartUploadRequestStub != nil {
-		return fake.CompleteMultipartUploadRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.completeMultipartUploadRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4174,15 +4179,16 @@ func (fake *FakeS3API) CompleteMultipartUploadWithContext(arg1 context.Context, 
 		arg2 *s3.CompleteMultipartUploadInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CompleteMultipartUploadWithContextStub
+	fakeReturns := fake.completeMultipartUploadWithContextReturns
 	fake.recordInvocation("CompleteMultipartUploadWithContext", []interface{}{arg1, arg2, arg3})
 	fake.completeMultipartUploadWithContextMutex.Unlock()
-	if fake.CompleteMultipartUploadWithContextStub != nil {
-		return fake.CompleteMultipartUploadWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.completeMultipartUploadWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4237,15 +4243,16 @@ func (fake *FakeS3API) CopyObject(arg1 *s3.CopyObjectInput) (*s3.CopyObjectOutpu
 	fake.copyObjectArgsForCall = append(fake.copyObjectArgsForCall, struct {
 		arg1 *s3.CopyObjectInput
 	}{arg1})
+	stub := fake.CopyObjectStub
+	fakeReturns := fake.copyObjectReturns
 	fake.recordInvocation("CopyObject", []interface{}{arg1})
 	fake.copyObjectMutex.Unlock()
-	if fake.CopyObjectStub != nil {
-		return fake.CopyObjectStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyObjectReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4300,15 +4307,16 @@ func (fake *FakeS3API) CopyObjectRequest(arg1 *s3.CopyObjectInput) (*request.Req
 	fake.copyObjectRequestArgsForCall = append(fake.copyObjectRequestArgsForCall, struct {
 		arg1 *s3.CopyObjectInput
 	}{arg1})
+	stub := fake.CopyObjectRequestStub
+	fakeReturns := fake.copyObjectRequestReturns
 	fake.recordInvocation("CopyObjectRequest", []interface{}{arg1})
 	fake.copyObjectRequestMutex.Unlock()
-	if fake.CopyObjectRequestStub != nil {
-		return fake.CopyObjectRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyObjectRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4365,15 +4373,16 @@ func (fake *FakeS3API) CopyObjectWithContext(arg1 context.Context, arg2 *s3.Copy
 		arg2 *s3.CopyObjectInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CopyObjectWithContextStub
+	fakeReturns := fake.copyObjectWithContextReturns
 	fake.recordInvocation("CopyObjectWithContext", []interface{}{arg1, arg2, arg3})
 	fake.copyObjectWithContextMutex.Unlock()
-	if fake.CopyObjectWithContextStub != nil {
-		return fake.CopyObjectWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.copyObjectWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4428,15 +4437,16 @@ func (fake *FakeS3API) CreateBucket(arg1 *s3.CreateBucketInput) (*s3.CreateBucke
 	fake.createBucketArgsForCall = append(fake.createBucketArgsForCall, struct {
 		arg1 *s3.CreateBucketInput
 	}{arg1})
+	stub := fake.CreateBucketStub
+	fakeReturns := fake.createBucketReturns
 	fake.recordInvocation("CreateBucket", []interface{}{arg1})
 	fake.createBucketMutex.Unlock()
-	if fake.CreateBucketStub != nil {
-		return fake.CreateBucketStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createBucketReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4491,15 +4501,16 @@ func (fake *FakeS3API) CreateBucketRequest(arg1 *s3.CreateBucketInput) (*request
 	fake.createBucketRequestArgsForCall = append(fake.createBucketRequestArgsForCall, struct {
 		arg1 *s3.CreateBucketInput
 	}{arg1})
+	stub := fake.CreateBucketRequestStub
+	fakeReturns := fake.createBucketRequestReturns
 	fake.recordInvocation("CreateBucketRequest", []interface{}{arg1})
 	fake.createBucketRequestMutex.Unlock()
-	if fake.CreateBucketRequestStub != nil {
-		return fake.CreateBucketRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createBucketRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4556,15 +4567,16 @@ func (fake *FakeS3API) CreateBucketWithContext(arg1 context.Context, arg2 *s3.Cr
 		arg2 *s3.CreateBucketInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateBucketWithContextStub
+	fakeReturns := fake.createBucketWithContextReturns
 	fake.recordInvocation("CreateBucketWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createBucketWithContextMutex.Unlock()
-	if fake.CreateBucketWithContextStub != nil {
-		return fake.CreateBucketWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createBucketWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4619,15 +4631,16 @@ func (fake *FakeS3API) CreateMultipartUpload(arg1 *s3.CreateMultipartUploadInput
 	fake.createMultipartUploadArgsForCall = append(fake.createMultipartUploadArgsForCall, struct {
 		arg1 *s3.CreateMultipartUploadInput
 	}{arg1})
+	stub := fake.CreateMultipartUploadStub
+	fakeReturns := fake.createMultipartUploadReturns
 	fake.recordInvocation("CreateMultipartUpload", []interface{}{arg1})
 	fake.createMultipartUploadMutex.Unlock()
-	if fake.CreateMultipartUploadStub != nil {
-		return fake.CreateMultipartUploadStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createMultipartUploadReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4682,15 +4695,16 @@ func (fake *FakeS3API) CreateMultipartUploadRequest(arg1 *s3.CreateMultipartUplo
 	fake.createMultipartUploadRequestArgsForCall = append(fake.createMultipartUploadRequestArgsForCall, struct {
 		arg1 *s3.CreateMultipartUploadInput
 	}{arg1})
+	stub := fake.CreateMultipartUploadRequestStub
+	fakeReturns := fake.createMultipartUploadRequestReturns
 	fake.recordInvocation("CreateMultipartUploadRequest", []interface{}{arg1})
 	fake.createMultipartUploadRequestMutex.Unlock()
-	if fake.CreateMultipartUploadRequestStub != nil {
-		return fake.CreateMultipartUploadRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createMultipartUploadRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4747,15 +4761,16 @@ func (fake *FakeS3API) CreateMultipartUploadWithContext(arg1 context.Context, ar
 		arg2 *s3.CreateMultipartUploadInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.CreateMultipartUploadWithContextStub
+	fakeReturns := fake.createMultipartUploadWithContextReturns
 	fake.recordInvocation("CreateMultipartUploadWithContext", []interface{}{arg1, arg2, arg3})
 	fake.createMultipartUploadWithContextMutex.Unlock()
-	if fake.CreateMultipartUploadWithContextStub != nil {
-		return fake.CreateMultipartUploadWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.createMultipartUploadWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4810,15 +4825,16 @@ func (fake *FakeS3API) DeleteBucket(arg1 *s3.DeleteBucketInput) (*s3.DeleteBucke
 	fake.deleteBucketArgsForCall = append(fake.deleteBucketArgsForCall, struct {
 		arg1 *s3.DeleteBucketInput
 	}{arg1})
+	stub := fake.DeleteBucketStub
+	fakeReturns := fake.deleteBucketReturns
 	fake.recordInvocation("DeleteBucket", []interface{}{arg1})
 	fake.deleteBucketMutex.Unlock()
-	if fake.DeleteBucketStub != nil {
-		return fake.DeleteBucketStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4873,15 +4889,16 @@ func (fake *FakeS3API) DeleteBucketAnalyticsConfiguration(arg1 *s3.DeleteBucketA
 	fake.deleteBucketAnalyticsConfigurationArgsForCall = append(fake.deleteBucketAnalyticsConfigurationArgsForCall, struct {
 		arg1 *s3.DeleteBucketAnalyticsConfigurationInput
 	}{arg1})
+	stub := fake.DeleteBucketAnalyticsConfigurationStub
+	fakeReturns := fake.deleteBucketAnalyticsConfigurationReturns
 	fake.recordInvocation("DeleteBucketAnalyticsConfiguration", []interface{}{arg1})
 	fake.deleteBucketAnalyticsConfigurationMutex.Unlock()
-	if fake.DeleteBucketAnalyticsConfigurationStub != nil {
-		return fake.DeleteBucketAnalyticsConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketAnalyticsConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -4936,15 +4953,16 @@ func (fake *FakeS3API) DeleteBucketAnalyticsConfigurationRequest(arg1 *s3.Delete
 	fake.deleteBucketAnalyticsConfigurationRequestArgsForCall = append(fake.deleteBucketAnalyticsConfigurationRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketAnalyticsConfigurationInput
 	}{arg1})
+	stub := fake.DeleteBucketAnalyticsConfigurationRequestStub
+	fakeReturns := fake.deleteBucketAnalyticsConfigurationRequestReturns
 	fake.recordInvocation("DeleteBucketAnalyticsConfigurationRequest", []interface{}{arg1})
 	fake.deleteBucketAnalyticsConfigurationRequestMutex.Unlock()
-	if fake.DeleteBucketAnalyticsConfigurationRequestStub != nil {
-		return fake.DeleteBucketAnalyticsConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketAnalyticsConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5001,15 +5019,16 @@ func (fake *FakeS3API) DeleteBucketAnalyticsConfigurationWithContext(arg1 contex
 		arg2 *s3.DeleteBucketAnalyticsConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketAnalyticsConfigurationWithContextStub
+	fakeReturns := fake.deleteBucketAnalyticsConfigurationWithContextReturns
 	fake.recordInvocation("DeleteBucketAnalyticsConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketAnalyticsConfigurationWithContextMutex.Unlock()
-	if fake.DeleteBucketAnalyticsConfigurationWithContextStub != nil {
-		return fake.DeleteBucketAnalyticsConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketAnalyticsConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5064,15 +5083,16 @@ func (fake *FakeS3API) DeleteBucketCors(arg1 *s3.DeleteBucketCorsInput) (*s3.Del
 	fake.deleteBucketCorsArgsForCall = append(fake.deleteBucketCorsArgsForCall, struct {
 		arg1 *s3.DeleteBucketCorsInput
 	}{arg1})
+	stub := fake.DeleteBucketCorsStub
+	fakeReturns := fake.deleteBucketCorsReturns
 	fake.recordInvocation("DeleteBucketCors", []interface{}{arg1})
 	fake.deleteBucketCorsMutex.Unlock()
-	if fake.DeleteBucketCorsStub != nil {
-		return fake.DeleteBucketCorsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketCorsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5127,15 +5147,16 @@ func (fake *FakeS3API) DeleteBucketCorsRequest(arg1 *s3.DeleteBucketCorsInput) (
 	fake.deleteBucketCorsRequestArgsForCall = append(fake.deleteBucketCorsRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketCorsInput
 	}{arg1})
+	stub := fake.DeleteBucketCorsRequestStub
+	fakeReturns := fake.deleteBucketCorsRequestReturns
 	fake.recordInvocation("DeleteBucketCorsRequest", []interface{}{arg1})
 	fake.deleteBucketCorsRequestMutex.Unlock()
-	if fake.DeleteBucketCorsRequestStub != nil {
-		return fake.DeleteBucketCorsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketCorsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5192,15 +5213,16 @@ func (fake *FakeS3API) DeleteBucketCorsWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.DeleteBucketCorsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketCorsWithContextStub
+	fakeReturns := fake.deleteBucketCorsWithContextReturns
 	fake.recordInvocation("DeleteBucketCorsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketCorsWithContextMutex.Unlock()
-	if fake.DeleteBucketCorsWithContextStub != nil {
-		return fake.DeleteBucketCorsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketCorsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5255,15 +5277,16 @@ func (fake *FakeS3API) DeleteBucketEncryption(arg1 *s3.DeleteBucketEncryptionInp
 	fake.deleteBucketEncryptionArgsForCall = append(fake.deleteBucketEncryptionArgsForCall, struct {
 		arg1 *s3.DeleteBucketEncryptionInput
 	}{arg1})
+	stub := fake.DeleteBucketEncryptionStub
+	fakeReturns := fake.deleteBucketEncryptionReturns
 	fake.recordInvocation("DeleteBucketEncryption", []interface{}{arg1})
 	fake.deleteBucketEncryptionMutex.Unlock()
-	if fake.DeleteBucketEncryptionStub != nil {
-		return fake.DeleteBucketEncryptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketEncryptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5318,15 +5341,16 @@ func (fake *FakeS3API) DeleteBucketEncryptionRequest(arg1 *s3.DeleteBucketEncryp
 	fake.deleteBucketEncryptionRequestArgsForCall = append(fake.deleteBucketEncryptionRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketEncryptionInput
 	}{arg1})
+	stub := fake.DeleteBucketEncryptionRequestStub
+	fakeReturns := fake.deleteBucketEncryptionRequestReturns
 	fake.recordInvocation("DeleteBucketEncryptionRequest", []interface{}{arg1})
 	fake.deleteBucketEncryptionRequestMutex.Unlock()
-	if fake.DeleteBucketEncryptionRequestStub != nil {
-		return fake.DeleteBucketEncryptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketEncryptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5383,15 +5407,16 @@ func (fake *FakeS3API) DeleteBucketEncryptionWithContext(arg1 context.Context, a
 		arg2 *s3.DeleteBucketEncryptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketEncryptionWithContextStub
+	fakeReturns := fake.deleteBucketEncryptionWithContextReturns
 	fake.recordInvocation("DeleteBucketEncryptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketEncryptionWithContextMutex.Unlock()
-	if fake.DeleteBucketEncryptionWithContextStub != nil {
-		return fake.DeleteBucketEncryptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketEncryptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5446,15 +5471,16 @@ func (fake *FakeS3API) DeleteBucketInventoryConfiguration(arg1 *s3.DeleteBucketI
 	fake.deleteBucketInventoryConfigurationArgsForCall = append(fake.deleteBucketInventoryConfigurationArgsForCall, struct {
 		arg1 *s3.DeleteBucketInventoryConfigurationInput
 	}{arg1})
+	stub := fake.DeleteBucketInventoryConfigurationStub
+	fakeReturns := fake.deleteBucketInventoryConfigurationReturns
 	fake.recordInvocation("DeleteBucketInventoryConfiguration", []interface{}{arg1})
 	fake.deleteBucketInventoryConfigurationMutex.Unlock()
-	if fake.DeleteBucketInventoryConfigurationStub != nil {
-		return fake.DeleteBucketInventoryConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketInventoryConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5509,15 +5535,16 @@ func (fake *FakeS3API) DeleteBucketInventoryConfigurationRequest(arg1 *s3.Delete
 	fake.deleteBucketInventoryConfigurationRequestArgsForCall = append(fake.deleteBucketInventoryConfigurationRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketInventoryConfigurationInput
 	}{arg1})
+	stub := fake.DeleteBucketInventoryConfigurationRequestStub
+	fakeReturns := fake.deleteBucketInventoryConfigurationRequestReturns
 	fake.recordInvocation("DeleteBucketInventoryConfigurationRequest", []interface{}{arg1})
 	fake.deleteBucketInventoryConfigurationRequestMutex.Unlock()
-	if fake.DeleteBucketInventoryConfigurationRequestStub != nil {
-		return fake.DeleteBucketInventoryConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketInventoryConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5574,15 +5601,16 @@ func (fake *FakeS3API) DeleteBucketInventoryConfigurationWithContext(arg1 contex
 		arg2 *s3.DeleteBucketInventoryConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketInventoryConfigurationWithContextStub
+	fakeReturns := fake.deleteBucketInventoryConfigurationWithContextReturns
 	fake.recordInvocation("DeleteBucketInventoryConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketInventoryConfigurationWithContextMutex.Unlock()
-	if fake.DeleteBucketInventoryConfigurationWithContextStub != nil {
-		return fake.DeleteBucketInventoryConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketInventoryConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5637,15 +5665,16 @@ func (fake *FakeS3API) DeleteBucketLifecycle(arg1 *s3.DeleteBucketLifecycleInput
 	fake.deleteBucketLifecycleArgsForCall = append(fake.deleteBucketLifecycleArgsForCall, struct {
 		arg1 *s3.DeleteBucketLifecycleInput
 	}{arg1})
+	stub := fake.DeleteBucketLifecycleStub
+	fakeReturns := fake.deleteBucketLifecycleReturns
 	fake.recordInvocation("DeleteBucketLifecycle", []interface{}{arg1})
 	fake.deleteBucketLifecycleMutex.Unlock()
-	if fake.DeleteBucketLifecycleStub != nil {
-		return fake.DeleteBucketLifecycleStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketLifecycleReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5700,15 +5729,16 @@ func (fake *FakeS3API) DeleteBucketLifecycleRequest(arg1 *s3.DeleteBucketLifecyc
 	fake.deleteBucketLifecycleRequestArgsForCall = append(fake.deleteBucketLifecycleRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketLifecycleInput
 	}{arg1})
+	stub := fake.DeleteBucketLifecycleRequestStub
+	fakeReturns := fake.deleteBucketLifecycleRequestReturns
 	fake.recordInvocation("DeleteBucketLifecycleRequest", []interface{}{arg1})
 	fake.deleteBucketLifecycleRequestMutex.Unlock()
-	if fake.DeleteBucketLifecycleRequestStub != nil {
-		return fake.DeleteBucketLifecycleRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketLifecycleRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5765,15 +5795,16 @@ func (fake *FakeS3API) DeleteBucketLifecycleWithContext(arg1 context.Context, ar
 		arg2 *s3.DeleteBucketLifecycleInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketLifecycleWithContextStub
+	fakeReturns := fake.deleteBucketLifecycleWithContextReturns
 	fake.recordInvocation("DeleteBucketLifecycleWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketLifecycleWithContextMutex.Unlock()
-	if fake.DeleteBucketLifecycleWithContextStub != nil {
-		return fake.DeleteBucketLifecycleWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketLifecycleWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5828,15 +5859,16 @@ func (fake *FakeS3API) DeleteBucketMetricsConfiguration(arg1 *s3.DeleteBucketMet
 	fake.deleteBucketMetricsConfigurationArgsForCall = append(fake.deleteBucketMetricsConfigurationArgsForCall, struct {
 		arg1 *s3.DeleteBucketMetricsConfigurationInput
 	}{arg1})
+	stub := fake.DeleteBucketMetricsConfigurationStub
+	fakeReturns := fake.deleteBucketMetricsConfigurationReturns
 	fake.recordInvocation("DeleteBucketMetricsConfiguration", []interface{}{arg1})
 	fake.deleteBucketMetricsConfigurationMutex.Unlock()
-	if fake.DeleteBucketMetricsConfigurationStub != nil {
-		return fake.DeleteBucketMetricsConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketMetricsConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5891,15 +5923,16 @@ func (fake *FakeS3API) DeleteBucketMetricsConfigurationRequest(arg1 *s3.DeleteBu
 	fake.deleteBucketMetricsConfigurationRequestArgsForCall = append(fake.deleteBucketMetricsConfigurationRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketMetricsConfigurationInput
 	}{arg1})
+	stub := fake.DeleteBucketMetricsConfigurationRequestStub
+	fakeReturns := fake.deleteBucketMetricsConfigurationRequestReturns
 	fake.recordInvocation("DeleteBucketMetricsConfigurationRequest", []interface{}{arg1})
 	fake.deleteBucketMetricsConfigurationRequestMutex.Unlock()
-	if fake.DeleteBucketMetricsConfigurationRequestStub != nil {
-		return fake.DeleteBucketMetricsConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketMetricsConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -5956,15 +5989,16 @@ func (fake *FakeS3API) DeleteBucketMetricsConfigurationWithContext(arg1 context.
 		arg2 *s3.DeleteBucketMetricsConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketMetricsConfigurationWithContextStub
+	fakeReturns := fake.deleteBucketMetricsConfigurationWithContextReturns
 	fake.recordInvocation("DeleteBucketMetricsConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketMetricsConfigurationWithContextMutex.Unlock()
-	if fake.DeleteBucketMetricsConfigurationWithContextStub != nil {
-		return fake.DeleteBucketMetricsConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketMetricsConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6019,15 +6053,16 @@ func (fake *FakeS3API) DeleteBucketPolicy(arg1 *s3.DeleteBucketPolicyInput) (*s3
 	fake.deleteBucketPolicyArgsForCall = append(fake.deleteBucketPolicyArgsForCall, struct {
 		arg1 *s3.DeleteBucketPolicyInput
 	}{arg1})
+	stub := fake.DeleteBucketPolicyStub
+	fakeReturns := fake.deleteBucketPolicyReturns
 	fake.recordInvocation("DeleteBucketPolicy", []interface{}{arg1})
 	fake.deleteBucketPolicyMutex.Unlock()
-	if fake.DeleteBucketPolicyStub != nil {
-		return fake.DeleteBucketPolicyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketPolicyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6082,15 +6117,16 @@ func (fake *FakeS3API) DeleteBucketPolicyRequest(arg1 *s3.DeleteBucketPolicyInpu
 	fake.deleteBucketPolicyRequestArgsForCall = append(fake.deleteBucketPolicyRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketPolicyInput
 	}{arg1})
+	stub := fake.DeleteBucketPolicyRequestStub
+	fakeReturns := fake.deleteBucketPolicyRequestReturns
 	fake.recordInvocation("DeleteBucketPolicyRequest", []interface{}{arg1})
 	fake.deleteBucketPolicyRequestMutex.Unlock()
-	if fake.DeleteBucketPolicyRequestStub != nil {
-		return fake.DeleteBucketPolicyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketPolicyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6147,15 +6183,16 @@ func (fake *FakeS3API) DeleteBucketPolicyWithContext(arg1 context.Context, arg2 
 		arg2 *s3.DeleteBucketPolicyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketPolicyWithContextStub
+	fakeReturns := fake.deleteBucketPolicyWithContextReturns
 	fake.recordInvocation("DeleteBucketPolicyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketPolicyWithContextMutex.Unlock()
-	if fake.DeleteBucketPolicyWithContextStub != nil {
-		return fake.DeleteBucketPolicyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketPolicyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6210,15 +6247,16 @@ func (fake *FakeS3API) DeleteBucketReplication(arg1 *s3.DeleteBucketReplicationI
 	fake.deleteBucketReplicationArgsForCall = append(fake.deleteBucketReplicationArgsForCall, struct {
 		arg1 *s3.DeleteBucketReplicationInput
 	}{arg1})
+	stub := fake.DeleteBucketReplicationStub
+	fakeReturns := fake.deleteBucketReplicationReturns
 	fake.recordInvocation("DeleteBucketReplication", []interface{}{arg1})
 	fake.deleteBucketReplicationMutex.Unlock()
-	if fake.DeleteBucketReplicationStub != nil {
-		return fake.DeleteBucketReplicationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketReplicationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6273,15 +6311,16 @@ func (fake *FakeS3API) DeleteBucketReplicationRequest(arg1 *s3.DeleteBucketRepli
 	fake.deleteBucketReplicationRequestArgsForCall = append(fake.deleteBucketReplicationRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketReplicationInput
 	}{arg1})
+	stub := fake.DeleteBucketReplicationRequestStub
+	fakeReturns := fake.deleteBucketReplicationRequestReturns
 	fake.recordInvocation("DeleteBucketReplicationRequest", []interface{}{arg1})
 	fake.deleteBucketReplicationRequestMutex.Unlock()
-	if fake.DeleteBucketReplicationRequestStub != nil {
-		return fake.DeleteBucketReplicationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketReplicationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6338,15 +6377,16 @@ func (fake *FakeS3API) DeleteBucketReplicationWithContext(arg1 context.Context, 
 		arg2 *s3.DeleteBucketReplicationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketReplicationWithContextStub
+	fakeReturns := fake.deleteBucketReplicationWithContextReturns
 	fake.recordInvocation("DeleteBucketReplicationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketReplicationWithContextMutex.Unlock()
-	if fake.DeleteBucketReplicationWithContextStub != nil {
-		return fake.DeleteBucketReplicationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketReplicationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6401,15 +6441,16 @@ func (fake *FakeS3API) DeleteBucketRequest(arg1 *s3.DeleteBucketInput) (*request
 	fake.deleteBucketRequestArgsForCall = append(fake.deleteBucketRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketInput
 	}{arg1})
+	stub := fake.DeleteBucketRequestStub
+	fakeReturns := fake.deleteBucketRequestReturns
 	fake.recordInvocation("DeleteBucketRequest", []interface{}{arg1})
 	fake.deleteBucketRequestMutex.Unlock()
-	if fake.DeleteBucketRequestStub != nil {
-		return fake.DeleteBucketRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6464,15 +6505,16 @@ func (fake *FakeS3API) DeleteBucketTagging(arg1 *s3.DeleteBucketTaggingInput) (*
 	fake.deleteBucketTaggingArgsForCall = append(fake.deleteBucketTaggingArgsForCall, struct {
 		arg1 *s3.DeleteBucketTaggingInput
 	}{arg1})
+	stub := fake.DeleteBucketTaggingStub
+	fakeReturns := fake.deleteBucketTaggingReturns
 	fake.recordInvocation("DeleteBucketTagging", []interface{}{arg1})
 	fake.deleteBucketTaggingMutex.Unlock()
-	if fake.DeleteBucketTaggingStub != nil {
-		return fake.DeleteBucketTaggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketTaggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6527,15 +6569,16 @@ func (fake *FakeS3API) DeleteBucketTaggingRequest(arg1 *s3.DeleteBucketTaggingIn
 	fake.deleteBucketTaggingRequestArgsForCall = append(fake.deleteBucketTaggingRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketTaggingInput
 	}{arg1})
+	stub := fake.DeleteBucketTaggingRequestStub
+	fakeReturns := fake.deleteBucketTaggingRequestReturns
 	fake.recordInvocation("DeleteBucketTaggingRequest", []interface{}{arg1})
 	fake.deleteBucketTaggingRequestMutex.Unlock()
-	if fake.DeleteBucketTaggingRequestStub != nil {
-		return fake.DeleteBucketTaggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketTaggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6592,15 +6635,16 @@ func (fake *FakeS3API) DeleteBucketTaggingWithContext(arg1 context.Context, arg2
 		arg2 *s3.DeleteBucketTaggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketTaggingWithContextStub
+	fakeReturns := fake.deleteBucketTaggingWithContextReturns
 	fake.recordInvocation("DeleteBucketTaggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketTaggingWithContextMutex.Unlock()
-	if fake.DeleteBucketTaggingWithContextStub != nil {
-		return fake.DeleteBucketTaggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketTaggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6655,15 +6699,16 @@ func (fake *FakeS3API) DeleteBucketWebsite(arg1 *s3.DeleteBucketWebsiteInput) (*
 	fake.deleteBucketWebsiteArgsForCall = append(fake.deleteBucketWebsiteArgsForCall, struct {
 		arg1 *s3.DeleteBucketWebsiteInput
 	}{arg1})
+	stub := fake.DeleteBucketWebsiteStub
+	fakeReturns := fake.deleteBucketWebsiteReturns
 	fake.recordInvocation("DeleteBucketWebsite", []interface{}{arg1})
 	fake.deleteBucketWebsiteMutex.Unlock()
-	if fake.DeleteBucketWebsiteStub != nil {
-		return fake.DeleteBucketWebsiteStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketWebsiteReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6718,15 +6763,16 @@ func (fake *FakeS3API) DeleteBucketWebsiteRequest(arg1 *s3.DeleteBucketWebsiteIn
 	fake.deleteBucketWebsiteRequestArgsForCall = append(fake.deleteBucketWebsiteRequestArgsForCall, struct {
 		arg1 *s3.DeleteBucketWebsiteInput
 	}{arg1})
+	stub := fake.DeleteBucketWebsiteRequestStub
+	fakeReturns := fake.deleteBucketWebsiteRequestReturns
 	fake.recordInvocation("DeleteBucketWebsiteRequest", []interface{}{arg1})
 	fake.deleteBucketWebsiteRequestMutex.Unlock()
-	if fake.DeleteBucketWebsiteRequestStub != nil {
-		return fake.DeleteBucketWebsiteRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketWebsiteRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6783,15 +6829,16 @@ func (fake *FakeS3API) DeleteBucketWebsiteWithContext(arg1 context.Context, arg2
 		arg2 *s3.DeleteBucketWebsiteInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketWebsiteWithContextStub
+	fakeReturns := fake.deleteBucketWebsiteWithContextReturns
 	fake.recordInvocation("DeleteBucketWebsiteWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketWebsiteWithContextMutex.Unlock()
-	if fake.DeleteBucketWebsiteWithContextStub != nil {
-		return fake.DeleteBucketWebsiteWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketWebsiteWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6848,15 +6895,16 @@ func (fake *FakeS3API) DeleteBucketWithContext(arg1 context.Context, arg2 *s3.De
 		arg2 *s3.DeleteBucketInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteBucketWithContextStub
+	fakeReturns := fake.deleteBucketWithContextReturns
 	fake.recordInvocation("DeleteBucketWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteBucketWithContextMutex.Unlock()
-	if fake.DeleteBucketWithContextStub != nil {
-		return fake.DeleteBucketWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteBucketWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6911,15 +6959,16 @@ func (fake *FakeS3API) DeleteObject(arg1 *s3.DeleteObjectInput) (*s3.DeleteObjec
 	fake.deleteObjectArgsForCall = append(fake.deleteObjectArgsForCall, struct {
 		arg1 *s3.DeleteObjectInput
 	}{arg1})
+	stub := fake.DeleteObjectStub
+	fakeReturns := fake.deleteObjectReturns
 	fake.recordInvocation("DeleteObject", []interface{}{arg1})
 	fake.deleteObjectMutex.Unlock()
-	if fake.DeleteObjectStub != nil {
-		return fake.DeleteObjectStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -6974,15 +7023,16 @@ func (fake *FakeS3API) DeleteObjectRequest(arg1 *s3.DeleteObjectInput) (*request
 	fake.deleteObjectRequestArgsForCall = append(fake.deleteObjectRequestArgsForCall, struct {
 		arg1 *s3.DeleteObjectInput
 	}{arg1})
+	stub := fake.DeleteObjectRequestStub
+	fakeReturns := fake.deleteObjectRequestReturns
 	fake.recordInvocation("DeleteObjectRequest", []interface{}{arg1})
 	fake.deleteObjectRequestMutex.Unlock()
-	if fake.DeleteObjectRequestStub != nil {
-		return fake.DeleteObjectRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7037,15 +7087,16 @@ func (fake *FakeS3API) DeleteObjectTagging(arg1 *s3.DeleteObjectTaggingInput) (*
 	fake.deleteObjectTaggingArgsForCall = append(fake.deleteObjectTaggingArgsForCall, struct {
 		arg1 *s3.DeleteObjectTaggingInput
 	}{arg1})
+	stub := fake.DeleteObjectTaggingStub
+	fakeReturns := fake.deleteObjectTaggingReturns
 	fake.recordInvocation("DeleteObjectTagging", []interface{}{arg1})
 	fake.deleteObjectTaggingMutex.Unlock()
-	if fake.DeleteObjectTaggingStub != nil {
-		return fake.DeleteObjectTaggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectTaggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7100,15 +7151,16 @@ func (fake *FakeS3API) DeleteObjectTaggingRequest(arg1 *s3.DeleteObjectTaggingIn
 	fake.deleteObjectTaggingRequestArgsForCall = append(fake.deleteObjectTaggingRequestArgsForCall, struct {
 		arg1 *s3.DeleteObjectTaggingInput
 	}{arg1})
+	stub := fake.DeleteObjectTaggingRequestStub
+	fakeReturns := fake.deleteObjectTaggingRequestReturns
 	fake.recordInvocation("DeleteObjectTaggingRequest", []interface{}{arg1})
 	fake.deleteObjectTaggingRequestMutex.Unlock()
-	if fake.DeleteObjectTaggingRequestStub != nil {
-		return fake.DeleteObjectTaggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectTaggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7165,15 +7217,16 @@ func (fake *FakeS3API) DeleteObjectTaggingWithContext(arg1 context.Context, arg2
 		arg2 *s3.DeleteObjectTaggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteObjectTaggingWithContextStub
+	fakeReturns := fake.deleteObjectTaggingWithContextReturns
 	fake.recordInvocation("DeleteObjectTaggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteObjectTaggingWithContextMutex.Unlock()
-	if fake.DeleteObjectTaggingWithContextStub != nil {
-		return fake.DeleteObjectTaggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectTaggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7230,15 +7283,16 @@ func (fake *FakeS3API) DeleteObjectWithContext(arg1 context.Context, arg2 *s3.De
 		arg2 *s3.DeleteObjectInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteObjectWithContextStub
+	fakeReturns := fake.deleteObjectWithContextReturns
 	fake.recordInvocation("DeleteObjectWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteObjectWithContextMutex.Unlock()
-	if fake.DeleteObjectWithContextStub != nil {
-		return fake.DeleteObjectWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7293,15 +7347,16 @@ func (fake *FakeS3API) DeleteObjects(arg1 *s3.DeleteObjectsInput) (*s3.DeleteObj
 	fake.deleteObjectsArgsForCall = append(fake.deleteObjectsArgsForCall, struct {
 		arg1 *s3.DeleteObjectsInput
 	}{arg1})
+	stub := fake.DeleteObjectsStub
+	fakeReturns := fake.deleteObjectsReturns
 	fake.recordInvocation("DeleteObjects", []interface{}{arg1})
 	fake.deleteObjectsMutex.Unlock()
-	if fake.DeleteObjectsStub != nil {
-		return fake.DeleteObjectsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7356,15 +7411,16 @@ func (fake *FakeS3API) DeleteObjectsRequest(arg1 *s3.DeleteObjectsInput) (*reque
 	fake.deleteObjectsRequestArgsForCall = append(fake.deleteObjectsRequestArgsForCall, struct {
 		arg1 *s3.DeleteObjectsInput
 	}{arg1})
+	stub := fake.DeleteObjectsRequestStub
+	fakeReturns := fake.deleteObjectsRequestReturns
 	fake.recordInvocation("DeleteObjectsRequest", []interface{}{arg1})
 	fake.deleteObjectsRequestMutex.Unlock()
-	if fake.DeleteObjectsRequestStub != nil {
-		return fake.DeleteObjectsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7421,15 +7477,16 @@ func (fake *FakeS3API) DeleteObjectsWithContext(arg1 context.Context, arg2 *s3.D
 		arg2 *s3.DeleteObjectsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeleteObjectsWithContextStub
+	fakeReturns := fake.deleteObjectsWithContextReturns
 	fake.recordInvocation("DeleteObjectsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deleteObjectsWithContextMutex.Unlock()
-	if fake.DeleteObjectsWithContextStub != nil {
-		return fake.DeleteObjectsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deleteObjectsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7484,15 +7541,16 @@ func (fake *FakeS3API) DeletePublicAccessBlock(arg1 *s3.DeletePublicAccessBlockI
 	fake.deletePublicAccessBlockArgsForCall = append(fake.deletePublicAccessBlockArgsForCall, struct {
 		arg1 *s3.DeletePublicAccessBlockInput
 	}{arg1})
+	stub := fake.DeletePublicAccessBlockStub
+	fakeReturns := fake.deletePublicAccessBlockReturns
 	fake.recordInvocation("DeletePublicAccessBlock", []interface{}{arg1})
 	fake.deletePublicAccessBlockMutex.Unlock()
-	if fake.DeletePublicAccessBlockStub != nil {
-		return fake.DeletePublicAccessBlockStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deletePublicAccessBlockReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7547,15 +7605,16 @@ func (fake *FakeS3API) DeletePublicAccessBlockRequest(arg1 *s3.DeletePublicAcces
 	fake.deletePublicAccessBlockRequestArgsForCall = append(fake.deletePublicAccessBlockRequestArgsForCall, struct {
 		arg1 *s3.DeletePublicAccessBlockInput
 	}{arg1})
+	stub := fake.DeletePublicAccessBlockRequestStub
+	fakeReturns := fake.deletePublicAccessBlockRequestReturns
 	fake.recordInvocation("DeletePublicAccessBlockRequest", []interface{}{arg1})
 	fake.deletePublicAccessBlockRequestMutex.Unlock()
-	if fake.DeletePublicAccessBlockRequestStub != nil {
-		return fake.DeletePublicAccessBlockRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deletePublicAccessBlockRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7612,15 +7671,16 @@ func (fake *FakeS3API) DeletePublicAccessBlockWithContext(arg1 context.Context, 
 		arg2 *s3.DeletePublicAccessBlockInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.DeletePublicAccessBlockWithContextStub
+	fakeReturns := fake.deletePublicAccessBlockWithContextReturns
 	fake.recordInvocation("DeletePublicAccessBlockWithContext", []interface{}{arg1, arg2, arg3})
 	fake.deletePublicAccessBlockWithContextMutex.Unlock()
-	if fake.DeletePublicAccessBlockWithContextStub != nil {
-		return fake.DeletePublicAccessBlockWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.deletePublicAccessBlockWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7675,15 +7735,16 @@ func (fake *FakeS3API) GetBucketAccelerateConfiguration(arg1 *s3.GetBucketAccele
 	fake.getBucketAccelerateConfigurationArgsForCall = append(fake.getBucketAccelerateConfigurationArgsForCall, struct {
 		arg1 *s3.GetBucketAccelerateConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketAccelerateConfigurationStub
+	fakeReturns := fake.getBucketAccelerateConfigurationReturns
 	fake.recordInvocation("GetBucketAccelerateConfiguration", []interface{}{arg1})
 	fake.getBucketAccelerateConfigurationMutex.Unlock()
-	if fake.GetBucketAccelerateConfigurationStub != nil {
-		return fake.GetBucketAccelerateConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAccelerateConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7738,15 +7799,16 @@ func (fake *FakeS3API) GetBucketAccelerateConfigurationRequest(arg1 *s3.GetBucke
 	fake.getBucketAccelerateConfigurationRequestArgsForCall = append(fake.getBucketAccelerateConfigurationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketAccelerateConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketAccelerateConfigurationRequestStub
+	fakeReturns := fake.getBucketAccelerateConfigurationRequestReturns
 	fake.recordInvocation("GetBucketAccelerateConfigurationRequest", []interface{}{arg1})
 	fake.getBucketAccelerateConfigurationRequestMutex.Unlock()
-	if fake.GetBucketAccelerateConfigurationRequestStub != nil {
-		return fake.GetBucketAccelerateConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAccelerateConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7803,15 +7865,16 @@ func (fake *FakeS3API) GetBucketAccelerateConfigurationWithContext(arg1 context.
 		arg2 *s3.GetBucketAccelerateConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketAccelerateConfigurationWithContextStub
+	fakeReturns := fake.getBucketAccelerateConfigurationWithContextReturns
 	fake.recordInvocation("GetBucketAccelerateConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketAccelerateConfigurationWithContextMutex.Unlock()
-	if fake.GetBucketAccelerateConfigurationWithContextStub != nil {
-		return fake.GetBucketAccelerateConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAccelerateConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7866,15 +7929,16 @@ func (fake *FakeS3API) GetBucketAcl(arg1 *s3.GetBucketAclInput) (*s3.GetBucketAc
 	fake.getBucketAclArgsForCall = append(fake.getBucketAclArgsForCall, struct {
 		arg1 *s3.GetBucketAclInput
 	}{arg1})
+	stub := fake.GetBucketAclStub
+	fakeReturns := fake.getBucketAclReturns
 	fake.recordInvocation("GetBucketAcl", []interface{}{arg1})
 	fake.getBucketAclMutex.Unlock()
-	if fake.GetBucketAclStub != nil {
-		return fake.GetBucketAclStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAclReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7929,15 +7993,16 @@ func (fake *FakeS3API) GetBucketAclRequest(arg1 *s3.GetBucketAclInput) (*request
 	fake.getBucketAclRequestArgsForCall = append(fake.getBucketAclRequestArgsForCall, struct {
 		arg1 *s3.GetBucketAclInput
 	}{arg1})
+	stub := fake.GetBucketAclRequestStub
+	fakeReturns := fake.getBucketAclRequestReturns
 	fake.recordInvocation("GetBucketAclRequest", []interface{}{arg1})
 	fake.getBucketAclRequestMutex.Unlock()
-	if fake.GetBucketAclRequestStub != nil {
-		return fake.GetBucketAclRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAclRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -7994,15 +8059,16 @@ func (fake *FakeS3API) GetBucketAclWithContext(arg1 context.Context, arg2 *s3.Ge
 		arg2 *s3.GetBucketAclInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketAclWithContextStub
+	fakeReturns := fake.getBucketAclWithContextReturns
 	fake.recordInvocation("GetBucketAclWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketAclWithContextMutex.Unlock()
-	if fake.GetBucketAclWithContextStub != nil {
-		return fake.GetBucketAclWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAclWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8057,15 +8123,16 @@ func (fake *FakeS3API) GetBucketAnalyticsConfiguration(arg1 *s3.GetBucketAnalyti
 	fake.getBucketAnalyticsConfigurationArgsForCall = append(fake.getBucketAnalyticsConfigurationArgsForCall, struct {
 		arg1 *s3.GetBucketAnalyticsConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketAnalyticsConfigurationStub
+	fakeReturns := fake.getBucketAnalyticsConfigurationReturns
 	fake.recordInvocation("GetBucketAnalyticsConfiguration", []interface{}{arg1})
 	fake.getBucketAnalyticsConfigurationMutex.Unlock()
-	if fake.GetBucketAnalyticsConfigurationStub != nil {
-		return fake.GetBucketAnalyticsConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAnalyticsConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8120,15 +8187,16 @@ func (fake *FakeS3API) GetBucketAnalyticsConfigurationRequest(arg1 *s3.GetBucket
 	fake.getBucketAnalyticsConfigurationRequestArgsForCall = append(fake.getBucketAnalyticsConfigurationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketAnalyticsConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketAnalyticsConfigurationRequestStub
+	fakeReturns := fake.getBucketAnalyticsConfigurationRequestReturns
 	fake.recordInvocation("GetBucketAnalyticsConfigurationRequest", []interface{}{arg1})
 	fake.getBucketAnalyticsConfigurationRequestMutex.Unlock()
-	if fake.GetBucketAnalyticsConfigurationRequestStub != nil {
-		return fake.GetBucketAnalyticsConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAnalyticsConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8185,15 +8253,16 @@ func (fake *FakeS3API) GetBucketAnalyticsConfigurationWithContext(arg1 context.C
 		arg2 *s3.GetBucketAnalyticsConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketAnalyticsConfigurationWithContextStub
+	fakeReturns := fake.getBucketAnalyticsConfigurationWithContextReturns
 	fake.recordInvocation("GetBucketAnalyticsConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketAnalyticsConfigurationWithContextMutex.Unlock()
-	if fake.GetBucketAnalyticsConfigurationWithContextStub != nil {
-		return fake.GetBucketAnalyticsConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketAnalyticsConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8248,15 +8317,16 @@ func (fake *FakeS3API) GetBucketCors(arg1 *s3.GetBucketCorsInput) (*s3.GetBucket
 	fake.getBucketCorsArgsForCall = append(fake.getBucketCorsArgsForCall, struct {
 		arg1 *s3.GetBucketCorsInput
 	}{arg1})
+	stub := fake.GetBucketCorsStub
+	fakeReturns := fake.getBucketCorsReturns
 	fake.recordInvocation("GetBucketCors", []interface{}{arg1})
 	fake.getBucketCorsMutex.Unlock()
-	if fake.GetBucketCorsStub != nil {
-		return fake.GetBucketCorsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketCorsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8311,15 +8381,16 @@ func (fake *FakeS3API) GetBucketCorsRequest(arg1 *s3.GetBucketCorsInput) (*reque
 	fake.getBucketCorsRequestArgsForCall = append(fake.getBucketCorsRequestArgsForCall, struct {
 		arg1 *s3.GetBucketCorsInput
 	}{arg1})
+	stub := fake.GetBucketCorsRequestStub
+	fakeReturns := fake.getBucketCorsRequestReturns
 	fake.recordInvocation("GetBucketCorsRequest", []interface{}{arg1})
 	fake.getBucketCorsRequestMutex.Unlock()
-	if fake.GetBucketCorsRequestStub != nil {
-		return fake.GetBucketCorsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketCorsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8376,15 +8447,16 @@ func (fake *FakeS3API) GetBucketCorsWithContext(arg1 context.Context, arg2 *s3.G
 		arg2 *s3.GetBucketCorsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketCorsWithContextStub
+	fakeReturns := fake.getBucketCorsWithContextReturns
 	fake.recordInvocation("GetBucketCorsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketCorsWithContextMutex.Unlock()
-	if fake.GetBucketCorsWithContextStub != nil {
-		return fake.GetBucketCorsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketCorsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8439,15 +8511,16 @@ func (fake *FakeS3API) GetBucketEncryption(arg1 *s3.GetBucketEncryptionInput) (*
 	fake.getBucketEncryptionArgsForCall = append(fake.getBucketEncryptionArgsForCall, struct {
 		arg1 *s3.GetBucketEncryptionInput
 	}{arg1})
+	stub := fake.GetBucketEncryptionStub
+	fakeReturns := fake.getBucketEncryptionReturns
 	fake.recordInvocation("GetBucketEncryption", []interface{}{arg1})
 	fake.getBucketEncryptionMutex.Unlock()
-	if fake.GetBucketEncryptionStub != nil {
-		return fake.GetBucketEncryptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketEncryptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8502,15 +8575,16 @@ func (fake *FakeS3API) GetBucketEncryptionRequest(arg1 *s3.GetBucketEncryptionIn
 	fake.getBucketEncryptionRequestArgsForCall = append(fake.getBucketEncryptionRequestArgsForCall, struct {
 		arg1 *s3.GetBucketEncryptionInput
 	}{arg1})
+	stub := fake.GetBucketEncryptionRequestStub
+	fakeReturns := fake.getBucketEncryptionRequestReturns
 	fake.recordInvocation("GetBucketEncryptionRequest", []interface{}{arg1})
 	fake.getBucketEncryptionRequestMutex.Unlock()
-	if fake.GetBucketEncryptionRequestStub != nil {
-		return fake.GetBucketEncryptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketEncryptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8567,15 +8641,16 @@ func (fake *FakeS3API) GetBucketEncryptionWithContext(arg1 context.Context, arg2
 		arg2 *s3.GetBucketEncryptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketEncryptionWithContextStub
+	fakeReturns := fake.getBucketEncryptionWithContextReturns
 	fake.recordInvocation("GetBucketEncryptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketEncryptionWithContextMutex.Unlock()
-	if fake.GetBucketEncryptionWithContextStub != nil {
-		return fake.GetBucketEncryptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketEncryptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8630,15 +8705,16 @@ func (fake *FakeS3API) GetBucketInventoryConfiguration(arg1 *s3.GetBucketInvento
 	fake.getBucketInventoryConfigurationArgsForCall = append(fake.getBucketInventoryConfigurationArgsForCall, struct {
 		arg1 *s3.GetBucketInventoryConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketInventoryConfigurationStub
+	fakeReturns := fake.getBucketInventoryConfigurationReturns
 	fake.recordInvocation("GetBucketInventoryConfiguration", []interface{}{arg1})
 	fake.getBucketInventoryConfigurationMutex.Unlock()
-	if fake.GetBucketInventoryConfigurationStub != nil {
-		return fake.GetBucketInventoryConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketInventoryConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8693,15 +8769,16 @@ func (fake *FakeS3API) GetBucketInventoryConfigurationRequest(arg1 *s3.GetBucket
 	fake.getBucketInventoryConfigurationRequestArgsForCall = append(fake.getBucketInventoryConfigurationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketInventoryConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketInventoryConfigurationRequestStub
+	fakeReturns := fake.getBucketInventoryConfigurationRequestReturns
 	fake.recordInvocation("GetBucketInventoryConfigurationRequest", []interface{}{arg1})
 	fake.getBucketInventoryConfigurationRequestMutex.Unlock()
-	if fake.GetBucketInventoryConfigurationRequestStub != nil {
-		return fake.GetBucketInventoryConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketInventoryConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8758,15 +8835,16 @@ func (fake *FakeS3API) GetBucketInventoryConfigurationWithContext(arg1 context.C
 		arg2 *s3.GetBucketInventoryConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketInventoryConfigurationWithContextStub
+	fakeReturns := fake.getBucketInventoryConfigurationWithContextReturns
 	fake.recordInvocation("GetBucketInventoryConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketInventoryConfigurationWithContextMutex.Unlock()
-	if fake.GetBucketInventoryConfigurationWithContextStub != nil {
-		return fake.GetBucketInventoryConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketInventoryConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8821,15 +8899,16 @@ func (fake *FakeS3API) GetBucketLifecycle(arg1 *s3.GetBucketLifecycleInput) (*s3
 	fake.getBucketLifecycleArgsForCall = append(fake.getBucketLifecycleArgsForCall, struct {
 		arg1 *s3.GetBucketLifecycleInput
 	}{arg1})
+	stub := fake.GetBucketLifecycleStub
+	fakeReturns := fake.getBucketLifecycleReturns
 	fake.recordInvocation("GetBucketLifecycle", []interface{}{arg1})
 	fake.getBucketLifecycleMutex.Unlock()
-	if fake.GetBucketLifecycleStub != nil {
-		return fake.GetBucketLifecycleStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLifecycleReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8884,15 +8963,16 @@ func (fake *FakeS3API) GetBucketLifecycleConfiguration(arg1 *s3.GetBucketLifecyc
 	fake.getBucketLifecycleConfigurationArgsForCall = append(fake.getBucketLifecycleConfigurationArgsForCall, struct {
 		arg1 *s3.GetBucketLifecycleConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketLifecycleConfigurationStub
+	fakeReturns := fake.getBucketLifecycleConfigurationReturns
 	fake.recordInvocation("GetBucketLifecycleConfiguration", []interface{}{arg1})
 	fake.getBucketLifecycleConfigurationMutex.Unlock()
-	if fake.GetBucketLifecycleConfigurationStub != nil {
-		return fake.GetBucketLifecycleConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLifecycleConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -8947,15 +9027,16 @@ func (fake *FakeS3API) GetBucketLifecycleConfigurationRequest(arg1 *s3.GetBucket
 	fake.getBucketLifecycleConfigurationRequestArgsForCall = append(fake.getBucketLifecycleConfigurationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketLifecycleConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketLifecycleConfigurationRequestStub
+	fakeReturns := fake.getBucketLifecycleConfigurationRequestReturns
 	fake.recordInvocation("GetBucketLifecycleConfigurationRequest", []interface{}{arg1})
 	fake.getBucketLifecycleConfigurationRequestMutex.Unlock()
-	if fake.GetBucketLifecycleConfigurationRequestStub != nil {
-		return fake.GetBucketLifecycleConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLifecycleConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9012,15 +9093,16 @@ func (fake *FakeS3API) GetBucketLifecycleConfigurationWithContext(arg1 context.C
 		arg2 *s3.GetBucketLifecycleConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketLifecycleConfigurationWithContextStub
+	fakeReturns := fake.getBucketLifecycleConfigurationWithContextReturns
 	fake.recordInvocation("GetBucketLifecycleConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketLifecycleConfigurationWithContextMutex.Unlock()
-	if fake.GetBucketLifecycleConfigurationWithContextStub != nil {
-		return fake.GetBucketLifecycleConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLifecycleConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9075,15 +9157,16 @@ func (fake *FakeS3API) GetBucketLifecycleRequest(arg1 *s3.GetBucketLifecycleInpu
 	fake.getBucketLifecycleRequestArgsForCall = append(fake.getBucketLifecycleRequestArgsForCall, struct {
 		arg1 *s3.GetBucketLifecycleInput
 	}{arg1})
+	stub := fake.GetBucketLifecycleRequestStub
+	fakeReturns := fake.getBucketLifecycleRequestReturns
 	fake.recordInvocation("GetBucketLifecycleRequest", []interface{}{arg1})
 	fake.getBucketLifecycleRequestMutex.Unlock()
-	if fake.GetBucketLifecycleRequestStub != nil {
-		return fake.GetBucketLifecycleRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLifecycleRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9140,15 +9223,16 @@ func (fake *FakeS3API) GetBucketLifecycleWithContext(arg1 context.Context, arg2 
 		arg2 *s3.GetBucketLifecycleInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketLifecycleWithContextStub
+	fakeReturns := fake.getBucketLifecycleWithContextReturns
 	fake.recordInvocation("GetBucketLifecycleWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketLifecycleWithContextMutex.Unlock()
-	if fake.GetBucketLifecycleWithContextStub != nil {
-		return fake.GetBucketLifecycleWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLifecycleWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9203,15 +9287,16 @@ func (fake *FakeS3API) GetBucketLocation(arg1 *s3.GetBucketLocationInput) (*s3.G
 	fake.getBucketLocationArgsForCall = append(fake.getBucketLocationArgsForCall, struct {
 		arg1 *s3.GetBucketLocationInput
 	}{arg1})
+	stub := fake.GetBucketLocationStub
+	fakeReturns := fake.getBucketLocationReturns
 	fake.recordInvocation("GetBucketLocation", []interface{}{arg1})
 	fake.getBucketLocationMutex.Unlock()
-	if fake.GetBucketLocationStub != nil {
-		return fake.GetBucketLocationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLocationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9266,15 +9351,16 @@ func (fake *FakeS3API) GetBucketLocationRequest(arg1 *s3.GetBucketLocationInput)
 	fake.getBucketLocationRequestArgsForCall = append(fake.getBucketLocationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketLocationInput
 	}{arg1})
+	stub := fake.GetBucketLocationRequestStub
+	fakeReturns := fake.getBucketLocationRequestReturns
 	fake.recordInvocation("GetBucketLocationRequest", []interface{}{arg1})
 	fake.getBucketLocationRequestMutex.Unlock()
-	if fake.GetBucketLocationRequestStub != nil {
-		return fake.GetBucketLocationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLocationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9331,15 +9417,16 @@ func (fake *FakeS3API) GetBucketLocationWithContext(arg1 context.Context, arg2 *
 		arg2 *s3.GetBucketLocationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketLocationWithContextStub
+	fakeReturns := fake.getBucketLocationWithContextReturns
 	fake.recordInvocation("GetBucketLocationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketLocationWithContextMutex.Unlock()
-	if fake.GetBucketLocationWithContextStub != nil {
-		return fake.GetBucketLocationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLocationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9394,15 +9481,16 @@ func (fake *FakeS3API) GetBucketLogging(arg1 *s3.GetBucketLoggingInput) (*s3.Get
 	fake.getBucketLoggingArgsForCall = append(fake.getBucketLoggingArgsForCall, struct {
 		arg1 *s3.GetBucketLoggingInput
 	}{arg1})
+	stub := fake.GetBucketLoggingStub
+	fakeReturns := fake.getBucketLoggingReturns
 	fake.recordInvocation("GetBucketLogging", []interface{}{arg1})
 	fake.getBucketLoggingMutex.Unlock()
-	if fake.GetBucketLoggingStub != nil {
-		return fake.GetBucketLoggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLoggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9457,15 +9545,16 @@ func (fake *FakeS3API) GetBucketLoggingRequest(arg1 *s3.GetBucketLoggingInput) (
 	fake.getBucketLoggingRequestArgsForCall = append(fake.getBucketLoggingRequestArgsForCall, struct {
 		arg1 *s3.GetBucketLoggingInput
 	}{arg1})
+	stub := fake.GetBucketLoggingRequestStub
+	fakeReturns := fake.getBucketLoggingRequestReturns
 	fake.recordInvocation("GetBucketLoggingRequest", []interface{}{arg1})
 	fake.getBucketLoggingRequestMutex.Unlock()
-	if fake.GetBucketLoggingRequestStub != nil {
-		return fake.GetBucketLoggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLoggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9522,15 +9611,16 @@ func (fake *FakeS3API) GetBucketLoggingWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.GetBucketLoggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketLoggingWithContextStub
+	fakeReturns := fake.getBucketLoggingWithContextReturns
 	fake.recordInvocation("GetBucketLoggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketLoggingWithContextMutex.Unlock()
-	if fake.GetBucketLoggingWithContextStub != nil {
-		return fake.GetBucketLoggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketLoggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9585,15 +9675,16 @@ func (fake *FakeS3API) GetBucketMetricsConfiguration(arg1 *s3.GetBucketMetricsCo
 	fake.getBucketMetricsConfigurationArgsForCall = append(fake.getBucketMetricsConfigurationArgsForCall, struct {
 		arg1 *s3.GetBucketMetricsConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketMetricsConfigurationStub
+	fakeReturns := fake.getBucketMetricsConfigurationReturns
 	fake.recordInvocation("GetBucketMetricsConfiguration", []interface{}{arg1})
 	fake.getBucketMetricsConfigurationMutex.Unlock()
-	if fake.GetBucketMetricsConfigurationStub != nil {
-		return fake.GetBucketMetricsConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketMetricsConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9648,15 +9739,16 @@ func (fake *FakeS3API) GetBucketMetricsConfigurationRequest(arg1 *s3.GetBucketMe
 	fake.getBucketMetricsConfigurationRequestArgsForCall = append(fake.getBucketMetricsConfigurationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketMetricsConfigurationInput
 	}{arg1})
+	stub := fake.GetBucketMetricsConfigurationRequestStub
+	fakeReturns := fake.getBucketMetricsConfigurationRequestReturns
 	fake.recordInvocation("GetBucketMetricsConfigurationRequest", []interface{}{arg1})
 	fake.getBucketMetricsConfigurationRequestMutex.Unlock()
-	if fake.GetBucketMetricsConfigurationRequestStub != nil {
-		return fake.GetBucketMetricsConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketMetricsConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9713,15 +9805,16 @@ func (fake *FakeS3API) GetBucketMetricsConfigurationWithContext(arg1 context.Con
 		arg2 *s3.GetBucketMetricsConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketMetricsConfigurationWithContextStub
+	fakeReturns := fake.getBucketMetricsConfigurationWithContextReturns
 	fake.recordInvocation("GetBucketMetricsConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketMetricsConfigurationWithContextMutex.Unlock()
-	if fake.GetBucketMetricsConfigurationWithContextStub != nil {
-		return fake.GetBucketMetricsConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketMetricsConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9776,15 +9869,16 @@ func (fake *FakeS3API) GetBucketNotification(arg1 *s3.GetBucketNotificationConfi
 	fake.getBucketNotificationArgsForCall = append(fake.getBucketNotificationArgsForCall, struct {
 		arg1 *s3.GetBucketNotificationConfigurationRequest
 	}{arg1})
+	stub := fake.GetBucketNotificationStub
+	fakeReturns := fake.getBucketNotificationReturns
 	fake.recordInvocation("GetBucketNotification", []interface{}{arg1})
 	fake.getBucketNotificationMutex.Unlock()
-	if fake.GetBucketNotificationStub != nil {
-		return fake.GetBucketNotificationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketNotificationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9839,15 +9933,16 @@ func (fake *FakeS3API) GetBucketNotificationConfiguration(arg1 *s3.GetBucketNoti
 	fake.getBucketNotificationConfigurationArgsForCall = append(fake.getBucketNotificationConfigurationArgsForCall, struct {
 		arg1 *s3.GetBucketNotificationConfigurationRequest
 	}{arg1})
+	stub := fake.GetBucketNotificationConfigurationStub
+	fakeReturns := fake.getBucketNotificationConfigurationReturns
 	fake.recordInvocation("GetBucketNotificationConfiguration", []interface{}{arg1})
 	fake.getBucketNotificationConfigurationMutex.Unlock()
-	if fake.GetBucketNotificationConfigurationStub != nil {
-		return fake.GetBucketNotificationConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketNotificationConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9902,15 +9997,16 @@ func (fake *FakeS3API) GetBucketNotificationConfigurationRequest(arg1 *s3.GetBuc
 	fake.getBucketNotificationConfigurationRequestArgsForCall = append(fake.getBucketNotificationConfigurationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketNotificationConfigurationRequest
 	}{arg1})
+	stub := fake.GetBucketNotificationConfigurationRequestStub
+	fakeReturns := fake.getBucketNotificationConfigurationRequestReturns
 	fake.recordInvocation("GetBucketNotificationConfigurationRequest", []interface{}{arg1})
 	fake.getBucketNotificationConfigurationRequestMutex.Unlock()
-	if fake.GetBucketNotificationConfigurationRequestStub != nil {
-		return fake.GetBucketNotificationConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketNotificationConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -9967,15 +10063,16 @@ func (fake *FakeS3API) GetBucketNotificationConfigurationWithContext(arg1 contex
 		arg2 *s3.GetBucketNotificationConfigurationRequest
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketNotificationConfigurationWithContextStub
+	fakeReturns := fake.getBucketNotificationConfigurationWithContextReturns
 	fake.recordInvocation("GetBucketNotificationConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketNotificationConfigurationWithContextMutex.Unlock()
-	if fake.GetBucketNotificationConfigurationWithContextStub != nil {
-		return fake.GetBucketNotificationConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketNotificationConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10030,15 +10127,16 @@ func (fake *FakeS3API) GetBucketNotificationRequest(arg1 *s3.GetBucketNotificati
 	fake.getBucketNotificationRequestArgsForCall = append(fake.getBucketNotificationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketNotificationConfigurationRequest
 	}{arg1})
+	stub := fake.GetBucketNotificationRequestStub
+	fakeReturns := fake.getBucketNotificationRequestReturns
 	fake.recordInvocation("GetBucketNotificationRequest", []interface{}{arg1})
 	fake.getBucketNotificationRequestMutex.Unlock()
-	if fake.GetBucketNotificationRequestStub != nil {
-		return fake.GetBucketNotificationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketNotificationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10095,15 +10193,16 @@ func (fake *FakeS3API) GetBucketNotificationWithContext(arg1 context.Context, ar
 		arg2 *s3.GetBucketNotificationConfigurationRequest
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketNotificationWithContextStub
+	fakeReturns := fake.getBucketNotificationWithContextReturns
 	fake.recordInvocation("GetBucketNotificationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketNotificationWithContextMutex.Unlock()
-	if fake.GetBucketNotificationWithContextStub != nil {
-		return fake.GetBucketNotificationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketNotificationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10158,15 +10257,16 @@ func (fake *FakeS3API) GetBucketPolicy(arg1 *s3.GetBucketPolicyInput) (*s3.GetBu
 	fake.getBucketPolicyArgsForCall = append(fake.getBucketPolicyArgsForCall, struct {
 		arg1 *s3.GetBucketPolicyInput
 	}{arg1})
+	stub := fake.GetBucketPolicyStub
+	fakeReturns := fake.getBucketPolicyReturns
 	fake.recordInvocation("GetBucketPolicy", []interface{}{arg1})
 	fake.getBucketPolicyMutex.Unlock()
-	if fake.GetBucketPolicyStub != nil {
-		return fake.GetBucketPolicyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketPolicyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10221,15 +10321,16 @@ func (fake *FakeS3API) GetBucketPolicyRequest(arg1 *s3.GetBucketPolicyInput) (*r
 	fake.getBucketPolicyRequestArgsForCall = append(fake.getBucketPolicyRequestArgsForCall, struct {
 		arg1 *s3.GetBucketPolicyInput
 	}{arg1})
+	stub := fake.GetBucketPolicyRequestStub
+	fakeReturns := fake.getBucketPolicyRequestReturns
 	fake.recordInvocation("GetBucketPolicyRequest", []interface{}{arg1})
 	fake.getBucketPolicyRequestMutex.Unlock()
-	if fake.GetBucketPolicyRequestStub != nil {
-		return fake.GetBucketPolicyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketPolicyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10284,15 +10385,16 @@ func (fake *FakeS3API) GetBucketPolicyStatus(arg1 *s3.GetBucketPolicyStatusInput
 	fake.getBucketPolicyStatusArgsForCall = append(fake.getBucketPolicyStatusArgsForCall, struct {
 		arg1 *s3.GetBucketPolicyStatusInput
 	}{arg1})
+	stub := fake.GetBucketPolicyStatusStub
+	fakeReturns := fake.getBucketPolicyStatusReturns
 	fake.recordInvocation("GetBucketPolicyStatus", []interface{}{arg1})
 	fake.getBucketPolicyStatusMutex.Unlock()
-	if fake.GetBucketPolicyStatusStub != nil {
-		return fake.GetBucketPolicyStatusStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketPolicyStatusReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10347,15 +10449,16 @@ func (fake *FakeS3API) GetBucketPolicyStatusRequest(arg1 *s3.GetBucketPolicyStat
 	fake.getBucketPolicyStatusRequestArgsForCall = append(fake.getBucketPolicyStatusRequestArgsForCall, struct {
 		arg1 *s3.GetBucketPolicyStatusInput
 	}{arg1})
+	stub := fake.GetBucketPolicyStatusRequestStub
+	fakeReturns := fake.getBucketPolicyStatusRequestReturns
 	fake.recordInvocation("GetBucketPolicyStatusRequest", []interface{}{arg1})
 	fake.getBucketPolicyStatusRequestMutex.Unlock()
-	if fake.GetBucketPolicyStatusRequestStub != nil {
-		return fake.GetBucketPolicyStatusRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketPolicyStatusRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10412,15 +10515,16 @@ func (fake *FakeS3API) GetBucketPolicyStatusWithContext(arg1 context.Context, ar
 		arg2 *s3.GetBucketPolicyStatusInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketPolicyStatusWithContextStub
+	fakeReturns := fake.getBucketPolicyStatusWithContextReturns
 	fake.recordInvocation("GetBucketPolicyStatusWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketPolicyStatusWithContextMutex.Unlock()
-	if fake.GetBucketPolicyStatusWithContextStub != nil {
-		return fake.GetBucketPolicyStatusWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketPolicyStatusWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10477,15 +10581,16 @@ func (fake *FakeS3API) GetBucketPolicyWithContext(arg1 context.Context, arg2 *s3
 		arg2 *s3.GetBucketPolicyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketPolicyWithContextStub
+	fakeReturns := fake.getBucketPolicyWithContextReturns
 	fake.recordInvocation("GetBucketPolicyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketPolicyWithContextMutex.Unlock()
-	if fake.GetBucketPolicyWithContextStub != nil {
-		return fake.GetBucketPolicyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketPolicyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10540,15 +10645,16 @@ func (fake *FakeS3API) GetBucketReplication(arg1 *s3.GetBucketReplicationInput) 
 	fake.getBucketReplicationArgsForCall = append(fake.getBucketReplicationArgsForCall, struct {
 		arg1 *s3.GetBucketReplicationInput
 	}{arg1})
+	stub := fake.GetBucketReplicationStub
+	fakeReturns := fake.getBucketReplicationReturns
 	fake.recordInvocation("GetBucketReplication", []interface{}{arg1})
 	fake.getBucketReplicationMutex.Unlock()
-	if fake.GetBucketReplicationStub != nil {
-		return fake.GetBucketReplicationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketReplicationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10603,15 +10709,16 @@ func (fake *FakeS3API) GetBucketReplicationRequest(arg1 *s3.GetBucketReplication
 	fake.getBucketReplicationRequestArgsForCall = append(fake.getBucketReplicationRequestArgsForCall, struct {
 		arg1 *s3.GetBucketReplicationInput
 	}{arg1})
+	stub := fake.GetBucketReplicationRequestStub
+	fakeReturns := fake.getBucketReplicationRequestReturns
 	fake.recordInvocation("GetBucketReplicationRequest", []interface{}{arg1})
 	fake.getBucketReplicationRequestMutex.Unlock()
-	if fake.GetBucketReplicationRequestStub != nil {
-		return fake.GetBucketReplicationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketReplicationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10668,15 +10775,16 @@ func (fake *FakeS3API) GetBucketReplicationWithContext(arg1 context.Context, arg
 		arg2 *s3.GetBucketReplicationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketReplicationWithContextStub
+	fakeReturns := fake.getBucketReplicationWithContextReturns
 	fake.recordInvocation("GetBucketReplicationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketReplicationWithContextMutex.Unlock()
-	if fake.GetBucketReplicationWithContextStub != nil {
-		return fake.GetBucketReplicationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketReplicationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10731,15 +10839,16 @@ func (fake *FakeS3API) GetBucketRequestPayment(arg1 *s3.GetBucketRequestPaymentI
 	fake.getBucketRequestPaymentArgsForCall = append(fake.getBucketRequestPaymentArgsForCall, struct {
 		arg1 *s3.GetBucketRequestPaymentInput
 	}{arg1})
+	stub := fake.GetBucketRequestPaymentStub
+	fakeReturns := fake.getBucketRequestPaymentReturns
 	fake.recordInvocation("GetBucketRequestPayment", []interface{}{arg1})
 	fake.getBucketRequestPaymentMutex.Unlock()
-	if fake.GetBucketRequestPaymentStub != nil {
-		return fake.GetBucketRequestPaymentStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketRequestPaymentReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10794,15 +10903,16 @@ func (fake *FakeS3API) GetBucketRequestPaymentRequest(arg1 *s3.GetBucketRequestP
 	fake.getBucketRequestPaymentRequestArgsForCall = append(fake.getBucketRequestPaymentRequestArgsForCall, struct {
 		arg1 *s3.GetBucketRequestPaymentInput
 	}{arg1})
+	stub := fake.GetBucketRequestPaymentRequestStub
+	fakeReturns := fake.getBucketRequestPaymentRequestReturns
 	fake.recordInvocation("GetBucketRequestPaymentRequest", []interface{}{arg1})
 	fake.getBucketRequestPaymentRequestMutex.Unlock()
-	if fake.GetBucketRequestPaymentRequestStub != nil {
-		return fake.GetBucketRequestPaymentRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketRequestPaymentRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10859,15 +10969,16 @@ func (fake *FakeS3API) GetBucketRequestPaymentWithContext(arg1 context.Context, 
 		arg2 *s3.GetBucketRequestPaymentInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketRequestPaymentWithContextStub
+	fakeReturns := fake.getBucketRequestPaymentWithContextReturns
 	fake.recordInvocation("GetBucketRequestPaymentWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketRequestPaymentWithContextMutex.Unlock()
-	if fake.GetBucketRequestPaymentWithContextStub != nil {
-		return fake.GetBucketRequestPaymentWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketRequestPaymentWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10922,15 +11033,16 @@ func (fake *FakeS3API) GetBucketTagging(arg1 *s3.GetBucketTaggingInput) (*s3.Get
 	fake.getBucketTaggingArgsForCall = append(fake.getBucketTaggingArgsForCall, struct {
 		arg1 *s3.GetBucketTaggingInput
 	}{arg1})
+	stub := fake.GetBucketTaggingStub
+	fakeReturns := fake.getBucketTaggingReturns
 	fake.recordInvocation("GetBucketTagging", []interface{}{arg1})
 	fake.getBucketTaggingMutex.Unlock()
-	if fake.GetBucketTaggingStub != nil {
-		return fake.GetBucketTaggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketTaggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -10985,15 +11097,16 @@ func (fake *FakeS3API) GetBucketTaggingRequest(arg1 *s3.GetBucketTaggingInput) (
 	fake.getBucketTaggingRequestArgsForCall = append(fake.getBucketTaggingRequestArgsForCall, struct {
 		arg1 *s3.GetBucketTaggingInput
 	}{arg1})
+	stub := fake.GetBucketTaggingRequestStub
+	fakeReturns := fake.getBucketTaggingRequestReturns
 	fake.recordInvocation("GetBucketTaggingRequest", []interface{}{arg1})
 	fake.getBucketTaggingRequestMutex.Unlock()
-	if fake.GetBucketTaggingRequestStub != nil {
-		return fake.GetBucketTaggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketTaggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11050,15 +11163,16 @@ func (fake *FakeS3API) GetBucketTaggingWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.GetBucketTaggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketTaggingWithContextStub
+	fakeReturns := fake.getBucketTaggingWithContextReturns
 	fake.recordInvocation("GetBucketTaggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketTaggingWithContextMutex.Unlock()
-	if fake.GetBucketTaggingWithContextStub != nil {
-		return fake.GetBucketTaggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketTaggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11113,15 +11227,16 @@ func (fake *FakeS3API) GetBucketVersioning(arg1 *s3.GetBucketVersioningInput) (*
 	fake.getBucketVersioningArgsForCall = append(fake.getBucketVersioningArgsForCall, struct {
 		arg1 *s3.GetBucketVersioningInput
 	}{arg1})
+	stub := fake.GetBucketVersioningStub
+	fakeReturns := fake.getBucketVersioningReturns
 	fake.recordInvocation("GetBucketVersioning", []interface{}{arg1})
 	fake.getBucketVersioningMutex.Unlock()
-	if fake.GetBucketVersioningStub != nil {
-		return fake.GetBucketVersioningStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketVersioningReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11176,15 +11291,16 @@ func (fake *FakeS3API) GetBucketVersioningRequest(arg1 *s3.GetBucketVersioningIn
 	fake.getBucketVersioningRequestArgsForCall = append(fake.getBucketVersioningRequestArgsForCall, struct {
 		arg1 *s3.GetBucketVersioningInput
 	}{arg1})
+	stub := fake.GetBucketVersioningRequestStub
+	fakeReturns := fake.getBucketVersioningRequestReturns
 	fake.recordInvocation("GetBucketVersioningRequest", []interface{}{arg1})
 	fake.getBucketVersioningRequestMutex.Unlock()
-	if fake.GetBucketVersioningRequestStub != nil {
-		return fake.GetBucketVersioningRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketVersioningRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11241,15 +11357,16 @@ func (fake *FakeS3API) GetBucketVersioningWithContext(arg1 context.Context, arg2
 		arg2 *s3.GetBucketVersioningInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketVersioningWithContextStub
+	fakeReturns := fake.getBucketVersioningWithContextReturns
 	fake.recordInvocation("GetBucketVersioningWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketVersioningWithContextMutex.Unlock()
-	if fake.GetBucketVersioningWithContextStub != nil {
-		return fake.GetBucketVersioningWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketVersioningWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11304,15 +11421,16 @@ func (fake *FakeS3API) GetBucketWebsite(arg1 *s3.GetBucketWebsiteInput) (*s3.Get
 	fake.getBucketWebsiteArgsForCall = append(fake.getBucketWebsiteArgsForCall, struct {
 		arg1 *s3.GetBucketWebsiteInput
 	}{arg1})
+	stub := fake.GetBucketWebsiteStub
+	fakeReturns := fake.getBucketWebsiteReturns
 	fake.recordInvocation("GetBucketWebsite", []interface{}{arg1})
 	fake.getBucketWebsiteMutex.Unlock()
-	if fake.GetBucketWebsiteStub != nil {
-		return fake.GetBucketWebsiteStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketWebsiteReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11367,15 +11485,16 @@ func (fake *FakeS3API) GetBucketWebsiteRequest(arg1 *s3.GetBucketWebsiteInput) (
 	fake.getBucketWebsiteRequestArgsForCall = append(fake.getBucketWebsiteRequestArgsForCall, struct {
 		arg1 *s3.GetBucketWebsiteInput
 	}{arg1})
+	stub := fake.GetBucketWebsiteRequestStub
+	fakeReturns := fake.getBucketWebsiteRequestReturns
 	fake.recordInvocation("GetBucketWebsiteRequest", []interface{}{arg1})
 	fake.getBucketWebsiteRequestMutex.Unlock()
-	if fake.GetBucketWebsiteRequestStub != nil {
-		return fake.GetBucketWebsiteRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketWebsiteRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11432,15 +11551,16 @@ func (fake *FakeS3API) GetBucketWebsiteWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.GetBucketWebsiteInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetBucketWebsiteWithContextStub
+	fakeReturns := fake.getBucketWebsiteWithContextReturns
 	fake.recordInvocation("GetBucketWebsiteWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getBucketWebsiteWithContextMutex.Unlock()
-	if fake.GetBucketWebsiteWithContextStub != nil {
-		return fake.GetBucketWebsiteWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getBucketWebsiteWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11495,15 +11615,16 @@ func (fake *FakeS3API) GetObject(arg1 *s3.GetObjectInput) (*s3.GetObjectOutput, 
 	fake.getObjectArgsForCall = append(fake.getObjectArgsForCall, struct {
 		arg1 *s3.GetObjectInput
 	}{arg1})
+	stub := fake.GetObjectStub
+	fakeReturns := fake.getObjectReturns
 	fake.recordInvocation("GetObject", []interface{}{arg1})
 	fake.getObjectMutex.Unlock()
-	if fake.GetObjectStub != nil {
-		return fake.GetObjectStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11558,15 +11679,16 @@ func (fake *FakeS3API) GetObjectAcl(arg1 *s3.GetObjectAclInput) (*s3.GetObjectAc
 	fake.getObjectAclArgsForCall = append(fake.getObjectAclArgsForCall, struct {
 		arg1 *s3.GetObjectAclInput
 	}{arg1})
+	stub := fake.GetObjectAclStub
+	fakeReturns := fake.getObjectAclReturns
 	fake.recordInvocation("GetObjectAcl", []interface{}{arg1})
 	fake.getObjectAclMutex.Unlock()
-	if fake.GetObjectAclStub != nil {
-		return fake.GetObjectAclStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectAclReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11621,15 +11743,16 @@ func (fake *FakeS3API) GetObjectAclRequest(arg1 *s3.GetObjectAclInput) (*request
 	fake.getObjectAclRequestArgsForCall = append(fake.getObjectAclRequestArgsForCall, struct {
 		arg1 *s3.GetObjectAclInput
 	}{arg1})
+	stub := fake.GetObjectAclRequestStub
+	fakeReturns := fake.getObjectAclRequestReturns
 	fake.recordInvocation("GetObjectAclRequest", []interface{}{arg1})
 	fake.getObjectAclRequestMutex.Unlock()
-	if fake.GetObjectAclRequestStub != nil {
-		return fake.GetObjectAclRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectAclRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11686,15 +11809,16 @@ func (fake *FakeS3API) GetObjectAclWithContext(arg1 context.Context, arg2 *s3.Ge
 		arg2 *s3.GetObjectAclInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetObjectAclWithContextStub
+	fakeReturns := fake.getObjectAclWithContextReturns
 	fake.recordInvocation("GetObjectAclWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getObjectAclWithContextMutex.Unlock()
-	if fake.GetObjectAclWithContextStub != nil {
-		return fake.GetObjectAclWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectAclWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11749,15 +11873,16 @@ func (fake *FakeS3API) GetObjectLegalHold(arg1 *s3.GetObjectLegalHoldInput) (*s3
 	fake.getObjectLegalHoldArgsForCall = append(fake.getObjectLegalHoldArgsForCall, struct {
 		arg1 *s3.GetObjectLegalHoldInput
 	}{arg1})
+	stub := fake.GetObjectLegalHoldStub
+	fakeReturns := fake.getObjectLegalHoldReturns
 	fake.recordInvocation("GetObjectLegalHold", []interface{}{arg1})
 	fake.getObjectLegalHoldMutex.Unlock()
-	if fake.GetObjectLegalHoldStub != nil {
-		return fake.GetObjectLegalHoldStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectLegalHoldReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11812,15 +11937,16 @@ func (fake *FakeS3API) GetObjectLegalHoldRequest(arg1 *s3.GetObjectLegalHoldInpu
 	fake.getObjectLegalHoldRequestArgsForCall = append(fake.getObjectLegalHoldRequestArgsForCall, struct {
 		arg1 *s3.GetObjectLegalHoldInput
 	}{arg1})
+	stub := fake.GetObjectLegalHoldRequestStub
+	fakeReturns := fake.getObjectLegalHoldRequestReturns
 	fake.recordInvocation("GetObjectLegalHoldRequest", []interface{}{arg1})
 	fake.getObjectLegalHoldRequestMutex.Unlock()
-	if fake.GetObjectLegalHoldRequestStub != nil {
-		return fake.GetObjectLegalHoldRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectLegalHoldRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11877,15 +12003,16 @@ func (fake *FakeS3API) GetObjectLegalHoldWithContext(arg1 context.Context, arg2 
 		arg2 *s3.GetObjectLegalHoldInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetObjectLegalHoldWithContextStub
+	fakeReturns := fake.getObjectLegalHoldWithContextReturns
 	fake.recordInvocation("GetObjectLegalHoldWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getObjectLegalHoldWithContextMutex.Unlock()
-	if fake.GetObjectLegalHoldWithContextStub != nil {
-		return fake.GetObjectLegalHoldWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectLegalHoldWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -11940,15 +12067,16 @@ func (fake *FakeS3API) GetObjectLockConfiguration(arg1 *s3.GetObjectLockConfigur
 	fake.getObjectLockConfigurationArgsForCall = append(fake.getObjectLockConfigurationArgsForCall, struct {
 		arg1 *s3.GetObjectLockConfigurationInput
 	}{arg1})
+	stub := fake.GetObjectLockConfigurationStub
+	fakeReturns := fake.getObjectLockConfigurationReturns
 	fake.recordInvocation("GetObjectLockConfiguration", []interface{}{arg1})
 	fake.getObjectLockConfigurationMutex.Unlock()
-	if fake.GetObjectLockConfigurationStub != nil {
-		return fake.GetObjectLockConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectLockConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12003,15 +12131,16 @@ func (fake *FakeS3API) GetObjectLockConfigurationRequest(arg1 *s3.GetObjectLockC
 	fake.getObjectLockConfigurationRequestArgsForCall = append(fake.getObjectLockConfigurationRequestArgsForCall, struct {
 		arg1 *s3.GetObjectLockConfigurationInput
 	}{arg1})
+	stub := fake.GetObjectLockConfigurationRequestStub
+	fakeReturns := fake.getObjectLockConfigurationRequestReturns
 	fake.recordInvocation("GetObjectLockConfigurationRequest", []interface{}{arg1})
 	fake.getObjectLockConfigurationRequestMutex.Unlock()
-	if fake.GetObjectLockConfigurationRequestStub != nil {
-		return fake.GetObjectLockConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectLockConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12068,15 +12197,16 @@ func (fake *FakeS3API) GetObjectLockConfigurationWithContext(arg1 context.Contex
 		arg2 *s3.GetObjectLockConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetObjectLockConfigurationWithContextStub
+	fakeReturns := fake.getObjectLockConfigurationWithContextReturns
 	fake.recordInvocation("GetObjectLockConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getObjectLockConfigurationWithContextMutex.Unlock()
-	if fake.GetObjectLockConfigurationWithContextStub != nil {
-		return fake.GetObjectLockConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectLockConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12131,15 +12261,16 @@ func (fake *FakeS3API) GetObjectRequest(arg1 *s3.GetObjectInput) (*request.Reque
 	fake.getObjectRequestArgsForCall = append(fake.getObjectRequestArgsForCall, struct {
 		arg1 *s3.GetObjectInput
 	}{arg1})
+	stub := fake.GetObjectRequestStub
+	fakeReturns := fake.getObjectRequestReturns
 	fake.recordInvocation("GetObjectRequest", []interface{}{arg1})
 	fake.getObjectRequestMutex.Unlock()
-	if fake.GetObjectRequestStub != nil {
-		return fake.GetObjectRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12194,15 +12325,16 @@ func (fake *FakeS3API) GetObjectRetention(arg1 *s3.GetObjectRetentionInput) (*s3
 	fake.getObjectRetentionArgsForCall = append(fake.getObjectRetentionArgsForCall, struct {
 		arg1 *s3.GetObjectRetentionInput
 	}{arg1})
+	stub := fake.GetObjectRetentionStub
+	fakeReturns := fake.getObjectRetentionReturns
 	fake.recordInvocation("GetObjectRetention", []interface{}{arg1})
 	fake.getObjectRetentionMutex.Unlock()
-	if fake.GetObjectRetentionStub != nil {
-		return fake.GetObjectRetentionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectRetentionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12257,15 +12389,16 @@ func (fake *FakeS3API) GetObjectRetentionRequest(arg1 *s3.GetObjectRetentionInpu
 	fake.getObjectRetentionRequestArgsForCall = append(fake.getObjectRetentionRequestArgsForCall, struct {
 		arg1 *s3.GetObjectRetentionInput
 	}{arg1})
+	stub := fake.GetObjectRetentionRequestStub
+	fakeReturns := fake.getObjectRetentionRequestReturns
 	fake.recordInvocation("GetObjectRetentionRequest", []interface{}{arg1})
 	fake.getObjectRetentionRequestMutex.Unlock()
-	if fake.GetObjectRetentionRequestStub != nil {
-		return fake.GetObjectRetentionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectRetentionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12322,15 +12455,16 @@ func (fake *FakeS3API) GetObjectRetentionWithContext(arg1 context.Context, arg2 
 		arg2 *s3.GetObjectRetentionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetObjectRetentionWithContextStub
+	fakeReturns := fake.getObjectRetentionWithContextReturns
 	fake.recordInvocation("GetObjectRetentionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getObjectRetentionWithContextMutex.Unlock()
-	if fake.GetObjectRetentionWithContextStub != nil {
-		return fake.GetObjectRetentionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectRetentionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12385,15 +12519,16 @@ func (fake *FakeS3API) GetObjectTagging(arg1 *s3.GetObjectTaggingInput) (*s3.Get
 	fake.getObjectTaggingArgsForCall = append(fake.getObjectTaggingArgsForCall, struct {
 		arg1 *s3.GetObjectTaggingInput
 	}{arg1})
+	stub := fake.GetObjectTaggingStub
+	fakeReturns := fake.getObjectTaggingReturns
 	fake.recordInvocation("GetObjectTagging", []interface{}{arg1})
 	fake.getObjectTaggingMutex.Unlock()
-	if fake.GetObjectTaggingStub != nil {
-		return fake.GetObjectTaggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectTaggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12448,15 +12583,16 @@ func (fake *FakeS3API) GetObjectTaggingRequest(arg1 *s3.GetObjectTaggingInput) (
 	fake.getObjectTaggingRequestArgsForCall = append(fake.getObjectTaggingRequestArgsForCall, struct {
 		arg1 *s3.GetObjectTaggingInput
 	}{arg1})
+	stub := fake.GetObjectTaggingRequestStub
+	fakeReturns := fake.getObjectTaggingRequestReturns
 	fake.recordInvocation("GetObjectTaggingRequest", []interface{}{arg1})
 	fake.getObjectTaggingRequestMutex.Unlock()
-	if fake.GetObjectTaggingRequestStub != nil {
-		return fake.GetObjectTaggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectTaggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12513,15 +12649,16 @@ func (fake *FakeS3API) GetObjectTaggingWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.GetObjectTaggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetObjectTaggingWithContextStub
+	fakeReturns := fake.getObjectTaggingWithContextReturns
 	fake.recordInvocation("GetObjectTaggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getObjectTaggingWithContextMutex.Unlock()
-	if fake.GetObjectTaggingWithContextStub != nil {
-		return fake.GetObjectTaggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectTaggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12576,15 +12713,16 @@ func (fake *FakeS3API) GetObjectTorrent(arg1 *s3.GetObjectTorrentInput) (*s3.Get
 	fake.getObjectTorrentArgsForCall = append(fake.getObjectTorrentArgsForCall, struct {
 		arg1 *s3.GetObjectTorrentInput
 	}{arg1})
+	stub := fake.GetObjectTorrentStub
+	fakeReturns := fake.getObjectTorrentReturns
 	fake.recordInvocation("GetObjectTorrent", []interface{}{arg1})
 	fake.getObjectTorrentMutex.Unlock()
-	if fake.GetObjectTorrentStub != nil {
-		return fake.GetObjectTorrentStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectTorrentReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12639,15 +12777,16 @@ func (fake *FakeS3API) GetObjectTorrentRequest(arg1 *s3.GetObjectTorrentInput) (
 	fake.getObjectTorrentRequestArgsForCall = append(fake.getObjectTorrentRequestArgsForCall, struct {
 		arg1 *s3.GetObjectTorrentInput
 	}{arg1})
+	stub := fake.GetObjectTorrentRequestStub
+	fakeReturns := fake.getObjectTorrentRequestReturns
 	fake.recordInvocation("GetObjectTorrentRequest", []interface{}{arg1})
 	fake.getObjectTorrentRequestMutex.Unlock()
-	if fake.GetObjectTorrentRequestStub != nil {
-		return fake.GetObjectTorrentRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectTorrentRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12704,15 +12843,16 @@ func (fake *FakeS3API) GetObjectTorrentWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.GetObjectTorrentInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetObjectTorrentWithContextStub
+	fakeReturns := fake.getObjectTorrentWithContextReturns
 	fake.recordInvocation("GetObjectTorrentWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getObjectTorrentWithContextMutex.Unlock()
-	if fake.GetObjectTorrentWithContextStub != nil {
-		return fake.GetObjectTorrentWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectTorrentWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12769,15 +12909,16 @@ func (fake *FakeS3API) GetObjectWithContext(arg1 context.Context, arg2 *s3.GetOb
 		arg2 *s3.GetObjectInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetObjectWithContextStub
+	fakeReturns := fake.getObjectWithContextReturns
 	fake.recordInvocation("GetObjectWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getObjectWithContextMutex.Unlock()
-	if fake.GetObjectWithContextStub != nil {
-		return fake.GetObjectWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getObjectWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12832,15 +12973,16 @@ func (fake *FakeS3API) GetPublicAccessBlock(arg1 *s3.GetPublicAccessBlockInput) 
 	fake.getPublicAccessBlockArgsForCall = append(fake.getPublicAccessBlockArgsForCall, struct {
 		arg1 *s3.GetPublicAccessBlockInput
 	}{arg1})
+	stub := fake.GetPublicAccessBlockStub
+	fakeReturns := fake.getPublicAccessBlockReturns
 	fake.recordInvocation("GetPublicAccessBlock", []interface{}{arg1})
 	fake.getPublicAccessBlockMutex.Unlock()
-	if fake.GetPublicAccessBlockStub != nil {
-		return fake.GetPublicAccessBlockStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicAccessBlockReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12895,15 +13037,16 @@ func (fake *FakeS3API) GetPublicAccessBlockRequest(arg1 *s3.GetPublicAccessBlock
 	fake.getPublicAccessBlockRequestArgsForCall = append(fake.getPublicAccessBlockRequestArgsForCall, struct {
 		arg1 *s3.GetPublicAccessBlockInput
 	}{arg1})
+	stub := fake.GetPublicAccessBlockRequestStub
+	fakeReturns := fake.getPublicAccessBlockRequestReturns
 	fake.recordInvocation("GetPublicAccessBlockRequest", []interface{}{arg1})
 	fake.getPublicAccessBlockRequestMutex.Unlock()
-	if fake.GetPublicAccessBlockRequestStub != nil {
-		return fake.GetPublicAccessBlockRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicAccessBlockRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -12960,15 +13103,16 @@ func (fake *FakeS3API) GetPublicAccessBlockWithContext(arg1 context.Context, arg
 		arg2 *s3.GetPublicAccessBlockInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.GetPublicAccessBlockWithContextStub
+	fakeReturns := fake.getPublicAccessBlockWithContextReturns
 	fake.recordInvocation("GetPublicAccessBlockWithContext", []interface{}{arg1, arg2, arg3})
 	fake.getPublicAccessBlockWithContextMutex.Unlock()
-	if fake.GetPublicAccessBlockWithContextStub != nil {
-		return fake.GetPublicAccessBlockWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.getPublicAccessBlockWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13023,15 +13167,16 @@ func (fake *FakeS3API) HeadBucket(arg1 *s3.HeadBucketInput) (*s3.HeadBucketOutpu
 	fake.headBucketArgsForCall = append(fake.headBucketArgsForCall, struct {
 		arg1 *s3.HeadBucketInput
 	}{arg1})
+	stub := fake.HeadBucketStub
+	fakeReturns := fake.headBucketReturns
 	fake.recordInvocation("HeadBucket", []interface{}{arg1})
 	fake.headBucketMutex.Unlock()
-	if fake.HeadBucketStub != nil {
-		return fake.HeadBucketStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.headBucketReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13086,15 +13231,16 @@ func (fake *FakeS3API) HeadBucketRequest(arg1 *s3.HeadBucketInput) (*request.Req
 	fake.headBucketRequestArgsForCall = append(fake.headBucketRequestArgsForCall, struct {
 		arg1 *s3.HeadBucketInput
 	}{arg1})
+	stub := fake.HeadBucketRequestStub
+	fakeReturns := fake.headBucketRequestReturns
 	fake.recordInvocation("HeadBucketRequest", []interface{}{arg1})
 	fake.headBucketRequestMutex.Unlock()
-	if fake.HeadBucketRequestStub != nil {
-		return fake.HeadBucketRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.headBucketRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13151,15 +13297,16 @@ func (fake *FakeS3API) HeadBucketWithContext(arg1 context.Context, arg2 *s3.Head
 		arg2 *s3.HeadBucketInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.HeadBucketWithContextStub
+	fakeReturns := fake.headBucketWithContextReturns
 	fake.recordInvocation("HeadBucketWithContext", []interface{}{arg1, arg2, arg3})
 	fake.headBucketWithContextMutex.Unlock()
-	if fake.HeadBucketWithContextStub != nil {
-		return fake.HeadBucketWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.headBucketWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13214,15 +13361,16 @@ func (fake *FakeS3API) HeadObject(arg1 *s3.HeadObjectInput) (*s3.HeadObjectOutpu
 	fake.headObjectArgsForCall = append(fake.headObjectArgsForCall, struct {
 		arg1 *s3.HeadObjectInput
 	}{arg1})
+	stub := fake.HeadObjectStub
+	fakeReturns := fake.headObjectReturns
 	fake.recordInvocation("HeadObject", []interface{}{arg1})
 	fake.headObjectMutex.Unlock()
-	if fake.HeadObjectStub != nil {
-		return fake.HeadObjectStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.headObjectReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13277,15 +13425,16 @@ func (fake *FakeS3API) HeadObjectRequest(arg1 *s3.HeadObjectInput) (*request.Req
 	fake.headObjectRequestArgsForCall = append(fake.headObjectRequestArgsForCall, struct {
 		arg1 *s3.HeadObjectInput
 	}{arg1})
+	stub := fake.HeadObjectRequestStub
+	fakeReturns := fake.headObjectRequestReturns
 	fake.recordInvocation("HeadObjectRequest", []interface{}{arg1})
 	fake.headObjectRequestMutex.Unlock()
-	if fake.HeadObjectRequestStub != nil {
-		return fake.HeadObjectRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.headObjectRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13342,15 +13491,16 @@ func (fake *FakeS3API) HeadObjectWithContext(arg1 context.Context, arg2 *s3.Head
 		arg2 *s3.HeadObjectInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.HeadObjectWithContextStub
+	fakeReturns := fake.headObjectWithContextReturns
 	fake.recordInvocation("HeadObjectWithContext", []interface{}{arg1, arg2, arg3})
 	fake.headObjectWithContextMutex.Unlock()
-	if fake.HeadObjectWithContextStub != nil {
-		return fake.HeadObjectWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.headObjectWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13405,15 +13555,16 @@ func (fake *FakeS3API) ListBucketAnalyticsConfigurations(arg1 *s3.ListBucketAnal
 	fake.listBucketAnalyticsConfigurationsArgsForCall = append(fake.listBucketAnalyticsConfigurationsArgsForCall, struct {
 		arg1 *s3.ListBucketAnalyticsConfigurationsInput
 	}{arg1})
+	stub := fake.ListBucketAnalyticsConfigurationsStub
+	fakeReturns := fake.listBucketAnalyticsConfigurationsReturns
 	fake.recordInvocation("ListBucketAnalyticsConfigurations", []interface{}{arg1})
 	fake.listBucketAnalyticsConfigurationsMutex.Unlock()
-	if fake.ListBucketAnalyticsConfigurationsStub != nil {
-		return fake.ListBucketAnalyticsConfigurationsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketAnalyticsConfigurationsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13468,15 +13619,16 @@ func (fake *FakeS3API) ListBucketAnalyticsConfigurationsRequest(arg1 *s3.ListBuc
 	fake.listBucketAnalyticsConfigurationsRequestArgsForCall = append(fake.listBucketAnalyticsConfigurationsRequestArgsForCall, struct {
 		arg1 *s3.ListBucketAnalyticsConfigurationsInput
 	}{arg1})
+	stub := fake.ListBucketAnalyticsConfigurationsRequestStub
+	fakeReturns := fake.listBucketAnalyticsConfigurationsRequestReturns
 	fake.recordInvocation("ListBucketAnalyticsConfigurationsRequest", []interface{}{arg1})
 	fake.listBucketAnalyticsConfigurationsRequestMutex.Unlock()
-	if fake.ListBucketAnalyticsConfigurationsRequestStub != nil {
-		return fake.ListBucketAnalyticsConfigurationsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketAnalyticsConfigurationsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13533,15 +13685,16 @@ func (fake *FakeS3API) ListBucketAnalyticsConfigurationsWithContext(arg1 context
 		arg2 *s3.ListBucketAnalyticsConfigurationsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListBucketAnalyticsConfigurationsWithContextStub
+	fakeReturns := fake.listBucketAnalyticsConfigurationsWithContextReturns
 	fake.recordInvocation("ListBucketAnalyticsConfigurationsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listBucketAnalyticsConfigurationsWithContextMutex.Unlock()
-	if fake.ListBucketAnalyticsConfigurationsWithContextStub != nil {
-		return fake.ListBucketAnalyticsConfigurationsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketAnalyticsConfigurationsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13596,15 +13749,16 @@ func (fake *FakeS3API) ListBucketInventoryConfigurations(arg1 *s3.ListBucketInve
 	fake.listBucketInventoryConfigurationsArgsForCall = append(fake.listBucketInventoryConfigurationsArgsForCall, struct {
 		arg1 *s3.ListBucketInventoryConfigurationsInput
 	}{arg1})
+	stub := fake.ListBucketInventoryConfigurationsStub
+	fakeReturns := fake.listBucketInventoryConfigurationsReturns
 	fake.recordInvocation("ListBucketInventoryConfigurations", []interface{}{arg1})
 	fake.listBucketInventoryConfigurationsMutex.Unlock()
-	if fake.ListBucketInventoryConfigurationsStub != nil {
-		return fake.ListBucketInventoryConfigurationsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketInventoryConfigurationsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13659,15 +13813,16 @@ func (fake *FakeS3API) ListBucketInventoryConfigurationsRequest(arg1 *s3.ListBuc
 	fake.listBucketInventoryConfigurationsRequestArgsForCall = append(fake.listBucketInventoryConfigurationsRequestArgsForCall, struct {
 		arg1 *s3.ListBucketInventoryConfigurationsInput
 	}{arg1})
+	stub := fake.ListBucketInventoryConfigurationsRequestStub
+	fakeReturns := fake.listBucketInventoryConfigurationsRequestReturns
 	fake.recordInvocation("ListBucketInventoryConfigurationsRequest", []interface{}{arg1})
 	fake.listBucketInventoryConfigurationsRequestMutex.Unlock()
-	if fake.ListBucketInventoryConfigurationsRequestStub != nil {
-		return fake.ListBucketInventoryConfigurationsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketInventoryConfigurationsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13724,15 +13879,16 @@ func (fake *FakeS3API) ListBucketInventoryConfigurationsWithContext(arg1 context
 		arg2 *s3.ListBucketInventoryConfigurationsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListBucketInventoryConfigurationsWithContextStub
+	fakeReturns := fake.listBucketInventoryConfigurationsWithContextReturns
 	fake.recordInvocation("ListBucketInventoryConfigurationsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listBucketInventoryConfigurationsWithContextMutex.Unlock()
-	if fake.ListBucketInventoryConfigurationsWithContextStub != nil {
-		return fake.ListBucketInventoryConfigurationsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketInventoryConfigurationsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13787,15 +13943,16 @@ func (fake *FakeS3API) ListBucketMetricsConfigurations(arg1 *s3.ListBucketMetric
 	fake.listBucketMetricsConfigurationsArgsForCall = append(fake.listBucketMetricsConfigurationsArgsForCall, struct {
 		arg1 *s3.ListBucketMetricsConfigurationsInput
 	}{arg1})
+	stub := fake.ListBucketMetricsConfigurationsStub
+	fakeReturns := fake.listBucketMetricsConfigurationsReturns
 	fake.recordInvocation("ListBucketMetricsConfigurations", []interface{}{arg1})
 	fake.listBucketMetricsConfigurationsMutex.Unlock()
-	if fake.ListBucketMetricsConfigurationsStub != nil {
-		return fake.ListBucketMetricsConfigurationsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketMetricsConfigurationsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13850,15 +14007,16 @@ func (fake *FakeS3API) ListBucketMetricsConfigurationsRequest(arg1 *s3.ListBucke
 	fake.listBucketMetricsConfigurationsRequestArgsForCall = append(fake.listBucketMetricsConfigurationsRequestArgsForCall, struct {
 		arg1 *s3.ListBucketMetricsConfigurationsInput
 	}{arg1})
+	stub := fake.ListBucketMetricsConfigurationsRequestStub
+	fakeReturns := fake.listBucketMetricsConfigurationsRequestReturns
 	fake.recordInvocation("ListBucketMetricsConfigurationsRequest", []interface{}{arg1})
 	fake.listBucketMetricsConfigurationsRequestMutex.Unlock()
-	if fake.ListBucketMetricsConfigurationsRequestStub != nil {
-		return fake.ListBucketMetricsConfigurationsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketMetricsConfigurationsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13915,15 +14073,16 @@ func (fake *FakeS3API) ListBucketMetricsConfigurationsWithContext(arg1 context.C
 		arg2 *s3.ListBucketMetricsConfigurationsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListBucketMetricsConfigurationsWithContextStub
+	fakeReturns := fake.listBucketMetricsConfigurationsWithContextReturns
 	fake.recordInvocation("ListBucketMetricsConfigurationsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listBucketMetricsConfigurationsWithContextMutex.Unlock()
-	if fake.ListBucketMetricsConfigurationsWithContextStub != nil {
-		return fake.ListBucketMetricsConfigurationsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketMetricsConfigurationsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -13978,15 +14137,16 @@ func (fake *FakeS3API) ListBuckets(arg1 *s3.ListBucketsInput) (*s3.ListBucketsOu
 	fake.listBucketsArgsForCall = append(fake.listBucketsArgsForCall, struct {
 		arg1 *s3.ListBucketsInput
 	}{arg1})
+	stub := fake.ListBucketsStub
+	fakeReturns := fake.listBucketsReturns
 	fake.recordInvocation("ListBuckets", []interface{}{arg1})
 	fake.listBucketsMutex.Unlock()
-	if fake.ListBucketsStub != nil {
-		return fake.ListBucketsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14041,15 +14201,16 @@ func (fake *FakeS3API) ListBucketsRequest(arg1 *s3.ListBucketsInput) (*request.R
 	fake.listBucketsRequestArgsForCall = append(fake.listBucketsRequestArgsForCall, struct {
 		arg1 *s3.ListBucketsInput
 	}{arg1})
+	stub := fake.ListBucketsRequestStub
+	fakeReturns := fake.listBucketsRequestReturns
 	fake.recordInvocation("ListBucketsRequest", []interface{}{arg1})
 	fake.listBucketsRequestMutex.Unlock()
-	if fake.ListBucketsRequestStub != nil {
-		return fake.ListBucketsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14106,15 +14267,16 @@ func (fake *FakeS3API) ListBucketsWithContext(arg1 context.Context, arg2 *s3.Lis
 		arg2 *s3.ListBucketsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListBucketsWithContextStub
+	fakeReturns := fake.listBucketsWithContextReturns
 	fake.recordInvocation("ListBucketsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listBucketsWithContextMutex.Unlock()
-	if fake.ListBucketsWithContextStub != nil {
-		return fake.ListBucketsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listBucketsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14169,15 +14331,16 @@ func (fake *FakeS3API) ListMultipartUploads(arg1 *s3.ListMultipartUploadsInput) 
 	fake.listMultipartUploadsArgsForCall = append(fake.listMultipartUploadsArgsForCall, struct {
 		arg1 *s3.ListMultipartUploadsInput
 	}{arg1})
+	stub := fake.ListMultipartUploadsStub
+	fakeReturns := fake.listMultipartUploadsReturns
 	fake.recordInvocation("ListMultipartUploads", []interface{}{arg1})
 	fake.listMultipartUploadsMutex.Unlock()
-	if fake.ListMultipartUploadsStub != nil {
-		return fake.ListMultipartUploadsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listMultipartUploadsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14233,15 +14396,16 @@ func (fake *FakeS3API) ListMultipartUploadsPages(arg1 *s3.ListMultipartUploadsIn
 		arg1 *s3.ListMultipartUploadsInput
 		arg2 func(*s3.ListMultipartUploadsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListMultipartUploadsPagesStub
+	fakeReturns := fake.listMultipartUploadsPagesReturns
 	fake.recordInvocation("ListMultipartUploadsPages", []interface{}{arg1, arg2})
 	fake.listMultipartUploadsPagesMutex.Unlock()
-	if fake.ListMultipartUploadsPagesStub != nil {
-		return fake.ListMultipartUploadsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listMultipartUploadsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -14296,15 +14460,16 @@ func (fake *FakeS3API) ListMultipartUploadsPagesWithContext(arg1 context.Context
 		arg3 func(*s3.ListMultipartUploadsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListMultipartUploadsPagesWithContextStub
+	fakeReturns := fake.listMultipartUploadsPagesWithContextReturns
 	fake.recordInvocation("ListMultipartUploadsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listMultipartUploadsPagesWithContextMutex.Unlock()
-	if fake.ListMultipartUploadsPagesWithContextStub != nil {
-		return fake.ListMultipartUploadsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listMultipartUploadsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -14356,15 +14521,16 @@ func (fake *FakeS3API) ListMultipartUploadsRequest(arg1 *s3.ListMultipartUploads
 	fake.listMultipartUploadsRequestArgsForCall = append(fake.listMultipartUploadsRequestArgsForCall, struct {
 		arg1 *s3.ListMultipartUploadsInput
 	}{arg1})
+	stub := fake.ListMultipartUploadsRequestStub
+	fakeReturns := fake.listMultipartUploadsRequestReturns
 	fake.recordInvocation("ListMultipartUploadsRequest", []interface{}{arg1})
 	fake.listMultipartUploadsRequestMutex.Unlock()
-	if fake.ListMultipartUploadsRequestStub != nil {
-		return fake.ListMultipartUploadsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listMultipartUploadsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14421,15 +14587,16 @@ func (fake *FakeS3API) ListMultipartUploadsWithContext(arg1 context.Context, arg
 		arg2 *s3.ListMultipartUploadsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListMultipartUploadsWithContextStub
+	fakeReturns := fake.listMultipartUploadsWithContextReturns
 	fake.recordInvocation("ListMultipartUploadsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listMultipartUploadsWithContextMutex.Unlock()
-	if fake.ListMultipartUploadsWithContextStub != nil {
-		return fake.ListMultipartUploadsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listMultipartUploadsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14484,15 +14651,16 @@ func (fake *FakeS3API) ListObjectVersions(arg1 *s3.ListObjectVersionsInput) (*s3
 	fake.listObjectVersionsArgsForCall = append(fake.listObjectVersionsArgsForCall, struct {
 		arg1 *s3.ListObjectVersionsInput
 	}{arg1})
+	stub := fake.ListObjectVersionsStub
+	fakeReturns := fake.listObjectVersionsReturns
 	fake.recordInvocation("ListObjectVersions", []interface{}{arg1})
 	fake.listObjectVersionsMutex.Unlock()
-	if fake.ListObjectVersionsStub != nil {
-		return fake.ListObjectVersionsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectVersionsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14548,15 +14716,16 @@ func (fake *FakeS3API) ListObjectVersionsPages(arg1 *s3.ListObjectVersionsInput,
 		arg1 *s3.ListObjectVersionsInput
 		arg2 func(*s3.ListObjectVersionsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListObjectVersionsPagesStub
+	fakeReturns := fake.listObjectVersionsPagesReturns
 	fake.recordInvocation("ListObjectVersionsPages", []interface{}{arg1, arg2})
 	fake.listObjectVersionsPagesMutex.Unlock()
-	if fake.ListObjectVersionsPagesStub != nil {
-		return fake.ListObjectVersionsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listObjectVersionsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -14611,15 +14780,16 @@ func (fake *FakeS3API) ListObjectVersionsPagesWithContext(arg1 context.Context, 
 		arg3 func(*s3.ListObjectVersionsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListObjectVersionsPagesWithContextStub
+	fakeReturns := fake.listObjectVersionsPagesWithContextReturns
 	fake.recordInvocation("ListObjectVersionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listObjectVersionsPagesWithContextMutex.Unlock()
-	if fake.ListObjectVersionsPagesWithContextStub != nil {
-		return fake.ListObjectVersionsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listObjectVersionsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -14671,15 +14841,16 @@ func (fake *FakeS3API) ListObjectVersionsRequest(arg1 *s3.ListObjectVersionsInpu
 	fake.listObjectVersionsRequestArgsForCall = append(fake.listObjectVersionsRequestArgsForCall, struct {
 		arg1 *s3.ListObjectVersionsInput
 	}{arg1})
+	stub := fake.ListObjectVersionsRequestStub
+	fakeReturns := fake.listObjectVersionsRequestReturns
 	fake.recordInvocation("ListObjectVersionsRequest", []interface{}{arg1})
 	fake.listObjectVersionsRequestMutex.Unlock()
-	if fake.ListObjectVersionsRequestStub != nil {
-		return fake.ListObjectVersionsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectVersionsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14736,15 +14907,16 @@ func (fake *FakeS3API) ListObjectVersionsWithContext(arg1 context.Context, arg2 
 		arg2 *s3.ListObjectVersionsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListObjectVersionsWithContextStub
+	fakeReturns := fake.listObjectVersionsWithContextReturns
 	fake.recordInvocation("ListObjectVersionsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listObjectVersionsWithContextMutex.Unlock()
-	if fake.ListObjectVersionsWithContextStub != nil {
-		return fake.ListObjectVersionsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectVersionsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14799,15 +14971,16 @@ func (fake *FakeS3API) ListObjects(arg1 *s3.ListObjectsInput) (*s3.ListObjectsOu
 	fake.listObjectsArgsForCall = append(fake.listObjectsArgsForCall, struct {
 		arg1 *s3.ListObjectsInput
 	}{arg1})
+	stub := fake.ListObjectsStub
+	fakeReturns := fake.listObjectsReturns
 	fake.recordInvocation("ListObjects", []interface{}{arg1})
 	fake.listObjectsMutex.Unlock()
-	if fake.ListObjectsStub != nil {
-		return fake.ListObjectsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -14863,15 +15036,16 @@ func (fake *FakeS3API) ListObjectsPages(arg1 *s3.ListObjectsInput, arg2 func(*s3
 		arg1 *s3.ListObjectsInput
 		arg2 func(*s3.ListObjectsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListObjectsPagesStub
+	fakeReturns := fake.listObjectsPagesReturns
 	fake.recordInvocation("ListObjectsPages", []interface{}{arg1, arg2})
 	fake.listObjectsPagesMutex.Unlock()
-	if fake.ListObjectsPagesStub != nil {
-		return fake.ListObjectsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listObjectsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -14926,15 +15100,16 @@ func (fake *FakeS3API) ListObjectsPagesWithContext(arg1 context.Context, arg2 *s
 		arg3 func(*s3.ListObjectsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListObjectsPagesWithContextStub
+	fakeReturns := fake.listObjectsPagesWithContextReturns
 	fake.recordInvocation("ListObjectsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listObjectsPagesWithContextMutex.Unlock()
-	if fake.ListObjectsPagesWithContextStub != nil {
-		return fake.ListObjectsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listObjectsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -14986,15 +15161,16 @@ func (fake *FakeS3API) ListObjectsRequest(arg1 *s3.ListObjectsInput) (*request.R
 	fake.listObjectsRequestArgsForCall = append(fake.listObjectsRequestArgsForCall, struct {
 		arg1 *s3.ListObjectsInput
 	}{arg1})
+	stub := fake.ListObjectsRequestStub
+	fakeReturns := fake.listObjectsRequestReturns
 	fake.recordInvocation("ListObjectsRequest", []interface{}{arg1})
 	fake.listObjectsRequestMutex.Unlock()
-	if fake.ListObjectsRequestStub != nil {
-		return fake.ListObjectsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15049,15 +15225,16 @@ func (fake *FakeS3API) ListObjectsV2(arg1 *s3.ListObjectsV2Input) (*s3.ListObjec
 	fake.listObjectsV2ArgsForCall = append(fake.listObjectsV2ArgsForCall, struct {
 		arg1 *s3.ListObjectsV2Input
 	}{arg1})
+	stub := fake.ListObjectsV2Stub
+	fakeReturns := fake.listObjectsV2Returns
 	fake.recordInvocation("ListObjectsV2", []interface{}{arg1})
 	fake.listObjectsV2Mutex.Unlock()
-	if fake.ListObjectsV2Stub != nil {
-		return fake.ListObjectsV2Stub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectsV2Returns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15113,15 +15290,16 @@ func (fake *FakeS3API) ListObjectsV2Pages(arg1 *s3.ListObjectsV2Input, arg2 func
 		arg1 *s3.ListObjectsV2Input
 		arg2 func(*s3.ListObjectsV2Output, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListObjectsV2PagesStub
+	fakeReturns := fake.listObjectsV2PagesReturns
 	fake.recordInvocation("ListObjectsV2Pages", []interface{}{arg1, arg2})
 	fake.listObjectsV2PagesMutex.Unlock()
-	if fake.ListObjectsV2PagesStub != nil {
-		return fake.ListObjectsV2PagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listObjectsV2PagesReturns
 	return fakeReturns.result1
 }
 
@@ -15176,15 +15354,16 @@ func (fake *FakeS3API) ListObjectsV2PagesWithContext(arg1 context.Context, arg2 
 		arg3 func(*s3.ListObjectsV2Output, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListObjectsV2PagesWithContextStub
+	fakeReturns := fake.listObjectsV2PagesWithContextReturns
 	fake.recordInvocation("ListObjectsV2PagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listObjectsV2PagesWithContextMutex.Unlock()
-	if fake.ListObjectsV2PagesWithContextStub != nil {
-		return fake.ListObjectsV2PagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listObjectsV2PagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -15236,15 +15415,16 @@ func (fake *FakeS3API) ListObjectsV2Request(arg1 *s3.ListObjectsV2Input) (*reque
 	fake.listObjectsV2RequestArgsForCall = append(fake.listObjectsV2RequestArgsForCall, struct {
 		arg1 *s3.ListObjectsV2Input
 	}{arg1})
+	stub := fake.ListObjectsV2RequestStub
+	fakeReturns := fake.listObjectsV2RequestReturns
 	fake.recordInvocation("ListObjectsV2Request", []interface{}{arg1})
 	fake.listObjectsV2RequestMutex.Unlock()
-	if fake.ListObjectsV2RequestStub != nil {
-		return fake.ListObjectsV2RequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectsV2RequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15301,15 +15481,16 @@ func (fake *FakeS3API) ListObjectsV2WithContext(arg1 context.Context, arg2 *s3.L
 		arg2 *s3.ListObjectsV2Input
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListObjectsV2WithContextStub
+	fakeReturns := fake.listObjectsV2WithContextReturns
 	fake.recordInvocation("ListObjectsV2WithContext", []interface{}{arg1, arg2, arg3})
 	fake.listObjectsV2WithContextMutex.Unlock()
-	if fake.ListObjectsV2WithContextStub != nil {
-		return fake.ListObjectsV2WithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectsV2WithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15366,15 +15547,16 @@ func (fake *FakeS3API) ListObjectsWithContext(arg1 context.Context, arg2 *s3.Lis
 		arg2 *s3.ListObjectsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListObjectsWithContextStub
+	fakeReturns := fake.listObjectsWithContextReturns
 	fake.recordInvocation("ListObjectsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listObjectsWithContextMutex.Unlock()
-	if fake.ListObjectsWithContextStub != nil {
-		return fake.ListObjectsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listObjectsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15429,15 +15611,16 @@ func (fake *FakeS3API) ListParts(arg1 *s3.ListPartsInput) (*s3.ListPartsOutput, 
 	fake.listPartsArgsForCall = append(fake.listPartsArgsForCall, struct {
 		arg1 *s3.ListPartsInput
 	}{arg1})
+	stub := fake.ListPartsStub
+	fakeReturns := fake.listPartsReturns
 	fake.recordInvocation("ListParts", []interface{}{arg1})
 	fake.listPartsMutex.Unlock()
-	if fake.ListPartsStub != nil {
-		return fake.ListPartsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listPartsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15493,15 +15676,16 @@ func (fake *FakeS3API) ListPartsPages(arg1 *s3.ListPartsInput, arg2 func(*s3.Lis
 		arg1 *s3.ListPartsInput
 		arg2 func(*s3.ListPartsOutput, bool) bool
 	}{arg1, arg2})
+	stub := fake.ListPartsPagesStub
+	fakeReturns := fake.listPartsPagesReturns
 	fake.recordInvocation("ListPartsPages", []interface{}{arg1, arg2})
 	fake.listPartsPagesMutex.Unlock()
-	if fake.ListPartsPagesStub != nil {
-		return fake.ListPartsPagesStub(arg1, arg2)
+	if stub != nil {
+		return stub(arg1, arg2)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listPartsPagesReturns
 	return fakeReturns.result1
 }
 
@@ -15556,15 +15740,16 @@ func (fake *FakeS3API) ListPartsPagesWithContext(arg1 context.Context, arg2 *s3.
 		arg3 func(*s3.ListPartsOutput, bool) bool
 		arg4 []request.Option
 	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListPartsPagesWithContextStub
+	fakeReturns := fake.listPartsPagesWithContextReturns
 	fake.recordInvocation("ListPartsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
 	fake.listPartsPagesWithContextMutex.Unlock()
-	if fake.ListPartsPagesWithContextStub != nil {
-		return fake.ListPartsPagesWithContextStub(arg1, arg2, arg3, arg4...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.listPartsPagesWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -15616,15 +15801,16 @@ func (fake *FakeS3API) ListPartsRequest(arg1 *s3.ListPartsInput) (*request.Reque
 	fake.listPartsRequestArgsForCall = append(fake.listPartsRequestArgsForCall, struct {
 		arg1 *s3.ListPartsInput
 	}{arg1})
+	stub := fake.ListPartsRequestStub
+	fakeReturns := fake.listPartsRequestReturns
 	fake.recordInvocation("ListPartsRequest", []interface{}{arg1})
 	fake.listPartsRequestMutex.Unlock()
-	if fake.ListPartsRequestStub != nil {
-		return fake.ListPartsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listPartsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15681,15 +15867,16 @@ func (fake *FakeS3API) ListPartsWithContext(arg1 context.Context, arg2 *s3.ListP
 		arg2 *s3.ListPartsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.ListPartsWithContextStub
+	fakeReturns := fake.listPartsWithContextReturns
 	fake.recordInvocation("ListPartsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.listPartsWithContextMutex.Unlock()
-	if fake.ListPartsWithContextStub != nil {
-		return fake.ListPartsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.listPartsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15744,15 +15931,16 @@ func (fake *FakeS3API) PutBucketAccelerateConfiguration(arg1 *s3.PutBucketAccele
 	fake.putBucketAccelerateConfigurationArgsForCall = append(fake.putBucketAccelerateConfigurationArgsForCall, struct {
 		arg1 *s3.PutBucketAccelerateConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketAccelerateConfigurationStub
+	fakeReturns := fake.putBucketAccelerateConfigurationReturns
 	fake.recordInvocation("PutBucketAccelerateConfiguration", []interface{}{arg1})
 	fake.putBucketAccelerateConfigurationMutex.Unlock()
-	if fake.PutBucketAccelerateConfigurationStub != nil {
-		return fake.PutBucketAccelerateConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAccelerateConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15807,15 +15995,16 @@ func (fake *FakeS3API) PutBucketAccelerateConfigurationRequest(arg1 *s3.PutBucke
 	fake.putBucketAccelerateConfigurationRequestArgsForCall = append(fake.putBucketAccelerateConfigurationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketAccelerateConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketAccelerateConfigurationRequestStub
+	fakeReturns := fake.putBucketAccelerateConfigurationRequestReturns
 	fake.recordInvocation("PutBucketAccelerateConfigurationRequest", []interface{}{arg1})
 	fake.putBucketAccelerateConfigurationRequestMutex.Unlock()
-	if fake.PutBucketAccelerateConfigurationRequestStub != nil {
-		return fake.PutBucketAccelerateConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAccelerateConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15872,15 +16061,16 @@ func (fake *FakeS3API) PutBucketAccelerateConfigurationWithContext(arg1 context.
 		arg2 *s3.PutBucketAccelerateConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketAccelerateConfigurationWithContextStub
+	fakeReturns := fake.putBucketAccelerateConfigurationWithContextReturns
 	fake.recordInvocation("PutBucketAccelerateConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketAccelerateConfigurationWithContextMutex.Unlock()
-	if fake.PutBucketAccelerateConfigurationWithContextStub != nil {
-		return fake.PutBucketAccelerateConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAccelerateConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15935,15 +16125,16 @@ func (fake *FakeS3API) PutBucketAcl(arg1 *s3.PutBucketAclInput) (*s3.PutBucketAc
 	fake.putBucketAclArgsForCall = append(fake.putBucketAclArgsForCall, struct {
 		arg1 *s3.PutBucketAclInput
 	}{arg1})
+	stub := fake.PutBucketAclStub
+	fakeReturns := fake.putBucketAclReturns
 	fake.recordInvocation("PutBucketAcl", []interface{}{arg1})
 	fake.putBucketAclMutex.Unlock()
-	if fake.PutBucketAclStub != nil {
-		return fake.PutBucketAclStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAclReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -15998,15 +16189,16 @@ func (fake *FakeS3API) PutBucketAclRequest(arg1 *s3.PutBucketAclInput) (*request
 	fake.putBucketAclRequestArgsForCall = append(fake.putBucketAclRequestArgsForCall, struct {
 		arg1 *s3.PutBucketAclInput
 	}{arg1})
+	stub := fake.PutBucketAclRequestStub
+	fakeReturns := fake.putBucketAclRequestReturns
 	fake.recordInvocation("PutBucketAclRequest", []interface{}{arg1})
 	fake.putBucketAclRequestMutex.Unlock()
-	if fake.PutBucketAclRequestStub != nil {
-		return fake.PutBucketAclRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAclRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16063,15 +16255,16 @@ func (fake *FakeS3API) PutBucketAclWithContext(arg1 context.Context, arg2 *s3.Pu
 		arg2 *s3.PutBucketAclInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketAclWithContextStub
+	fakeReturns := fake.putBucketAclWithContextReturns
 	fake.recordInvocation("PutBucketAclWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketAclWithContextMutex.Unlock()
-	if fake.PutBucketAclWithContextStub != nil {
-		return fake.PutBucketAclWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAclWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16126,15 +16319,16 @@ func (fake *FakeS3API) PutBucketAnalyticsConfiguration(arg1 *s3.PutBucketAnalyti
 	fake.putBucketAnalyticsConfigurationArgsForCall = append(fake.putBucketAnalyticsConfigurationArgsForCall, struct {
 		arg1 *s3.PutBucketAnalyticsConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketAnalyticsConfigurationStub
+	fakeReturns := fake.putBucketAnalyticsConfigurationReturns
 	fake.recordInvocation("PutBucketAnalyticsConfiguration", []interface{}{arg1})
 	fake.putBucketAnalyticsConfigurationMutex.Unlock()
-	if fake.PutBucketAnalyticsConfigurationStub != nil {
-		return fake.PutBucketAnalyticsConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAnalyticsConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16189,15 +16383,16 @@ func (fake *FakeS3API) PutBucketAnalyticsConfigurationRequest(arg1 *s3.PutBucket
 	fake.putBucketAnalyticsConfigurationRequestArgsForCall = append(fake.putBucketAnalyticsConfigurationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketAnalyticsConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketAnalyticsConfigurationRequestStub
+	fakeReturns := fake.putBucketAnalyticsConfigurationRequestReturns
 	fake.recordInvocation("PutBucketAnalyticsConfigurationRequest", []interface{}{arg1})
 	fake.putBucketAnalyticsConfigurationRequestMutex.Unlock()
-	if fake.PutBucketAnalyticsConfigurationRequestStub != nil {
-		return fake.PutBucketAnalyticsConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAnalyticsConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16254,15 +16449,16 @@ func (fake *FakeS3API) PutBucketAnalyticsConfigurationWithContext(arg1 context.C
 		arg2 *s3.PutBucketAnalyticsConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketAnalyticsConfigurationWithContextStub
+	fakeReturns := fake.putBucketAnalyticsConfigurationWithContextReturns
 	fake.recordInvocation("PutBucketAnalyticsConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketAnalyticsConfigurationWithContextMutex.Unlock()
-	if fake.PutBucketAnalyticsConfigurationWithContextStub != nil {
-		return fake.PutBucketAnalyticsConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketAnalyticsConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16317,15 +16513,16 @@ func (fake *FakeS3API) PutBucketCors(arg1 *s3.PutBucketCorsInput) (*s3.PutBucket
 	fake.putBucketCorsArgsForCall = append(fake.putBucketCorsArgsForCall, struct {
 		arg1 *s3.PutBucketCorsInput
 	}{arg1})
+	stub := fake.PutBucketCorsStub
+	fakeReturns := fake.putBucketCorsReturns
 	fake.recordInvocation("PutBucketCors", []interface{}{arg1})
 	fake.putBucketCorsMutex.Unlock()
-	if fake.PutBucketCorsStub != nil {
-		return fake.PutBucketCorsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketCorsReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16380,15 +16577,16 @@ func (fake *FakeS3API) PutBucketCorsRequest(arg1 *s3.PutBucketCorsInput) (*reque
 	fake.putBucketCorsRequestArgsForCall = append(fake.putBucketCorsRequestArgsForCall, struct {
 		arg1 *s3.PutBucketCorsInput
 	}{arg1})
+	stub := fake.PutBucketCorsRequestStub
+	fakeReturns := fake.putBucketCorsRequestReturns
 	fake.recordInvocation("PutBucketCorsRequest", []interface{}{arg1})
 	fake.putBucketCorsRequestMutex.Unlock()
-	if fake.PutBucketCorsRequestStub != nil {
-		return fake.PutBucketCorsRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketCorsRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16445,15 +16643,16 @@ func (fake *FakeS3API) PutBucketCorsWithContext(arg1 context.Context, arg2 *s3.P
 		arg2 *s3.PutBucketCorsInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketCorsWithContextStub
+	fakeReturns := fake.putBucketCorsWithContextReturns
 	fake.recordInvocation("PutBucketCorsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketCorsWithContextMutex.Unlock()
-	if fake.PutBucketCorsWithContextStub != nil {
-		return fake.PutBucketCorsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketCorsWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16508,15 +16707,16 @@ func (fake *FakeS3API) PutBucketEncryption(arg1 *s3.PutBucketEncryptionInput) (*
 	fake.putBucketEncryptionArgsForCall = append(fake.putBucketEncryptionArgsForCall, struct {
 		arg1 *s3.PutBucketEncryptionInput
 	}{arg1})
+	stub := fake.PutBucketEncryptionStub
+	fakeReturns := fake.putBucketEncryptionReturns
 	fake.recordInvocation("PutBucketEncryption", []interface{}{arg1})
 	fake.putBucketEncryptionMutex.Unlock()
-	if fake.PutBucketEncryptionStub != nil {
-		return fake.PutBucketEncryptionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketEncryptionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16571,15 +16771,16 @@ func (fake *FakeS3API) PutBucketEncryptionRequest(arg1 *s3.PutBucketEncryptionIn
 	fake.putBucketEncryptionRequestArgsForCall = append(fake.putBucketEncryptionRequestArgsForCall, struct {
 		arg1 *s3.PutBucketEncryptionInput
 	}{arg1})
+	stub := fake.PutBucketEncryptionRequestStub
+	fakeReturns := fake.putBucketEncryptionRequestReturns
 	fake.recordInvocation("PutBucketEncryptionRequest", []interface{}{arg1})
 	fake.putBucketEncryptionRequestMutex.Unlock()
-	if fake.PutBucketEncryptionRequestStub != nil {
-		return fake.PutBucketEncryptionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketEncryptionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16636,15 +16837,16 @@ func (fake *FakeS3API) PutBucketEncryptionWithContext(arg1 context.Context, arg2
 		arg2 *s3.PutBucketEncryptionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketEncryptionWithContextStub
+	fakeReturns := fake.putBucketEncryptionWithContextReturns
 	fake.recordInvocation("PutBucketEncryptionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketEncryptionWithContextMutex.Unlock()
-	if fake.PutBucketEncryptionWithContextStub != nil {
-		return fake.PutBucketEncryptionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketEncryptionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16699,15 +16901,16 @@ func (fake *FakeS3API) PutBucketInventoryConfiguration(arg1 *s3.PutBucketInvento
 	fake.putBucketInventoryConfigurationArgsForCall = append(fake.putBucketInventoryConfigurationArgsForCall, struct {
 		arg1 *s3.PutBucketInventoryConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketInventoryConfigurationStub
+	fakeReturns := fake.putBucketInventoryConfigurationReturns
 	fake.recordInvocation("PutBucketInventoryConfiguration", []interface{}{arg1})
 	fake.putBucketInventoryConfigurationMutex.Unlock()
-	if fake.PutBucketInventoryConfigurationStub != nil {
-		return fake.PutBucketInventoryConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketInventoryConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16762,15 +16965,16 @@ func (fake *FakeS3API) PutBucketInventoryConfigurationRequest(arg1 *s3.PutBucket
 	fake.putBucketInventoryConfigurationRequestArgsForCall = append(fake.putBucketInventoryConfigurationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketInventoryConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketInventoryConfigurationRequestStub
+	fakeReturns := fake.putBucketInventoryConfigurationRequestReturns
 	fake.recordInvocation("PutBucketInventoryConfigurationRequest", []interface{}{arg1})
 	fake.putBucketInventoryConfigurationRequestMutex.Unlock()
-	if fake.PutBucketInventoryConfigurationRequestStub != nil {
-		return fake.PutBucketInventoryConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketInventoryConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16827,15 +17031,16 @@ func (fake *FakeS3API) PutBucketInventoryConfigurationWithContext(arg1 context.C
 		arg2 *s3.PutBucketInventoryConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketInventoryConfigurationWithContextStub
+	fakeReturns := fake.putBucketInventoryConfigurationWithContextReturns
 	fake.recordInvocation("PutBucketInventoryConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketInventoryConfigurationWithContextMutex.Unlock()
-	if fake.PutBucketInventoryConfigurationWithContextStub != nil {
-		return fake.PutBucketInventoryConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketInventoryConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16890,15 +17095,16 @@ func (fake *FakeS3API) PutBucketLifecycle(arg1 *s3.PutBucketLifecycleInput) (*s3
 	fake.putBucketLifecycleArgsForCall = append(fake.putBucketLifecycleArgsForCall, struct {
 		arg1 *s3.PutBucketLifecycleInput
 	}{arg1})
+	stub := fake.PutBucketLifecycleStub
+	fakeReturns := fake.putBucketLifecycleReturns
 	fake.recordInvocation("PutBucketLifecycle", []interface{}{arg1})
 	fake.putBucketLifecycleMutex.Unlock()
-	if fake.PutBucketLifecycleStub != nil {
-		return fake.PutBucketLifecycleStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLifecycleReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -16953,15 +17159,16 @@ func (fake *FakeS3API) PutBucketLifecycleConfiguration(arg1 *s3.PutBucketLifecyc
 	fake.putBucketLifecycleConfigurationArgsForCall = append(fake.putBucketLifecycleConfigurationArgsForCall, struct {
 		arg1 *s3.PutBucketLifecycleConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketLifecycleConfigurationStub
+	fakeReturns := fake.putBucketLifecycleConfigurationReturns
 	fake.recordInvocation("PutBucketLifecycleConfiguration", []interface{}{arg1})
 	fake.putBucketLifecycleConfigurationMutex.Unlock()
-	if fake.PutBucketLifecycleConfigurationStub != nil {
-		return fake.PutBucketLifecycleConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLifecycleConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17016,15 +17223,16 @@ func (fake *FakeS3API) PutBucketLifecycleConfigurationRequest(arg1 *s3.PutBucket
 	fake.putBucketLifecycleConfigurationRequestArgsForCall = append(fake.putBucketLifecycleConfigurationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketLifecycleConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketLifecycleConfigurationRequestStub
+	fakeReturns := fake.putBucketLifecycleConfigurationRequestReturns
 	fake.recordInvocation("PutBucketLifecycleConfigurationRequest", []interface{}{arg1})
 	fake.putBucketLifecycleConfigurationRequestMutex.Unlock()
-	if fake.PutBucketLifecycleConfigurationRequestStub != nil {
-		return fake.PutBucketLifecycleConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLifecycleConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17081,15 +17289,16 @@ func (fake *FakeS3API) PutBucketLifecycleConfigurationWithContext(arg1 context.C
 		arg2 *s3.PutBucketLifecycleConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketLifecycleConfigurationWithContextStub
+	fakeReturns := fake.putBucketLifecycleConfigurationWithContextReturns
 	fake.recordInvocation("PutBucketLifecycleConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketLifecycleConfigurationWithContextMutex.Unlock()
-	if fake.PutBucketLifecycleConfigurationWithContextStub != nil {
-		return fake.PutBucketLifecycleConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLifecycleConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17144,15 +17353,16 @@ func (fake *FakeS3API) PutBucketLifecycleRequest(arg1 *s3.PutBucketLifecycleInpu
 	fake.putBucketLifecycleRequestArgsForCall = append(fake.putBucketLifecycleRequestArgsForCall, struct {
 		arg1 *s3.PutBucketLifecycleInput
 	}{arg1})
+	stub := fake.PutBucketLifecycleRequestStub
+	fakeReturns := fake.putBucketLifecycleRequestReturns
 	fake.recordInvocation("PutBucketLifecycleRequest", []interface{}{arg1})
 	fake.putBucketLifecycleRequestMutex.Unlock()
-	if fake.PutBucketLifecycleRequestStub != nil {
-		return fake.PutBucketLifecycleRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLifecycleRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17209,15 +17419,16 @@ func (fake *FakeS3API) PutBucketLifecycleWithContext(arg1 context.Context, arg2 
 		arg2 *s3.PutBucketLifecycleInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketLifecycleWithContextStub
+	fakeReturns := fake.putBucketLifecycleWithContextReturns
 	fake.recordInvocation("PutBucketLifecycleWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketLifecycleWithContextMutex.Unlock()
-	if fake.PutBucketLifecycleWithContextStub != nil {
-		return fake.PutBucketLifecycleWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLifecycleWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17272,15 +17483,16 @@ func (fake *FakeS3API) PutBucketLogging(arg1 *s3.PutBucketLoggingInput) (*s3.Put
 	fake.putBucketLoggingArgsForCall = append(fake.putBucketLoggingArgsForCall, struct {
 		arg1 *s3.PutBucketLoggingInput
 	}{arg1})
+	stub := fake.PutBucketLoggingStub
+	fakeReturns := fake.putBucketLoggingReturns
 	fake.recordInvocation("PutBucketLogging", []interface{}{arg1})
 	fake.putBucketLoggingMutex.Unlock()
-	if fake.PutBucketLoggingStub != nil {
-		return fake.PutBucketLoggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLoggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17335,15 +17547,16 @@ func (fake *FakeS3API) PutBucketLoggingRequest(arg1 *s3.PutBucketLoggingInput) (
 	fake.putBucketLoggingRequestArgsForCall = append(fake.putBucketLoggingRequestArgsForCall, struct {
 		arg1 *s3.PutBucketLoggingInput
 	}{arg1})
+	stub := fake.PutBucketLoggingRequestStub
+	fakeReturns := fake.putBucketLoggingRequestReturns
 	fake.recordInvocation("PutBucketLoggingRequest", []interface{}{arg1})
 	fake.putBucketLoggingRequestMutex.Unlock()
-	if fake.PutBucketLoggingRequestStub != nil {
-		return fake.PutBucketLoggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLoggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17400,15 +17613,16 @@ func (fake *FakeS3API) PutBucketLoggingWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.PutBucketLoggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketLoggingWithContextStub
+	fakeReturns := fake.putBucketLoggingWithContextReturns
 	fake.recordInvocation("PutBucketLoggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketLoggingWithContextMutex.Unlock()
-	if fake.PutBucketLoggingWithContextStub != nil {
-		return fake.PutBucketLoggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketLoggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17463,15 +17677,16 @@ func (fake *FakeS3API) PutBucketMetricsConfiguration(arg1 *s3.PutBucketMetricsCo
 	fake.putBucketMetricsConfigurationArgsForCall = append(fake.putBucketMetricsConfigurationArgsForCall, struct {
 		arg1 *s3.PutBucketMetricsConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketMetricsConfigurationStub
+	fakeReturns := fake.putBucketMetricsConfigurationReturns
 	fake.recordInvocation("PutBucketMetricsConfiguration", []interface{}{arg1})
 	fake.putBucketMetricsConfigurationMutex.Unlock()
-	if fake.PutBucketMetricsConfigurationStub != nil {
-		return fake.PutBucketMetricsConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketMetricsConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17526,15 +17741,16 @@ func (fake *FakeS3API) PutBucketMetricsConfigurationRequest(arg1 *s3.PutBucketMe
 	fake.putBucketMetricsConfigurationRequestArgsForCall = append(fake.putBucketMetricsConfigurationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketMetricsConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketMetricsConfigurationRequestStub
+	fakeReturns := fake.putBucketMetricsConfigurationRequestReturns
 	fake.recordInvocation("PutBucketMetricsConfigurationRequest", []interface{}{arg1})
 	fake.putBucketMetricsConfigurationRequestMutex.Unlock()
-	if fake.PutBucketMetricsConfigurationRequestStub != nil {
-		return fake.PutBucketMetricsConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketMetricsConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17591,15 +17807,16 @@ func (fake *FakeS3API) PutBucketMetricsConfigurationWithContext(arg1 context.Con
 		arg2 *s3.PutBucketMetricsConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketMetricsConfigurationWithContextStub
+	fakeReturns := fake.putBucketMetricsConfigurationWithContextReturns
 	fake.recordInvocation("PutBucketMetricsConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketMetricsConfigurationWithContextMutex.Unlock()
-	if fake.PutBucketMetricsConfigurationWithContextStub != nil {
-		return fake.PutBucketMetricsConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketMetricsConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17654,15 +17871,16 @@ func (fake *FakeS3API) PutBucketNotification(arg1 *s3.PutBucketNotificationInput
 	fake.putBucketNotificationArgsForCall = append(fake.putBucketNotificationArgsForCall, struct {
 		arg1 *s3.PutBucketNotificationInput
 	}{arg1})
+	stub := fake.PutBucketNotificationStub
+	fakeReturns := fake.putBucketNotificationReturns
 	fake.recordInvocation("PutBucketNotification", []interface{}{arg1})
 	fake.putBucketNotificationMutex.Unlock()
-	if fake.PutBucketNotificationStub != nil {
-		return fake.PutBucketNotificationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketNotificationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17717,15 +17935,16 @@ func (fake *FakeS3API) PutBucketNotificationConfiguration(arg1 *s3.PutBucketNoti
 	fake.putBucketNotificationConfigurationArgsForCall = append(fake.putBucketNotificationConfigurationArgsForCall, struct {
 		arg1 *s3.PutBucketNotificationConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketNotificationConfigurationStub
+	fakeReturns := fake.putBucketNotificationConfigurationReturns
 	fake.recordInvocation("PutBucketNotificationConfiguration", []interface{}{arg1})
 	fake.putBucketNotificationConfigurationMutex.Unlock()
-	if fake.PutBucketNotificationConfigurationStub != nil {
-		return fake.PutBucketNotificationConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketNotificationConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17780,15 +17999,16 @@ func (fake *FakeS3API) PutBucketNotificationConfigurationRequest(arg1 *s3.PutBuc
 	fake.putBucketNotificationConfigurationRequestArgsForCall = append(fake.putBucketNotificationConfigurationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketNotificationConfigurationInput
 	}{arg1})
+	stub := fake.PutBucketNotificationConfigurationRequestStub
+	fakeReturns := fake.putBucketNotificationConfigurationRequestReturns
 	fake.recordInvocation("PutBucketNotificationConfigurationRequest", []interface{}{arg1})
 	fake.putBucketNotificationConfigurationRequestMutex.Unlock()
-	if fake.PutBucketNotificationConfigurationRequestStub != nil {
-		return fake.PutBucketNotificationConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketNotificationConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17845,15 +18065,16 @@ func (fake *FakeS3API) PutBucketNotificationConfigurationWithContext(arg1 contex
 		arg2 *s3.PutBucketNotificationConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketNotificationConfigurationWithContextStub
+	fakeReturns := fake.putBucketNotificationConfigurationWithContextReturns
 	fake.recordInvocation("PutBucketNotificationConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketNotificationConfigurationWithContextMutex.Unlock()
-	if fake.PutBucketNotificationConfigurationWithContextStub != nil {
-		return fake.PutBucketNotificationConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketNotificationConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17908,15 +18129,16 @@ func (fake *FakeS3API) PutBucketNotificationRequest(arg1 *s3.PutBucketNotificati
 	fake.putBucketNotificationRequestArgsForCall = append(fake.putBucketNotificationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketNotificationInput
 	}{arg1})
+	stub := fake.PutBucketNotificationRequestStub
+	fakeReturns := fake.putBucketNotificationRequestReturns
 	fake.recordInvocation("PutBucketNotificationRequest", []interface{}{arg1})
 	fake.putBucketNotificationRequestMutex.Unlock()
-	if fake.PutBucketNotificationRequestStub != nil {
-		return fake.PutBucketNotificationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketNotificationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -17973,15 +18195,16 @@ func (fake *FakeS3API) PutBucketNotificationWithContext(arg1 context.Context, ar
 		arg2 *s3.PutBucketNotificationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketNotificationWithContextStub
+	fakeReturns := fake.putBucketNotificationWithContextReturns
 	fake.recordInvocation("PutBucketNotificationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketNotificationWithContextMutex.Unlock()
-	if fake.PutBucketNotificationWithContextStub != nil {
-		return fake.PutBucketNotificationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketNotificationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18036,15 +18259,16 @@ func (fake *FakeS3API) PutBucketPolicy(arg1 *s3.PutBucketPolicyInput) (*s3.PutBu
 	fake.putBucketPolicyArgsForCall = append(fake.putBucketPolicyArgsForCall, struct {
 		arg1 *s3.PutBucketPolicyInput
 	}{arg1})
+	stub := fake.PutBucketPolicyStub
+	fakeReturns := fake.putBucketPolicyReturns
 	fake.recordInvocation("PutBucketPolicy", []interface{}{arg1})
 	fake.putBucketPolicyMutex.Unlock()
-	if fake.PutBucketPolicyStub != nil {
-		return fake.PutBucketPolicyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketPolicyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18099,15 +18323,16 @@ func (fake *FakeS3API) PutBucketPolicyRequest(arg1 *s3.PutBucketPolicyInput) (*r
 	fake.putBucketPolicyRequestArgsForCall = append(fake.putBucketPolicyRequestArgsForCall, struct {
 		arg1 *s3.PutBucketPolicyInput
 	}{arg1})
+	stub := fake.PutBucketPolicyRequestStub
+	fakeReturns := fake.putBucketPolicyRequestReturns
 	fake.recordInvocation("PutBucketPolicyRequest", []interface{}{arg1})
 	fake.putBucketPolicyRequestMutex.Unlock()
-	if fake.PutBucketPolicyRequestStub != nil {
-		return fake.PutBucketPolicyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketPolicyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18164,15 +18389,16 @@ func (fake *FakeS3API) PutBucketPolicyWithContext(arg1 context.Context, arg2 *s3
 		arg2 *s3.PutBucketPolicyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketPolicyWithContextStub
+	fakeReturns := fake.putBucketPolicyWithContextReturns
 	fake.recordInvocation("PutBucketPolicyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketPolicyWithContextMutex.Unlock()
-	if fake.PutBucketPolicyWithContextStub != nil {
-		return fake.PutBucketPolicyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketPolicyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18227,15 +18453,16 @@ func (fake *FakeS3API) PutBucketReplication(arg1 *s3.PutBucketReplicationInput) 
 	fake.putBucketReplicationArgsForCall = append(fake.putBucketReplicationArgsForCall, struct {
 		arg1 *s3.PutBucketReplicationInput
 	}{arg1})
+	stub := fake.PutBucketReplicationStub
+	fakeReturns := fake.putBucketReplicationReturns
 	fake.recordInvocation("PutBucketReplication", []interface{}{arg1})
 	fake.putBucketReplicationMutex.Unlock()
-	if fake.PutBucketReplicationStub != nil {
-		return fake.PutBucketReplicationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketReplicationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18290,15 +18517,16 @@ func (fake *FakeS3API) PutBucketReplicationRequest(arg1 *s3.PutBucketReplication
 	fake.putBucketReplicationRequestArgsForCall = append(fake.putBucketReplicationRequestArgsForCall, struct {
 		arg1 *s3.PutBucketReplicationInput
 	}{arg1})
+	stub := fake.PutBucketReplicationRequestStub
+	fakeReturns := fake.putBucketReplicationRequestReturns
 	fake.recordInvocation("PutBucketReplicationRequest", []interface{}{arg1})
 	fake.putBucketReplicationRequestMutex.Unlock()
-	if fake.PutBucketReplicationRequestStub != nil {
-		return fake.PutBucketReplicationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketReplicationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18355,15 +18583,16 @@ func (fake *FakeS3API) PutBucketReplicationWithContext(arg1 context.Context, arg
 		arg2 *s3.PutBucketReplicationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketReplicationWithContextStub
+	fakeReturns := fake.putBucketReplicationWithContextReturns
 	fake.recordInvocation("PutBucketReplicationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketReplicationWithContextMutex.Unlock()
-	if fake.PutBucketReplicationWithContextStub != nil {
-		return fake.PutBucketReplicationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketReplicationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18418,15 +18647,16 @@ func (fake *FakeS3API) PutBucketRequestPayment(arg1 *s3.PutBucketRequestPaymentI
 	fake.putBucketRequestPaymentArgsForCall = append(fake.putBucketRequestPaymentArgsForCall, struct {
 		arg1 *s3.PutBucketRequestPaymentInput
 	}{arg1})
+	stub := fake.PutBucketRequestPaymentStub
+	fakeReturns := fake.putBucketRequestPaymentReturns
 	fake.recordInvocation("PutBucketRequestPayment", []interface{}{arg1})
 	fake.putBucketRequestPaymentMutex.Unlock()
-	if fake.PutBucketRequestPaymentStub != nil {
-		return fake.PutBucketRequestPaymentStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketRequestPaymentReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18481,15 +18711,16 @@ func (fake *FakeS3API) PutBucketRequestPaymentRequest(arg1 *s3.PutBucketRequestP
 	fake.putBucketRequestPaymentRequestArgsForCall = append(fake.putBucketRequestPaymentRequestArgsForCall, struct {
 		arg1 *s3.PutBucketRequestPaymentInput
 	}{arg1})
+	stub := fake.PutBucketRequestPaymentRequestStub
+	fakeReturns := fake.putBucketRequestPaymentRequestReturns
 	fake.recordInvocation("PutBucketRequestPaymentRequest", []interface{}{arg1})
 	fake.putBucketRequestPaymentRequestMutex.Unlock()
-	if fake.PutBucketRequestPaymentRequestStub != nil {
-		return fake.PutBucketRequestPaymentRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketRequestPaymentRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18546,15 +18777,16 @@ func (fake *FakeS3API) PutBucketRequestPaymentWithContext(arg1 context.Context, 
 		arg2 *s3.PutBucketRequestPaymentInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketRequestPaymentWithContextStub
+	fakeReturns := fake.putBucketRequestPaymentWithContextReturns
 	fake.recordInvocation("PutBucketRequestPaymentWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketRequestPaymentWithContextMutex.Unlock()
-	if fake.PutBucketRequestPaymentWithContextStub != nil {
-		return fake.PutBucketRequestPaymentWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketRequestPaymentWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18609,15 +18841,16 @@ func (fake *FakeS3API) PutBucketTagging(arg1 *s3.PutBucketTaggingInput) (*s3.Put
 	fake.putBucketTaggingArgsForCall = append(fake.putBucketTaggingArgsForCall, struct {
 		arg1 *s3.PutBucketTaggingInput
 	}{arg1})
+	stub := fake.PutBucketTaggingStub
+	fakeReturns := fake.putBucketTaggingReturns
 	fake.recordInvocation("PutBucketTagging", []interface{}{arg1})
 	fake.putBucketTaggingMutex.Unlock()
-	if fake.PutBucketTaggingStub != nil {
-		return fake.PutBucketTaggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketTaggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18672,15 +18905,16 @@ func (fake *FakeS3API) PutBucketTaggingRequest(arg1 *s3.PutBucketTaggingInput) (
 	fake.putBucketTaggingRequestArgsForCall = append(fake.putBucketTaggingRequestArgsForCall, struct {
 		arg1 *s3.PutBucketTaggingInput
 	}{arg1})
+	stub := fake.PutBucketTaggingRequestStub
+	fakeReturns := fake.putBucketTaggingRequestReturns
 	fake.recordInvocation("PutBucketTaggingRequest", []interface{}{arg1})
 	fake.putBucketTaggingRequestMutex.Unlock()
-	if fake.PutBucketTaggingRequestStub != nil {
-		return fake.PutBucketTaggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketTaggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18737,15 +18971,16 @@ func (fake *FakeS3API) PutBucketTaggingWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.PutBucketTaggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketTaggingWithContextStub
+	fakeReturns := fake.putBucketTaggingWithContextReturns
 	fake.recordInvocation("PutBucketTaggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketTaggingWithContextMutex.Unlock()
-	if fake.PutBucketTaggingWithContextStub != nil {
-		return fake.PutBucketTaggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketTaggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18800,15 +19035,16 @@ func (fake *FakeS3API) PutBucketVersioning(arg1 *s3.PutBucketVersioningInput) (*
 	fake.putBucketVersioningArgsForCall = append(fake.putBucketVersioningArgsForCall, struct {
 		arg1 *s3.PutBucketVersioningInput
 	}{arg1})
+	stub := fake.PutBucketVersioningStub
+	fakeReturns := fake.putBucketVersioningReturns
 	fake.recordInvocation("PutBucketVersioning", []interface{}{arg1})
 	fake.putBucketVersioningMutex.Unlock()
-	if fake.PutBucketVersioningStub != nil {
-		return fake.PutBucketVersioningStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketVersioningReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18863,15 +19099,16 @@ func (fake *FakeS3API) PutBucketVersioningRequest(arg1 *s3.PutBucketVersioningIn
 	fake.putBucketVersioningRequestArgsForCall = append(fake.putBucketVersioningRequestArgsForCall, struct {
 		arg1 *s3.PutBucketVersioningInput
 	}{arg1})
+	stub := fake.PutBucketVersioningRequestStub
+	fakeReturns := fake.putBucketVersioningRequestReturns
 	fake.recordInvocation("PutBucketVersioningRequest", []interface{}{arg1})
 	fake.putBucketVersioningRequestMutex.Unlock()
-	if fake.PutBucketVersioningRequestStub != nil {
-		return fake.PutBucketVersioningRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketVersioningRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18928,15 +19165,16 @@ func (fake *FakeS3API) PutBucketVersioningWithContext(arg1 context.Context, arg2
 		arg2 *s3.PutBucketVersioningInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketVersioningWithContextStub
+	fakeReturns := fake.putBucketVersioningWithContextReturns
 	fake.recordInvocation("PutBucketVersioningWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketVersioningWithContextMutex.Unlock()
-	if fake.PutBucketVersioningWithContextStub != nil {
-		return fake.PutBucketVersioningWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketVersioningWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -18991,15 +19229,16 @@ func (fake *FakeS3API) PutBucketWebsite(arg1 *s3.PutBucketWebsiteInput) (*s3.Put
 	fake.putBucketWebsiteArgsForCall = append(fake.putBucketWebsiteArgsForCall, struct {
 		arg1 *s3.PutBucketWebsiteInput
 	}{arg1})
+	stub := fake.PutBucketWebsiteStub
+	fakeReturns := fake.putBucketWebsiteReturns
 	fake.recordInvocation("PutBucketWebsite", []interface{}{arg1})
 	fake.putBucketWebsiteMutex.Unlock()
-	if fake.PutBucketWebsiteStub != nil {
-		return fake.PutBucketWebsiteStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketWebsiteReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19054,15 +19293,16 @@ func (fake *FakeS3API) PutBucketWebsiteRequest(arg1 *s3.PutBucketWebsiteInput) (
 	fake.putBucketWebsiteRequestArgsForCall = append(fake.putBucketWebsiteRequestArgsForCall, struct {
 		arg1 *s3.PutBucketWebsiteInput
 	}{arg1})
+	stub := fake.PutBucketWebsiteRequestStub
+	fakeReturns := fake.putBucketWebsiteRequestReturns
 	fake.recordInvocation("PutBucketWebsiteRequest", []interface{}{arg1})
 	fake.putBucketWebsiteRequestMutex.Unlock()
-	if fake.PutBucketWebsiteRequestStub != nil {
-		return fake.PutBucketWebsiteRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketWebsiteRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19119,15 +19359,16 @@ func (fake *FakeS3API) PutBucketWebsiteWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.PutBucketWebsiteInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutBucketWebsiteWithContextStub
+	fakeReturns := fake.putBucketWebsiteWithContextReturns
 	fake.recordInvocation("PutBucketWebsiteWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putBucketWebsiteWithContextMutex.Unlock()
-	if fake.PutBucketWebsiteWithContextStub != nil {
-		return fake.PutBucketWebsiteWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putBucketWebsiteWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19182,15 +19423,16 @@ func (fake *FakeS3API) PutObject(arg1 *s3.PutObjectInput) (*s3.PutObjectOutput, 
 	fake.putObjectArgsForCall = append(fake.putObjectArgsForCall, struct {
 		arg1 *s3.PutObjectInput
 	}{arg1})
+	stub := fake.PutObjectStub
+	fakeReturns := fake.putObjectReturns
 	fake.recordInvocation("PutObject", []interface{}{arg1})
 	fake.putObjectMutex.Unlock()
-	if fake.PutObjectStub != nil {
-		return fake.PutObjectStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19245,15 +19487,16 @@ func (fake *FakeS3API) PutObjectAcl(arg1 *s3.PutObjectAclInput) (*s3.PutObjectAc
 	fake.putObjectAclArgsForCall = append(fake.putObjectAclArgsForCall, struct {
 		arg1 *s3.PutObjectAclInput
 	}{arg1})
+	stub := fake.PutObjectAclStub
+	fakeReturns := fake.putObjectAclReturns
 	fake.recordInvocation("PutObjectAcl", []interface{}{arg1})
 	fake.putObjectAclMutex.Unlock()
-	if fake.PutObjectAclStub != nil {
-		return fake.PutObjectAclStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectAclReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19308,15 +19551,16 @@ func (fake *FakeS3API) PutObjectAclRequest(arg1 *s3.PutObjectAclInput) (*request
 	fake.putObjectAclRequestArgsForCall = append(fake.putObjectAclRequestArgsForCall, struct {
 		arg1 *s3.PutObjectAclInput
 	}{arg1})
+	stub := fake.PutObjectAclRequestStub
+	fakeReturns := fake.putObjectAclRequestReturns
 	fake.recordInvocation("PutObjectAclRequest", []interface{}{arg1})
 	fake.putObjectAclRequestMutex.Unlock()
-	if fake.PutObjectAclRequestStub != nil {
-		return fake.PutObjectAclRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectAclRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19373,15 +19617,16 @@ func (fake *FakeS3API) PutObjectAclWithContext(arg1 context.Context, arg2 *s3.Pu
 		arg2 *s3.PutObjectAclInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutObjectAclWithContextStub
+	fakeReturns := fake.putObjectAclWithContextReturns
 	fake.recordInvocation("PutObjectAclWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putObjectAclWithContextMutex.Unlock()
-	if fake.PutObjectAclWithContextStub != nil {
-		return fake.PutObjectAclWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectAclWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19436,15 +19681,16 @@ func (fake *FakeS3API) PutObjectLegalHold(arg1 *s3.PutObjectLegalHoldInput) (*s3
 	fake.putObjectLegalHoldArgsForCall = append(fake.putObjectLegalHoldArgsForCall, struct {
 		arg1 *s3.PutObjectLegalHoldInput
 	}{arg1})
+	stub := fake.PutObjectLegalHoldStub
+	fakeReturns := fake.putObjectLegalHoldReturns
 	fake.recordInvocation("PutObjectLegalHold", []interface{}{arg1})
 	fake.putObjectLegalHoldMutex.Unlock()
-	if fake.PutObjectLegalHoldStub != nil {
-		return fake.PutObjectLegalHoldStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectLegalHoldReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19499,15 +19745,16 @@ func (fake *FakeS3API) PutObjectLegalHoldRequest(arg1 *s3.PutObjectLegalHoldInpu
 	fake.putObjectLegalHoldRequestArgsForCall = append(fake.putObjectLegalHoldRequestArgsForCall, struct {
 		arg1 *s3.PutObjectLegalHoldInput
 	}{arg1})
+	stub := fake.PutObjectLegalHoldRequestStub
+	fakeReturns := fake.putObjectLegalHoldRequestReturns
 	fake.recordInvocation("PutObjectLegalHoldRequest", []interface{}{arg1})
 	fake.putObjectLegalHoldRequestMutex.Unlock()
-	if fake.PutObjectLegalHoldRequestStub != nil {
-		return fake.PutObjectLegalHoldRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectLegalHoldRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19564,15 +19811,16 @@ func (fake *FakeS3API) PutObjectLegalHoldWithContext(arg1 context.Context, arg2 
 		arg2 *s3.PutObjectLegalHoldInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutObjectLegalHoldWithContextStub
+	fakeReturns := fake.putObjectLegalHoldWithContextReturns
 	fake.recordInvocation("PutObjectLegalHoldWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putObjectLegalHoldWithContextMutex.Unlock()
-	if fake.PutObjectLegalHoldWithContextStub != nil {
-		return fake.PutObjectLegalHoldWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectLegalHoldWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19627,15 +19875,16 @@ func (fake *FakeS3API) PutObjectLockConfiguration(arg1 *s3.PutObjectLockConfigur
 	fake.putObjectLockConfigurationArgsForCall = append(fake.putObjectLockConfigurationArgsForCall, struct {
 		arg1 *s3.PutObjectLockConfigurationInput
 	}{arg1})
+	stub := fake.PutObjectLockConfigurationStub
+	fakeReturns := fake.putObjectLockConfigurationReturns
 	fake.recordInvocation("PutObjectLockConfiguration", []interface{}{arg1})
 	fake.putObjectLockConfigurationMutex.Unlock()
-	if fake.PutObjectLockConfigurationStub != nil {
-		return fake.PutObjectLockConfigurationStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectLockConfigurationReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19690,15 +19939,16 @@ func (fake *FakeS3API) PutObjectLockConfigurationRequest(arg1 *s3.PutObjectLockC
 	fake.putObjectLockConfigurationRequestArgsForCall = append(fake.putObjectLockConfigurationRequestArgsForCall, struct {
 		arg1 *s3.PutObjectLockConfigurationInput
 	}{arg1})
+	stub := fake.PutObjectLockConfigurationRequestStub
+	fakeReturns := fake.putObjectLockConfigurationRequestReturns
 	fake.recordInvocation("PutObjectLockConfigurationRequest", []interface{}{arg1})
 	fake.putObjectLockConfigurationRequestMutex.Unlock()
-	if fake.PutObjectLockConfigurationRequestStub != nil {
-		return fake.PutObjectLockConfigurationRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectLockConfigurationRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19755,15 +20005,16 @@ func (fake *FakeS3API) PutObjectLockConfigurationWithContext(arg1 context.Contex
 		arg2 *s3.PutObjectLockConfigurationInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutObjectLockConfigurationWithContextStub
+	fakeReturns := fake.putObjectLockConfigurationWithContextReturns
 	fake.recordInvocation("PutObjectLockConfigurationWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putObjectLockConfigurationWithContextMutex.Unlock()
-	if fake.PutObjectLockConfigurationWithContextStub != nil {
-		return fake.PutObjectLockConfigurationWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectLockConfigurationWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19818,15 +20069,16 @@ func (fake *FakeS3API) PutObjectRequest(arg1 *s3.PutObjectInput) (*request.Reque
 	fake.putObjectRequestArgsForCall = append(fake.putObjectRequestArgsForCall, struct {
 		arg1 *s3.PutObjectInput
 	}{arg1})
+	stub := fake.PutObjectRequestStub
+	fakeReturns := fake.putObjectRequestReturns
 	fake.recordInvocation("PutObjectRequest", []interface{}{arg1})
 	fake.putObjectRequestMutex.Unlock()
-	if fake.PutObjectRequestStub != nil {
-		return fake.PutObjectRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19881,15 +20133,16 @@ func (fake *FakeS3API) PutObjectRetention(arg1 *s3.PutObjectRetentionInput) (*s3
 	fake.putObjectRetentionArgsForCall = append(fake.putObjectRetentionArgsForCall, struct {
 		arg1 *s3.PutObjectRetentionInput
 	}{arg1})
+	stub := fake.PutObjectRetentionStub
+	fakeReturns := fake.putObjectRetentionReturns
 	fake.recordInvocation("PutObjectRetention", []interface{}{arg1})
 	fake.putObjectRetentionMutex.Unlock()
-	if fake.PutObjectRetentionStub != nil {
-		return fake.PutObjectRetentionStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectRetentionReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -19944,15 +20197,16 @@ func (fake *FakeS3API) PutObjectRetentionRequest(arg1 *s3.PutObjectRetentionInpu
 	fake.putObjectRetentionRequestArgsForCall = append(fake.putObjectRetentionRequestArgsForCall, struct {
 		arg1 *s3.PutObjectRetentionInput
 	}{arg1})
+	stub := fake.PutObjectRetentionRequestStub
+	fakeReturns := fake.putObjectRetentionRequestReturns
 	fake.recordInvocation("PutObjectRetentionRequest", []interface{}{arg1})
 	fake.putObjectRetentionRequestMutex.Unlock()
-	if fake.PutObjectRetentionRequestStub != nil {
-		return fake.PutObjectRetentionRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectRetentionRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20009,15 +20263,16 @@ func (fake *FakeS3API) PutObjectRetentionWithContext(arg1 context.Context, arg2 
 		arg2 *s3.PutObjectRetentionInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutObjectRetentionWithContextStub
+	fakeReturns := fake.putObjectRetentionWithContextReturns
 	fake.recordInvocation("PutObjectRetentionWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putObjectRetentionWithContextMutex.Unlock()
-	if fake.PutObjectRetentionWithContextStub != nil {
-		return fake.PutObjectRetentionWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectRetentionWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20072,15 +20327,16 @@ func (fake *FakeS3API) PutObjectTagging(arg1 *s3.PutObjectTaggingInput) (*s3.Put
 	fake.putObjectTaggingArgsForCall = append(fake.putObjectTaggingArgsForCall, struct {
 		arg1 *s3.PutObjectTaggingInput
 	}{arg1})
+	stub := fake.PutObjectTaggingStub
+	fakeReturns := fake.putObjectTaggingReturns
 	fake.recordInvocation("PutObjectTagging", []interface{}{arg1})
 	fake.putObjectTaggingMutex.Unlock()
-	if fake.PutObjectTaggingStub != nil {
-		return fake.PutObjectTaggingStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectTaggingReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20135,15 +20391,16 @@ func (fake *FakeS3API) PutObjectTaggingRequest(arg1 *s3.PutObjectTaggingInput) (
 	fake.putObjectTaggingRequestArgsForCall = append(fake.putObjectTaggingRequestArgsForCall, struct {
 		arg1 *s3.PutObjectTaggingInput
 	}{arg1})
+	stub := fake.PutObjectTaggingRequestStub
+	fakeReturns := fake.putObjectTaggingRequestReturns
 	fake.recordInvocation("PutObjectTaggingRequest", []interface{}{arg1})
 	fake.putObjectTaggingRequestMutex.Unlock()
-	if fake.PutObjectTaggingRequestStub != nil {
-		return fake.PutObjectTaggingRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectTaggingRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20200,15 +20457,16 @@ func (fake *FakeS3API) PutObjectTaggingWithContext(arg1 context.Context, arg2 *s
 		arg2 *s3.PutObjectTaggingInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutObjectTaggingWithContextStub
+	fakeReturns := fake.putObjectTaggingWithContextReturns
 	fake.recordInvocation("PutObjectTaggingWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putObjectTaggingWithContextMutex.Unlock()
-	if fake.PutObjectTaggingWithContextStub != nil {
-		return fake.PutObjectTaggingWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectTaggingWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20265,15 +20523,16 @@ func (fake *FakeS3API) PutObjectWithContext(arg1 context.Context, arg2 *s3.PutOb
 		arg2 *s3.PutObjectInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutObjectWithContextStub
+	fakeReturns := fake.putObjectWithContextReturns
 	fake.recordInvocation("PutObjectWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putObjectWithContextMutex.Unlock()
-	if fake.PutObjectWithContextStub != nil {
-		return fake.PutObjectWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putObjectWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20328,15 +20587,16 @@ func (fake *FakeS3API) PutPublicAccessBlock(arg1 *s3.PutPublicAccessBlockInput) 
 	fake.putPublicAccessBlockArgsForCall = append(fake.putPublicAccessBlockArgsForCall, struct {
 		arg1 *s3.PutPublicAccessBlockInput
 	}{arg1})
+	stub := fake.PutPublicAccessBlockStub
+	fakeReturns := fake.putPublicAccessBlockReturns
 	fake.recordInvocation("PutPublicAccessBlock", []interface{}{arg1})
 	fake.putPublicAccessBlockMutex.Unlock()
-	if fake.PutPublicAccessBlockStub != nil {
-		return fake.PutPublicAccessBlockStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putPublicAccessBlockReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20391,15 +20651,16 @@ func (fake *FakeS3API) PutPublicAccessBlockRequest(arg1 *s3.PutPublicAccessBlock
 	fake.putPublicAccessBlockRequestArgsForCall = append(fake.putPublicAccessBlockRequestArgsForCall, struct {
 		arg1 *s3.PutPublicAccessBlockInput
 	}{arg1})
+	stub := fake.PutPublicAccessBlockRequestStub
+	fakeReturns := fake.putPublicAccessBlockRequestReturns
 	fake.recordInvocation("PutPublicAccessBlockRequest", []interface{}{arg1})
 	fake.putPublicAccessBlockRequestMutex.Unlock()
-	if fake.PutPublicAccessBlockRequestStub != nil {
-		return fake.PutPublicAccessBlockRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putPublicAccessBlockRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20456,15 +20717,16 @@ func (fake *FakeS3API) PutPublicAccessBlockWithContext(arg1 context.Context, arg
 		arg2 *s3.PutPublicAccessBlockInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.PutPublicAccessBlockWithContextStub
+	fakeReturns := fake.putPublicAccessBlockWithContextReturns
 	fake.recordInvocation("PutPublicAccessBlockWithContext", []interface{}{arg1, arg2, arg3})
 	fake.putPublicAccessBlockWithContextMutex.Unlock()
-	if fake.PutPublicAccessBlockWithContextStub != nil {
-		return fake.PutPublicAccessBlockWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.putPublicAccessBlockWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20519,15 +20781,16 @@ func (fake *FakeS3API) RestoreObject(arg1 *s3.RestoreObjectInput) (*s3.RestoreOb
 	fake.restoreObjectArgsForCall = append(fake.restoreObjectArgsForCall, struct {
 		arg1 *s3.RestoreObjectInput
 	}{arg1})
+	stub := fake.RestoreObjectStub
+	fakeReturns := fake.restoreObjectReturns
 	fake.recordInvocation("RestoreObject", []interface{}{arg1})
 	fake.restoreObjectMutex.Unlock()
-	if fake.RestoreObjectStub != nil {
-		return fake.RestoreObjectStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreObjectReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20582,15 +20845,16 @@ func (fake *FakeS3API) RestoreObjectRequest(arg1 *s3.RestoreObjectInput) (*reque
 	fake.restoreObjectRequestArgsForCall = append(fake.restoreObjectRequestArgsForCall, struct {
 		arg1 *s3.RestoreObjectInput
 	}{arg1})
+	stub := fake.RestoreObjectRequestStub
+	fakeReturns := fake.restoreObjectRequestReturns
 	fake.recordInvocation("RestoreObjectRequest", []interface{}{arg1})
 	fake.restoreObjectRequestMutex.Unlock()
-	if fake.RestoreObjectRequestStub != nil {
-		return fake.RestoreObjectRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreObjectRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20647,15 +20911,16 @@ func (fake *FakeS3API) RestoreObjectWithContext(arg1 context.Context, arg2 *s3.R
 		arg2 *s3.RestoreObjectInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.RestoreObjectWithContextStub
+	fakeReturns := fake.restoreObjectWithContextReturns
 	fake.recordInvocation("RestoreObjectWithContext", []interface{}{arg1, arg2, arg3})
 	fake.restoreObjectWithContextMutex.Unlock()
-	if fake.RestoreObjectWithContextStub != nil {
-		return fake.RestoreObjectWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.restoreObjectWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20710,15 +20975,16 @@ func (fake *FakeS3API) SelectObjectContent(arg1 *s3.SelectObjectContentInput) (*
 	fake.selectObjectContentArgsForCall = append(fake.selectObjectContentArgsForCall, struct {
 		arg1 *s3.SelectObjectContentInput
 	}{arg1})
+	stub := fake.SelectObjectContentStub
+	fakeReturns := fake.selectObjectContentReturns
 	fake.recordInvocation("SelectObjectContent", []interface{}{arg1})
 	fake.selectObjectContentMutex.Unlock()
-	if fake.SelectObjectContentStub != nil {
-		return fake.SelectObjectContentStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.selectObjectContentReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20773,15 +21039,16 @@ func (fake *FakeS3API) SelectObjectContentRequest(arg1 *s3.SelectObjectContentIn
 	fake.selectObjectContentRequestArgsForCall = append(fake.selectObjectContentRequestArgsForCall, struct {
 		arg1 *s3.SelectObjectContentInput
 	}{arg1})
+	stub := fake.SelectObjectContentRequestStub
+	fakeReturns := fake.selectObjectContentRequestReturns
 	fake.recordInvocation("SelectObjectContentRequest", []interface{}{arg1})
 	fake.selectObjectContentRequestMutex.Unlock()
-	if fake.SelectObjectContentRequestStub != nil {
-		return fake.SelectObjectContentRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.selectObjectContentRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20838,15 +21105,16 @@ func (fake *FakeS3API) SelectObjectContentWithContext(arg1 context.Context, arg2
 		arg2 *s3.SelectObjectContentInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.SelectObjectContentWithContextStub
+	fakeReturns := fake.selectObjectContentWithContextReturns
 	fake.recordInvocation("SelectObjectContentWithContext", []interface{}{arg1, arg2, arg3})
 	fake.selectObjectContentWithContextMutex.Unlock()
-	if fake.SelectObjectContentWithContextStub != nil {
-		return fake.SelectObjectContentWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.selectObjectContentWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20901,15 +21169,16 @@ func (fake *FakeS3API) UploadPart(arg1 *s3.UploadPartInput) (*s3.UploadPartOutpu
 	fake.uploadPartArgsForCall = append(fake.uploadPartArgsForCall, struct {
 		arg1 *s3.UploadPartInput
 	}{arg1})
+	stub := fake.UploadPartStub
+	fakeReturns := fake.uploadPartReturns
 	fake.recordInvocation("UploadPart", []interface{}{arg1})
 	fake.uploadPartMutex.Unlock()
-	if fake.UploadPartStub != nil {
-		return fake.UploadPartStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.uploadPartReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -20964,15 +21233,16 @@ func (fake *FakeS3API) UploadPartCopy(arg1 *s3.UploadPartCopyInput) (*s3.UploadP
 	fake.uploadPartCopyArgsForCall = append(fake.uploadPartCopyArgsForCall, struct {
 		arg1 *s3.UploadPartCopyInput
 	}{arg1})
+	stub := fake.UploadPartCopyStub
+	fakeReturns := fake.uploadPartCopyReturns
 	fake.recordInvocation("UploadPartCopy", []interface{}{arg1})
 	fake.uploadPartCopyMutex.Unlock()
-	if fake.UploadPartCopyStub != nil {
-		return fake.UploadPartCopyStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.uploadPartCopyReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21027,15 +21297,16 @@ func (fake *FakeS3API) UploadPartCopyRequest(arg1 *s3.UploadPartCopyInput) (*req
 	fake.uploadPartCopyRequestArgsForCall = append(fake.uploadPartCopyRequestArgsForCall, struct {
 		arg1 *s3.UploadPartCopyInput
 	}{arg1})
+	stub := fake.UploadPartCopyRequestStub
+	fakeReturns := fake.uploadPartCopyRequestReturns
 	fake.recordInvocation("UploadPartCopyRequest", []interface{}{arg1})
 	fake.uploadPartCopyRequestMutex.Unlock()
-	if fake.UploadPartCopyRequestStub != nil {
-		return fake.UploadPartCopyRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.uploadPartCopyRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21092,15 +21363,16 @@ func (fake *FakeS3API) UploadPartCopyWithContext(arg1 context.Context, arg2 *s3.
 		arg2 *s3.UploadPartCopyInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UploadPartCopyWithContextStub
+	fakeReturns := fake.uploadPartCopyWithContextReturns
 	fake.recordInvocation("UploadPartCopyWithContext", []interface{}{arg1, arg2, arg3})
 	fake.uploadPartCopyWithContextMutex.Unlock()
-	if fake.UploadPartCopyWithContextStub != nil {
-		return fake.UploadPartCopyWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.uploadPartCopyWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21155,15 +21427,16 @@ func (fake *FakeS3API) UploadPartRequest(arg1 *s3.UploadPartInput) (*request.Req
 	fake.uploadPartRequestArgsForCall = append(fake.uploadPartRequestArgsForCall, struct {
 		arg1 *s3.UploadPartInput
 	}{arg1})
+	stub := fake.UploadPartRequestStub
+	fakeReturns := fake.uploadPartRequestReturns
 	fake.recordInvocation("UploadPartRequest", []interface{}{arg1})
 	fake.uploadPartRequestMutex.Unlock()
-	if fake.UploadPartRequestStub != nil {
-		return fake.UploadPartRequestStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.uploadPartRequestReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21220,15 +21493,16 @@ func (fake *FakeS3API) UploadPartWithContext(arg1 context.Context, arg2 *s3.Uplo
 		arg2 *s3.UploadPartInput
 		arg3 []request.Option
 	}{arg1, arg2, arg3})
+	stub := fake.UploadPartWithContextStub
+	fakeReturns := fake.uploadPartWithContextReturns
 	fake.recordInvocation("UploadPartWithContext", []interface{}{arg1, arg2, arg3})
 	fake.uploadPartWithContextMutex.Unlock()
-	if fake.UploadPartWithContextStub != nil {
-		return fake.UploadPartWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1, ret.result2
 	}
-	fakeReturns := fake.uploadPartWithContextReturns
 	return fakeReturns.result1, fakeReturns.result2
 }
 
@@ -21283,15 +21557,16 @@ func (fake *FakeS3API) WaitUntilBucketExists(arg1 *s3.HeadBucketInput) error {
 	fake.waitUntilBucketExistsArgsForCall = append(fake.waitUntilBucketExistsArgsForCall, struct {
 		arg1 *s3.HeadBucketInput
 	}{arg1})
+	stub := fake.WaitUntilBucketExistsStub
+	fakeReturns := fake.waitUntilBucketExistsReturns
 	fake.recordInvocation("WaitUntilBucketExists", []interface{}{arg1})
 	fake.waitUntilBucketExistsMutex.Unlock()
-	if fake.WaitUntilBucketExistsStub != nil {
-		return fake.WaitUntilBucketExistsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilBucketExistsReturns
 	return fakeReturns.result1
 }
 
@@ -21345,15 +21620,16 @@ func (fake *FakeS3API) WaitUntilBucketExistsWithContext(arg1 context.Context, ar
 		arg2 *s3.HeadBucketInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilBucketExistsWithContextStub
+	fakeReturns := fake.waitUntilBucketExistsWithContextReturns
 	fake.recordInvocation("WaitUntilBucketExistsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilBucketExistsWithContextMutex.Unlock()
-	if fake.WaitUntilBucketExistsWithContextStub != nil {
-		return fake.WaitUntilBucketExistsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilBucketExistsWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -21405,15 +21681,16 @@ func (fake *FakeS3API) WaitUntilBucketNotExists(arg1 *s3.HeadBucketInput) error 
 	fake.waitUntilBucketNotExistsArgsForCall = append(fake.waitUntilBucketNotExistsArgsForCall, struct {
 		arg1 *s3.HeadBucketInput
 	}{arg1})
+	stub := fake.WaitUntilBucketNotExistsStub
+	fakeReturns := fake.waitUntilBucketNotExistsReturns
 	fake.recordInvocation("WaitUntilBucketNotExists", []interface{}{arg1})
 	fake.waitUntilBucketNotExistsMutex.Unlock()
-	if fake.WaitUntilBucketNotExistsStub != nil {
-		return fake.WaitUntilBucketNotExistsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilBucketNotExistsReturns
 	return fakeReturns.result1
 }
 
@@ -21467,15 +21744,16 @@ func (fake *FakeS3API) WaitUntilBucketNotExistsWithContext(arg1 context.Context,
 		arg2 *s3.HeadBucketInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilBucketNotExistsWithContextStub
+	fakeReturns := fake.waitUntilBucketNotExistsWithContextReturns
 	fake.recordInvocation("WaitUntilBucketNotExistsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilBucketNotExistsWithContextMutex.Unlock()
-	if fake.WaitUntilBucketNotExistsWithContextStub != nil {
-		return fake.WaitUntilBucketNotExistsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilBucketNotExistsWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -21527,15 +21805,16 @@ func (fake *FakeS3API) WaitUntilObjectExists(arg1 *s3.HeadObjectInput) error {
 	fake.waitUntilObjectExistsArgsForCall = append(fake.waitUntilObjectExistsArgsForCall, struct {
 		arg1 *s3.HeadObjectInput
 	}{arg1})
+	stub := fake.WaitUntilObjectExistsStub
+	fakeReturns := fake.waitUntilObjectExistsReturns
 	fake.recordInvocation("WaitUntilObjectExists", []interface{}{arg1})
 	fake.waitUntilObjectExistsMutex.Unlock()
-	if fake.WaitUntilObjectExistsStub != nil {
-		return fake.WaitUntilObjectExistsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilObjectExistsReturns
 	return fakeReturns.result1
 }
 
@@ -21589,15 +21868,16 @@ func (fake *FakeS3API) WaitUntilObjectExistsWithContext(arg1 context.Context, ar
 		arg2 *s3.HeadObjectInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilObjectExistsWithContextStub
+	fakeReturns := fake.waitUntilObjectExistsWithContextReturns
 	fake.recordInvocation("WaitUntilObjectExistsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilObjectExistsWithContextMutex.Unlock()
-	if fake.WaitUntilObjectExistsWithContextStub != nil {
-		return fake.WaitUntilObjectExistsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilObjectExistsWithContextReturns
 	return fakeReturns.result1
 }
 
@@ -21649,15 +21929,16 @@ func (fake *FakeS3API) WaitUntilObjectNotExists(arg1 *s3.HeadObjectInput) error 
 	fake.waitUntilObjectNotExistsArgsForCall = append(fake.waitUntilObjectNotExistsArgsForCall, struct {
 		arg1 *s3.HeadObjectInput
 	}{arg1})
+	stub := fake.WaitUntilObjectNotExistsStub
+	fakeReturns := fake.waitUntilObjectNotExistsReturns
 	fake.recordInvocation("WaitUntilObjectNotExists", []interface{}{arg1})
 	fake.waitUntilObjectNotExistsMutex.Unlock()
-	if fake.WaitUntilObjectNotExistsStub != nil {
-		return fake.WaitUntilObjectNotExistsStub(arg1)
+	if stub != nil {
+		return stub(arg1)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilObjectNotExistsReturns
 	return fakeReturns.result1
 }
 
@@ -21711,15 +21992,16 @@ func (fake *FakeS3API) WaitUntilObjectNotExistsWithContext(arg1 context.Context,
 		arg2 *s3.HeadObjectInput
 		arg3 []request.WaiterOption
 	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilObjectNotExistsWithContextStub
+	fakeReturns := fake.waitUntilObjectNotExistsWithContextReturns
 	fake.recordInvocation("WaitUntilObjectNotExistsWithContext", []interface{}{arg1, arg2, arg3})
 	fake.waitUntilObjectNotExistsWithContextMutex.Unlock()
-	if fake.WaitUntilObjectNotExistsWithContextStub != nil {
-		return fake.WaitUntilObjectNotExistsWithContextStub(arg1, arg2, arg3...)
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
 	}
 	if specificReturn {
 		return ret.result1
 	}
-	fakeReturns := fake.waitUntilObjectNotExistsWithContextReturns
 	return fakeReturns.result1
 }
 
