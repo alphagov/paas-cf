@@ -7,7 +7,7 @@
   value: medium
 - type: replace
   path: /instance_groups/name=diego-api/vm_type
-  value: medium
+  value: large
 - type: replace
   path: /instance_groups/name=doppler/vm_type
   value: large
