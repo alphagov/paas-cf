@@ -1,4 +1,6 @@
 RSpec.describe "certificates" do
+  let(:manifest) { manifest_with_defaults }
+
   def get_all_cas_usages(enumerable)
     return enumerable.flat_map { |v| get_all_cas_usages(v) } if enumerable.is_a? Array
 
@@ -14,8 +16,6 @@ RSpec.describe "certificates" do
   end
 
   describe "ca certificates" do
-    let(:manifest) { manifest_with_defaults }
-
     let(:ca_usages) do
       get_all_cas_usages(manifest.fetch(".")).map do |usage|
         usage.gsub(/[()]/, "") # delete surrounding parens
@@ -29,6 +29,28 @@ RSpec.describe "certificates" do
     it "uses .ca for every usage of a ca certificate" do
       expect(ca_usages).to all(match(/[.]ca$/)),
         "Usage of CA #{ca_usages} should be cert_name.ca not ca_name.certificate, otherwise credhub rotation will fail"
+    end
+  end
+
+  describe "leaf certs" do
+    let(:vars) { manifest.fetch("variables") }
+    let(:certs) { vars.select { |v| v["type"] == "certificate" } }
+
+    it "have at least one alternative_name" do
+      certs.each do |c|
+        is_ca = c.dig("options", "is_ca") || false
+
+        if is_ca
+          next
+        end
+
+        cert_name = c["name"]
+        common_name = c.dig("options", "common_name")
+        alt_names = c.dig("options", "alternative_names") || []
+
+        expect(alt_names.length).to be > 0,
+          "Certificate #{cert_name} (common_name '#{common_name}') must have at least one alternative_name"
+      end
     end
   end
 end
