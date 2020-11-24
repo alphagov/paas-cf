@@ -221,6 +221,7 @@ groups:
     jobs:
       - continuous-smoke-tests
       - continuous-billing-smoke-tests
+      - continuous-leaked-aws-key-check
       - check-certificates
   - name: credentials
     jobs:
@@ -255,6 +256,12 @@ resource_types:
   source:
     repository: ghcr.io/alphagov/paas/grafana-annotation-resource
     tag: 140506423e1194319fc1e2ed7f8d04a36ca61ae3
+
+- name: slack-notification-resource
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/slack-notification-resource
+    tag: edd15a5700df670874871fe03fa098e28d89faea
 
 resources:
   - name: pipeline-trigger
@@ -480,6 +487,11 @@ resources:
       stop: 5:00 PM
       days: [Monday, Tuesday, Wednesday, Thursday, Friday]
 
+  - name: leaked-aws-key-check-timer
+    type: time
+    source:
+      interval: 5m
+
   - name: check-certificates-timer
     type: time
     source:
@@ -609,6 +621,11 @@ resources:
       template: |
         ${BUILD_PIPELINE_NAME}/${BUILD_JOB_NAME}
         ${ATC_EXTERNAL_URL}/teams/${BUILD_TEAM_NAME}/pipelines/${BUILD_PIPELINE_NAME}/jobs/${BUILD_JOB_NAME}/builds/${BUILD_NAME}
+
+  - name: slack-notification
+    type: slack-notification-resource
+    source:
+      url: ((cyber_slack_webhook_url))
 
 jobs:
   - name: pipeline-lock
@@ -5721,6 +5738,96 @@ jobs:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
                 CF_PASS: ((cf_pass))
+
+  - name: continuous-leaked-aws-key-check
+    serial_groups: [smoke-tests]
+    build_logs_to_retain: 10000
+    plan:
+      - in_parallel:
+        - get: leaked-aws-key-check-timer
+          trigger: true
+
+      - do:
+        - task: run-leaked-aws-key-check
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *awscli-image-resource
+            params:
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              SLACK_WEBHOOK_URL: ((cyber_slack_webhook_url))
+            inputs:
+            run:
+              path: sh
+              args:
+                - -u
+                - -c
+                - |
+                  quarantine_policy="AWSCompromisedKeyQuarantine"
+                  target_user_string='paas-s3-broker'
+
+                  ###list all attached user policies
+
+                  compromised=false
+                  list_users=$(aws iam list-users | grep UserName | awk -F '"' '{print $4}')
+
+                  for user in ${list_users}; do
+
+                    if test "${user#*$target_user_string}" != "$user"; then
+                      ### Check s3 broker users, only
+
+                      attached_policies=$(aws iam list-attached-user-policies --user-name "${user}" | grep PolicyName | awk -F '"' '{print $4}')
+
+                      for policy in ${attached_policies:-NO_POLICIES}; do
+                       ###Check for the AWS Quarantine policy attached to a user
+                        if [ "${policy}" = "${quarantine_policy}" ]; then
+
+                          echo "User ${user} has policy ${quarantine_policy} attached."
+
+                          access_keys=$(aws iam list-access-keys --user-name "${user}" | grep AccessKeyId | awk -F '"' '{print $4}')
+
+                          for key in ${access_keys:-NO_ACCESS_KEYS}; do
+
+                            access_key_status=$(aws iam list-access-keys --user-name "${user}" | grep Status | awk -F '"' '{print $4}')
+
+                            if [ "${access_key_status}" = "Active" ]; then
+                              echo "User ${user} has active AWS Access key ${key}."
+                              ### Deactivate the access key
+                              compromised=true
+                              aws iam update-access-key --access-key-id "${key}" --status Inactive --user-name "${user}"
+
+                              ### Check the access key status
+                              access_key_status=$(aws iam list-access-keys --user-name "${user}" | grep Status | awk -F '"' '{print $4}')
+                              if [ "${access_key_status}" = "Inactive" ]; then
+                                echo "AWS Access key ${key} has been deactivated."
+                                echo "Deactivated ${key} for user ${user} in environment ${DEPLOY_ENV}." >> slack-messages/leaked_aws_key_message
+                                echo "Refer to the <https://drive.google.com/drive/folders/1E6Gnx5WUwrZOiyREHdx7x8f2AsY-SAFT|Cyber playbook> for next steps." >> slack-messages/leaked_aws_key_message
+                                echo "+++++++++++++++++++++++++++++++++++++++"
+                              fi
+                            fi
+                          done
+                        fi
+                      done
+                    fi
+                  done
+                  if ${compromised}; then
+                    exit 1
+                  else
+                    exit 0
+                  fi
+            outputs:
+              - name: slack-messages
+
+    on_failure: &slack_failure_notification
+      params:
+        alert_type: 'failed'
+        channel: '#cyber-security-alerts'
+        username: 'GOV.UK PaaS compromised S3 key(s)'
+        icon_emoji: ':cyberowl:'
+        text_file: slack-messages/leaked_aws_key_message
+      put: slack-notification
 
   - name: check-certificates
     build_logs_to_retain: 50

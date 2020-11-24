@@ -408,6 +408,12 @@ upload-psn-secrets: check-env ## Decrypt and upload PSN secrets to Credhub
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-secrets/upload-psn-secrets.rb
 
+.PHONY: upload-slack-secrets
+upload-slack-secrets: check-env ## Decrypt and upload Slack credentials to Credhub
+	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
+	@scripts/upload-secrets/upload-slack-secrets.rb
+
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
 	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
