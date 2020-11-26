@@ -9,11 +9,20 @@ import (
 )
 
 var servicesToAlertOn = []string {
+	"ACM",
+	"CLOUDFRONT",
 	"EC2",
-	"RDS",
-	"S3",
-	"VPC",
+	"ELASTICACHE",
+	"ELASTICLOADBALANCING",
 	"NATGATEWAY",
+	"RDS",
+	"ROUTE53",
+	"S3",
+	"SES",
+	"SHIELD",
+	"SQS",
+	"VPC",
+	"WAF",
 }
 
 func AWSHealthEventsGauge(
