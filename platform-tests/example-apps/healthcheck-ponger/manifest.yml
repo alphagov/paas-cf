@@ -9,7 +9,7 @@ applications:
    stack: cflinuxfs3
 
    env:
-     GOVERSION: go1.13
+     GOVERSION: go1.15
      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/healthcheck-ponger
 
    routes:
