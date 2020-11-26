@@ -2454,6 +2454,32 @@ jobs:
                 xlarge-ha-11-high-iops
                 EOF
 
+                # Enable Postgres 12 plans
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-12
+                small-12
+                small-ha-12
+                medium-12
+                medium-ha-12
+                large-12
+                large-ha-12
+                xlarge-12
+                xlarge-ha-12
+                EOF
+
+                # Enable Postgres 12 High IOPS plans
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-12-high-iops
+                small-12-high-iops
+                small-ha-12-high-iops
+                medium-12-high-iops
+                medium-ha-12-high-iops
+                large-12-high-iops
+                large-ha-12-high-iops
+                xlarge-12-high-iops
+                xlarge-ha-12-high-iops
+                EOF
+
                 # Disable deprecated plans
                 cat <<EOF | xargs -n1 cf disable-service-access mysql -p
                 small-unencrypted-5.7
@@ -5198,7 +5224,7 @@ jobs:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
                 CF_PASS: ((cf_pass))
-    
+
     on_success:
       try:
         task: ping-cronitor-continuous-smoke-tests-completed
@@ -5210,7 +5236,7 @@ jobs:
           DEPLOY_ENV: ((deploy_env))
           CCI_BUILD_NUMBER: $BUILD_NAME
           CRONITOR_PING_MESSAGE: "Continuous+smoke+tests+job+has+completed+successfully"
-          
+
     on_failure:
       try:
         task: ping-cronitor-continuous-smoke-tests-failed
