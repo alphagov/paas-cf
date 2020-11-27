@@ -8,7 +8,7 @@ import (
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
-var servicesToAlertOn = []string {
+var AWSHealthServicesToAlertOn = []string {
 	"ACM",
 	"CLOUDFRONT",
 	"EC2",
@@ -35,7 +35,7 @@ func AWSHealthEventsGauge(
 		lsess := logger.Session("aws-health-events-gauge")
 		metrics := []m.Metric{}
 
-		for _, svcName := range servicesToAlertOn {
+		for _, svcName := range AWSHealthServicesToAlertOn {
 			lsess.Info("request-events", lager.Data{"sevice": svcName})
 			count, err := healthService.CountOpenEventsForServiceInRegion(svcName, region)
 

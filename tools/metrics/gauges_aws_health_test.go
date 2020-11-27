@@ -7,6 +7,7 @@ import (
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
+	"github.com/onsi/gomega/types"
 	"time"
 
 	healthfakes "github.com/alphagov/paas-cf/tools/metrics/pkg/health/fakes"
@@ -28,64 +29,57 @@ var _ = Describe("AWS Health Gauge", func() {
 	It("exposes metrics with a service label", func() {
 		healthService.CountOpenEventsForServiceInRegionReturns(2, nil)
 
-		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1 * time.Second)
+		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric m.Metric
-		Eventually(func() string {
-			var err error
-			metric, err = gauge.ReadMetric()
-			Expect(err).NotTo(HaveOccurred())
-			return metric.Name
-		}, 3 * time.Second).Should(Equal("aws.health.active.events"))
+		metrics := []m.Metric{}
+		Eventually(collectMetrics(&metrics, gauge), 1*time.Second).
+			Should(Equal(len(AWSHealthServicesToAlertOn)))
 
-		Expect(metric.Kind).To(Equal(m.Gauge))
-		Expect(metric.Tags).To(ContainElement(
+		Expect(metrics).To(ContainMetricWithName("aws.health.active.events"))
+		Expect(metrics[0].Kind).To(Equal(m.Gauge))
+		Expect(metrics[0].Tags).To(ContainElement(
 			MatchFields(
 				IgnoreExtras,
-				Fields{ "Label": Equal("service") }),
-			),
+				Fields{"Label": Equal("service")}),
+		),
 		)
 	})
 
 	It("exposes metric with a value of 0 if there are no open events for a service", func() {
 		healthService.CountOpenEventsForServiceInRegionReturns(0, nil)
 
-		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1 * time.Second)
+		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric m.Metric
-		Eventually(func() string {
-			var err error
-			metric, err = gauge.ReadMetric()
-			Expect(err).NotTo(HaveOccurred())
-			return metric.Name
-		}, 3 * time.Second).Should(Equal("aws.health.active.events"))
+		metrics := []m.Metric{}
+		Eventually(collectMetrics(&metrics, gauge), 1*time.Second).
+			Should(Equal(len(AWSHealthServicesToAlertOn)))
 
-		Expect(metric.Value).To(Equal(float64(0)))
+		Expect(metrics).To(ContainMetricWithName("aws.health.active.events"))
+
+		Expect(metrics[0].Value).To(Equal(float64(0)))
 	})
 
 	It("exposes metric with a value > 0 if there open events for a service", func() {
 		healthService.CountOpenEventsForServiceInRegionReturns(3, nil)
 
-		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1 * time.Second)
+		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1*time.Second)
 		defer gauge.Close()
 
-		var metric m.Metric
-		Eventually(func() string {
-			var err error
-			metric, err = gauge.ReadMetric()
-			Expect(err).NotTo(HaveOccurred())
-			return metric.Name
-		}, 3 * time.Second).Should(Equal("aws.health.active.events"))
+		metrics := []m.Metric{}
+		Eventually(collectMetrics(&metrics, gauge), 1*time.Second).
+			Should(Equal(len(AWSHealthServicesToAlertOn)))
 
-		Expect(metric.Value).To(Equal(float64(3)))
+		Expect(metrics).To(ContainMetricWithName("aws.health.active.events"))
+
+		Expect(metrics[0].Value).To(Equal(float64(3)))
 	})
 
 	It("exposes no metrics when an error occurs", func() {
 		healthService.CountOpenEventsForServiceInRegionReturns(-1, errors.New("whoops"))
 
-		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1 * time.Second)
+		gauge := AWSHealthEventsGauge(logger, "eu-west-1", &healthService, 1*time.Second)
 		defer gauge.Close()
 
 		Consistently(func() *m.Metric {
@@ -97,6 +91,27 @@ var _ = Describe("AWS Health Gauge", func() {
 				return nil
 			}
 			return &possibleMetric
-		}, 3 * time.Second).Should(BeNil())
+		}, 3*time.Second).Should(BeNil())
 	})
 })
+
+func ContainMetricWithName(name string) types.GomegaMatcher {
+	return WithTransform(func(metrics []m.Metric) []string {
+		names := []string{}
+		for _, metric := range metrics {
+			names = append(names, metric.Name)
+		}
+
+		return names
+	}, ContainElement(name))
+}
+
+func collectMetrics(metrics *[]m.Metric, gauge m.MetricReadCloser) func() int {
+	return func() int {
+		var err error
+		metric, err := gauge.ReadMetric()
+		Expect(err).NotTo(HaveOccurred())
+		*metrics = append(*metrics, metric)
+		return len(*metrics)
+	}
+}
