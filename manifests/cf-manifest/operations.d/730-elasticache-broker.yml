@@ -194,7 +194,7 @@
                     # 4.x
                     - id: b78c9d07-a031-495f-937c-28613905431c
                       name: tiny-4.x
-                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
+                      description: "1.5GB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny
@@ -203,8 +203,8 @@
                           encrypted: true
                           highlyAvailable: false
                           memory:
-                            amount: 568
-                            unit: MB
+                            amount: 1.5
+                            unit: GB
                           version: '4'
                     - id: e31d1a05-4f75-4bca-93a0-661bc233d25c
                       name: tiny-ha-4.x
@@ -308,7 +308,7 @@
                           version: '5'
                     - id: 1f2cccd7-d9a9-4b9a-b517-73b381848b73
                       name: tiny-5.x
-                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
+                      description: "1.5GB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny
@@ -317,8 +317,8 @@
                           encrypted: true
                           highlyAvailable: false
                           memory:
-                            amount: 568
-                            unit: MB
+                            amount: 1.5
+                            unit: GB
                           version: '5'
                     - id: c12a6a40-fb53-4e1e-b0a9-ba5e3180e3b7
                       name: tiny-ha-5.x
