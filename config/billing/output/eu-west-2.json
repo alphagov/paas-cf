@@ -2401,6 +2401,34 @@
 			]
 		},
 		{
+			"name": "redis micro-5.x",
+			"valid_from": "2020-11-01",
+			"plan_guid": "7b3a5162-5b09-4d33-be29-8bdf30d0df06",
+			"number_of_nodes": 1,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.019",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis micro-ha-5.x",
+			"valid_from": "2020-11-01",
+			"plan_guid": "327574ea-3990-4ca2-9f59-69ad1bbc8a9d",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.019",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
 			"name": "redis tiny-5.x",
 			"valid_from": "2020-03-01",
 			"plan_guid": "1f2cccd7-d9a9-4b9a-b517-73b381848b73",

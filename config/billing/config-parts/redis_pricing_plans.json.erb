@@ -82,6 +82,20 @@
 
 	# Redis 5.x
 	{
+		"name" => "micro-5.x",
+		"valid_from" => "2020-11-01",
+		"guid" => "7b3a5162-5b09-4d33-be29-8bdf30d0df06",
+		"ha" => false,
+		"aws_price" => price("elasticache_t3_micro")
+	},
+	{
+    "name" => "micro-ha-5.x",
+    "valid_from" => "2020-11-01",
+    "guid" => "327574ea-3990-4ca2-9f59-69ad1bbc8a9d",
+    "ha" => true,
+    "aws_price" => price("elasticache_t3_micro")
+  },
+	{
 	  "name" => "tiny-5.x",
 	  "valid_from" => "2020-03-01",
 	  "guid" => "1f2cccd7-d9a9-4b9a-b517-73b381848b73",
