@@ -293,7 +293,7 @@
                             unit: MB
                           version: '5'
                     - id: 327574ea-3990-4ca2-9f59-69ad1bbc8a9d
-                      nameL: micro-ha-5.x
+                      name: micro-ha-5.x
                       description: "568MB RAM, highly-available, daily backups."
                       free: false
                       metadata:
