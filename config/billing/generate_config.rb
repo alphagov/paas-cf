@@ -37,7 +37,7 @@ REGIONS.each do |region|
   json_content = g.generate(template)
 
   content = JSON.parse json_content
-  pretty_json_content = JSON.pretty_generate(content, indent: "\t")
+  pretty_json_content = JSON.pretty_generate(content, indent: "\t") + "\n"
 
   File.open("#{__dir__}/output/#{region}.json", "w") do |f|
     f.write pretty_json_content
