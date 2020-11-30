@@ -272,6 +272,24 @@ RSpec.describe "RDS broker properties" do
           "large-ha-11-high-iops",
           "xlarge-11-high-iops",
           "xlarge-ha-11-high-iops",
+          "tiny-unencrypted-12",
+          "small-12",
+          "small-ha-12",
+          "medium-12",
+          "medium-ha-12",
+          "large-12",
+          "large-ha-12",
+          "xlarge-12",
+          "xlarge-ha-12",
+          "tiny-unencrypted-12-high-iops",
+          "small-12-high-iops",
+          "small-ha-12-high-iops",
+          "medium-12-high-iops",
+          "medium-ha-12-high-iops",
+          "large-12-high-iops",
+          "large-ha-12-high-iops",
+          "xlarge-12-high-iops",
+          "xlarge-ha-12-high-iops",
         )
       end
 
@@ -332,6 +350,16 @@ RSpec.describe "RDS broker properties" do
 
           it "uses postgres 11" do
             expect(rds_properties["engine_version"]).to eq("11")
+          end
+
+          include_examples "plans using t3 and m5 instances"
+        end
+
+        shared_examples "postgres 12 plans" do
+          let(:rds_properties) { plan.fetch("rds_properties") }
+
+          it "uses postgres 12" do
+            expect(rds_properties["engine_version"]).to eq("12")
           end
 
           include_examples "plans using t3 and m5 instances"
@@ -938,6 +966,214 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
+          it_behaves_like "xlarge sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        # Postgres 12
+        describe "tiny-unencrypted-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "tiny-unencrypted-12" } }
+
+          it "is marked as free" do
+            expect(plan.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "tiny sized plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "small-ha-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "small sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-ha-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "medium sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-ha-12" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-12" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "xlarge sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        # Postgres 12 High IOPS
+        describe "tiny-unencrypted-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "tiny-unencrypted-12-high-iops" } }
+
+          it "is marked as free" do
+            expect(plan.fetch("free")).to eq(true)
+          end
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "tiny sized high iops plans"
+          it_behaves_like "backup disabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption disabled plans"
+        end
+
+        describe "small-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "small sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "small-ha-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "small-ha-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "small sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "medium sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "medium-ha-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "medium-ha-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "medium sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "large sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "large sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "xlarge sized high iops plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "xlarge-ha-12-high-iops" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "xlarge-ha-12-high-iops" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
           it_behaves_like "xlarge sized high iops plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"

@@ -17,7 +17,7 @@ import (
 var _ = Describe("Postgres backing service", func() {
 	const (
 		serviceName  = "postgres"
-		testPlanName = "tiny-unencrypted-11"
+		testPlanName = "tiny-unencrypted-12"
 	)
 
 	It("should have registered the postgres service", func() {
@@ -58,6 +58,15 @@ var _ = Describe("Postgres backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-10"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-10"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-10"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-10-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-10-high-iops"))
 
 			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-11"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("small-11"))
@@ -68,6 +77,35 @@ var _ = Describe("Postgres backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-11"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-11"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-11"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-11-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-11-high-iops"))
+
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-12-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-12-high-iops"))
+
 		})
 	})
 	Context("creating a database instance", func() {
