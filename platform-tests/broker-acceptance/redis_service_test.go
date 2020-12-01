@@ -31,10 +31,16 @@ var _ = Describe("Redis backing service", func() {
 			"tiny-ha-4.x",
 			"small-ha-4.x",
 			"medium-ha-4.x",
+			"large-ha-4.x",
+			"xlarge-ha-4.x",
+			"micro-5.x",
+			"micro-ha-5.x",
 			"tiny-5.x",
 			"tiny-ha-5.x",
 			"small-ha-5.x",
 			"medium-ha-5.x",
+			"large-ha-5.x",
+			"xlarge-ha-5.x",
 		}
 	)
 

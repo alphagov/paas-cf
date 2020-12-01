@@ -18,6 +18,9 @@
       replicas_per_node_group: 1
       automatic_failover_enabled: true
 
+    micro_plan: &elasticache_micro_plan
+      instance_type: cache.t3.micro
+
     tiny_plan: &elasticache_tiny_plan
       instance_type: cache.t2.small
 
@@ -191,7 +194,7 @@
                     # 4.x
                     - id: b78c9d07-a031-495f-937c-28613905431c
                       name: tiny-4.x
-                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
+                      description: "1.5GB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny
@@ -200,8 +203,8 @@
                           encrypted: true
                           highlyAvailable: false
                           memory:
-                            amount: 568
-                            unit: MB
+                            amount: 1.5
+                            unit: GB
                           version: '4'
                     - id: e31d1a05-4f75-4bca-93a0-661bc233d25c
                       name: tiny-ha-4.x
@@ -275,9 +278,9 @@
                           version: '4'
 
                     # 5.x
-                    - id: 1f2cccd7-d9a9-4b9a-b517-73b381848b73
-                      name: tiny-5.x
-                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
+                    - id: 7b3a5162-5b09-4d33-be29-8bdf30d0df06
+                      name: micro-5.x
+                      description: "568MB RAM, single node, no failover, daily backups. Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny
@@ -288,6 +291,34 @@
                           memory:
                             amount: 568
                             unit: MB
+                          version: '5'
+                    - id: 327574ea-3990-4ca2-9f59-69ad1bbc8a9d
+                      name: micro-ha-5.x
+                      description: "568MB RAM, highly-available, daily backups."
+                      free: false
+                      metadata:
+                        displayName: Tiny
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          memory:
+                            amount: 568
+                            unit: MB
+                          version: '5'
+                    - id: 1f2cccd7-d9a9-4b9a-b517-73b381848b73
+                      name: tiny-5.x
+                      description: "1.5GB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
+                      free: true
+                      metadata:
+                        displayName: Tiny
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: false
+                          memory:
+                            amount: 1.5
+                            unit: GB
                           version: '5'
                     - id: c12a6a40-fb53-4e1e-b0a9-ba5e3180e3b7
                       name: tiny-ha-5.x
@@ -429,6 +460,18 @@
                 <<: *elasticache_redis_4_x # yamllint disable-line
                 <<: *elasticache_ha_plan # yamllint disable-line
                 <<: *elasticache_xlarge_plan # yamllint disable-line
+
+              7b3a5162-5b09-4d33-be29-8bdf30d0df06: #micro-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_non_ha_plan # yamllint disable-line
+                <<: *elasticache_micro_plan # yamllint disable-line
+
+              327574ea-3990-4ca2-9f59-69ad1bbc8a9d: #micro-ha-5.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_micro_plan # yamllint disable-line
 
               1f2cccd7-d9a9-4b9a-b517-73b381848b73: #tiny-5.x
                 <<: *elasticache_cache_cluster_config # yamllint disable-line

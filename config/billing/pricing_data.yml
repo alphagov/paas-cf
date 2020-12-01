@@ -61,6 +61,7 @@ eu-west-1:
   rds_mysql_m5_4xlarge_ha: "3.024"
 
   elasticache_t2_micro: "0.018"
+  elasticache_t3_micro: "0.018"
   elasticache_t2_small: "0.036"
   elasticache_t2_medium: "0.073"
   elasticache_m5_large: "0.172"
@@ -117,6 +118,7 @@ eu-west-2:
 
 
   elasticache_t2_micro: "0.019"
+  elasticache_t3_micro: "0.019"
   elasticache_t2_small: "0.038"
   elasticache_t2_medium: "0.077"
   elasticache_m5_large: "0.18"
