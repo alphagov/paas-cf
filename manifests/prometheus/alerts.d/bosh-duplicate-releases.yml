@@ -9,7 +9,7 @@
       - alert: BoshDuplicateReleases_Warning
         expr: |
           count by (bosh_release_name) (
-            count by (bosh_release_name, bosh_release_version) (bosh_deployment_release_info{bosh_release_name!="bpm"})
+            count by (bosh_release_name, bosh_release_version) (bosh_deployment_release_info{bosh_release_name!="bpm", bosh_deployment!="app-autoscaler"})
           ) > 1
         labels:
           severity: warning

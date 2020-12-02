@@ -105,9 +105,12 @@
   value:
     name: loggregator_rds_metrics_collector
     type: certificate
+    update_mode: converge
     options:
       ca: loggregator_ca
       common_name: loggregator_rds_metrics_collector
       extended_key_usage:
         - client_auth
         - server_auth
+      alternative_names:
+        - loggregator_rds_metrics_collector

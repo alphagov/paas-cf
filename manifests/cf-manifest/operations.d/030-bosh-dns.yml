@@ -56,22 +56,29 @@
   value:
     name: dns_healthcheck_server_tls
     type: certificate
+    update_mode: converge
     options:
       ca: dns_healthcheck_tls_ca
       common_name: health.bosh-dns
       extended_key_usage:
       - server_auth
+      alternative_names:
+      - health.bosh-dns
 
 - type: replace
   path: /variables/-
   value:
     name: dns_healthcheck_client_tls
     type: certificate
+    update_mode: converge
     options:
       ca: dns_healthcheck_tls_ca
       common_name: health.bosh-dns
       extended_key_usage:
       - client_auth
+      alternative_names:
+      - health.bosh-dns
+
 
 - type: replace
   path: /variables/-
@@ -87,20 +94,25 @@
   value:
     name: dns_api_server_tls
     type: certificate
+    update_mode: converge
     options:
       ca: dns_api_tls_ca
       common_name: api.bosh-dns
       extended_key_usage:
       - server_auth
+      alternative_names:
+      - api.bosh-dns
 
 - type: replace
   path: /variables/-
   value:
     name: dns_api_client_tls
     type: certificate
+    update_mode: converge
     options:
       ca: dns_api_tls_ca
       common_name: api.bosh-dns
       extended_key_usage:
       - client_auth
-
+      alternative_names:
+      - api.bosh-dns
