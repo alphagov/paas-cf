@@ -7,6 +7,7 @@
     "ccs-report-management-info",
     "gds-document-checking-service",
     "gds-shielded-vulnerable-people-service",
+    "govuk-accounts",
     "x-co-authentication"
   ]
 }
