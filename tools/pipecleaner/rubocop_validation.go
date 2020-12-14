@@ -39,7 +39,7 @@ type rubocopResult struct {
 	Files []rubocopReport `json:"files"`
 }
 
-func rubocopTask(task atc.TaskConfig, params atc.Params) []error {
+func rubocopTask(task atc.TaskConfig, params atc.TaskEnv) []error {
 	errors := make([]error, 0)
 
 	if task.Run.Path != "ruby" {

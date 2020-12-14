@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/concourse/concourse/atc"
+	"github.com/concourse/concourse/atc/configvalidate"
 )
 
 type pipelineValidator struct {
@@ -98,16 +99,16 @@ func (pv *pipelineValidator) FailureOutput() string {
 }
 
 func (pv *pipelineValidator) Validate() {
-	validateWarnings, validateErrors := pv.PipelineConfig.Validate()
+	warnings, errors := configvalidate.Validate(pv.PipelineConfig)
 
-	for _, warning := range validateWarnings {
+	for _, warning := range warnings {
 		pv.ConcourseValidationWarnings = append(
 			pv.ConcourseValidationWarnings,
 			fmt.Errorf("atc validate warning %s: %s", warning.Type, warning.Message),
 		)
 	}
 
-	for _, err := range validateErrors {
+	for _, err := range errors {
 		pv.ConcourseValidationErrors = append(
 			pv.ConcourseValidationErrors,
 			fmt.Errorf(err),
@@ -156,16 +157,20 @@ func (pv *pipelineValidator) ValidateJobs() {
 			})
 		}
 
-		for _, plan := range job.Plans() {
-			if plan.TaskConfig == nil {
-				continue
-			}
+		job.StepConfig().Visit(atc.StepRecursor{
+			OnTask: func(step *atc.TaskStep) error {
+				if step.Config == nil {
+					return nil
+				}
 
-			errColl.TaskErrors = append(errColl.TaskErrors, taskErrorCollection{
-				TaskName:   plan.Name(),
-				TaskErrors: pv.ValidateTask(*plan.TaskConfig, plan.Params),
-			})
-		}
+				errColl.TaskErrors = append(errColl.TaskErrors, taskErrorCollection{
+					TaskName:   step.Name,
+					TaskErrors: pv.ValidateTask(*step.Config, step.Params),
+				})
+
+				return nil
+			},
+		})
 
 		errors = append(errors, errColl)
 	}
@@ -175,7 +180,7 @@ func (pv *pipelineValidator) ValidateJobs() {
 
 func (pv *pipelineValidator) ValidateTask(
 	taskConfig atc.TaskConfig,
-	params atc.Params,
+	params atc.TaskEnv,
 ) []validatorErrorCollection {
 	errCollections := make([]validatorErrorCollection, 0)
 

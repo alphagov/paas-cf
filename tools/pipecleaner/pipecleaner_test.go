@@ -242,6 +242,17 @@ var _ = Describe("pipecleaner", func() {
 			})
 		})
 
+		Context("when set_pipeline is used", func() {
+			BeforeEach(func() {
+				command = exec.Command(toolpath, "fixtures/pipecleaner_set_pipeline.yml")
+			})
+
+			It("should not report an issue", func() {
+				Expect(session).To(gexec.Exit(0))
+				Expect(session).To(gbytes.Say("FILE fixtures/pipecleaner_set_pipeline.yml"))
+			})
+		})
+
 		Context("linting tasks", func() {
 			Context("rubocop", func() {
 				Context("when there is a bad compare", func() {

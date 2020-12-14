@@ -32,7 +32,7 @@ func canShellcheckDialect(dialect string) bool {
 	return false
 }
 
-func shellcheckTask(task atc.TaskConfig, params atc.Params) []error {
+func shellcheckTask(task atc.TaskConfig, params atc.TaskEnv) []error {
 	errors := make([]error, 0)
 
 	dialect := task.Run.Path

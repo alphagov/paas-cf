@@ -1,0 +1,13 @@
+---
+resources:
+  - name: my-git-repo
+    type: git
+
+jobs:
+  - name: forget-to-use-resource
+    plan:
+      - get: my-git-repo
+        trigger: true
+
+      - set_pipeline: foo
+        file: my-git-repo/ci/pipeline.yml
