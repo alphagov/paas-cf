@@ -212,6 +212,17 @@ vm_types:
     - ((terraform_outputs_elasticache_broker_clients_security_group))
     - ((terraform_outputs_default_security_group))
 
+- name: high_cpu_cell
+  cloud_properties:
+    instance_type: ((high_cpu_cell_instance_type))
+    ephemeral_disk:
+      size: 204800
+      type: gp2
+    security_groups:
+      - ((terraform_outputs_rds_broker_db_clients_security_group))
+      - ((terraform_outputs_elasticache_broker_clients_security_group))
+      - ((terraform_outputs_default_security_group))
+
 - name: small_cell
   cloud_properties:
     instance_type: ((small_cell_instance_type))
