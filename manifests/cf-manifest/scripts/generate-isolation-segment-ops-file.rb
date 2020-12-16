@@ -32,6 +32,8 @@ isolation_segment["name"] = name
 
 isolation_segment["instances"] = seg_def["number_of_cells"]
 
+vm_type = seg_def["vm_type"] || "cell"
+
 unless seg_def["isolation_segment_size"].nil?
   vm_type = isolation_segment["vm_type"]
 
@@ -48,8 +50,6 @@ unless seg_def["isolation_segment_size"].nil?
     raise "Unknown isolation_segment_size #{seg_def['isolation_segment_size']}"
   end
 
-  isolation_segment["vm_type"] = vm_type
-
   isolation_segment
     .fetch("jobs")
     .find { |job| job["name"] == "rep" }[
@@ -58,6 +58,8 @@ unless seg_def["isolation_segment_size"].nil?
     "executor"][
     "memory_capacity_mb"] = memory_capacity
 end
+
+isolation_segment["vm_type"] = vm_type
 
 if seg_def["restricted_egress"]
   # When we restrict egress in an isolation segment, we presumably want to
