@@ -1,4 +1,5 @@
 # github.com/aws/aws-sdk-go v1.16.32
+## explicit
 github.com/aws/aws-sdk-go/aws
 github.com/aws/aws-sdk-go/aws/awserr
 github.com/aws/aws-sdk-go/aws/awsutil
@@ -35,18 +36,27 @@ github.com/aws/aws-sdk-go/service/s3
 github.com/aws/aws-sdk-go/service/sqs
 github.com/aws/aws-sdk-go/service/sts
 # github.com/garyburd/redigo v1.1.0
+## explicit
 github.com/garyburd/redigo/internal
 github.com/garyburd/redigo/redis
 # github.com/go-sql-driver/mysql v1.3.0
+## explicit
 github.com/go-sql-driver/mysql
 # github.com/influxdata/influxdb1-client v0.0.0-20190809212627-fc22c7df067e
+## explicit
 github.com/influxdata/influxdb1-client
 github.com/influxdata/influxdb1-client/models
 github.com/influxdata/influxdb1-client/pkg/escape
 # github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af
 github.com/jmespath/go-jmespath
 # github.com/lib/pq v0.0.0-20170810061220-e42267488fe3
+## explicit
 github.com/lib/pq
 github.com/lib/pq/oid
 # github.com/pkg/errors v0.8.0
+## explicit
 github.com/pkg/errors
+# github.com/stretchr/testify v1.6.1
+## explicit
+# golang.org/x/net v0.0.0-20200822124328-c89045814202
+## explicit
