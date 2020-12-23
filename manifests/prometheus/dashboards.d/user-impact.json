@@ -502,7 +502,7 @@
                 "stack": false,
                 "steppedLine": false,
                 "targets": [{
-                        "expr": "count(firehose_value_metric_rep_capacity_total_memory)",
+                        "expr": "count(firehose_value_metric_rep_capacity_total_memory{bosh_job_name=\"diego-cell\"})",
                         "format": "time_series",
                         "instant": false,
                         "intervalFactor": 1,
@@ -512,7 +512,7 @@
                     },
                     {
                         "refId": "B",
-                        "expr": "ceil(count(firehose_value_metric_rep_capacity_total_memory) * on () (100 - rep_memory_capacity_pct:avg5m) / (100 - 33))",
+                        "expr": "ceil(count(firehose_value_metric_rep_capacity_total_memory{bosh_job_name=\"diego-cell\"}) * on () (100 - rep_memory_capacity_pct:avg5m{bosh_job_name=\"diego-cell\"}) / (100 - 33))",
                         "intervalFactor": 1,
                         "format": "time_series",
                         "legendFormat": "Required"
