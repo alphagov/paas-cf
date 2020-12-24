@@ -8,16 +8,25 @@ evaluation_interval: 1m
 tests:
   - interval: 5m
     input_series:
-      - series: 'firehose_value_metric_rep_capacity_remaining_memory{environment="test", bosh_job_id="1"}'
+      # Cells whose available memory craters
+      # after the first two hours
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{environment="test", bosh_job_id="1", bosh_job_name="diego-cells"}'
         values: '80000-10x24 30000-10x36'
 
-      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_id="1"}'
+      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_id="1", bosh_job_name="diego-cells"}'
         values: '100000-0x60'
 
-      - series: 'firehose_value_metric_rep_capacity_remaining_memory{environment="test", bosh_job_id="2"}'
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{environment="test", bosh_job_id="2", bosh_job_name="diego-cells"}'
         values: '70000-10x60 20000-10x36'
 
-      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_id="2"}'
+      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_id="2", bosh_job_name="diego-cells"}'
+        values: '100000-0x60'
+
+      # Isolation segment whose memory stays stable throughout
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{environment="test", bosh_job_id="1", bosh_job_name="diego-cells-iso-seg"}'
+        values: '90000-0x60'
+
+      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_id="1", bosh_job_name="diego-cells-iso-seg"}'
         values: '100000-0x60'
 
     alert_rule_test:
@@ -41,8 +50,37 @@ tests:
               environment: test
             exp_annotations:
               summary: Rep low free memory capacity
+              bosh_job_name: diego-cells
               description: >
                 Low free memory 75% for the advertised rep memory capacity
                 in the last 2 hours on average.
                 Review if we need to scale...
               url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+
+    promql_expr_test:
+      - expr: rep_memory_capacity_pct:avg5m
+        eval_time: 0m
+        exp_samples:
+          - labels: 'rep_memory_capacity_pct:avg5m{environment="test", bosh_job_name="diego-cells"}'
+            value: 75
+          - labels: 'rep_memory_capacity_pct:avg5m{environment="test", bosh_job_name="diego-cells-iso-seg"}'
+            value: 90
+
+  - interval: 5m
+    input_series:
+      # Each series has a fixed amount of memory for 1 hour
+      # Two diego-cells series, and one diego-cells-iso-seg series.
+      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_name="diego-cells", bosh_job_index="1"}'
+        values: 100+0x12
+      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_name="diego-cells", bosh_job_index="2"}'
+        values: 100+0x12
+      - series: 'firehose_value_metric_rep_capacity_total_memory{environment="test", bosh_job_name="diego-cells-iso-seg", bosh_job_index="1"}'
+        values: 100+0x12
+    promql_expr_test:
+      - expr: diego_cells_deployed
+        eval_time: 5m
+        exp_samples:
+          - labels: 'diego_cells_deployed{bosh_job_name="diego-cells", environment="test"}'
+            value: 2
+          - labels: 'diego_cells_deployed{bosh_job_name="diego-cells-iso-seg", environment="test"}'
+            value: 1

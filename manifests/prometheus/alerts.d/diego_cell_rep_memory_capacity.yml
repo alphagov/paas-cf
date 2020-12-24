@@ -5,11 +5,39 @@
   value:
     name: DiegoCellRepMemoryCapacity
     rules:
+      # Average amount of free memory across all cells over the last 5 minutes
       - record: rep_memory_capacity_pct:avg5m
         expr: >
           100 *
-          sum(avg_over_time(firehose_value_metric_rep_capacity_remaining_memory{environment="((metrics_environment))"}[5m])) by (environment) /
-          sum(avg_over_time(firehose_value_metric_rep_capacity_total_memory{environment="((metrics_environment))"}[5m])) by (environment)
+          sum(avg_over_time(firehose_value_metric_rep_capacity_remaining_memory{environment="((metrics_environment))"}[5m])) by (environment, bosh_job_name) /
+          sum(avg_over_time(firehose_value_metric_rep_capacity_total_memory{environment="((metrics_environment))"}[5m])) by (environment, bosh_job_name)
+
+      # Average amount of memory being used across all cells over the last minutes
+      - record: rep_memory_used_pct:avg5m
+        expr: 100 - rep_memory_capacity_pct:avg5m
+
+      # The number of diego cells that have been deployed
+      - record: diego_cells_deployed
+        expr: count(firehose_value_metric_rep_capacity_total_memory) by (environment, bosh_job_name)
+
+      # The percentage of the deployed cells being utilised.
+      # Multiply average memory usage (in the interval 0..1)
+      # by cell count to find how many cells worth of resources
+      # we're using
+      - record: diego_cell_capacity_used_pct:avg5m
+        expr: diego_cells_deployed * (rep_memory_used_pct:avg5m/100)
+
+      # As per ADR021 [1], we want to be roughly 30% over provisioned.
+      # We can calculate the amount we need to meet that requirement
+      # by multiplying the number of cells we're utilising by 1.5,
+      # and raising it to the next whole number. Doing so treats the
+      # amount of cells we're using right now as two thirds of the total,
+      # ergo we're one third over-provisioned.
+      #
+      # [1] https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+      - record: diego_cells_required
+        expr: ceil(1.5 * diego_cell_capacity_used_pct:avg5m)
+
       - alert: DiegoCellRepMemoryCapacity
         expr:  rep_memory_capacity_pct:avg5m < 35
         for: 2h
@@ -17,6 +45,7 @@
           severity: warning
         annotations:
           summary: Rep low free memory capacity
+          bosh_job_name: "{{ $labels.bosh_job_name }}"
           description: >
             Low free memory {{ $value | printf "%.0f" }}% for the advertised rep memory capacity
             in the last 2 hours on average.
