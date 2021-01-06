@@ -3984,11 +3984,11 @@ jobs:
               - -u
               - -c
               - |
-                BILLING_DB_PLAN="tiny-unencrypted-9.5"
+                BILLING_DB_PLAN="tiny-unencrypted-12"
                 if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
-                  BILLING_DB_PLAN="medium-9.5"
+                  BILLING_DB_PLAN="medium-12"
                 elif [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ]; then
-                  BILLING_DB_PLAN="large-9.5"
+                  BILLING_DB_PLAN="large-12"
                 fi
 
                 cf api "${API_ENDPOINT}"
