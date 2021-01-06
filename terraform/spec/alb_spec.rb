@@ -6,8 +6,8 @@ def hcl2json(tf)
 
   unless exit_status.success?
     warn stderr
-  end
 
+  end
   JSON.parse(stdout)
 end
 
@@ -83,7 +83,7 @@ describe "alb" do
 
     it "has names less than 32 characters" do
       lb_names = get_lbs(terraform)
-        .map { |r| r.dig("name") }
+        .map { |r| r[0].dig("name") }
         .map { |val| val.gsub("${var.env}", "prod-lon") }
 
       expect(lb_names).not_to be_empty
@@ -93,7 +93,7 @@ describe "alb" do
 
     it "has access_logs configured" do
       access_logs = get_lbs(terraform)
-        .map { |r| r.dig("access_logs") }
+        .map { |r| r[0].dig("access_logs") }
 
       expect(access_logs).not_to be_empty
       expect(access_logs).not_to include(nil)
@@ -101,7 +101,7 @@ describe "alb" do
 
     it "does not have deletion protection enabled" do
       deletion_protection = get_lbs(terraform)
-        .map { |r| r.dig("enable_deletion_protection") }
+        .map { |r| r[0].dig("enable_deletion_protection") }
 
       expect(deletion_protection).not_to be_empty
       expect(deletion_protection).to all(be(nil))
@@ -128,9 +128,9 @@ describe "alb" do
 
     it "has deregistration configured" do
       deregistration_delay = get_tgs(terraform)
-        .reject { |r| r.dig("name").match?(/broker|alertmanager|prometheus/) }
-        .reject { |r| r.dig("port") == 83 } # This is temporary port
-        .map { |r| r.dig("deregistration_delay") }
+        .reject { |r| r[0].dig("name").match?(/broker|alertmanager|prometheus/) }
+        .reject { |r| r[0].dig("port") == 83 } # This is temporary port
+        .map { |r| r[0].dig("deregistration_delay") }
 
       expect(deregistration_delay).not_to be_empty
       expect(deregistration_delay).to all(be < 120)
@@ -138,12 +138,12 @@ describe "alb" do
 
     it "has slow_start configured if it is a router" do
       router_tgs = get_tgs(terraform)
-        .reject { |r| r.dig("name").match?(/broker|alertmanager|prometheus|rlp|doppler/) }
-        .reject { |r| r.dig("port") == 83 } # This is temporary port
+        .reject { |r| r[0].dig("name").match?(/broker|alertmanager|prometheus|rlp|doppler/) }
+        .reject { |r| r[0].dig("port") == 83 } # This is temporary port
 
       expect(router_tgs).not_to be_empty
 
-      slow_start = router_tgs.map { |r| r.dig("slow_start") }
+      slow_start = router_tgs.map { |r| r[0].dig("slow_start") }
 
       expect(slow_start).to all(be > 30) # More than the routing table sync interval
       expect(slow_start).to all(be < 110) # Less than the drain wait time

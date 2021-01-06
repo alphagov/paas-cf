@@ -1,0 +1,101 @@
+on: pull_request
+
+env:
+  TF_VERSION: "0.13.2"
+  BOSH_CLI_VERSION: "2.0.48"
+  PROMETHEUS_VERSION: "2.6.1"
+  DEPLOY_ENV: "github"
+  SHELLCHECK_VERSION: "0.7.1"
+  GO_VERSION: "^1.15"
+  RUBY_VERSION: "2.7"
+
+jobs:
+  run_tests:
+    runs-on: ubuntu-latest
+    steps:
+      ## Setup
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install Shellcheck
+        run: |
+          wget -qO- "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJv
+          sudo cp "shellcheck-v${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
+
+      - name: "Install Terraform ${{env.TF_VERSION}}"
+        run: |
+          cd "${{runner.temp}}"
+          wget -q -O terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
+          unzip terraform.zip
+          chmod +x ./terraform
+          sudo mv -f ./terraform /usr/local/bin
+
+      - name: Install Bosh CLI v2
+        run: |
+          set -e
+          wget -q "https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64"
+          sudo mv "bosh-cli-${BOSH_CLI_VERSION}-linux-amd64" /usr/local/bin/bosh && sudo chmod +x /usr/local/bin/bosh
+          set +e
+
+      - name: "Install Promtool ${{env.PROMETHEUS_VERSION}}"
+        run: |
+          wget -q -O prometheus.tgz "https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz"
+          sudo tar xzf "prometheus.tgz" -C /usr/local/bin --wildcards --wildcards-match-slash --strip-components=1 '*promtool'
+
+      - name: "Install Go ${{env.GO_VERSION}}"
+        uses: actions/setup-go@v2
+        with:
+          go-version: "${{env.GO_VERSION}}"
+          
+      - name: Install pipecleaner
+        run: (cd tools/pipecleaner && go install -mod=vendor)
+
+      - name: Install Python packages
+        run: pip install --user yamllint
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "${{env.RUBY_VERSION}}"
+
+      - name: Install bundle
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+
+      ## Tests
+      - name: Lint
+        env:
+          TMPDIR: "${{runner.temp}}"
+        run: make lint
+
+      - name: Config spec
+        run: make config_spec
+
+      - name: Scripts spec
+        run: make scripts_spec
+
+      - name: Tools spec
+        run: make tools_spec
+
+      - name: Concourse spec
+        run: make concourse_spec
+
+      - name: Manifests spec
+        run: make manifests_spec
+
+      - name: Terraform spec
+        run: |
+          make terraform_spec
+        env:
+          TF_IN_AUTOMATION: yes
+          GOPATH: "/home/runner/go"
+          GOBIN: "/home/runner/go/bin"
+
+      - name: Platform tests spec
+        run: make platform_tests_spec
+
+      - name: Compile platform tests
+        run: make compile_platform_tests
