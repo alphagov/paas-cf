@@ -52,11 +52,5 @@
         "account_id": "011755346992",
         "vpc_id": "vpc-0e82d077854b512f3",
         "subnet_cidr": "172.18.12.0/22"
-    },
-    {
-        "peer_name": "cabinet-office-nsra",
-        "account_id": "961408729235",
-        "vpc_id": "vpc-09e705b2d551cd9a8",
-        "subnet_cidr": "172.18.16.0/22"
     }
 ]
