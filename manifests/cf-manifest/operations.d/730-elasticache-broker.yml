@@ -120,7 +120,7 @@
                     - elasticache
                     - redis
                   bindable: true
-                  plan_updateable: true
+                  plan_updateable: false
                   plans:
                     # Deprecated
                     - id: 3a51701c-eef3-447c-882b-907ad2bcb7ab
