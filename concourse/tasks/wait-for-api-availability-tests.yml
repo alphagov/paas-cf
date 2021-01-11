@@ -11,7 +11,7 @@ image_resource:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/awscli
-    tag: 90f9f534ed5a3887b9c5d55a20cca6561f7de6a4
+    tag: 54495aab0a18ba76a55d98ae19f904d3629feb77
 
 run:
   path: sh
