@@ -3642,7 +3642,7 @@ jobs:
               - -u
               - -c
               - |
-                DB_PLAN="tiny-unencrypted-9.5"
+                DB_PLAN="tiny-unencrypted-12"
 
                 cf api "${API_ENDPOINT}"
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
