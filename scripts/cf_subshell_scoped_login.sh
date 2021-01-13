@@ -31,7 +31,7 @@ case $TARGET in
     ;;
 esac
 
-TMPDIR=${TMPDIR:-/tmp}
+TMPDIR=${TMPDIR:-/tmp/}
 CF_HOME=$(mktemp -d "${TMPDIR}cf_home.XXXXXX")
 cleanup() {
   echo "Cleaning up temporary CF_HOME..."
@@ -47,7 +47,8 @@ export CF_HOME
 export CF_SUBSHELL_TARGET=$TARGET
 
 cf api "${API_URL}"
-open "${PASSCODE_URL}" && cf login --sso
+OPEN=$(which open 2>/dev/null || echo -n xdg-open)
+$OPEN "${PASSCODE_URL}" && cf login --sso
 
 echo
 echo "You are now in a subshell with CF_HOME set to ${CF_HOME}"
