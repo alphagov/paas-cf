@@ -100,17 +100,26 @@ resource "aws_db_parameter_group" "cdn_pg_9_5" {
   description = "CDN Postgres 9.5 parameter group"
 }
 
+resource "aws_db_parameter_group" "cdn_pg_12" {
+  name        = "${var.env}-pg12-cdn"
+  family      = "postgres12"
+  description = "CDN Postgres 12 parameter group"
+}
+
 resource "aws_db_instance" "cdn" {
   identifier           = "${var.env}-cdn"
   allocated_storage    = 10
   engine               = "postgres"
-  engine_version       = "9.5"
+  engine_version       = "12.3"
   instance_class       = "db.t2.small"
   name                 = "cdn"
   username             = "dbadmin"
   password             = var.secrets_cdn_db_master_password
   db_subnet_group_name = aws_db_subnet_group.cdn_rds.name
-  parameter_group_name = aws_db_parameter_group.cdn_pg_9_5.id
+  parameter_group_name = aws_db_parameter_group.cdn_pg_12.id
+
+  allow_major_version_upgrade = true
+  apply_immediately           = true
 
   storage_type               = "gp2"
   backup_window              = "02:00-03:00"
