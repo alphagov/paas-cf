@@ -38,5 +38,17 @@ RSpec.describe "grafana dashboards" do
       expect(title).to match(/[-A-Za-z0-9]+/)
       expect(uid).to match(/^[-a-z0-9]+$/)
     end
+
+    it "has a null id" do
+      json = JSON.parse(dashboard_contents)
+
+      dashboard = json["dashboard"]
+      expect(dashboard).not_to(be(nil), "does not include a dashboard object")
+
+      id_exists = dashboard.key?("id")
+      id = dashboard.dig("id")
+      expect(id_exists).to(be(true), "must include an 'id' key")
+      expect(id).to(be(nil), "must specify id: null")
+    end
   end
 end
