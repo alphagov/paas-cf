@@ -53,6 +53,16 @@ RSpec.describe "image resources" do
         end
     end
   end
+
+  describe "dockerhub docker images" do
+    # DockerHub images are those where there's no hostname at the start of the
+    # image name. Detecting that by the absence of a full stop.
+    dockerhub_images = image_tags_by_repo.select { |repo, _| repo.match?(%r{[^\.]+/}) }
+
+    describe "are not being used" do
+      expect(dockerhub_images).to be_empty
+    end
+  end
 end
 
 # rubocop:enable Security/YAMLLoad
