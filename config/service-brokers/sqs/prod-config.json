@@ -1,5 +1,6 @@
 {
   "allowed_orgs": [
-    "gds-tech-ops"
+    "gds-tech-ops",
+    "gds-techarchs"
   ]
 }
