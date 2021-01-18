@@ -1,8 +1,9 @@
 {
   "allowed_orgs": [
       "dof-dss",
-      "gds-tech-ops",
       "gds-document-checking-service",
+      "gds-tech-ops",
+      "gds-techarchs",
       "nicts-probate"
   ]
 }
