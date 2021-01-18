@@ -10,8 +10,20 @@ env:
   RUBY_VERSION: "2.7"
 
 jobs:
-  run_tests:
+  tests:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        make_task:
+          - "lint"
+          - "config_spec"
+          - "scripts_spec"
+          - "tools_spec"
+          - "concourse_spec"
+          - "manifests_spec"
+          - "terraform_spec"
+          - "platform_tests_spec"
+          - "compile_platform_tests"
     steps:
       ## Setup
       - name: Checkout repo
@@ -66,36 +78,10 @@ jobs:
           bundle install --jobs 4 --retry 3
 
       ## Tests
-      - name: Lint
+      - name: "make ${{ matrix.make_task }}"
         env:
           TMPDIR: "${{runner.temp}}"
-        run: make lint
-
-      - name: Config spec
-        run: make config_spec
-
-      - name: Scripts spec
-        run: make scripts_spec
-
-      - name: Tools spec
-        run: make tools_spec
-
-      - name: Concourse spec
-        run: make concourse_spec
-
-      - name: Manifests spec
-        run: make manifests_spec
-
-      - name: Terraform spec
-        run: |
-          make terraform_spec
-        env:
           TF_IN_AUTOMATION: yes
           GOPATH: "/home/runner/go"
           GOBIN: "/home/runner/go/bin"
-
-      - name: Platform tests spec
-        run: make platform_tests_spec
-
-      - name: Compile platform tests
-        run: make compile_platform_tests
+        run: "make ${{ matrix.make_task }}"
