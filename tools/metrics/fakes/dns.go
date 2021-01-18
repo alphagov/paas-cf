@@ -2,7 +2,6 @@ package fakes
 
 import (
 	"fmt"
-
 	"github.com/miekg/dns"
 )
 
