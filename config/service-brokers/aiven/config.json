@@ -284,6 +284,26 @@
                 "version": "1"
               }
             }
+          },
+          {
+            "id": "f604ab6f-624a-4a7d-9849-4335e55408c4",
+            "name": "small-1.x",
+            "aiven_plan": "startup-8",
+            "description": "NOT Highly Available, 1 dedicated VM, 2 CPU per VM, 8GB RAM per VM, 50GB disk space. Free for trial orgs. Costs for billable orgs.",
+            "free": true,
+            "metadata": {
+              "displayName": "Small",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": false,
+                "nodes": 1,
+                "cpu": 2,
+                "memory": {"amount": 8, "unit": "GB"},
+                "storage": {"amount": 50, "unit": "GB"},
+                "version": "1"
+              }
+            }
           }
         ]
       }

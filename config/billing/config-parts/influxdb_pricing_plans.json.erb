@@ -11,3 +11,16 @@
 		}
 	]
 },
+{
+	"name": "influxdb small-1.x",
+	"valid_from": "2021-01-01",
+	"plan_guid": "f604ab6f-624a-4a7d-9849-4335e55408c4",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_influxdb_startup_8") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
