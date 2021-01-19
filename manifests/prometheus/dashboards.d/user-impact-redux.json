@@ -46,7 +46,7 @@
     "editable": true,
     "gnetId": null,
     "graphTooltip": 0,
-    "iteration": 1610711495327,
+    "iteration": 1611072332212,
     "links": [],
     "panels": [
       {
@@ -58,39 +58,39 @@
             "decimals": 0,
             "mappings": [
               {
-                "from": "66",
+                "from": "85",
                 "id": 0,
                 "text": " Add more cells",
                 "to": "100",
                 "type": 2
               },
               {
-                "from": "60",
+                "from": "80",
                 "id": 1,
                 "text": "Add more soon",
-                "to": "66",
+                "to": "85",
                 "type": 2,
                 "value": "6"
               },
               {
-                "from": "50",
+                "from": "70",
                 "id": 2,
                 "text": "Good",
-                "to": "60",
+                "to": "85",
                 "type": 2
               },
               {
-                "from": "40",
+                "from": "50",
                 "id": 3,
                 "text": "Usage reducing",
-                "to": "50",
+                "to": "70",
                 "type": 2
               },
               {
                 "from": "0",
                 "id": 4,
                 "text": "Reduce cells",
-                "to": "40",
+                "to": "50",
                 "type": 2
               },
               {
@@ -113,19 +113,19 @@
                 },
                 {
                   "color": "yellow",
-                  "value": 40
-                },
-                {
-                  "color": "green",
                   "value": 50
                 },
                 {
+                  "color": "green",
+                  "value": 70
+                },
+                {
                   "color": "#EAB839",
-                  "value": 60
+                  "value": 80
                 },
                 {
                   "color": "red",
-                  "value": 66
+                  "value": 85
                 }
               ]
             },
@@ -591,249 +591,6 @@
       },
       {
         "datasource": null,
-        "description": "$isoseg",
-        "fieldConfig": {
-          "defaults": {
-            "custom": {},
-            "decimals": 0,
-            "mappings": [
-              {
-                "from": "66",
-                "id": 0,
-                "text": " Add more cells",
-                "to": "100",
-                "type": 2
-              },
-              {
-                "from": "60",
-                "id": 1,
-                "text": "Add more soon",
-                "to": "66",
-                "type": 2,
-                "value": "6"
-              },
-              {
-                "from": "50",
-                "id": 2,
-                "text": "Good",
-                "to": "60",
-                "type": 2
-              },
-              {
-                "from": "40",
-                "id": 3,
-                "text": "Usage reducing",
-                "to": "50",
-                "type": 2
-              },
-              {
-                "from": "0",
-                "id": 4,
-                "text": "Reduce cells",
-                "to": "40",
-                "type": 2
-              },
-              {
-                "from": "101",
-                "id": 5,
-                "text": "Over capacity",
-                "to": "1000000",
-                "type": 2
-              }
-            ],
-            "max": 100,
-            "min": 0,
-            "noValue": "Error",
-            "thresholds": {
-              "mode": "percentage",
-              "steps": [
-                {
-                  "color": "blue",
-                  "value": null
-                },
-                {
-                  "color": "yellow",
-                  "value": 40
-                },
-                {
-                  "color": "green",
-                  "value": 50
-                },
-                {
-                  "color": "#EAB839",
-                  "value": 60
-                },
-                {
-                  "color": "red",
-                  "value": 66
-                }
-              ]
-            },
-            "unit": "percent"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 7,
-          "w": 3,
-          "x": 0,
-          "y": 7
-        },
-        "id": 39,
-        "options": {
-          "colorMode": "background",
-          "graphMode": "none",
-          "justifyMode": "center",
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "lastNotNull"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "textMode": "auto"
-        },
-        "pluginVersion": "7.1.5",
-        "repeat": null,
-        "repeatDirection": "v",
-        "repeatIteration": 1610711495327,
-        "repeatPanelId": 16,
-        "scopedVars": {
-          "isoseg": {
-            "selected": true,
-            "text": "diego-cell-iso-seg-not-egress-restricted-1",
-            "value": "diego-cell-iso-seg-not-egress-restricted-1"
-          }
-        },
-        "targets": [
-          {
-            "expr": "(diego_cells_required{bosh_job_name=\"$isoseg\"} / diego_cells_deployed{bosh_job_name=\"$isoseg\"})*100",
-            "instant": true,
-            "interval": "",
-            "legendFormat": "Cell utilisation",
-            "refId": "A"
-          }
-        ],
-        "timeFrom": null,
-        "timeShift": null,
-        "title": "$isoseg cell utilisation",
-        "type": "stat"
-      },
-      {
-        "aliasColors": {},
-        "bars": false,
-        "dashLength": 10,
-        "dashes": false,
-        "datasource": null,
-        "description": "Number of cells deployed vs number of cells required over the last 30 days.  Used to see trends in cell usage.",
-        "fieldConfig": {
-          "defaults": {
-            "custom": {}
-          },
-          "overrides": []
-        },
-        "fill": 1,
-        "fillGradient": 0,
-        "gridPos": {
-          "h": 7,
-          "w": 9,
-          "x": 3,
-          "y": 7
-        },
-        "hiddenSeries": false,
-        "id": 40,
-        "legend": {
-          "alignAsTable": false,
-          "avg": false,
-          "current": true,
-          "max": false,
-          "min": false,
-          "rightSide": false,
-          "show": true,
-          "total": false,
-          "values": true
-        },
-        "lines": true,
-        "linewidth": 1,
-        "nullPointMode": "null",
-        "percentage": false,
-        "pluginVersion": "7.1.5",
-        "pointradius": 2,
-        "points": false,
-        "renderer": "flot",
-        "repeat": null,
-        "repeatDirection": "v",
-        "repeatIteration": 1610711495327,
-        "repeatPanelId": 19,
-        "scopedVars": {
-          "isoseg": {
-            "selected": true,
-            "text": "diego-cell-iso-seg-not-egress-restricted-1",
-            "value": "diego-cell-iso-seg-not-egress-restricted-1"
-          }
-        },
-        "seriesOverrides": [],
-        "spaceLength": 10,
-        "stack": false,
-        "steppedLine": false,
-        "targets": [
-          {
-            "expr": "diego_cells_deployed{bosh_job_name=\"$isoseg\"}",
-            "interval": "",
-            "legendFormat": "Deployed",
-            "refId": "A"
-          },
-          {
-            "expr": "diego_cells_required{bosh_job_name=\"$isoseg\"}",
-            "interval": "",
-            "legendFormat": "Required",
-            "refId": "B"
-          }
-        ],
-        "thresholds": [],
-        "timeFrom": null,
-        "timeRegions": [],
-        "timeShift": null,
-        "title": "$isoseg cell count (30 days)",
-        "tooltip": {
-          "shared": true,
-          "sort": 0,
-          "value_type": "individual"
-        },
-        "type": "graph",
-        "xaxis": {
-          "buckets": null,
-          "mode": "time",
-          "name": null,
-          "show": true,
-          "values": []
-        },
-        "yaxes": [
-          {
-            "format": "short",
-            "label": "Num cells",
-            "logBase": 1,
-            "max": null,
-            "min": null,
-            "show": true
-          },
-          {
-            "format": "short",
-            "label": null,
-            "logBase": 1,
-            "max": null,
-            "min": null,
-            "show": true
-          }
-        ],
-        "yaxis": {
-          "align": false,
-          "alignLevel": null
-        }
-      },
-      {
-        "datasource": null,
         "fieldConfig": {
           "defaults": {
             "custom": {}
@@ -1263,14 +1020,11 @@
           "allValue": "All",
           "current": {
             "selected": true,
-            "tags": [],
             "text": [
-              "diego-cell",
-              "diego-cell-iso-seg-not-egress-restricted-1"
+              "diego-cell"
             ],
             "value": [
-              "diego-cell",
-              "diego-cell-iso-seg-not-egress-restricted-1"
+              "diego-cell"
             ]
           },
           "datasource": "prometheus",
