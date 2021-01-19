@@ -3,8 +3,8 @@ platform: linux
 image_resource:
   type: docker-image
   source:
-    repository: ruby
-    tag: 2.7-slim
+    repository: ghcr.io/alphagov/paas/ruby
+    tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
 inputs:
   - name: paas-trusted-people
 run:
