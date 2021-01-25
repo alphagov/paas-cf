@@ -7,42 +7,51 @@ meta:
         submodule_recursive: 'false'  # git-resource issue 307
 
   containers:
+    alpine: &alpine-image-resource
+      type: docker-image
+      source:
+        repository: ghcr.io/alphagov/paas/alpine
+        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+    psql: &psql-image-resource
+      type: docker-image
+      source:
+        repository: ghcr.io/alphagov/paas/psql
+        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+    node: &node-image-resource
+      type: docker-image
+      source:
+        repository: ghcr.io/alphagov/paas/node
+        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
         tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
         tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
         tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
         tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
         tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
         tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
@@ -58,7 +67,6 @@ meta:
       source:
         repository: ghcr.io/alphagov/paas/terraform
         tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
@@ -599,11 +607,7 @@ jobs:
           task: lock-the-pipeline
           tags: [colocated-with-web]
           config:
-            image_resource:
-              type: docker-image
-              source:
-                repository: ghcr.io/alphagov/paas/alpine
-                tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+            image_resource: *alpine-image-resource
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -1209,12 +1213,7 @@ jobs:
         tags: [colocated-with-web]
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ghcr.io/alphagov/paas/psql
-              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
-
+          image_resource: *psql-image-resource
           inputs:
             - name: terraform-variables
             - name: paas-cf
@@ -3749,11 +3748,7 @@ jobs:
         tags: [colocated-with-web]
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ghcr.io/alphagov/paas/node
-              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+          image_resource: *node-image-resource
           inputs:
             - name: paas-admin
           outputs:
@@ -3886,11 +3881,7 @@ jobs:
           tags: [colocated-with-web]
           config:
             platform: linux
-            image_resource:
-              type: docker-image
-              source:
-                repository: ghcr.io/alphagov/paas/node
-                tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+            image_resource: *node-image-resource
             params:
               DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
               DEPLOY_ENV: ((deploy_env))
@@ -4707,11 +4698,7 @@ jobs:
           task: unlock-the-pipeline
           tags: [colocated-with-web]
           config:
-            image_resource:
-              type: docker-image
-              source:
-                repository: ghcr.io/alphagov/paas/alpine
-                tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+            image_resource: *alpine-image-resource
             platform: linux
             params:
               DISABLE_PIPELINE_LOCKING: ((disable_pipeline_locking))
@@ -5196,11 +5183,7 @@ jobs:
         tags: [colocated-with-web]
         config:
           platform: linux
-          image_resource:
-            type: docker-image
-            source:
-              repository: ghcr.io/alphagov/paas/alpine
-              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+          image_resource: *alpine-image-resource
           inputs:
             - name: deployed-healthcheck
           params:
