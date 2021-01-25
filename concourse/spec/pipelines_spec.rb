@@ -55,7 +55,7 @@ RSpec.describe "concourse pipelines" do
         end
 
         it "has correct branches" do
-          valid_branches = %w[gds_master master main ((branch_name))]
+          valid_branches = %w[gds_master master main gds_main ((branch_name))]
 
           valid_branches << "cf13.2" # FIXME: cf-upgrade
 
