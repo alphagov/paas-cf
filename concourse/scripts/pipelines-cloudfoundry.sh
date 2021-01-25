@@ -79,7 +79,7 @@ deploy_env: ${DEPLOY_ENV}
 state_bucket: ${state_bucket}
 test_artifacts_bucket: gds-paas-${DEPLOY_ENV}-test-artifacts
 pipeline_trigger_file: ${pipeline_name}.trigger
-branch_name: ${BRANCH:-master}
+branch_name: ${BRANCH:-main}
 aws_region: ${AWS_DEFAULT_REGION}
 debug: ${DEBUG:-}
 env_specific_bosh_vars_file: ${ENV_SPECIFIC_BOSH_VARS_FILE}
