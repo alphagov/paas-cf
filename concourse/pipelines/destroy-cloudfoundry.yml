@@ -90,7 +90,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 54495aab0a18ba76a55d98ae19f904d3629feb77
+              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
 
           inputs:
             - name: paas-cf
@@ -162,7 +162,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/bosh-cli-v2
-              tag: 54495aab0a18ba76a55d98ae19f904d3629feb77
+              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
 
           inputs:
             - name: bosh-vars-store
@@ -215,8 +215,8 @@ jobs:
           image_resource:
             type: docker-image
             source:
-              repository: ruby
-              tag: 2.7-slim
+              repository: ghcr.io/alphagov/paas/ruby
+              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
           inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -259,7 +259,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/terraform
-              tag: 54495aab0a18ba76a55d98ae19f904d3629feb77
+              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
 
           inputs:
             - name: terraform-variables

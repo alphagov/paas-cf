@@ -33,7 +33,7 @@ RSpec.describe "image resources" do
       .each do |repo, tags|
       context "repo #{repo}" do
         it "has only one tag" do
-          expect(tags.length).to eq(1)
+          expect(tags).to have_attributes(size: 1)
         end
 
         it "is a lowercase git hash" do
@@ -48,9 +48,20 @@ RSpec.describe "image resources" do
         .reject { |repo, _| repo.match?(/-resource$/) }
         .to_h.values .flatten .uniq.tap do |all_tags|
           it "onlies have one tag" do
-            expect(all_tags.length).to eq(1)
+            expect(all_tags).to have_attributes(size: 1)
           end
         end
+    end
+  end
+
+  describe "dockerhub docker images" do
+    # DockerHub images are those where there's no hostname at the start of the
+    # image name. Detecting that by the absence of a full stop.
+    # The regex is complicated by not all image names having a slash in.
+    dockerhub_images = image_tags_by_repo.select { |repo, _| repo.match?(%r{^[^\.]+(/.+)?$}) }
+
+    it "are not being used" do
+      expect(dockerhub_images).to be_empty
     end
   end
 end
