@@ -110,7 +110,7 @@ resource "aws_db_instance" "cdn" {
   identifier           = "${var.env}-cdn"
   allocated_storage    = 10
   engine               = "postgres"
-  engine_version       = "12.3"
+  engine_version       = "12"
   instance_class       = "db.t2.small"
   name                 = "cdn"
   username             = "dbadmin"
