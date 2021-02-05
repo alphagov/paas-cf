@@ -1,0 +1,10 @@
+---
+applications:
+    - name: postgis-upgrade
+      buildpacks:
+        - https://github.com/cloudfoundry/apt-buildpack#v0.2.3
+        - staticfile_buildpack
+      command: while true; do sleep 30; done;
+      health-check-type: process
+      env:
+        PERL5LIB: "/home/vcap/deps/0/apt/usr/share/perl5/"
