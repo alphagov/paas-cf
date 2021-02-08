@@ -14,27 +14,27 @@ disk_types:
 - name: 5GB
   disk_size: 5120
   cloud_properties:
-    type: gp2
+    type: gp3
 - name: 10GB
   disk_size: 10240
   cloud_properties:
-    type: gp2
+    type: gp3
 - name: 100GB
   disk_size: 102400
   cloud_properties:
-    type: gp2
+    type: gp3
 - name: 200GB
   disk_size: 204800
   cloud_properties:
-    type: gp2
+    type: gp3
 - name: 500GB
   disk_size: 512000
   cloud_properties:
-    type: gp2
+    type: gp3
 - name: 750GB
   disk_size: 768000
   cloud_properties:
-    type: gp2
+    type: gp3
 
 networks:
 - name: cf
@@ -149,21 +149,21 @@ vm_types:
     instance_type: ((nano_vm_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
 
 - name: small
   cloud_properties:
     instance_type: ((small_vm_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
 
 - name: errand
   cloud_properties:
     instance_type: ((small_vm_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
     iam_instance_profile: bosh-errand
 
 - name: medium
@@ -171,42 +171,42 @@ vm_types:
     instance_type: ((medium_vm_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
 
 - name: large
   cloud_properties:
     instance_type: ((large_vm_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
 
 - name: xlarge
   cloud_properties:
     instance_type: ((xlarge_vm_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
 
 - name: router
   cloud_properties:
     instance_type: ((router_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
 
 - name: slim_router
   cloud_properties:
     instance_type: ((slim_router_instance_type))
     ephemeral_disk:
       size: 10240
-      type: gp2
+      type: gp3
 
 - name: cell
   cloud_properties:
     instance_type: ((cell_instance_type))
     ephemeral_disk:
       size: 204800
-      type: gp2
+      type: gp3
     security_groups:
     - ((terraform_outputs_rds_broker_db_clients_security_group))
     - ((terraform_outputs_elasticache_broker_clients_security_group))
@@ -217,7 +217,7 @@ vm_types:
     instance_type: ((high_cpu_cell_instance_type))
     ephemeral_disk:
       size: 204800
-      type: gp2
+      type: gp3
     security_groups:
       - ((terraform_outputs_rds_broker_db_clients_security_group))
       - ((terraform_outputs_elasticache_broker_clients_security_group))
@@ -228,7 +228,7 @@ vm_types:
     instance_type: ((small_cell_instance_type))
     ephemeral_disk:
       size: 102400
-      type: gp2
+      type: gp3
     security_groups:
     - ((terraform_outputs_rds_broker_db_clients_security_group))
     - ((terraform_outputs_elasticache_broker_clients_security_group))
@@ -239,7 +239,7 @@ vm_extensions:
   cloud_properties:
     ephemeral_disk:
       size: 65536
-      type: gp2
+      type: gp3
 
 - name: cf_cc_instance_profile
   cloud_properties:
