@@ -3974,7 +3974,7 @@ jobs:
           outputs:
             - name: paas-admin-data
           params:
-            PLATFORM_PROMETHEUS_ENDPOINT: "https://prometheus-1.((system_dns_zone_name))"
+            PLATFORM_PROMETHEUS_ENDPOINT: "https://prometheus-2.((system_dns_zone_name))"
             PLATFORM_PROMETHEUS_USERNAME: admin
             PLATFORM_PROMETHEUS_PASSWORD: ((platform_prometheus_password))
           run:
