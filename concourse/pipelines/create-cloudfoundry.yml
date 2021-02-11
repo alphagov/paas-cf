@@ -140,6 +140,7 @@ groups:
       - post-deploy
       - deploy-paas-accounts
       - deploy-paas-admin
+      - deploy-paas-admin-data
       - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
@@ -181,6 +182,7 @@ groups:
     jobs:
       - deploy-paas-accounts
       - deploy-paas-admin
+      - deploy-paas-admin-data
       - deploy-paas-auditor
       - deploy-paas-billing
       - deploy-paas-metrics
@@ -418,6 +420,11 @@ resources:
       branch: main
       pool: ((pipeline_name))
       private_key: ((pipeline_lock_git_private_key))
+
+  - name: performance-scraper-timer
+    type: time
+    source:
+      interval: 24h
 
   - name: smoke-tests-timer
     type: time
@@ -3763,7 +3770,7 @@ jobs:
               - -c
               - |
                 cd paas-admin
-                npm install
+                npm ci
                 NODE_ENV=production npm run build
 
                 cp -Ra . ../paas-admin-dist
@@ -3826,12 +3833,10 @@ jobs:
                     DOMAIN_NAME: "https://admin.${SYSTEM_DNS_ZONE_NAME}"
                     AWS_ACCESS_KEY_ID: ((paas_admin_aws_access_key_id))
                     AWS_SECRET_ACCESS_KEY: ((paas_admin_aws_secret_access_key))
+                    PLATFORM_METRICS_ENDPOINT: "http://paas-admin-data.apps.internal:8080"
                     PROMETHEUS_USERNAME: paas-admin
                     PROMETHEUS_PASSWORD: ((paas_admin_prometheus_password))
                     PROMETHEUS_ENDPOINT: "https://prometheus.${SYSTEM_DNS_ZONE_NAME}"
-                    PLATFORM_PROMETHEUS_ENDPOINT: "https://prometheus-1.${SYSTEM_DNS_ZONE_NAME}"
-                    PLATFORM_PROMETHEUS_USERNAME: admin
-                    PLATFORM_PROMETHEUS_PASSWORD: ((platform_prometheus_password))
                     ZENDESK_API_TOKEN: ((zendesk_api_token))
                     ZENDESK_USERNAME: ((zendesk_username))
                 EOF
@@ -3940,6 +3945,109 @@ jobs:
           GIT_SSH_PRIVATE_KEY: ((paas-admin-git-keys.private_key))
           GIT_SSH_PUBLIC_KEY: ((paas-admin-git-keys.public_key))
           GIT_USER: gov-paas-((deploy_env))
+
+      - *end-grafana-job-annotation
+
+  - name: deploy-paas-admin-data
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+      - get: paas-admin
+      - get: performance-scraper-timer
+        trigger: true
+
+      - in_parallel:
+        - <<: *get-paas-cf
+          passed: ['post-deploy']
+
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+      - task: build
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *node-image-resource
+          inputs:
+            - name: paas-admin
+          outputs:
+            - name: paas-admin-data
+          params:
+            PLATFORM_PROMETHEUS_ENDPOINT: "https://prometheus-1.((system_dns_zone_name))"
+            PLATFORM_PROMETHEUS_USERNAME: admin
+            PLATFORM_PROMETHEUS_PASSWORD: ((platform_prometheus_password))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                echo "Interacting with ${PLATFORM_PROMETHEUS_ENDPOINT} as ${PLATFORM_PROMETHEUS_USERNAME}..."
+                cd paas-admin
+                npm ci
+                npm run -s scrape:performance > ../paas-admin-data/metrics.json
+
+      - task: render-manifest
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ghcr.io/alphagov/paas/spruce
+              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+
+          inputs:
+            - name: paas-admin-data
+          outputs:
+            - name: paas-admin-data
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                cat <<EOF > ./paas-admin-data/manifest.yml
+                applications:
+                - name: paas-admin-data
+                  memory: 64M
+                  buildpacks:
+                  - staticfile_buildpack
+                  routes:
+                  - route: "paas-admin-data.apps.internal"
+                  instances: 3
+                EOF
+
+      - task: deploy
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-admin-data
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+            CF_CLIENT_SECRET: ((cf_client_secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf target -o admin -s public
+
+                cd paas-admin-data
+
+                cf cancel-deployment paas-admin-data || true
+                cf push --strategy=rolling paas-admin-data
+                cf add-network-policy paas-admin paas-admin-data --protocol tcp --port 8080
 
       - *end-grafana-job-annotation
 
