@@ -424,7 +424,8 @@ resources:
   - name: performance-scraper-timer
     type: time
     source:
-      interval: 24h
+      start: 2AM
+      stop: 3AM
 
   - name: smoke-tests-timer
     type: time
