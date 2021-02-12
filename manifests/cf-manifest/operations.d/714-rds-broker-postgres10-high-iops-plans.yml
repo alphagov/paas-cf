@@ -17,7 +17,7 @@
       engine: "postgres"
       engine_version: "10"
       engine_family: "postgres10"
-      default_extensions: ["uuid-ossp", "postgis", "citext"]
+      default_extensions: ["uuid-ossp", "citext"]
       allowed_extensions: [
         "address_standardizer",
         "address_standardizer_data_us",
