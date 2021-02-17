@@ -133,6 +133,7 @@ groups:
       - internal-app-availability-tests
       - api-availability-tests
       - cf-terraform
+      - psn-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -165,6 +166,7 @@ groups:
       - internal-app-availability-tests
       - api-availability-tests
       - cf-terraform
+      - psn-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -325,6 +327,25 @@ resources:
             "terraform_version": "0.12.29",
             "serial": 0,
             "outputs": {},
+            "resources": []
+        }
+
+  - name: psn-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: psn.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 4,
+            "terraform_version": "0.12.29",
+            "serial": 0,
+            "outputs": {"psn_security_group_seed_json": {
+              "value": "[]",
+              "type": "string"
+            }},
             "resources": []
         }
 
@@ -1238,6 +1259,90 @@ jobs:
                 paas-cf/manifests/cf-manifest/scripts/create-cf-dbs.sh
       - *end-grafana-job-annotation
 
+  - name: psn-terraform
+    serial_groups: [cf-deploy]
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+          - <<: *get-paas-cf
+            passed: ['pre-deploy']
+          - get: pipeline-trigger
+            passed: ['pre-deploy']
+            trigger: true
+          - get: psn-tfstate
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+            - name: concourse-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: terraform-apply-psn
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: psn-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_vpc_endpoint: ((psn_vpc_endpoint))
+            TF_VAR_env: ((deploy_env))
+            AWS_DEFAULT_REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                cp psn-tfstate/psn.tfstate updated-tfstate/psn.tfstate
+
+                if [ "${TF_VAR_vpc_endpoint}" = "__NO_PSN_VPC_ENDPOINT__" ]; then
+                  echo "The PSN VPC Endpoint has not been specified for this environment. Skipping..."
+                  echo "The 'psn_vpc_endpoint' is only expected to be set in London region."
+                  exit 0
+                fi
+
+                terraform init paas-cf/terraform/psn
+
+                sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/psn.tfstate
+
+                terraform apply \
+                  -auto-approve=true \
+                  -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
+                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
+                  -state=updated-tfstate/psn.tfstate \
+                  paas-cf/terraform/psn
+
+        ensure:
+          put: psn-tfstate
+          params:
+            file: updated-tfstate/psn.tfstate
+
+      - *end-grafana-job-annotation
+
   - name: generate-cf-config
     serial_groups: [cf-deploy]
     serial: true
@@ -1250,37 +1355,63 @@ jobs:
           - <<: *get-paas-cf
             passed: ['cf-terraform']
           - get: vpc-tfstate
+          - get: psn-tfstate
+            passed: ['psn-terraform']
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
 
       - in_parallel:
-        - task: extract-terraform-outputs
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *ruby-slim-image-resource
-            inputs:
-              - name: paas-cf
-              - name: vpc-tfstate
-              - name: bosh-tfstate
-              - name: cf-tfstate
-            outputs:
-              - name: terraform-outputs
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  for state in vpc bosh cf; do
-                    ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
-                      < ${state}-tfstate/${state}.tfstate \
-                      > terraform-outputs/${state}.yml
-                    ./paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                      < ${state}-tfstate/${state}.tfstate \
-                      > terraform-outputs/${state}.tfvars.sh
-                  done
+        - do:
+          - task: extract-terraform-outputs
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              image_resource: *ruby-slim-image-resource
+              inputs:
+                - name: paas-cf
+                - name: vpc-tfstate
+                - name: bosh-tfstate
+                - name: cf-tfstate
+              outputs:
+                - name: terraform-outputs
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -c
+                  - |
+                    for state in vpc bosh cf; do
+                      ./paas-cf/concourse/scripts/extract_terraform_state_to_yaml.rb \
+                        < ${state}-tfstate/${state}.tfstate \
+                        > terraform-outputs/${state}.yml
+                      ./paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                        < ${state}-tfstate/${state}.tfstate \
+                        > terraform-outputs/${state}.tfvars.sh
+                    done
+
+          - task: extract-terraform-outputs-psn
+            tags: [colocated-with-web]
+            config:
+              platform: linux
+              image_resource: *terraform-image-resource
+              inputs:
+                - name: psn-tfstate
+                - name: terraform-outputs
+              outputs:
+                - name: terraform-outputs
+              run:
+                path: sh
+                args:
+                  - -e
+                  - -c
+                  - |
+                    terraform output \
+                      -raw \
+                      -state=psn-tfstate/psn.tfstate \
+                      psn_security_group_seed_json > terraform-outputs/psn-peering.json
+
+                      ls -la terraform-outputs
 
         - task: generate-peer-opsfile
           tags: [colocated-with-web]
@@ -1350,6 +1481,27 @@ jobs:
                     > ms-oauth-endpoints/issuer
 
       - do:
+        - task: generate-psn-peer-opsfile
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *ruby-slim-image-resource
+            inputs:
+              - name: paas-cf
+              - name: terraform-outputs
+            outputs:
+              - name: psn-peering-opsfile
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb terraform-outputs/psn-peering.json \
+                  > psn-peering-opsfile/psn-peers.yml
+
+                  cat psn-peering-opsfile/psn-peers.yml
+
         - task: generate-paas-cf-cloud-config
           tags: [colocated-with-web]
           config:
@@ -1411,6 +1563,7 @@ jobs:
               - name: paas-cf
               - name: terraform-outputs
               - name: vpc-peering-opsfile
+              - name: psn-peering-opsfile
               - name: tenant-uaa-clients-opsfile
               - name: ms-oauth-endpoints
             outputs:

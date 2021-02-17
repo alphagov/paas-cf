@@ -41,6 +41,7 @@ manifest_without_isolation_segments="$(
     --ops-file="${CF_DEPLOYMENT_DIR}/operations/use-internal-lookup-for-route-services.yml" \
     ${opsfile_args} \
     --ops-file="${WORKDIR}/vpc-peering-opsfile/vpc-peers.yml" \
+    --ops-file="${WORKDIR}/psn-peering-opsfile/psn-peers.yml" \
     --ops-file="${WORKDIR}/tenant-uaa-clients-opsfile/tenant-uaa-opsfile.yml" \
     "${CF_DEPLOYMENT_DIR}/cf-deployment.yml"
 )"

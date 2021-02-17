@@ -82,6 +82,15 @@ private
     file
   end
 
+  def render_psn_peering_opsfile(dir)
+    FileUtils.mkdir(dir) unless Dir.exist?(dir)
+    file = File.open("#{dir}/psn-peers.yml", "w")
+    file.write("[]")
+    file.flush
+    file.rewind
+    file
+  end
+
   def render_tenant_uaa_clients_opsfile(dir, config_file, environment = "dev")
     FileUtils.mkdir(dir) unless Dir.exist?(dir)
 
@@ -113,6 +122,7 @@ private
     copy_fixture_file("bosh-secrets.yml", "#{workdir}/bosh-secrets")
     copy_fixture_file("environment-variables.yml", workdir)
     render_vpc_peering_opsfile("#{workdir}/vpc-peering-opsfile", environment)
+    render_psn_peering_opsfile("#{workdir}/psn-peering-opsfile")
     render_tenant_uaa_clients_opsfile("#{workdir}/tenant-uaa-clients-opsfile", "manifests/cf-manifest/spec/fixtures/tenant-uaa-client-fixtures.yml", "dev")
 
     env = {
