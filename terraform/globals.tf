@@ -13,7 +13,11 @@ variable "admin_cidrs" {
     "82.71.58.244/32",   # LP remote
     "51.148.163.199/32", # TW remote
     "51.68.223.16/29",   # pentesters
-    "87.127.226.154/29", # pentesters
+    "87.127.226.154/32", # pentesters
+    "87.127.226.155/32", # pentesters
+    "87.127.226.156/32", # pentesters
+    "87.127.226.157/32", # pentesters
+    "87.127.226.158/32", # pentesters
   ]
 }
 
