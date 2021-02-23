@@ -134,6 +134,7 @@ groups:
       - api-availability-tests
       - cf-terraform
       - psn-terraform
+      - vpc-peering-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -167,6 +168,7 @@ groups:
       - api-availability-tests
       - cf-terraform
       - psn-terraform
+      - vpc-peering-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -303,6 +305,22 @@ resources:
     source:
       bucket: ((state_bucket))
       versioned_file: cf.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 4,
+            "terraform_version": "0.12.29",
+            "serial": 0,
+            "outputs": {},
+            "resources": []
+        }
+
+  - name: vpc-peering-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: vpc-peering.tfstate
       region_name: ((aws_region))
       initial_version: "-"
       initial_content_text: |
@@ -1105,26 +1123,6 @@ jobs:
                 export TF_VAR_csls_kinesis_destination_arn="((cyber_csls_kinesis_destination_arn))"
                 EOF
 
-      - task: generate-peer-tfvars
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *ruby-slim-image-resource
-          inputs:
-            - name: paas-cf
-          outputs:
-            - name: vpc-peering-tfvars
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
-                > vpc-peering-tfvars/vpc-peers.tfvars
-
-                cat vpc-peering-tfvars/vpc-peers.tfvars
-
       - task: terraform-apply
         tags: [colocated-with-web]
         config:
@@ -1134,7 +1132,6 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
-            - name: vpc-peering-tfvars
           outputs:
             - name: updated-tfstate
           params:
@@ -1163,7 +1160,6 @@ jobs:
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
                   -var-file="paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
                   -var-file="paas-cf/terraform/((aws_region)).tfvars" \
-                  -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
                   -state=updated-tfstate/cf.tfstate \
                   paas-cf/terraform/cloudfoundry
         ensure:
@@ -1351,6 +1347,89 @@ jobs:
 
       - *end-grafana-job-annotation
 
+  - name: vpc-peering-terraform
+    serial_groups: [cf-deploy]
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+          - <<: *get-paas-cf
+            passed: ['pre-deploy']
+          - get: pipeline-trigger
+            passed: ['pre-deploy']
+            trigger: true
+          - get: vpc-peering-tfstate
+          - get: vpc-tfstate
+
+      - task: generate-peer-tfvars
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: vpc-peering-tfvars
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
+                > vpc-peering-tfvars/vpc-peers.tfvars
+
+                cat vpc-peering-tfvars/vpc-peers.tfvars
+
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: terraform-apply-vpc-peering
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-peering-tfvars
+            - name: vpc-peering-tfstate
+            - name: terraform-variables
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_env: ((deploy_env))
+            TF_VAR_system_dns_zone_name: ((system_dns_zone_name))
+            TF_VAR_apps_dns_zone_name: ((apps_dns_zone_name))
+            AWS_DEFAULT_REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                cp vpc-peering-tfstate/vpc-peering.tfstate updated-tfstate/vpc-peering.tfstate
+
+                terraform init paas-cf/terraform/vpc-peering
+
+                sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/vpc-peering.tfstate
+
+                terraform apply \
+                  -auto-approve=true \
+                  -var-file="paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
+                  -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
+                  -state=updated-tfstate/vpc-peering.tfstate \
+                  paas-cf/terraform/vpc-peering
+        ensure:
+          put: vpc-peering-tfstate
+          params:
+            file: updated-tfstate/vpc-peering.tfstate
+      - *end-grafana-job-annotation
+
   - name: generate-cf-config
     serial_groups: [cf-deploy]
     serial: true
@@ -1358,10 +1437,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['cf-terraform']
+            passed: ['cf-terraform', 'vpc-peering-terraform']
             trigger: true
           - <<: *get-paas-cf
-            passed: ['cf-terraform']
+            passed: ['cf-terraform', 'vpc-peering-terraform']
           - get: vpc-tfstate
           - get: psn-tfstate
             passed: ['psn-terraform']
