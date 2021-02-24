@@ -324,7 +324,7 @@ showenv: ## Display environment information
 	@scripts/showenv.sh
 
 .PHONY: upload-all-secrets
-upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-mailchimp-secrets upload-cronitor-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets
+upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-mailchimp-secrets upload-cronitor-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets upload-pingfom-secrets
 
 .PHONY: upload-google-oauth-secrets
 upload-google-oauth-secrets: check-env ## Decrypt and upload Google Admin Console credentials to Credhub
@@ -395,6 +395,12 @@ upload-zendesk-secrets: check-env ## Decrypt and upload ZenDesk secrets to Credh
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-secrets/upload-zendesk-secrets.rb
+
+.PHONY: upload-pingdom-secrets
+upload-pingdom-secrets: check-env ## Decrypt and upload Pingdom Credentials to Credhub
+	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
+	@scripts/upload-secrets/upload-pingdom-secrets.rb
 
 .PHONY: pingdom
 pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
