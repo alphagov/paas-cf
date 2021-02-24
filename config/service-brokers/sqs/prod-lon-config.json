@@ -1,5 +1,6 @@
 {
   "allowed_orgs": [
+      "ccs-conclave-sssos",
       "dof-dss",
       "gds-document-checking-service",
       "gds-tech-ops",
