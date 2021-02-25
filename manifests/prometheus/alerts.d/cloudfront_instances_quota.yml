@@ -1,0 +1,17 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: CloudfrontDistributionCountCloseToLimit
+    rules:
+      - alert: CloudfrontDistributionCountCloseToLimit
+        expr: paas_cloudfront_distributions_count > ((aws_limits_cloudfront_distributions)) / 100 * 80
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Number of Cloudfront Distributions is close to the limit"
+          description: "We are using {{ $value | printf \"%.0f\" }} of ((aws_limits_cloudfront_distributions)) Cloudfront Distributions. We might have to contact AWS support to raise the limit."
+          url: https://console.aws.amazon.com/support/home#/case/create?issueType=service-limit-increase&limitType=service-code-cloudfront-distributions
