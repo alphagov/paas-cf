@@ -1642,7 +1642,6 @@ jobs:
                 PAAS_ADMIN_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_access_key_id cf-terraform-outputs.yml)
                 PAAS_ADMIN_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_secret_access_key cf-terraform-outputs.yml)
                 PAAS_ADMIN_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/paas_admin_prometheus_password")
-                PINGDOM_API_TOKEN=$(credhub get -q -n "pingdom.com/api_token")
                 PLATFORM_PROMETHEUS_PASSWORD=$(credhub get -q -n "${DEPLOY_ENV}/prometheus/prometheus_password")
                 PAAS_PROMETHEUS_ENDPOINTS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_access_key_id cf-terraform-outputs.yml)
                 PAAS_PROMETHEUS_ENDPOINTS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_secret_access_key cf-terraform-outputs.yml)
@@ -1695,7 +1694,6 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_prometheus_endpoints_secret" --type password --password "${UAA_CLIENTS_PAAS_PROMETHEUS_ENDPOINTS_SECRET}"
                 credhub set --name="${PIPELINE_NS}/secrets_test_user_password" --type password --password "${SECRETS_TEST_USER_PASSWORD}"
                 credhub set --name="${PIPELINE_NS}/platform_prometheus_password" --type password --password "${PLATFORM_PROMETHEUS_PASSWORD}"
-                credhub set --name="${PIPELINE_NS}/pingdom_api_token" --type password --password "${PINGDOM_API_TOKEN}"
 
                 credhub set --name="${PIPELINE_NS}/custom_broker_acceptance_prometheus_password" --type password --password "${CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD}"
 
