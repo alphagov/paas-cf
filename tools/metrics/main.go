@@ -30,9 +30,9 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudwatch"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/debug"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/elasticache"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/rds"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 	promrep "github.com/alphagov/paas-cf/tools/metrics/pkg/prometheus_reporter"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/rds"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 )
@@ -184,6 +184,7 @@ func Main() error {
 		RDSDBInstancesGauge(logger, rdsService, 15*time.Minute),
 		AWSHealthEventsGauge(logger, awsRegion, healthService, 15*time.Minute),
 		ShieldOngoingAttacksGauge(logger, shieldService, 5*time.Minute),
+		CloudfrontDistributionInstancesGauge(logger, cfs, 15*time.Minute),
 	}
 	for _, addr := range strings.Split(os.Getenv("TLS_DOMAINS"), ",") {
 		gauges = append(gauges, TLSValidityGauge(logger, tlsChecker, strings.TrimSpace(addr), 15*time.Minute))

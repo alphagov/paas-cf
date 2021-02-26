@@ -21,6 +21,7 @@ The following metrics are currently collected:
 |`aws.cloudfront.bytes_uploaded` | Counter | Total number of bytes uploaded to a CloudFront distribution | `distribution_id` |
 |`aws.cloudfront.requests` | Counter | Total number of requests made to a CloudFront distribution | `distribution_id` |
 |`aws.cloudfront.totalerrorrate` | Gauge | The total rate of 4xx and 5xx errors in a CloudFront distribution | `distribution_id` |
+|`aws.cloudfront.distributions.count` | Gauge | The number of cloudfront distributions in this environment | |
 |`aws.s3.buckets.count` | Gauge | The total number of buckets in the AWS account | |
 |`cdn.tls.certificates.expiry` | Gauge | Number of days until a CloudFront cert expires | `hostname` |
 |`cdn.tls.certificates.validity` | Gauge | Number of days CloudFront cert is valid for | `hostname` |
