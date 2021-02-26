@@ -1281,7 +1281,6 @@ jobs:
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
-            - name: concourse-tfstate
           outputs:
             - name: terraform-variables
           run:
