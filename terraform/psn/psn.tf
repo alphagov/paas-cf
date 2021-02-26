@@ -13,9 +13,13 @@ variable "subnet_ids" {
   description = "The ID of one or more subnets in which to create a network interface for the endpoint."
 }
 
-variable "security_group_id" {
+variable "security_group_name" {
   type        = string
   description = "The security group to allow access to the PSN VPC Endpoint."
+}
+
+data "aws_security_group" "security_group" {
+  name = var.security_group_name
 }
 
 resource "aws_vpc_endpoint" "psn_service" {
@@ -43,11 +47,11 @@ resource "aws_security_group_rule" "psn_ingress_from_cells" {
   from_port = 3128
   to_port   = 3128
 
-  source_security_group_id = var.security_group_id
+  source_security_group_id = data.aws_security_group.security_group.id
 }
 
 resource "aws_security_group_rule" "cells_egress_to_psn" {
-  security_group_id = var.security_group_id
+  security_group_id = data.aws_security_group.security_group.id
 
   type      = "egress"
   protocol  = "tcp"

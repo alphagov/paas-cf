@@ -1281,6 +1281,7 @@ jobs:
           inputs:
             - name: paas-cf
             - name: vpc-tfstate
+            - name: bosh-tfstate
           outputs:
             - name: terraform-variables
           run:
@@ -1291,6 +1292,9 @@ jobs:
               - |
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < bosh-tfstate/bosh.tfstate > terraform-variables/bosh.tfvars.sh
 
       - task: terraform-apply-psn
         tags: [colocated-with-web]
@@ -1314,6 +1318,7 @@ jobs:
               - -c
               - |
                 . terraform-variables/vpc.tfvars.sh
+                . terraform-variables/bosh.tfvars.sh
 
                 cp psn-tfstate/psn.tfstate updated-tfstate/psn.tfstate
 
@@ -1322,6 +1327,10 @@ jobs:
                   echo "The 'psn_vpc_endpoint' is only expected to be set in London region."
                   exit 0
                 fi
+                # shellcheck disable=SC2154
+                export TF_VAR_subnet_ids="[\"${TF_VAR_subnet0_id}\", \"${TF_VAR_subnet1_id}\", \"${TF_VAR_subnet2_id}\"]"
+                # shellcheck disable=SC2154
+                export TF_VAR_security_group_name="${TF_VAR_default_security_group}"
 
                 terraform init paas-cf/terraform/psn
 
