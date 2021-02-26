@@ -1,0 +1,8 @@
+---
+- type: replace
+  path: /releases/name=cflinuxfs3
+  value:
+    name: "cflinuxfs3"
+    version: "0.226.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs3-release?v=0.226.0"
+    sha1: "1273264c7b643b5fefe56039680d884022a1fae7"
