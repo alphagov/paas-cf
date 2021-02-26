@@ -1323,6 +1323,8 @@ jobs:
                   exit 0
                 fi
 
+                export TF_VAR_subnet_ids="[\"${TF_VAR_subnet0_id}\", \"${TF_VAR_subnet1_id}\", \"${TF_VAR_subnet2_id}\"]"
+
                 terraform init paas-cf/terraform/psn
 
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/psn.tfstate
