@@ -1329,7 +1329,7 @@ jobs:
                   exit 0
                 fi
                 # shellcheck disable=SC2154
-                export TF_VAR_subnet_ids="[\"${TF_VAR_subnet0_id}\", \"${TF_VAR_subnet1_id}\", \"${TF_VAR_subnet2_id}\"]"
+                export TF_VAR_subnet_ids="[\"${TF_VAR_subnet0_id}\", \"${TF_VAR_subnet1_id}\"]"
                 # shellcheck disable=SC2154
                 export TF_VAR_security_group_name="${TF_VAR_default_security_group}"
 
