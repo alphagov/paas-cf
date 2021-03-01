@@ -1272,6 +1272,7 @@ jobs:
             trigger: true
           - get: psn-tfstate
           - get: vpc-tfstate
+          - get: bosh-tfstate
 
       - task: extract-terraform-variables
         tags: [colocated-with-web]
