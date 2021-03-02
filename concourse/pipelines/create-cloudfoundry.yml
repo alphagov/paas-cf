@@ -1911,6 +1911,7 @@ jobs:
             - name: prometheus-manifest-pre-vars
           params:
             AWS_ACCOUNT: ((aws_account))
+            AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))

@@ -35,6 +35,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/rds"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/servicequotas"
 )
 
 func getHTTPPort() int {
@@ -141,6 +142,8 @@ func Main() error {
 
 	costExplorer := costexplorer.New(sess)
 
+	serviceQuotas := servicequotas.NewService(sess)
+
 	rdsService := rds.NewService(sess)
 
 	logitClient, err := logit.NewService(
@@ -181,7 +184,7 @@ func Main() error {
 		CurrencyGauges(logger, 5*time.Minute),
 		BillingCollectorPerformanceGauge(logger, 15*time.Minute, logitClient),
 		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
-		RDSDBInstancesGauge(logger, rdsService, 15*time.Minute),
+		RDSDBInstancesGauge(logger, rdsService, serviceQuotas, 15*time.Minute),
 		AWSHealthEventsGauge(logger, awsRegion, healthService, 15*time.Minute),
 		ShieldOngoingAttacksGauge(logger, shieldService, 5*time.Minute),
 		CloudfrontDistributionInstancesGauge(logger, cfs, 15*time.Minute),

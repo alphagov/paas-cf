@@ -5,7 +5,6 @@ aws_limits_elasticache_cache_parameter_groups: 500
 aws_limits_elasticache_nodes: 700
 # Change limit for prod as well - S3 is global
 aws_limits_s3_buckets: 400
-aws_limits_rds_instances: 750
 prometheus_disk_size: 200GB
 # Change limit for prod as well - Cloudfront is global
 aws_limits_cloudfront_distributions: 400

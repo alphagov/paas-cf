@@ -4,13 +4,14 @@
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
   value:
-    name: RDSDBInstancesCountCloseToLimit
+    name: RDSDBInstancesCountCloseToQuota
     rules:
-      - alert: RDSDBInstancesCountCloseToLimit
-        expr: paas_aws_rds_dbinstances_count > ((aws_limits_rds_instances)) / 100 * 80
+      - alert: RDSDBInstancesCountCloseToQuota
+        expr: ((paas_aws_rds_dbinstances_count / paas_aws_rds_dbinstances_quota_count) * 100) > 80
         for: 1h
         labels:
           severity: warning
         annotations:
-          summary: "Number of AWS RDS DB instances is close to the limit"
-          description: "We are using {{ $value | printf \"%.0f\" }} of ((aws_limits_rds_instances)) RDS DB instances. We might have to contact AWS support to raise the limit."
+          summary: "Number of AWS RDS DB instances is close to the quota"
+          description: "We are using {{ $value | printf \"%.0f\" }}% of the RDS DB instance quota. We might have to increase the quota."
+          url: "https://console.aws.amazon.com/servicequotas/home?region=((aws_region))#!/services/rds/quotas/L-7B6409FD"

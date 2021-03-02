@@ -38,4 +38,10 @@ var _ = Describe("AWS", func() {
 			ContainElement("paas_aws_s3_buckets_count"),
 		))
 	})
+	It("should return RDS metrics", func() {
+		Eventually(getMetricNames).Should(SatisfyAll(
+			ContainElement("paas_aws_rds_dbinstances_count"),
+			ContainElement("paas_aws_rds_dbinstances_quota_count"),
+		))
+	})
 })

@@ -51,6 +51,10 @@ generate-fakes:
 		vendor/github.com/aws/aws-sdk-go/service/s3/s3iface/interface.go \
 		S3API
 
+	counterfeiter -o pkg/servicequotas/fakes/fake_servicequotas_client.go \
+		vendor/github.com/aws/aws-sdk-go/service/servicequotas/servicequotasiface/interface.go \
+		ServiceQuotasAPI
+
 	counterfeiter -o pkg/health/fakes/fake_health_client.go \
 		vendor/github.com/aws/aws-sdk-go/service/health/healthiface/interface.go \
 		HealthAPI

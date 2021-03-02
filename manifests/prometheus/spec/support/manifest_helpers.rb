@@ -21,6 +21,7 @@ private
   def fake_env_vars
     env = {}
     env["AWS_ACCOUNT"] = "dev"
+    env["AWS_REGION"] = "fake-1"
     env["SYSTEM_DNS_ZONE_NAME"] = "system.example.com"
     env["APPS_DNS_ZONE_NAME"] = "apps.example.com"
     env["DEPLOY_ENV"] = "test"
