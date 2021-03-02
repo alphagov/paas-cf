@@ -71,7 +71,7 @@ output "psn_security_group_seed_json" {
   value = templatefile(
     "${path.module}/data/security-group-seed.json.tpl",
     {
-      psn_cidrs = jsonencode(formatlist("%s/32", [for interface in data.aws_network_interface.psn_interface : interface.private_ip]))
+      psn_cidrs = [for interface in data.aws_network_interface.psn_interface : interface.private_ip]
     }
   )
 }
