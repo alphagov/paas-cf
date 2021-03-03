@@ -2,6 +2,7 @@ package scripts_test
 
 import (
 	"fmt"
+
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
@@ -97,10 +98,10 @@ var _ = Describe("VPC peering", func() {
 			}
 		})
 
-		Describe("do not intersect with any reserved subnets", func(){
+		Describe("do not intersect with any reserved subnets", func() {
 			for _, region := range REGION_NAMES {
 				for _, envName := range ENV_NAMES {
-					It("for a "+envName+" type deployment in " + region, func(){
+					It("for a "+envName+" type deployment in "+region, func() {
 						infraCidrs, err := terraformFindInfraCIDRs(region, envName)
 						Expect(err).ToNot(HaveOccurred())
 
@@ -135,19 +136,6 @@ var _ = Describe("VPC peering", func() {
 			}
 		})
 
-		Describe("tfvar output", func() {
-			It("can be generated", func() {
-				for _, filename := range files {
-					command := exec.Command("./generate_vpc_peering_tfvars.rb", filename)
-					var out bytes.Buffer
-					command.Stdout = &out
-					err := command.Run()
-					Expect(err).To(BeNil(), "Config file: %s", filename)
-					Expect(out.String()).ToNot(BeEmpty(), "Config file: %s", filename)
-				}
-			})
-		})
-
 		Describe("ops file", func() {
 			It("can be generated", func() {
 				for _, filename := range files {
@@ -164,7 +152,7 @@ var _ = Describe("VPC peering", func() {
 		})
 	})
 
-	Describe("generate_vpc_peering_tfvars.rb", func() {
+	Describe("generate_vpc_peering_opsfile.rb", func() {
 		var examplePeerConfig map[string]string
 
 		BeforeEach(func() {
@@ -174,50 +162,6 @@ var _ = Describe("VPC peering", func() {
 				"vpc_id":      "vpc123cheese",
 				"subnet_cidr": "0.0.0.0/32",
 			}
-		})
-
-		Context("tfvar output", func() {
-			It("is empty with no environment config", func() {
-				command := exec.Command("./generate_vpc_peering_tfvars.rb", "cheese")
-				var out bytes.Buffer
-				command.Stdout = &out
-				err := command.Run()
-				Expect(err).To(BeNil())
-				Expect(out.String()).To(BeEmpty())
-			})
-
-			It("crashes when not given a config", func() {
-				command := exec.Command("./generate_vpc_peering_tfvars.rb")
-				err := command.Run()
-				Expect(err).ToNot(BeNil())
-			})
-
-			It("crashes when a field is missing", func() {
-				for field, _ := range examplePeerConfig {
-					var config = map[string]string{}
-					for k, v := range examplePeerConfig {
-						if k == field {
-							continue
-						}
-						config[k] = v
-					}
-
-					file, err := ioutil.TempFile(os.TempDir(), "vpcpeer")
-					Expect(err).To(BeNil())
-
-					defer os.Remove(file.Name())
-
-					data, _ := json.Marshal(config)
-					err = ioutil.WriteFile(file.Name(), data, 0644)
-					Expect(err).To(BeNil())
-
-					command := exec.Command("./generate_vpc_peering_tfvars.rb", file.Name())
-					var out bytes.Buffer
-					command.Stdout = &out
-					err = command.Run()
-					Expect(err).ToNot(BeNil(), "Missing field: %s", field)
-				}
-			})
 		})
 
 		Context("ops file", func() {

@@ -1362,7 +1362,7 @@ jobs:
           - get: vpc-peering-tfstate
           - get: vpc-tfstate
 
-      - task: generate-peer-tfvars
+      - task: extract-vpc-tfvars
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -1371,7 +1371,6 @@ jobs:
             - name: paas-cf
             - name: vpc-tfstate
           outputs:
-            - name: vpc-peering-tfvars
             - name: terraform-variables
           run:
             path: sh
@@ -1379,11 +1378,6 @@ jobs:
               - -e
               - -c
               - |
-                ruby paas-cf/terraform/scripts/generate_vpc_peering_tfvars.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
-                > vpc-peering-tfvars/vpc-peers.tfvars
-
-                cat vpc-peering-tfvars/vpc-peers.tfvars
-
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
 
@@ -1394,7 +1388,6 @@ jobs:
           image_resource: *terraform-image-resource
           inputs:
             - name: paas-cf
-            - name: vpc-peering-tfvars
             - name: vpc-peering-tfstate
             - name: terraform-variables
           outputs:
@@ -1412,6 +1405,11 @@ jobs:
               - |
                 . terraform-variables/vpc.tfvars.sh
 
+                if [ -f "paas-cf/terraform/((deploy_env)).vpc_peering.json" ]; then
+                    TF_VAR_vpc_peers="$(cat "paas-cf/terraform/((deploy_env)).vpc_peering.json")"
+                    export TF_VAR_vpc_peers
+                fi
+
                 cp vpc-peering-tfstate/vpc-peering.tfstate updated-tfstate/vpc-peering.tfstate
 
                 terraform init paas-cf/terraform/vpc-peering
@@ -1422,7 +1420,6 @@ jobs:
                   -auto-approve=true \
                   -var-file="paas-cf/terraform/((aws_account)).tfvars" \
                   -var-file="paas-cf/terraform/((aws_region)).tfvars" \
-                  -var-file=vpc-peering-tfvars/vpc-peers.tfvars \
                   -state=updated-tfstate/vpc-peering.tfstate \
                   paas-cf/terraform/vpc-peering
         ensure:
