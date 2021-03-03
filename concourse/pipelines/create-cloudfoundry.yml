@@ -1438,10 +1438,10 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['cf-terraform', 'vpc-peering-terraform']
+            passed: ['cf-terraform']
             trigger: true
           - <<: *get-paas-cf
-            passed: ['cf-terraform', 'vpc-peering-terraform']
+            passed: ['cf-terraform']
           - get: vpc-tfstate
           - get: psn-tfstate
             passed: ['psn-terraform']
