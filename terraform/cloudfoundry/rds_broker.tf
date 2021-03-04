@@ -128,5 +128,14 @@ resource "aws_db_parameter_group" "rds_broker_mysql57" {
   name        = "rdsbroker-mysql57-${var.env}"
   family      = "mysql5.7"
   description = "RDS Broker MySQL 5.7 parameter group"
+
+  parameter {
+    apply_method = "pending-reboot"
+    name         = "max_allowed_packet"
+    // 256MB. setting this high for Drupal https://drupal-admin.com/blog/setup-mysql-drupal
+    // this is also set in the RDS Broker codebase
+    // ideally stop defining parameter groups here and let the broker codebase do it
+    value        = "268435456"
+  }
 }
 
