@@ -102,26 +102,6 @@ variable "microbosh_static_private_ip" {
   default     = "10.0.0.6"
 }
 
-variable "peer_account_ids" {
-  description = "The account ID's that contains the VPC to peer with"
-  default     = []
-}
-
-variable "peer_cidrs" {
-  description = "The CIDR of the VPC to peer with"
-  default     = []
-}
-
-variable "peer_names" {
-  description = "The name of the peer"
-  default     = []
-}
-
-variable "peer_vpc_ids" {
-  description = "The VPC to peer with"
-  default     = []
-}
-
 variable "pingdom_contact_ids" {
   description = "The IDs of the contacts in Pingdom who should be alerted"
   default     = []
