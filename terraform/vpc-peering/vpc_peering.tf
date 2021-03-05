@@ -12,6 +12,10 @@ locals {
 
 data "aws_route_tables" "internet" {
   vpc_id = var.vpc_id
+  filter {
+    name   = "tag:Name"
+    values = ["${var.env}-cf"]
+  }
 }
 
 resource "aws_vpc_peering_connection" "vpc_peer" {

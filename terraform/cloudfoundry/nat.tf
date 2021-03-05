@@ -12,6 +12,9 @@ resource "aws_nat_gateway" "cf" {
 resource "aws_route_table" "internet" {
   vpc_id = var.vpc_id
   count  = var.zone_count
+  tags = {
+    Name = "${var.env}-cf"
+  }
 }
 
 resource "aws_route" "internet" {
@@ -38,4 +41,3 @@ resource "aws_route_table_association" "router_internet" {
   subnet_id      = element(aws_subnet.router.*.id, count.index)
   route_table_id = element(aws_route_table.internet.*.id, count.index)
 }
-
