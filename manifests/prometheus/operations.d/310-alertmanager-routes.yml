@@ -10,6 +10,16 @@
     group_interval: 1m
     repeat_interval: 24h
     routes:
+      # Silenced alerts
+      - receiver: silence
+        match:
+          alertname: CFAppCrashed
+        continue: false
+      - receiver: silence
+        match:
+          alertname: CFAppUnhealthy
+        continue: false
+      # Loud alerts
       - receiver: warning-receiver
         match:
           severity: "warning"
