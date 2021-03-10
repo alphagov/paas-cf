@@ -73,3 +73,8 @@
     pagerduty_configs:
       - service_key: ((alertmanager_pagerduty_in_hours_service_key))
         description: "[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
+  value:
+    name: silence
