@@ -281,7 +281,7 @@ resource "aws_cloudwatch_metric_alarm" "loggregator_lb_ddos_detected" {
   period              = "60"
   statistic           = "Average"
   threshold           = 0
-  alarm_description   = "DDOS Detected against loggregator load balancer"
+  alarm_description   = "DDOS Detected against loggregator load balancer. See https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#ddos-mitigation"
   actions_enabled     = "true"
   alarm_actions       = [data.aws_sns_topic.email_in_hours_paas_support.arn]
 
@@ -300,7 +300,7 @@ resource "aws_cloudwatch_metric_alarm" "system_domain_lb_ddos_detected" {
   period              = "60"
   statistic           = "Average"
   threshold           = 0
-  alarm_description   = "DDOS Detected against system domain load balancer"
+  alarm_description   = "DDOS Detected against system domain load balancer. See https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#ddos-mitigation"
   actions_enabled     = "true"
   alarm_actions       = [data.aws_sns_topic.email_in_hours_paas_support.arn]
 
@@ -318,7 +318,7 @@ resource "aws_cloudwatch_metric_alarm" "app_domain_lb_ddos_detected" {
   period              = "60"
   statistic           = "Average"
   threshold           = 0
-  alarm_description   = "DDOS Detected against app domain load balancer"
+  alarm_description   = "DDOS Detected against app domain load balancer. See https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#ddos-mitigation"
   actions_enabled     = "true"
   alarm_actions       = [data.aws_sns_topic.email_in_hours_paas_support.arn]
 
