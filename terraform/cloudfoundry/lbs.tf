@@ -268,6 +268,65 @@ resource "aws_lb_target_group" "cf_router_system_domain_https" {
   }
 }
 
+data "aws_sns_topic" "email_in_hours_paas_support" {
+  name = "email-in-hours-paas-support"
+}
+
+resource "aws_cloudwatch_metric_alarm" "loggregator_lb_ddos_detected" {
+  alarm_name          = "${var.env}-loggregator-lb-ddos-detected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDOSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = 0
+  alarm_description   = "DDOS Detected against loggregator load balancer. See https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#ddos-mitigation"
+  actions_enabled     = "true"
+  alarm_actions       = [data.aws_sns_topic.email_in_hours_paas_support.arn]
+
+  dimensions = {
+    ResourceArn = aws_lb.cf_loggregator.arn
+  }
+}
+
+
+resource "aws_cloudwatch_metric_alarm" "system_domain_lb_ddos_detected" {
+  alarm_name          = "${var.env}-system-domain-lb-ddos-detected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDOSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = 0
+  alarm_description   = "DDOS Detected against system domain load balancer. See https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#ddos-mitigation"
+  actions_enabled     = "true"
+  alarm_actions       = [data.aws_sns_topic.email_in_hours_paas_support.arn]
+
+  dimensions = {
+    ResourceArn = aws_lb.cf_router_system_domain.arn
+  }
+}
+
+resource "aws_cloudwatch_metric_alarm" "app_domain_lb_ddos_detected" {
+  alarm_name          = "${var.env}-app-domain-lb-ddos-detected"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = "1"
+  metric_name         = "DDoSDetected"
+  namespace           = "AWS/DDOSProtection"
+  period              = "60"
+  statistic           = "Average"
+  threshold           = 0
+  alarm_description   = "DDOS Detected against app domain load balancer. See https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#ddos-mitigation"
+  actions_enabled     = "true"
+  alarm_actions       = [data.aws_sns_topic.email_in_hours_paas_support.arn]
+
+  dimensions = {
+    ResourceArn = aws_lb.cf_router_app_domain.arn
+  }
+}
+
 output "cf_router_system_domain_https_target_group_name" {
   value = aws_lb_target_group.cf_router_system_domain_https.name
 }
