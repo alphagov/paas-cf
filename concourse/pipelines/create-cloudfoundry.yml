@@ -2660,18 +2660,6 @@ jobs:
                 EOF
 
                 cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
-                tiny-unencrypted-9.5
-                small-ha-9.5
-                small-9.5
-                medium-ha-9.5
-                medium-9.5
-                large-ha-9.5
-                large-9.5
-                xlarge-ha-9.5
-                xlarge-9.5
-                EOF
-
-                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
                 tiny-unencrypted-10
                 small-10
                 small-ha-10
@@ -2756,18 +2744,6 @@ jobs:
                 xlarge-ha-unencrypted-5.7
                 xlarge-unencrypted-5.7
                 EOF
-
-                cat <<EOF | xargs -n1 cf disable-service-access postgres -p
-                small-ha-unencrypted-9.5
-                small-unencrypted-9.5
-                medium-ha-unencrypted-9.5
-                medium-unencrypted-9.5
-                large-ha-unencrypted-9.5
-                large-unencrypted-9.5
-                xlarge-ha-unencrypted-9.5
-                xlarge-unencrypted-9.5
-                EOF
-
 
       - task: register-cdn-broker
         tags: [colocated-with-web]
