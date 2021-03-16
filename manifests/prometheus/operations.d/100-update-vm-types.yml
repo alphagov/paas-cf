@@ -6,4 +6,4 @@
   value: nano
 - type: replace
   path: /instance_groups/name=prometheus2/vm_type
-  value: medium
+  value: large
