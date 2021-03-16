@@ -3169,29 +3169,6 @@ jobs:
                   max_iterations=20
                   timeout_per_iteration_in_seconds=30
 
-                  # if healthcheck-db already exist and it's postgres 9.5
-                  # we need to delete the database before creating it with postgres 12 plan
-                  if cf service healthcheck-db | grep -q 'plan: .*tiny-unencrypted-9.5'; then
-                    cf unbind-service healthcheck healthcheck-db || true
-                    cf delete-service -f healthcheck-db
-                    loop_iterations=1
-                    while cf service healthcheck-db | grep -q 'status: .*delete in progress'; do
-                      if  [ $loop_iterations -gt $max_iterations ] ; then
-                        echo "Timeout of $((max_iterations*timeout_per_iteration_in_seconds)) seconds reached, exiting..."
-                        break
-                      fi
-                      echo "Waiting for the current healthcheck-db service instance deletion to complete..."
-                      sleep $timeout_per_iteration_in_seconds
-                      loop_iterations=$((loop_iterations+1))
-                    done
-                    if [ $loop_iterations -gt $max_iterations ] ; then
-                      echo "Failed to delete healthcheck-db, exiting..."
-                      cd "${BUILD_ROOT}"
-                      echo "no" > deployed-healthcheck/healthcheck-deployed
-                      exit 1
-                    fi
-                  fi
-
                   if ! cf service healthcheck-db > /dev/null; then
                     cf create-service postgres tiny-unencrypted-12 healthcheck-db
                     loop_iterations=1
