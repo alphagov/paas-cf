@@ -490,7 +490,7 @@ resources:
   - name: leaked-aws-key-check-timer
     type: time
     source:
-      interval: 5m
+      interval: 20m
 
   - name: check-certificates-timer
     type: time
@@ -5737,7 +5737,7 @@ jobs:
                 CF_PASS: ((cf_pass))
 
   - name: continuous-leaked-aws-key-check
-    serial_groups: [smoke-tests]
+    serial_groups: [security-checks]
     build_logs_to_retain: 10000
     plan:
       - in_parallel:
