@@ -89,6 +89,7 @@ OUTPUT_TAG_PREFIX: ${OUTPUT_TAG_PREFIX:-}
 paas_cf_tag_filter: ${INPUT_TAG_PREFIX:+${INPUT_TAG_PREFIX}[0-9]*.[0-9]*.[0-9]*}
 system_dns_zone_name: ${SYSTEM_DNS_ZONE_NAME}
 apps_dns_zone_name: ${APPS_DNS_ZONE_NAME}
+apps_hosted_zone_name: ${APPS_HOSTED_ZONE_NAME}
 git_concourse_pool_clone_full_url_ssh: ${git_concourse_pool_clone_full_url_ssh}
 ALERT_EMAIL_ADDRESS: ${ALERT_EMAIL_ADDRESS:-}
 ENABLE_ALERT_NOTIFICATIONS: ${ENABLE_ALERT_NOTIFICATIONS:-true}

@@ -3578,6 +3578,7 @@ jobs:
               AWS_REGION: ((aws_region))
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+              APPS_HOSTED_ZONE_NAME: ((apps_hosted_zone_name))
             ensure:
               task: upload-test-artifacts
               tags: [colocated-with-web]
