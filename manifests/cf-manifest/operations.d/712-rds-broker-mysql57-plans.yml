@@ -37,29 +37,6 @@
       allocated_storage: 2048
 
 - type: replace
-  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog?/services?/-
-  value:
-    id: 4b888513-1dc3-4b9b-bdcd-51f4c03675a4
-    description: "AWS RDS MySQL service"
-    name: mysql
-    bindable: true
-    tags:
-      - mysql
-      - relational
-    metadata:
-      displayName: AWS RDS MySQL
-      longDescription: MySQL is an open-source relational database management system (RDBMS).
-      providerDisplayName: Amazon Web Services
-      documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/mysql/
-      supportUrl: https://admin.london.cloud.service.gov.uk/support
-      shareable: true
-      AdditionalMetadata:
-        otherDocumentation:
-          - https://dev.mysql.com/doc/
-          - https://aws.amazon.com/documentation/rds/
-    plan_updateable: true
-
-- type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=mysql/plans?/-
   value:
     id: 69977068-8ef5-4172-bfdb-e8cea3c14d01

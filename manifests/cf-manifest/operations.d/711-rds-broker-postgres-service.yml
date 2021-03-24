@@ -1,0 +1,26 @@
+---
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog?/services?/-
+  value:
+    description: "AWS RDS PostgreSQL service"
+    id: ce71b484-d542-40f7-9dd4-5526e38c81ba
+    name: postgres
+    bindable: true
+    tags:
+      - postgres
+      - relational
+    metadata:
+      displayName: AWS RDS Postgres
+      longDescription: |
+        Postgres, is a free and open-source relational database management system (RDBMS) emphasizing extensibility and
+        technical standards compliance. It is designed to handle a range of workloads, from single machines to data
+        warehouses or Web services with many concurrent users.
+      providerDisplayName: Amazon Web Services
+      documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/postgresql/
+      supportUrl: https://admin.london.cloud.service.gov.uk/support
+      shareable: true
+      AdditionalMetadata:
+        otherDocumentation:
+          - https://www.postgresql.org/docs/
+          - https://aws.amazon.com/documentation/rds/
+    plan_updateable: true
