@@ -219,6 +219,18 @@ dev: ## Set Environment to DEV
 	$(eval export CA_ROTATION_EXPIRY_DAYS ?= 360)
 	@true
 
+.PHONY: dev01
+dev01: $(eval export DEPLOY_ENV=dev01)
+dev01: dev
+	$(eval export ENABLE_AUTODELETE=false)
+	@true
+
+.PHONY: dev02
+dev02: $(eval export DEPLOY_ENV=dev02)
+dev02: dev
+	$(eval export ENABLE_AUTODELETE=false)
+	@true
+
 .PHONY: stg-lon
 stg-lon: ## Set Environment to stg-lon
 	$(eval export AWS_ACCOUNT=staging)
