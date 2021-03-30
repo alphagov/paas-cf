@@ -220,14 +220,14 @@ dev: ## Set Environment to DEV
 	@true
 
 .PHONY: dev01
-dev01: $(eval export DEPLOY_ENV=dev01)
 dev01: dev
+	$(eval export DEPLOY_ENV=dev01)
 	$(eval export ENABLE_AUTODELETE=false)
 	@true
 
 .PHONY: dev02
-dev02: $(eval export DEPLOY_ENV=dev02)
 dev02: dev
+	$(eval export DEPLOY_ENV=dev02)
 	$(eval export ENABLE_AUTODELETE=false)
 	@true
 
