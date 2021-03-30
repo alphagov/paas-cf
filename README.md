@@ -80,6 +80,22 @@ in [Additional Notes](#check-and-release-pipeline-locking).
 NB: The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
 overnight](#overnight-deletion-of-environments) by default.
 
+### Shared development environments
+In March 2021, we introduced two shared development environments: `dev01` and `dev02`. They are identical to other development
+environments, other than that they aren't torn down overnight. 
+
+To work with them, use their respective `dev01` and `dev02` Make targets; e.g.
+
+```
+make dev01 showenv
+make dev02 pipelines
+```
+
+They were introduced to try to reduce the burden of individuals  running their own environments, and having them be 
+very slow to start up in a morning. We opted for two shared environments over having every development environment not shut
+down overnight because it was cheaper in the long run.
+
+
 ### Destroy
 
 Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, and supporting infrastructure.
