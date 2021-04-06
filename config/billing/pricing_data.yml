@@ -13,6 +13,7 @@ defaults: &defaults
   aiven_elasticsearch_business_32: "4.384"
   aiven_influxdb_startup_4: "0.130"
   aiven_influxdb_startup_8: "0.295"
+  aiven_influxdb_startup_112: "2.808"
 
 eu-west-1:
   <<: *defaults
