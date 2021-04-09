@@ -3099,6 +3099,19 @@
 			]
 		},
 		{
+			"name": "influxdb xxl-1.x",
+			"valid_from": "2021-04-01",
+			"plan_guid": "cc1ec730-918a-45cd-ae7c-fd1ec6414750",
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 2.808",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
 			"name": "aws-s3-bucket default",
 			"valid_from": "2019-02-01",
 			"plan_guid": "24efab31-8cbd-47c0-8513-a9345f3c512b",

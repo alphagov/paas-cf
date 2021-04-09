@@ -304,6 +304,26 @@
                 "version": "1"
               }
             }
+          },
+          {
+            "id": "cc1ec730-918a-45cd-ae7c-fd1ec6414750",
+            "name": "xxl-1.x",
+            "aiven_plan": "startup-112",
+            "description": "NOT Highly Available, 1 dedicated VM, 16 CPU per VM, 122GB RAM per VM, 1120GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "XXLarge",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": false,
+                "nodes": 1,
+                "cpu": 16,
+                "memory": {"amount": 112, "unit": "GB"},
+                "storage": {"amount": 1120, "unit": "GB"},
+                "version": "1"
+              }
+            }
           }
         ]
       }
