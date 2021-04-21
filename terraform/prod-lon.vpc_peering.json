@@ -40,5 +40,11 @@
         "account_id": "165562107270",
         "vpc_id": "vpc-0edc26baacd344600",
         "subnet_cidr": "172.18.8.0/22"
+    },
+    {
+        "peer_name": "dit-staging_platform-staging",
+        "account_id": "011755346992",
+        "vpc_id": "vpc-0e82d077854b512f3",
+        "subnet_cidr": "172.18.12.0/22"
     }
 ]
