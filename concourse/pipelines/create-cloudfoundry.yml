@@ -11,67 +11,67 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     psql: &psql-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     node: &node-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     golang: &golang-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     terraform: &terraform-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+        tag: f426b94945a26666274ae24fe37b89edaba3a385
 
 
   tasks:
@@ -237,7 +237,7 @@ resource_types:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+    tag: f426b94945a26666274ae24fe37b89edaba3a385
 
 - name: s3-iam
   type: docker-image
@@ -700,7 +700,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+              tag: f426b94945a26666274ae24fe37b89edaba3a385
 
           inputs:
             - name: paas-cf
@@ -3994,7 +3994,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+              tag: f426b94945a26666274ae24fe37b89edaba3a385
 
           inputs:
             - name: paas-cf
@@ -4216,7 +4216,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+              tag: f426b94945a26666274ae24fe37b89edaba3a385
 
           inputs:
             - name: paas-admin-data
@@ -5130,7 +5130,7 @@ jobs:
           type: docker-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+            tag: f426b94945a26666274ae24fe37b89edaba3a385
 
         inputs:
           - name: passwords

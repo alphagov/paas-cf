@@ -7,7 +7,7 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/cf-cli
-    tag: b11f2b9068cd492ffd3b33b9db54a1cf8ad136b3
+    tag: f426b94945a26666274ae24fe37b89edaba3a385
 
 run:
   path: sh
