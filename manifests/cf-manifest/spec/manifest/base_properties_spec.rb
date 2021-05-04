@@ -35,11 +35,10 @@ RSpec.describe "base properties" do
       end
     end
 
-    it "default stemcell os matches cf-deployment manifest" do
+    it "default stemcell os is ubuntu-bionic series" do
       default = stemcells.find { |s| s["alias"] == "default" }
-      cf_deployment_default = cf_deployment_manifest.fetch("stemcells").find { |s| s["alias"] == "default" }
 
-      expect(default["os"]).to eq(cf_deployment_default.fetch("os"))
+      expect(default["os"]).to eq("ubuntu-bionic")
     end
 
     it "stemcell version is not older than the one in cf-deployment **iff they're the same major version**" do
