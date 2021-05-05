@@ -4020,7 +4020,7 @@ jobs:
                 - name: paas-admin
                   routes:
                   - route: "admin.${SYSTEM_DNS_ZONE_NAME}"
-                  instances: 2
+                  instances: 6
                   services:
                    - logit-syslog-drain
                   env:
