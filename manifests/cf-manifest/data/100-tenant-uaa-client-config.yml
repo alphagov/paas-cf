@@ -17,7 +17,12 @@
 #     - https://APP_NAME.((app_domain))/callback/URL
 #     - https://CUSTOM_DOMA.in/callback/URL
 
-stg-lon: []
+stg-lon: 
+  - name: terraform-provider-test-account
+    secret_name: secrets_uaa_clients_terraform_provider_test_account_secret
+    uaa_client:
+      scope: cloud_controller.admin,uaa.admin,scim.read,scim.write
+      override: true
 
 prod: []
 
