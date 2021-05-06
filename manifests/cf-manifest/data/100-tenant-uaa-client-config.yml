@@ -22,7 +22,7 @@ stg-lon:
     secret_name: secrets_uaa_clients_terraform_provider_test_account_secret
     uaa_client:
       scope: cloud_controller.admin,uaa.admin,scim.read,scim.write
-      authorized-grant-types: refresh_token,authorization_code,password
+      authorized-grant-types: refresh_token,password,client_credentials
       override: true
 
 prod: []
