@@ -2,10 +2,10 @@
 - type: replace
   path: /instance_groups/name=api/jobs?/-
   value:
-    name: awslogs-xenial
+    name: awslogs-bionic
     release: awslogs
     properties:
-      awslogs-xenial:
+      awslogs-bionic:
         region: ((terraform_outputs_region))
         awslogs_files_config:
           - name: /var/vcap/sys/log/cloud_controller_ng/security_events.log

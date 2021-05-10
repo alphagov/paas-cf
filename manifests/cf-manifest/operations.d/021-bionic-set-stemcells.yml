@@ -1,0 +1,35 @@
+---
+- type: replace
+  path: /addons/name=loggregator_agent/include/stemcell
+  value:
+    - os: ubuntu-bionic
+
+- type: replace
+  path: /addons/name=forwarder_agent/include/stemcell
+  value:
+    - os: ubuntu-bionic
+
+- type: replace
+  path: /addons/name=loggr-syslog-agent/include/stemcell
+  value:
+    - os: ubuntu-bionic
+
+- type: replace
+  path: /addons/name=prom_scraper/include/stemcell
+  value:
+    - os: ubuntu-bionic
+
+- type: replace
+  path: /addons/name=metrics-discovery-registrar/include/stemcell
+  value:
+    - os: ubuntu-bionic
+
+- type: replace
+  path: /addons/name=metrics-agent/include/stemcell
+  value:
+    - os: ubuntu-bionic
+
+- type: replace
+  path: /addons/name=bpm/include/stemcell
+  value:
+    - os: ubuntu-bionic
