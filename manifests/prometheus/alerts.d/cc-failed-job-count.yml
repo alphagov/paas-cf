@@ -15,4 +15,8 @@
           severity: warning
         annotations:
           summary: "Cloud Controller API failed job count"
-          description: "Amount of failed jobs in Cloud Controller API grew considerably in the last hour: {{ $value | printf \"%.0f\" }}. See logit.io: '@source.deployment.keyword:((metrics_environment)) AND @source.component:cloud_controller_worker AND @level:ERROR'"
+          description: |
+            Amount of failed jobs in Cloud Controller API grew considerably in the last hour: {{ $value | printf "%.0f" }}. See logit.io: '@source.deployment.keyword:((metrics_environment)) AND @source.component:cloud_controller_worker AND @level:ERROR'
+
+            There is a known issue affecting Cloud Controller which spews errors logs, with very little we can do about it. This alert may be related:
+            https://github.com/cloudfoundry/cloud_controller_ng/issues/1883
