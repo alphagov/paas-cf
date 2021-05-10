@@ -12,4 +12,4 @@
           severity: warning
         annotations:
           summary: "Cloud Controller API log error count"
-          description: "Amount of logged errors in Cloud Controller API grew considerably in the last hour: {{ $value | printf \"%.0f\" }}. See logit.io: '@source.component:cloud_controller_ng AND @level:ERROR'"
+          description: "Amount of logged errors in Cloud Controller API grew considerably in the last hour: {{ $value | printf \"%.0f\" }}. See logit.io: '@source.deployment.keyword:((metrics_environment)) AND @source.component:cloud_controller_ng AND @level:ERROR'"
