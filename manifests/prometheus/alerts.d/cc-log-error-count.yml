@@ -12,4 +12,8 @@
           severity: warning
         annotations:
           summary: "Cloud Controller API log error count"
-          description: "Amount of logged errors in Cloud Controller API grew considerably in the last hour: {{ $value | printf \"%.0f\" }}. See logit.io: '@source.component:cloud_controller_ng AND @level:ERROR'"
+          description: |
+            Number of logged errors in Cloud Controller API grew considerably in the last hour: {{ $value | printf "%.0f" }}. See logit.io: '@source.deployment.keyword:((metrics_environment)) AND @source.component:cloud_controller_ng AND @level:ERROR'
+
+            There is a known issue affecting Cloud Controller which spews errors logs, with very little we can do about it. This alert may be related:
+            https://github.com/cloudfoundry/cloud_controller_ng/issues/1883
