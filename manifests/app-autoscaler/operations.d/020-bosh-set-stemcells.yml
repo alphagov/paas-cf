@@ -1,1 +1,3 @@
-../../cf-manifest/operations.d/020-bosh-set-stemcells.yml
+# THIS USED TO BE A SIMLINK!
+#
+# manifests/app-autoscaler/operations.d/020-bosh-set-stemcells.yml -> ../../cf-manifest/operations.d/020-bosh-set-stemcells.yml
