@@ -4,6 +4,7 @@
     "gds-tech-ops",
     "govuk_development",
     "govuk-corona-backend-consumers",
+    "govuk-notify",
     "govuk-pay"
   ]
 }
