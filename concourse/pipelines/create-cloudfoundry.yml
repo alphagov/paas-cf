@@ -3954,7 +3954,7 @@ jobs:
     plan:
       - *add-grafana-job-annotation
       - get: paas-admin
-        trigger: true
+        trigger: ((enable_paas_admin_continuous_deploy))
 
       - in_parallel:
         - <<: *get-paas-cf
