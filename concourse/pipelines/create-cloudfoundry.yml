@@ -4296,8 +4296,8 @@ jobs:
             LOGIT_ADDRESS: ((logit_syslog_address))
             LOGIT_PORT: ((logit_syslog_port))
             API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
+            CF_USERNAME: ((cf_admin))
+            CF_PASSWORD: ((cf_pass))
           inputs:
             - name: paas-cf
             - name: paas-billing
@@ -4316,7 +4316,7 @@ jobs:
                 fi
 
                 cf api "${API_ENDPOINT}"
-                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf auth
 
                 cf target -o admin -s billing
 
