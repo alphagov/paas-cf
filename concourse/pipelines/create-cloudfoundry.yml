@@ -4422,6 +4422,46 @@ jobs:
                 cd src/github.com/alphagov/paas-billing
                 make acceptance
 
+      - task: deploy-paas-performance-data-exporter
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            API_ENDPOINT: ((api_endpoint))
+            CF_USERNAME: ((cf_admin))
+            CF_PASSWORD: ((cf_pass))
+            TARGET_ENVIRONMENT_FILE: ((env_specific_bosh_vars_file))
+            GOOGLE_SERVICE_ACCOUNT_CREDENTIALS: ((performance_data_exporter_credentials))
+          inputs:
+            - name: paas-billing
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth
+                cf target -o admin -s billing
+
+                cd paas-billing/performance_data_exporter/
+
+                cat <<SECRETS > google_credentials.yml
+                ---
+                google_api_credentials: '${GOOGLE_SERVICE_ACCOUNT_CREDENTIALS}'
+                SECRETS
+
+                cf cancel-deployment paas-performance-data-exporter || true
+                cf push \
+                  --strategy=rolling \
+                  --vars-file="${TARGET_ENVIRONMENT_FILE}" \
+                  --vars-file="google_credentials.yml" \
+                  -f manifest.yml \
+                  paas-performance-data-exporter
+
       - task: tag-repo
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/tag-repo.yml
