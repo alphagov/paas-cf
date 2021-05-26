@@ -206,6 +206,12 @@ groups:
       - healthcheck-check-state
       - healthcheck-disable
       - cleanup-deleted-cf-users
+      - disable-az-a
+      - enable-az-a
+      - disable-az-b
+      - enable-az-b
+      - disable-az-c
+      - enable-az-c
   - name: tests
     jobs:
       - app-availability-tests
@@ -318,6 +324,54 @@ resources:
         {
             "version": 4,
             "terraform_version": "0.12.29",
+            "serial": 0,
+            "outputs": {},
+            "resources": []
+        }
+
+  - name: az-management-a-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: az-management-a.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 4,
+            "terraform_version": "0.14.4",
+            "serial": 0,
+            "outputs": {},
+            "resources": []
+        }
+
+  - name: az-management-b-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: az-management-b.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 4,
+            "terraform_version": "0.14.4",
+            "serial": 0,
+            "outputs": {},
+            "resources": []
+        }
+
+  - name: az-management-c-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: az-management-c.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 4,
+            "terraform_version": "0.14.4",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -1444,6 +1498,394 @@ jobs:
           params:
             file: updated-tfstate/vpc-peering.tfstate
       - *end-grafana-job-annotation
+
+  - name: disable-az-a
+    serial_groups: [operator]
+    serial: true
+    plan:
+      - in_parallel:
+          - <<: *get-paas-cf
+          - get: az-management-a-tfstate
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: disable-az
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: az-management-a-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_az: "((aws_region))a"
+            TF_VAR_region: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo "RUNNING THIS ACTION FOR AZ-A, WILL MEAN THIS CONCOURSE IS BEING USELESS!"
+                echo "You will need to run the 'revert' action by hand, to get it back to working state."
+
+                . terraform-variables/vpc.tfvars.sh
+
+                cp az-management-a-tfstate/az-management-a.tfstate updated-tfstate/az-management-a.tfstate
+
+                terraform init paas-cf/terraform/az-management
+
+                terraform apply \
+                  -auto-approve=true \
+                  -state=updated-tfstate/az-management-a.tfstate \
+                  paas-cf/terraform/az-management
+        ensure:
+          put: az-management-a-tfstate
+          params:
+            file: updated-tfstate/az-management-a.tfstate
+
+  - name: enable-az-a
+    serial_groups: [operator]
+    serial: true
+    plan:
+      - in_parallel:
+          - <<: *get-paas-cf
+            passed: [disable-az-a]
+          - get: az-management-a-tfstate
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: enable-az
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: az-management-a-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_az: "((aws_region))a"
+            TF_VAR_region: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                cp az-management-a-tfstate/az-management-a.tfstate updated-tfstate/az-management-a.tfstate
+
+                terraform init paas-cf/terraform/az-management
+
+                terraform destroy \
+                  -auto-approve=true \
+                  -state=updated-tfstate/az-management-a.tfstate \
+                  paas-cf/terraform/az-management
+        ensure:
+          put: az-management-a-tfstate
+          params:
+            file: updated-tfstate/az-management-a.tfstate
+
+  - name: disable-az-b
+    serial_groups: [operator]
+    serial: true
+    plan:
+      - in_parallel:
+          - <<: *get-paas-cf
+          - get: az-management-b-tfstate
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: disable-az
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: az-management-b-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_az: "((aws_region))b"
+            TF_VAR_region: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                cp az-management-b-tfstate/az-management-b.tfstate updated-tfstate/az-management-b.tfstate
+
+                terraform init paas-cf/terraform/az-management
+
+                terraform apply \
+                  -auto-approve=true \
+                  -state=updated-tfstate/az-management-b.tfstate \
+                  paas-cf/terraform/az-management
+
+        ensure:
+          put: az-management-b-tfstate
+          params:
+            file: updated-tfstate/az-management-b.tfstate
+
+  - name: enable-az-b
+    serial_groups: [operator]
+    serial: true
+    plan:
+      - in_parallel:
+          - <<: *get-paas-cf
+            passed: [disable-az-b]
+          - get: az-management-b-tfstate
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: enable-az
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: az-management-b-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_az: "((aws_region))b"
+            TF_VAR_region: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                cp az-management-b-tfstate/az-management-b.tfstate updated-tfstate/az-management-b.tfstate
+
+                terraform init paas-cf/terraform/az-management
+
+                terraform destroy \
+                  -auto-approve=true \
+                  -state=updated-tfstate/az-management-b.tfstate \
+                  paas-cf/terraform/az-management
+
+        ensure:
+          put: az-management-b-tfstate
+          params:
+            file: updated-tfstate/az-management-b.tfstate
+
+  - name: disable-az-c
+    serial_groups: [operator]
+    serial: true
+    plan:
+      - in_parallel:
+          - <<: *get-paas-cf
+          - get: az-management-c-tfstate
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: disable-az
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: az-management-c-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_az: "((aws_region))c"
+            TF_VAR_region: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                cp az-management-c-tfstate/az-management-c.tfstate updated-tfstate/az-management-c.tfstate
+
+                terraform init paas-cf/terraform/az-management
+
+                terraform apply \
+                  -auto-approve=true \
+                  -state=updated-tfstate/az-management-c.tfstate \
+                  paas-cf/terraform/az-management
+
+        ensure:
+          put: az-management-c-tfstate
+          params:
+            file: updated-tfstate/az-management-c.tfstate
+
+  - name: enable-az-c
+    serial_groups: [operator]
+    serial: true
+    plan:
+      - in_parallel:
+          - <<: *get-paas-cf
+            passed: [disable-az-c]
+          - get: az-management-c-tfstate
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: enable-az
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+            - name: az-management-c-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_az: "((aws_region))c"
+            TF_VAR_region: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                cp az-management-c-tfstate/az-management-c.tfstate updated-tfstate/az-management-c.tfstate
+
+                terraform init paas-cf/terraform/az-management
+
+                terraform destroy \
+                  -auto-approve=true \
+                  -state=updated-tfstate/az-management-c.tfstate \
+                  paas-cf/terraform/az-management
+
+        ensure:
+          put: az-management-c-tfstate
+          params:
+            file: updated-tfstate/az-management-c.tfstate
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
