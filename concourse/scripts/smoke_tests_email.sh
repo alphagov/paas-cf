@@ -30,7 +30,7 @@ write_message_json() {
   "Body": {
     "Html": {
       "Data": "The smoke tests have failed in environment <b>${DEPLOY_ENV}</b>. See \
-      <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?groups=health'>Concourse</a> \
+      <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?group=health'>Concourse</a> \
       for details<br/>"
     }
   }
