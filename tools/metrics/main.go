@@ -34,8 +34,8 @@ import (
 	promrep "github.com/alphagov/paas-cf/tools/metrics/pkg/prometheus_reporter"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/rds"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/s3"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/servicequotas"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
 )
 
 func getHTTPPort() int {
@@ -181,7 +181,6 @@ func Main() error {
 		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
 		BillingCostsGauge(logger, os.Getenv("BILLING_ENDPOINT"), 15*time.Minute),
-		CurrencyGauges(logger, 5*time.Minute),
 		BillingCollectorPerformanceGauge(logger, 15*time.Minute, logitClient),
 		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
 		RDSDBInstancesGauge(logger, rdsService, serviceQuotas, 15*time.Minute),
