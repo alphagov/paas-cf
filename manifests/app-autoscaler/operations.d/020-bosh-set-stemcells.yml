@@ -1,3 +1,7 @@
-# THIS USED TO BE A SIMLINK!
-#
-# manifests/app-autoscaler/operations.d/020-bosh-set-stemcells.yml -> ../../cf-manifest/operations.d/020-bosh-set-stemcells.yml
+---
+- type: replace
+  path: /stemcells
+  value:
+    - alias: default
+      os: ubuntu-xenial
+      version: "621.123"
