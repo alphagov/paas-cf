@@ -9,6 +9,16 @@ If you have any problems using the new versions in the buildpacks, or working to
 Regards,
 
 The GOV.UK PaaS team
+{{- if .HasAnyHighlights }}
+# Highlights
+{{- range $index := .Data }}
+{{- if .HasHighlights }}
+{{ $buildpack := .Buildpack }}
+## {{ .Buildpack.Name }}: {{ .Buildpack.Version}}
+{{.Highlights}}
+{{- end }}
+{{- end }}
+{{- end }}
 
 # Planned Releases:
 {{ range $index := .Data }}

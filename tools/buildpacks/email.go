@@ -4,10 +4,11 @@ import (
 	"bytes"
 	"context"
 	"flag"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
+	"os/exec"
+	"strings"
 	"text/template"
 	"time"
 
@@ -20,15 +21,33 @@ type EmailDatas struct {
 	ReleaseDate string
 	Data        []EmailData
 }
+
+func (ed EmailDatas) HasAnyHighlights() bool {
+	for _, d := range ed.Data {
+		if d.HasHighlights {
+			return true
+		}
+	}
+
+	return false
+}
+
 type EmailData struct {
 	Buildpack           Buildpack
 	ReleaseNoteVersions []string
 	Changes             map[string]Changes
+	Highlights          string
+	HasHighlights       bool
 }
 
 type Changes struct {
 	Additions []string
 	Removals  []string
+}
+
+type ReleaseNotes struct {
+	Version string
+	Body    string
 }
 
 func toSet(input []string) map[string]bool {
@@ -80,10 +99,84 @@ func releasesSinceLastRelease(ctx context.Context, githubClient *github.Client, 
 	return releaseVersions
 }
 
+// Compiles the release notes for a buildpack.
+// Starts at the given version and runs up until the latest version.
+// Returns a slice of ReleaseNotes structs because ordering is important.
+func getCompiledReleaseNotes(ctx context.Context, githubClient *github.Client, repoName string, lastRelease string) ([]ReleaseNotes, error) {
+	var compiled []ReleaseNotes
+
+	releases, _, err := githubClient.Repositories.ListReleases(
+		ctx,
+		"cloudfoundry",
+		repoName,
+		&github.ListOptions{
+			PerPage: 100,
+		})
+	if err != nil {
+		return nil, err
+	}
+
+	for _, release := range releases {
+		if release.GetTagName() == lastRelease {
+			break
+		}
+
+		compiled = append(compiled, ReleaseNotes{
+			Version: release.GetTagName(),
+			Body:    release.GetBody(),
+		})
+	}
+	return compiled, nil
+}
+
+func getUserInputFromEditor(promptString string) (string, error) {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return "", err
+	}
+
+	tempFile, err := ioutil.TempFile(pwd, "tmp.buildpack-highlight-*")
+	if err != nil {
+		return "", err
+	}
+	defer os.Remove(tempFile.Name())
+
+	err = ioutil.WriteFile(tempFile.Name(), []byte(promptString), 0750)
+	if err != nil {
+		return "", err
+	}
+
+	editorName, editorIsSet := os.LookupEnv("EDITOR")
+	if !editorIsSet {
+		editorName = "vim"
+	}
+
+	editor := exec.Command(editorName, tempFile.Name())
+	editor.Stdin = os.Stdin
+	editor.Stdout = os.Stdout
+	editor.Stderr = os.Stderr
+	editor.Env = os.Environ()
+	editor.Dir = pwd
+
+	err = editor.Start()
+	if err != nil {
+		return "", err
+	}
+
+	err = editor.Wait()
+	if err != nil {
+		return "", err
+	}
+
+	content, err := ioutil.ReadFile(tempFile.Name())
+	return string(content), err
+}
+
 func main() {
 	var (
 		oldFilePath = flag.String("old", "", "Old file")
 		newFilePath = flag.String("new", "", "New file")
+		outputFile  = flag.String("out", "", "Output file")
 	)
 	flag.Parse()
 
@@ -137,6 +230,8 @@ func main() {
 			Buildpack:           newBuildpack,
 			ReleaseNoteVersions: releaseNoteVersions,
 			Changes:             make(map[string]Changes),
+			Highlights:          "",
+			HasHighlights:       false,
 		}
 
 		oldDependenciesByName := dependencyVersionsByName(oldBuildpack.Dependencies)
@@ -161,6 +256,26 @@ func main() {
 				buildpackEmailData.Changes[name] = tmpChanges
 			}
 		}
+
+		compiledReleaseNotes, err := getCompiledReleaseNotes(ctx, githubClient, newBuildpack.RepoName, oldBuildpack.Version)
+		if err != nil {
+			log.Fatalf("could not get compiled release notes for buildpack '%s': %s", newBuildpack.Name, err)
+			return
+		}
+
+		editorInput := commentifyCompiledReleaseNotes(newBuildpack.Name, compiledReleaseNotes)
+		highlights, err := getUserInputFromEditor(editorInput)
+		if err != nil {
+			log.Fatalf("couldn't get highlights for buildpack: %s", err)
+			return
+		}
+
+		strippedHighlights := stripCommentedLines(highlights)
+		if strippedHighlights != "" {
+			buildpackEmailData.Highlights = strippedHighlights
+			buildpackEmailData.HasHighlights = true
+		}
+
 		emailData.Data = append(emailData.Data, buildpackEmailData)
 		doneBuildpacks[newBuildpack.Name] = true
 	}
@@ -174,5 +289,57 @@ func main() {
 	if err != nil {
 		log.Fatalf("Email template could not be executed %v", err)
 	}
-	fmt.Print(string(emailText.Bytes()))
+
+	err = ioutil.WriteFile(*outputFile, emailText.Bytes(), 0750)
+	if err != nil {
+		log.Fatalf("Email template could not be written to file '%s' %v", *outputFile, err)
+	}
+}
+
+// Takes the compiled release notes for a buildpack and prepares them to be
+// presented to the user in a way that's similar to the way notes are in "git commit"
+func commentifyCompiledReleaseNotes(buildpackName string, releaseNotes []ReleaseNotes) string {
+	builder := strings.Builder{}
+
+	builder.WriteString("\n\n") // Space for the user to write in
+	builder.WriteString(`#
+# Read the release notes below and write up any highlights above.
+# Lines prefixed with a hash (#) will be ignored in the output.
+# Don't include a title line. This will be added when the email is compiled.
+#
+# Empty highlights will not be included in the email.
+# --------
+#
+`)
+
+	builder.WriteString("# " + buildpackName + "\n#\n")
+	for _, notes := range releaseNotes {
+		builder.WriteString("# --------\n")
+		builder.WriteString("# " + notes.Version + "\n")
+
+		// Break notes on new line, prefix with hash, and
+		// re-join with new lines to preserve the formatting
+		noteLines := strings.Split(notes.Body, "\n")
+		prefixedLines := []string{}
+		for _, line := range noteLines {
+			prefixedLines = append(prefixedLines, "# "+line)
+		}
+		rejoinedLines := strings.Join(prefixedLines, "\n")
+		builder.WriteString(rejoinedLines)
+		builder.WriteString("#\n")
+	}
+
+	return builder.String()
+}
+
+// Removes line prefixed with a hash
+func stripCommentedLines(input string) string {
+	var out []string
+	for _, str := range strings.Split(input, "\n") {
+		if strings.Index(str, "#") != 0 {
+			out = append(out, str)
+		}
+	}
+
+	return strings.TrimSpace(strings.Join(out, "\n"))
 }
