@@ -55,9 +55,9 @@
   path: /releases/-
   value:
     name: elasticache-broker
-    version: 0.1.15
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.15.tgz
-    sha1: 00a0c2a94deecec3c8a1b8e6ca7908627a137b76
+    version: 0.1.16
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.16.tgz
+    sha1: b0dba1508decf56c26828f2d080c3af01e9042f9
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
