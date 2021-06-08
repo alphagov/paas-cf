@@ -771,6 +771,7 @@ jobs:
             NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            DISABLED_AZS: ((disabled_azs))
           run:
             path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
 
@@ -2171,6 +2172,7 @@ jobs:
               ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
               ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR: paas-cf/manifests/cf-manifest/isolation-segments/((env_specific_isolation_segments_dir))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+              DISABLED_AZS: ((disabled_azs))
               VCAP_PASSWORD: ((vcap-password))
             run:
               path: sh

@@ -7,6 +7,7 @@ CF_MANIFEST_DIR=${PAAS_CF_DIR}/manifests/cf-manifest
 CF_DEPLOYMENT_DIR=${PAAS_CF_DIR}/manifests/cf-deployment
 SHARED_MANIFEST_DIR=${PAAS_CF_DIR}/manifests/shared
 WORKDIR=${WORKDIR:-.}
+DISABLED_AZS=${DISABLED_AZS:-}
 
 opsfile_args=""
 
@@ -65,6 +66,18 @@ for isolation_segment_definition in "${ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR}"/*.y
       ) - <<< "${manifest_with_isolation_segments}"
   )"
 done
+
+if [ -n "${DISABLED_AZS}" ]; then
+  for AZ in ${DISABLED_AZS}; do
+  manifest_with_isolation_segments="$(
+    bosh interpolate \
+    --ops-file <(
+      ruby "${CF_MANIFEST_DIR}/scripts/generate-disable-azs-ops-file.rb" "$AZ" \
+      <<< "${manifest_with_isolation_segments}"
+    ) - <<< "${manifest_with_isolation_segments}"
+  )"
+  done
+fi
 
 # Now we have a manifest with isolation segments, ready for BOSH
 echo "$manifest_with_isolation_segments"

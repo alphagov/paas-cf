@@ -27,6 +27,9 @@ Layout/HeredocIndentation:
 Layout/HashAlignment:
   Enabled: false
 
+Naming/FileName:
+  Exclude:
+    - 'manifests/cf-manifest/scripts/*'
 Naming/HeredocDelimiterNaming:
   Enabled: false
 
