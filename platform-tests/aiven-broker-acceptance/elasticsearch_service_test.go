@@ -36,7 +36,6 @@ var _ = Describe("Elasticsearch backing service", func() {
 
 	It("has the expected plans available", func() {
 		expectedPlans := []string{
-			"tiny-6.x", "small-ha-6.x", "medium-ha-6.x", "large-ha-6.x", "xlarge-ha-6.x",
 			"tiny-7.x", "small-ha-7.x", "medium-ha-7.x", "large-ha-7.x", "xlarge-ha-7.x",
 		}
 

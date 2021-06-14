@@ -32,6 +32,7 @@
             "elasticsearch_version": "6",
             "description": "NOT Highly Available, 1 dedicated VM, 1 CPU per VM, 4GB RAM per VM, 80GB disk space. Free for trial orgs. Costs for billable orgs.",
             "free": true,
+            "active": false,
             "metadata": {
               "displayName": "Tiny",
               "AdditionalMetadata": {
@@ -53,6 +54,7 @@
             "elasticsearch_version": "6",
             "description": "3 dedicated VMs, 1 CPU per VM, 4GB RAM per VM, 240GB disk space.",
             "free": false,
+            "active": false,
             "metadata": {
               "displayName": "Small",
               "AdditionalMetadata": {
@@ -74,6 +76,7 @@
             "elasticsearch_version": "6",
             "description": "3 dedicated VMs, 2 CPU per VM, 8GB RAM per VM, 525GB disk space.",
             "free": false,
+            "active": false,
             "metadata": {
               "displayName": "Medium",
               "AdditionalMetadata": {
@@ -95,6 +98,7 @@
             "elasticsearch_version": "6",
             "description": "3 dedicated VMs, 2 CPU per VM, 15GB RAM per VM, 1050GB disk space.",
             "free": false,
+            "active": false,
             "metadata": {
               "displayName": "Large",
               "AdditionalMetadata": {
@@ -116,6 +120,7 @@
             "elasticsearch_version": "6",
             "description": "3 dedicated VMs, 4 CPU per VM, 31GB RAM per VM, 2100GB disk space.",
             "free": false,
+            "active": false,
             "metadata": {
               "displayName": "XLarge",
               "AdditionalMetadata": {
