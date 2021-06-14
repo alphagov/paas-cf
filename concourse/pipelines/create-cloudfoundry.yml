@@ -206,12 +206,12 @@ groups:
       - healthcheck-check-state
       - healthcheck-disable
       - cleanup-deleted-cf-users
-      - disable-az-a
-      - enable-az-a
-      - disable-az-b
-      - enable-az-b
-      - disable-az-c
-      - enable-az-c
+      - disable-az-a-vpc
+      - enable-az-a-vpc
+      - disable-az-b-vpc
+      - enable-az-b-vpc
+      - disable-az-c-vpc
+      - enable-az-c-vpc
   - name: tests
     jobs:
       - app-availability-tests
@@ -1500,7 +1500,8 @@ jobs:
             file: updated-tfstate/vpc-peering.tfstate
       - *end-grafana-job-annotation
 
-  - name: disable-az-a
+  - name: disable-az-a-vpc
+    old_name: disable-az-a
     serial_groups: [operator]
     serial: true
     plan:
@@ -1546,7 +1547,7 @@ jobs:
               - |
                 BOSH_CLIENT='admin' bosh update-resurrection off
 
-      - task: disable-az
+      - task: disable-az-vpc
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -1584,13 +1585,14 @@ jobs:
           params:
             file: updated-tfstate/az-management-a.tfstate
 
-  - name: enable-az-a
+  - name: enable-az-a-vpc
+    old_name: enable-az-a
     serial_groups: [operator]
     serial: true
     plan:
       - in_parallel:
           - <<: *get-paas-cf
-            passed: [disable-az-a]
+            passed: [disable-az-a-vpc]
           - get: az-management-a-tfstate
           - get: vpc-tfstate
 
@@ -1613,7 +1615,7 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
 
-      - task: enable-az
+      - task: enable-az-vpc
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -1648,7 +1650,8 @@ jobs:
           params:
             file: updated-tfstate/az-management-a.tfstate
 
-  - name: disable-az-b
+  - name: disable-az-b-vpc
+    old_name: disable-az-b
     serial_groups: [operator]
     serial: true
     plan:
@@ -1694,7 +1697,7 @@ jobs:
               - |
                 BOSH_CLIENT='admin' bosh update-resurrection off
 
-      - task: disable-az
+      - task: disable-az-vpc
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -1730,13 +1733,14 @@ jobs:
           params:
             file: updated-tfstate/az-management-b.tfstate
 
-  - name: enable-az-b
+  - name: enable-az-b-vpc
+    old_name: enable-az-b
     serial_groups: [operator]
     serial: true
     plan:
       - in_parallel:
           - <<: *get-paas-cf
-            passed: [disable-az-b]
+            passed: [disable-az-b-vpc]
           - get: az-management-b-tfstate
           - get: vpc-tfstate
 
@@ -1759,7 +1763,7 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
 
-      - task: enable-az
+      - task: enable-az-vpc
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -1795,7 +1799,8 @@ jobs:
           params:
             file: updated-tfstate/az-management-b.tfstate
 
-  - name: disable-az-c
+  - name: disable-az-c-vpc
+    old_name: disable-az-c
     serial_groups: [operator]
     serial: true
     plan:
@@ -1841,7 +1846,7 @@ jobs:
               - |
                 BOSH_CLIENT='admin' bosh update-resurrection off
 
-      - task: disable-az
+      - task: disable-az-vpc
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -1877,13 +1882,14 @@ jobs:
           params:
             file: updated-tfstate/az-management-c.tfstate
 
-  - name: enable-az-c
+  - name: enable-az-c-vpc
+    old_name: enable-az-c
     serial_groups: [operator]
     serial: true
     plan:
       - in_parallel:
           - <<: *get-paas-cf
-            passed: [disable-az-c]
+            passed: [disable-az-c-vpc]
           - get: az-management-c-tfstate
           - get: vpc-tfstate
 
@@ -1906,7 +1912,7 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
 
-      - task: enable-az
+      - task: enable-az-vpc
         tags: [colocated-with-web]
         config:
           platform: linux
