@@ -1527,6 +1527,24 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
 
+      - task: disable-bosh-resurrector
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin' bosh update-resurrection off
+
       - task: disable-az
         tags: [colocated-with-web]
         config:
@@ -1657,6 +1675,24 @@ jobs:
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
 
+      - task: disable-bosh-resurrector
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin' bosh update-resurrection off
+
       - task: disable-az
         tags: [colocated-with-web]
         config:
@@ -1785,6 +1821,24 @@ jobs:
               - |
                 ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
                 < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: disable-bosh-resurrector
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin' bosh update-resurrection off
 
       - task: disable-az
         tags: [colocated-with-web]
