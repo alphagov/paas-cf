@@ -1567,9 +1567,6 @@ jobs:
               - -e
               - -c
               - |
-                echo "RUNNING THIS ACTION FOR AZ-A, WILL MEAN THIS CONCOURSE IS BEING USELESS!"
-                echo "You will need to run the 'revert' action by hand, to get it back to working state."
-
                 . terraform-variables/vpc.tfvars.sh
 
                 cp az-management-a-tfstate/az-management-a.tfstate updated-tfstate/az-management-a.tfstate
