@@ -2742,6 +2742,47 @@ jobs:
           params:
             file: app-autoscaler-manifest-pre-vars/app-autoscaler-manifest-pre-vars.yml
 
+      - task: get-and-upload-stemcell
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          inputs:
+            - name: paas-cf
+            - name: app-autoscaler-manifest
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: app-autoscaler
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
+
+                BOSH_CLIENT='admin'
+                export BOSH_CLIENT
+
+                stemcell_index=0
+                while true; do
+                  if ! $VAL_FROM_YAML "stemcells.${stemcell_index}" app-autoscaler-manifest/app-autoscaler-manifest.yml > /dev/null 2>&1; then
+                    break
+                  fi
+
+                  STEMCELL_VERSION=$($VAL_FROM_YAML "stemcells.${stemcell_index}.version" app-autoscaler-manifest/app-autoscaler-manifest.yml)
+                  STEMCELL_OS=$($VAL_FROM_YAML "stemcells.${stemcell_index}.os" app-autoscaler-manifest/app-autoscaler-manifest.yml)
+
+                  wget "https://bosh.io/d/stemcells/bosh-aws-xen-hvm-${STEMCELL_OS}-go_agent?v=${STEMCELL_VERSION}" -O stemcell.tgz
+
+                  bosh -n upload-stemcell stemcell.tgz
+
+                  stemcell_index=$((stemcell_index + 1))
+                done
+
       - task: app-autoscaler-deploy
         tags: [colocated-with-web]
         config:
