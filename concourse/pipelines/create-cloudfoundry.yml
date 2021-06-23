@@ -229,6 +229,7 @@ groups:
       - continuous-billing-smoke-tests
       - continuous-leaked-aws-key-check
       - check-certificates
+      - resurrector-is-enabled
   - name: credentials
     jobs:
       - set-smoke-test-creds
@@ -531,6 +532,11 @@ resources:
     type: time
     source:
       interval: 5m
+
+  - name: resurrector-is-enabled-timer
+    type: time
+    source:
+      interval: 30m
 
   - name: billing-smoke-tests-timer
     type: time
@@ -1944,6 +1950,58 @@ jobs:
           put: az-management-c-tfstate
           params:
             file: updated-tfstate/az-management-c.tfstate
+
+  # ideally this would be a monitoring-driven alert but this is not exposed as a metric
+  # and might be too private for our semi-public grafana anyway
+  - name: resurrector-is-enabled
+    serial: true
+    plan:
+      - get: resurrector-is-enabled-timer
+        trigger: true
+      - task: check-resurrector
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin' bosh curl /resurrection | jq -e '.resurrection'
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "resurrector-disabled"
+              else
+                echo "email alerts disabled"
+              fi
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
