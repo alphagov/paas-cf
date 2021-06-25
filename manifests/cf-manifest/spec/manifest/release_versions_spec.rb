@@ -100,6 +100,7 @@ RSpec.describe "release versions" do
     expect(monitor_remote_smoke_tests_resource_version).to eq(cf_smoke_tests_resource_version)
   end
 
+  pinned_cf_acceptance_tests_version = "16.14"
   specify "cf-acceptance-tests version should be the same as the CF manifest version" do
     cf_manifest_version = cf_deployment_manifest
       .fetch("manifest_version")
@@ -115,7 +116,11 @@ RSpec.describe "release versions" do
       expect(upstream_version).to be == Gem::Version.new("11.0"), "there was no release of github.com/cloudfoundry/cf-acceptance-tests for cf-deployment v11.0. remove this erroring line and uncomment the below if they fix this for v12"
     else
       paas_version = Gem::Version.new(cf_acceptance_tests_resource["source"]["branch"].gsub(/^cf/, ""))
-      expect(paas_version).to be >= upstream_version, "we should upgrade the cf-acceptance-tests' branch in the create-cloundfoundry pipeline to 'cf#{upstream_version}'"
+      if !pinned_cf_acceptance_tests_version.nil?
+        expect(paas_version.to_s).to eq(pinned_cf_acceptance_tests_version), "we should remove the pinned version test here. We only pin versions here when the upstream hasn't released a branch matching the CF manifest version"
+      else
+        expect(paas_version).to be >= upstream_version, "we should upgrade the cf-acceptance-tests' branch in the create-cloundfoundry pipeline to 'cf#{upstream_version}'"
+      end
     end
   end
 
