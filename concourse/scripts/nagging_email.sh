@@ -6,6 +6,7 @@ DEPLOY_ENV=$1
 SYSTEM_DNS_ZONE_NAME=$2
 ALERT_EMAIL_ADDRESS=$3
 MESSAGE_TYPE=$4
+CONTEXT=$5
 
 TO="${ALERT_EMAIL_ADDRESS}"
 FROM="${ALERT_EMAIL_ADDRESS}"
@@ -22,6 +23,24 @@ write_message_json() {
       "Data": "Bosh's resurrector is currently disabled in <b>${DEPLOY_ENV}</b>. Presumably \
       this is deliberate, but you probably want to re-enable it as soon as you deem sensible, \
       to avoid having to go and recreate dead instances manually. See \
+      <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?group=health'>Concourse</a> \
+      for details<br/>Alternatively, something else caused this check to fail, which is also \
+      something that should be investigated."
+    }
+  }
+}
+EOF
+  elif [ "${MESSAGE_TYPE}" = 'az-disabled-manifest' ]; then
+    cat <<EOF > message.json
+{
+  "Subject": {
+    "Data": "AZ ${CONTEXT} is disabled in ${DEPLOY_ENV}'s manifest"
+  },
+  "Body": {
+    "Html": {
+      "Data": "No instance_groups in <b>${DEPLOY_ENV}</b> are configured to use \
+      <b>${CONTEXT}</b>. Presumably the AZ has been disabled and this is deliberate, \
+      but you probably want to re-enable it as soon as you deem sensible. See \
       <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?group=health'>Concourse</a> \
       for details<br/>Alternatively, something else caused this check to fail, which is also \
       something that should be investigated."
