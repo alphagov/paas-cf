@@ -633,7 +633,7 @@ resources:
       ref: ce0fb696423739ed7796e4c75c4ae31d82df5f41
     source:
       uri: https://github.com/cloudfoundry/app-autoscaler-release.git
-      branch: develop
+      branch: main
 
   - name: grafana-overview-annotation-id
     type: s3-iam
