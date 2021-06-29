@@ -48,6 +48,24 @@ EOF
   }
 }
 EOF
+  elif [ "${MESSAGE_TYPE}" = 'az-disabled-vpc' ]; then
+    cat <<EOF > message.json
+{
+  "Subject": {
+    "Data": "AZ ${CONTEXT} is disabled in ${DEPLOY_ENV}'s VPC"
+  },
+  "Body": {
+    "Html": {
+      "Data": "<b>${DEPLOY_ENV}</b>'s VPC appears to have a network ACL disabling AZ \
+      <b>${CONTEXT}</b>. Presumably this is deliberate, but you probably want to re-enable \
+      it as soon as you deem sensible. See \
+      <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?group=health'>Concourse</a> \
+      for details<br/>Alternatively, something else caused this check to fail, which is also \
+      something that should be investigated."
+    }
+  }
+}
+EOF
   fi
 }
 
