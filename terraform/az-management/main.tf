@@ -11,6 +11,17 @@ data "aws_subnet_ids" "selected" {
   }
 }
 
+data "aws_subnet" "infra_subnet" {
+  vpc_id = var.vpc_id
+  filter {
+    name = "tag:Name"
+    # The wildcard covers the deploy env,
+    # but the VPC id locks the search to
+    # the correct deploy env anyway
+    values = ["*-infra-${var.az}"]
+  }
+}
+
 resource "aws_network_acl" "disable_az" {
   vpc_id = var.vpc_id
 
@@ -20,5 +31,6 @@ resource "aws_network_acl" "disable_az" {
     Name = "disable_az_${var.az}"
   }
 
-  subnet_ids = [for s in data.aws_subnet_ids.selected.ids : s]
+  # All subnets, excluding the infra one
+  subnet_ids = [for s in data.aws_subnet_ids.selected.ids : s if data.aws_subnet.infra_subnet.id != s]
 }

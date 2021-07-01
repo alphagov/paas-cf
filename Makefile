@@ -218,6 +218,7 @@ dev: ## Set Environment to DEV
 	$(eval export SLIM_DEV_DEPLOYMENT ?= true)
 	$(eval export CA_ROTATION_EXPIRY_DAYS ?= 360)
 	$(eval export ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY ?= true)
+	$(eval export DISABLED_AZS)
 	@true
 
 .PHONY: dev01
@@ -258,6 +259,7 @@ stg-lon: ## Set Environment to stg-lon
 	$(eval export AWS_REGION=eu-west-2)
 	$(eval export CA_ROTATION_EXPIRY_DAYS=335)
 	$(eval export ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY ?= true)
+	$(eval export DISABLED_AZS)
 	@true
 
 .PHONY: prod
@@ -282,6 +284,7 @@ prod: ## Set Environment to Production
 	$(eval export AWS_REGION=eu-west-1)
 	$(eval export CA_ROTATION_EXPIRY_DAYS=30)
 	$(eval export ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY ?= true)
+	$(eval export DISABLED_AZS)
 	@true
 
 .PHONY: prod-lon
@@ -306,6 +309,7 @@ prod-lon: ## Set Environment to prod-lon
 	$(eval export AWS_REGION=eu-west-2)
 	$(eval export CA_ROTATION_EXPIRY_DAYS=30)
 	$(eval export ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY ?= true)
+	$(eval export DISABLED_AZS)
 	@true
 
 .PHONY: bosh-cli

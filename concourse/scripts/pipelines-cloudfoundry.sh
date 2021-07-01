@@ -112,6 +112,7 @@ deploy_env_tag_prefix: "${deploy_env_tag_prefix}"
 skip_autodelete_await: "${SKIP_AUTODELETE_AWAIT:-false}"
 ca_rotation_expiry_days: "${CA_ROTATION_EXPIRY_DAYS}"
 enable_paas_admin_continuous_deploy: ${ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY:-true}
+disabled_azs: ${DISABLED_AZS:-}
 EOF
   echo -e "pipeline_lock_git_private_key: |\\n  ${git_id_rsa//$'\n'/$'\n'  }"
 }
