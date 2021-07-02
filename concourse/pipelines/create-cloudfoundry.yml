@@ -11,67 +11,67 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     psql: &psql-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     node: &node-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     golang: &golang-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     terraform: &terraform-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+        tag: 8453e9c989abefdaad40895c25df7d18a82d6522
 
 
   tasks:
@@ -229,6 +229,13 @@ groups:
       - continuous-billing-smoke-tests
       - continuous-leaked-aws-key-check
       - check-certificates
+      - resurrector-is-enabled
+      - az-a-is-enabled-in-manifest
+      - az-b-is-enabled-in-manifest
+      - az-c-is-enabled-in-manifest
+      - az-a-is-enabled-in-vpc
+      - az-b-is-enabled-in-vpc
+      - az-c-is-enabled-in-vpc
   - name: credentials
     jobs:
       - set-smoke-test-creds
@@ -243,7 +250,7 @@ resource_types:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+    tag: 8453e9c989abefdaad40895c25df7d18a82d6522
 
 - name: s3-iam
   type: docker-image
@@ -532,6 +539,21 @@ resources:
     source:
       interval: 5m
 
+  - name: resurrector-is-enabled-timer
+    type: time
+    source:
+      interval: 30m
+
+  - name: az-is-enabled-in-manifest-timer
+    type: time
+    source:
+      interval: 30m
+
+  - name: az-is-enabled-in-vpc-timer
+    type: time
+    source:
+      interval: 30m
+
   - name: billing-smoke-tests-timer
     type: time
     source:
@@ -754,7 +776,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+              tag: 8453e9c989abefdaad40895c25df7d18a82d6522
 
           inputs:
             - name: paas-cf
@@ -1944,6 +1966,475 @@ jobs:
           put: az-management-c-tfstate
           params:
             file: updated-tfstate/az-management-c.tfstate
+
+  # ideally this would be a monitoring-driven alert but this is not exposed as a metric
+  # and might be too private for our semi-public grafana anyway
+  - name: resurrector-is-enabled
+    serial: true
+    plan:
+      - get: resurrector-is-enabled-timer
+        trigger: true
+      - task: check-resurrector
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                BOSH_CLIENT='admin' bosh curl /resurrection | jq -e '.resurrection'
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "resurrector-disabled"
+              else
+                echo "email alerts disabled"
+              fi
+
+  - name: az-a-is-enabled-in-manifest
+    serial: true
+    plan:
+      - get: az-is-enabled-in-manifest-timer
+        trigger: true
+      - task: check-az-a-is-enabled-in-manifest
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo 'instance_groups with z1 enabled:'
+                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
+                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z1")) | .name' -
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "az-disabled-in-manifest" \
+                  "z1"
+              else
+                echo "email alerts disabled"
+              fi
+
+  - name: az-b-is-enabled-in-manifest
+    serial: true
+    plan:
+      - get: az-is-enabled-in-manifest-timer
+        trigger: true
+      - task: check-az-b-is-enabled-in-manifest
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo 'instance_groups with z2 enabled:'
+                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
+                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z2")) | .name' -
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "az-disabled-in-manifest" \
+                  "z2"
+              else
+                echo "email alerts disabled"
+              fi
+
+  - name: az-c-is-enabled-in-manifest
+    serial: true
+    plan:
+      - get: az-is-enabled-in-manifest-timer
+        trigger: true
+      - task: check-az-c-is-enabled-in-manifest
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                echo 'instance_groups with z3 enabled:'
+                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
+                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z3")) | .name' -
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "az-disabled-in-manifest" \
+                  "z3"
+              else
+                echo "email alerts disabled"
+              fi
+
+  - name: az-a-is-enabled-in-vpc
+    serial: true
+    plan:
+      - in_parallel:
+          - get: az-is-enabled-in-vpc-timer
+            trigger: true
+          - <<: *get-paas-cf
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: check-az-a-is-enabled-in-vpc
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *awscli-image-resource
+          params:
+            AWS_DEFAULT_REGION: ((aws_region))
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+          run:
+            path: ash
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                echo "Checking for network ACL disabling AZ..."
+                # shellcheck disable=SC2154
+                aws ec2 describe-network-acls \
+                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
+                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == "disable_az_((aws_region))a"))' < network-acls.json > /dev/null ; then
+                  echo "Found, therefore AZ disabled. Failing."
+                  false
+                else
+                  echo "Not found"
+                fi
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "az-disabled-vpc" \
+                  "a"
+              else
+                echo "email alerts disabled"
+              fi
+
+  - name: az-b-is-enabled-in-vpc
+    serial: true
+    plan:
+      - in_parallel:
+          - get: az-is-enabled-in-vpc-timer
+            trigger: true
+          - <<: *get-paas-cf
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: check-az-b-is-enabled-in-vpc
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *awscli-image-resource
+          params:
+            AWS_DEFAULT_REGION: ((aws_region))
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+          run:
+            path: ash
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                echo "Checking for network ACL disabling AZ..."
+                # shellcheck disable=SC2154
+                aws ec2 describe-network-acls \
+                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
+                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == "disable_az_((aws_region))b"))' < network-acls.json > /dev/null ; then
+                  echo "Found, therefore AZ disabled. Failing."
+                  false
+                else
+                  echo "Not found"
+                fi
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "az-disabled-vpc" \
+                  "b"
+              else
+                echo "email alerts disabled"
+              fi
+
+  - name: az-c-is-enabled-in-vpc
+    serial: true
+    plan:
+      - in_parallel:
+          - get: az-is-enabled-in-vpc-timer
+            trigger: true
+          - <<: *get-paas-cf
+          - get: vpc-tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: check-az-c-is-enabled-in-vpc
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *awscli-image-resource
+          params:
+            AWS_DEFAULT_REGION: ((aws_region))
+          inputs:
+            - name: terraform-variables
+            - name: paas-cf
+          run:
+            path: ash
+            args:
+              - -e
+              - -c
+              - |
+                . terraform-variables/vpc.tfvars.sh
+
+                echo "Checking for network ACL disabling AZ..."
+                # shellcheck disable=SC2154
+                aws ec2 describe-network-acls \
+                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
+                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == "disable_az_((aws_region))c"))' < network-acls.json > /dev/null ; then
+                  echo "Found, therefore AZ disabled. Failing."
+                  false
+                else
+                  echo "Not found"
+                fi
+    on_failure:
+      task: send-email-alert
+      tags: [colocated-with-web]
+      config:
+        platform: linux
+        image_resource: *awscli-image-resource
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          DEPLOY_ENV: ((deploy_env))
+          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        run:
+          path: ash
+          args:
+            - -e
+            - -c
+            - |
+              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+                paas-cf/concourse/scripts/nagging_email.sh \
+                  "${DEPLOY_ENV}" \
+                  "${SYSTEM_DNS_ZONE_NAME}" \
+                  "${ALERT_EMAIL_ADDRESS}" \
+                  "az-disabled-vpc" \
+                  "c"
+              else
+                echo "email alerts disabled"
+              fi
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
@@ -4536,7 +5027,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+              tag: 8453e9c989abefdaad40895c25df7d18a82d6522
 
           inputs:
             - name: paas-cf
@@ -4758,7 +5249,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+              tag: 8453e9c989abefdaad40895c25df7d18a82d6522
 
           inputs:
             - name: paas-admin-data
@@ -5681,7 +6172,7 @@ jobs:
           type: docker-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: 8d6c556abd2d54f27c0fda934d00df8beafac1f8
+            tag: 8453e9c989abefdaad40895c25df7d18a82d6522
 
         inputs:
           - name: passwords
