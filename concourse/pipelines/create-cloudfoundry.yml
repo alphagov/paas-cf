@@ -1972,8 +1972,11 @@ jobs:
   - name: resurrector-is-enabled
     serial: true
     plan:
-      - get: resurrector-is-enabled-timer
-        trigger: true
+      - in_parallel:
+        - get: resurrector-is-enabled-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-resurrector
         tags: [colocated-with-web]
         config:
@@ -1997,6 +2000,8 @@ jobs:
       config:
         platform: linux
         image_resource: *awscli-image-resource
+        inputs:
+          - name: paas-cf
         params:
           AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
@@ -2022,8 +2027,11 @@ jobs:
   - name: az-a-is-enabled-in-manifest
     serial: true
     plan:
-      - get: az-is-enabled-in-manifest-timer
-        trigger: true
+      - in_parallel:
+        - get: az-is-enabled-in-manifest-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-az-a-is-enabled-in-manifest
         tags: [colocated-with-web]
         config:
@@ -2050,6 +2058,8 @@ jobs:
       config:
         platform: linux
         image_resource: *awscli-image-resource
+        inputs:
+          - name: paas-cf
         params:
           AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
@@ -2076,8 +2086,11 @@ jobs:
   - name: az-b-is-enabled-in-manifest
     serial: true
     plan:
-      - get: az-is-enabled-in-manifest-timer
-        trigger: true
+      - in_parallel:
+        - get: az-is-enabled-in-manifest-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-az-b-is-enabled-in-manifest
         tags: [colocated-with-web]
         config:
@@ -2104,6 +2117,8 @@ jobs:
       config:
         platform: linux
         image_resource: *awscli-image-resource
+        inputs:
+          - name: paas-cf
         params:
           AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
@@ -2130,8 +2145,11 @@ jobs:
   - name: az-c-is-enabled-in-manifest
     serial: true
     plan:
-      - get: az-is-enabled-in-manifest-timer
-        trigger: true
+      - in_parallel:
+        - get: az-is-enabled-in-manifest-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-az-c-is-enabled-in-manifest
         tags: [colocated-with-web]
         config:
@@ -2158,6 +2176,8 @@ jobs:
       config:
         platform: linux
         image_resource: *awscli-image-resource
+        inputs:
+          - name: paas-cf
         params:
           AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
@@ -2188,6 +2208,7 @@ jobs:
           - get: az-is-enabled-in-vpc-timer
             trigger: true
           - <<: *get-paas-cf
+            passed: ['pipeline-lock']
           - get: vpc-tfstate
 
       - task: extract-terraform-variables
@@ -2243,6 +2264,8 @@ jobs:
       config:
         platform: linux
         image_resource: *awscli-image-resource
+        inputs:
+          - name: paas-cf
         params:
           AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
@@ -2273,6 +2296,7 @@ jobs:
           - get: az-is-enabled-in-vpc-timer
             trigger: true
           - <<: *get-paas-cf
+            passed: ['pipeline-lock']
           - get: vpc-tfstate
 
       - task: extract-terraform-variables
@@ -2328,6 +2352,8 @@ jobs:
       config:
         platform: linux
         image_resource: *awscli-image-resource
+        inputs:
+          - name: paas-cf
         params:
           AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
@@ -2358,6 +2384,7 @@ jobs:
           - get: az-is-enabled-in-vpc-timer
             trigger: true
           - <<: *get-paas-cf
+            passed: ['pipeline-lock']
           - get: vpc-tfstate
 
       - task: extract-terraform-variables
@@ -2413,6 +2440,8 @@ jobs:
       config:
         platform: linux
         image_resource: *awscli-image-resource
+        inputs:
+          - name: paas-cf
         params:
           AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
