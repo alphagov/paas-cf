@@ -2016,24 +2016,14 @@ jobs:
           passed: ['pipeline-lock']
       - task: check-az-a-is-enabled-in-manifest
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: ((bosh-ca-cert))
-            BOSH_DEPLOYMENT: ((deploy_env))
-            BOSH_CLIENT_SECRET: ((bosh-client-secret))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo 'instance_groups with z1 enabled:'
-                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
-                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z1")) | .name' -
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-manifest.yml
+        params:
+          DEPLOY_ENV: ((deploy_env))
+          BOSH_ENVIRONMENT: ((bosh_fqdn))
+          BOSH_CA_CERT: ((bosh-ca-cert))
+          BOSH_DEPLOYMENT: ((deploy_env))
+          BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          BOSH_AZ: z1
     on_failure:
       task: send-nagging-email-alert
       tags: [colocated-with-web]
@@ -2057,24 +2047,14 @@ jobs:
           passed: ['pipeline-lock']
       - task: check-az-b-is-enabled-in-manifest
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: ((bosh-ca-cert))
-            BOSH_DEPLOYMENT: ((deploy_env))
-            BOSH_CLIENT_SECRET: ((bosh-client-secret))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo 'instance_groups with z2 enabled:'
-                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
-                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z2")) | .name' -
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-manifest.yml
+        params:
+          DEPLOY_ENV: ((deploy_env))
+          BOSH_ENVIRONMENT: ((bosh_fqdn))
+          BOSH_CA_CERT: ((bosh-ca-cert))
+          BOSH_DEPLOYMENT: ((deploy_env))
+          BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          BOSH_AZ: z2
     on_failure:
       task: send-nagging-email-alert
       tags: [colocated-with-web]
@@ -2098,24 +2078,14 @@ jobs:
           passed: ['pipeline-lock']
       - task: check-az-c-is-enabled-in-manifest
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: ((bosh-ca-cert))
-            BOSH_DEPLOYMENT: ((deploy_env))
-            BOSH_CLIENT_SECRET: ((bosh-client-secret))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo 'instance_groups with z3 enabled:'
-                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
-                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z3")) | .name' -
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-manifest.yml
+        params:
+          DEPLOY_ENV: ((deploy_env))
+          BOSH_ENVIRONMENT: ((bosh_fqdn))
+          BOSH_CA_CERT: ((bosh-ca-cert))
+          BOSH_DEPLOYMENT: ((deploy_env))
+          BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          BOSH_AZ: z3
     on_failure:
       task: send-nagging-email-alert
       tags: [colocated-with-web]
