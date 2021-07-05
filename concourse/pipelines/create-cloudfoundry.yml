@@ -2232,33 +2232,10 @@ jobs:
 
       - task: check-az-a-is-enabled-in-vpc
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-            EXPECTED_ACL_NAME: disable_az_((aws_region))a
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-          run:
-            path: ash
-            args:
-              - -e
-              - -c
-              - |
-                . terraform-variables/vpc.tfvars.sh
-
-                echo "Checking for network ACL named ${EXPECTED_ACL_NAME}..."
-                # shellcheck disable=SC2154
-                aws ec2 describe-network-acls \
-                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
-                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == env.EXPECTED_ACL_NAME))' < network-acls.json > /dev/null ; then
-                  echo "Found, therefore AZ disabled. Failing."
-                  false
-                else
-                  echo "Not found"
-                fi
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-vpc.yml
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          EXPECTED_ACL_NAME: disable_az_((aws_region))a
     on_failure:
       task: send-email-alert
       tags: [colocated-with-web]
@@ -2321,33 +2298,11 @@ jobs:
 
       - task: check-az-b-is-enabled-in-vpc
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-            EXPECTED_ACL_NAME: disable_az_((aws_region))b
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-          run:
-            path: ash
-            args:
-              - -e
-              - -c
-              - |
-                . terraform-variables/vpc.tfvars.sh
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-vpc.yml
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          EXPECTED_ACL_NAME: disable_az_((aws_region))b
 
-                echo "Checking for network ACL named ${EXPECTED_ACL_NAME}..."
-                # shellcheck disable=SC2154
-                aws ec2 describe-network-acls \
-                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
-                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == env.EXPECTED_ACL_NAME))' < network-acls.json > /dev/null ; then
-                  echo "Found, therefore AZ disabled. Failing."
-                  false
-                else
-                  echo "Not found"
-                fi
     on_failure:
       task: send-email-alert
       tags: [colocated-with-web]
@@ -2410,33 +2365,11 @@ jobs:
 
       - task: check-az-c-is-enabled-in-vpc
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-            EXPECTED_ACL_NAME: disable_az_((aws_region))c
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-          run:
-            path: ash
-            args:
-              - -e
-              - -c
-              - |
-                . terraform-variables/vpc.tfvars.sh
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-vpc.yml
+        params:
+          AWS_DEFAULT_REGION: ((aws_region))
+          EXPECTED_ACL_NAME: disable_az_((aws_region))c
 
-                echo "Checking for network ACL named ${EXPECTED_ACL_NAME}..."
-                # shellcheck disable=SC2154
-                aws ec2 describe-network-acls \
-                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
-                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == env.EXPECTED_ACL_NAME))' < network-acls.json > /dev/null ; then
-                  echo "Found, therefore AZ disabled. Failing."
-                  false
-                else
-                  echo "Not found"
-                fi
     on_failure:
       task: send-email-alert
       tags: [colocated-with-web]

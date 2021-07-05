@@ -1,0 +1,32 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/awscli
+    tag: 8453e9c989abefdaad40895c25df7d18a82d6522
+params:
+  AWS_DEFAULT_REGION:
+  EXPECTED_ACL_NAME:
+inputs:
+  - name: terraform-variables
+  - name: paas-cf
+run:
+  path: ash
+  args:
+    - -e
+    - -c
+    - |
+      . terraform-variables/vpc.tfvars.sh
+
+      # shellcheck disable=SC2154
+      echo "Checking for network ACL named ${EXPECTED_ACL_NAME}..."
+      # shellcheck disable=SC2154
+      aws ec2 describe-network-acls \
+        --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
+      if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == env.EXPECTED_ACL_NAME))' < network-acls.json > /dev/null ; then
+        echo "Found, therefore AZ disabled. Failing."
+        false
+      else
+        echo "Not found"
+      fi
