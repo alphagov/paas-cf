@@ -1995,34 +1995,16 @@ jobs:
               - |
                 BOSH_CLIENT='admin' bosh curl /resurrection | jq -e '.resurrection'
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        inputs:
-          - name: paas-cf
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "resurrector-disabled"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: resurrector-disabled
 
   - name: az-a-is-enabled-in-manifest
     serial: true
@@ -2053,35 +2035,17 @@ jobs:
                 BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
                   | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z1")) | .name' -
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        inputs:
-          - name: paas-cf
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-in-manifest" \
-                  "z1"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-manifest
+        CONTEXT: z1
 
   - name: az-b-is-enabled-in-manifest
     serial: true
@@ -2112,35 +2076,17 @@ jobs:
                 BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
                   | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z2")) | .name' -
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        inputs:
-          - name: paas-cf
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-in-manifest" \
-                  "z2"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-manifest
+        CONTEXT: z2
 
   - name: az-c-is-enabled-in-manifest
     serial: true
@@ -2171,35 +2117,17 @@ jobs:
                 BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
                   | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z3")) | .name' -
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        inputs:
-          - name: paas-cf
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-in-manifest" \
-                  "z3"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-manifest
+        CONTEXT: z3
 
   - name: az-a-is-enabled-in-vpc
     serial: true
@@ -2237,35 +2165,17 @@ jobs:
           AWS_DEFAULT_REGION: ((aws_region))
           EXPECTED_ACL_NAME: disable_az_((aws_region))a
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        inputs:
-          - name: paas-cf
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-vpc" \
-                  "a"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-vpc
+        CONTEXT: a
 
   - name: az-b-is-enabled-in-vpc
     serial: true
@@ -2304,35 +2214,17 @@ jobs:
           EXPECTED_ACL_NAME: disable_az_((aws_region))b
 
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        inputs:
-          - name: paas-cf
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-vpc" \
-                  "b"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-vpc
+        CONTEXT: b
 
   - name: az-c-is-enabled-in-vpc
     serial: true
@@ -2371,35 +2263,17 @@ jobs:
           EXPECTED_ACL_NAME: disable_az_((aws_region))c
 
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        inputs:
-          - name: paas-cf
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-vpc" \
-                  "c"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-vpc
+        CONTEXT: c
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
