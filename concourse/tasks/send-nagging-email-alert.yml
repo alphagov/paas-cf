@@ -1,0 +1,33 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/awscli
+    tag: 8453e9c989abefdaad40895c25df7d18a82d6522
+inputs:
+  - name: paas-cf
+params:
+  AWS_DEFAULT_REGION:
+  DEPLOY_ENV:
+  SYSTEM_DNS_ZONE_NAME:
+  ALERT_EMAIL_ADDRESS:
+  ENABLE_ALERT_NOTIFICATIONS:
+  MESSAGE_TYPE:
+  CONTEXT:
+run:
+  path: ash
+  args:
+    - -e
+    - -c
+    - |
+      if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
+        paas-cf/concourse/scripts/nagging_email.sh \
+          "${DEPLOY_ENV}" \
+          "${SYSTEM_DNS_ZONE_NAME}" \
+          "${ALERT_EMAIL_ADDRESS}" \
+          "${MESSAGE_TYPE}" \
+          "${CONTEXT}"
+      else
+        echo "email alerts disabled"
+      fi

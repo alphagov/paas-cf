@@ -1,0 +1,24 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/bosh-cli-v2
+    tag: 8453e9c989abefdaad40895c25df7d18a82d6522
+params:
+  DEPLOY_ENV:
+  BOSH_ENVIRONMENT:
+  BOSH_CA_CERT:
+  BOSH_DEPLOYMENT:
+  BOSH_CLIENT_SECRET:
+  BOSH_AZ:
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      echo "instance_groups with ${BOSH_AZ} enabled:"
+      BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
+        | yq eval -j \
+        | jq -e '.instance_groups[] | select(.azs[] | select(. == env.BOSH_AZ)) | .name' -

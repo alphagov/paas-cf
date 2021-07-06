@@ -1972,8 +1972,11 @@ jobs:
   - name: resurrector-is-enabled
     serial: true
     plan:
-      - get: resurrector-is-enabled-timer
-        trigger: true
+      - in_parallel:
+        - get: resurrector-is-enabled-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-resurrector
         tags: [colocated-with-web]
         config:
@@ -1992,194 +1995,109 @@ jobs:
               - |
                 BOSH_CLIENT='admin' bosh curl /resurrection | jq -e '.resurrection'
     on_failure:
-      task: send-email-alert
+      task: send-nagging-email-alert
       tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "resurrector-disabled"
-              else
-                echo "email alerts disabled"
-              fi
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: resurrector-disabled
 
   - name: az-a-is-enabled-in-manifest
     serial: true
     plan:
-      - get: az-is-enabled-in-manifest-timer
-        trigger: true
+      - in_parallel:
+        - get: az-is-enabled-in-manifest-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-az-a-is-enabled-in-manifest
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: ((bosh-ca-cert))
-            BOSH_DEPLOYMENT: ((deploy_env))
-            BOSH_CLIENT_SECRET: ((bosh-client-secret))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo 'instance_groups with z1 enabled:'
-                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
-                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z1")) | .name' -
-    on_failure:
-      task: send-email-alert
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-manifest.yml
         params:
-          AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-in-manifest" \
-                  "z1"
-              else
-                echo "email alerts disabled"
-              fi
+          BOSH_ENVIRONMENT: ((bosh_fqdn))
+          BOSH_CA_CERT: ((bosh-ca-cert))
+          BOSH_DEPLOYMENT: ((deploy_env))
+          BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          BOSH_AZ: z1
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-manifest
+        CONTEXT: z1
 
   - name: az-b-is-enabled-in-manifest
     serial: true
     plan:
-      - get: az-is-enabled-in-manifest-timer
-        trigger: true
+      - in_parallel:
+        - get: az-is-enabled-in-manifest-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-az-b-is-enabled-in-manifest
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: ((bosh-ca-cert))
-            BOSH_DEPLOYMENT: ((deploy_env))
-            BOSH_CLIENT_SECRET: ((bosh-client-secret))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo 'instance_groups with z2 enabled:'
-                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
-                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z2")) | .name' -
-    on_failure:
-      task: send-email-alert
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-manifest.yml
         params:
-          AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-in-manifest" \
-                  "z2"
-              else
-                echo "email alerts disabled"
-              fi
+          BOSH_ENVIRONMENT: ((bosh_fqdn))
+          BOSH_CA_CERT: ((bosh-ca-cert))
+          BOSH_DEPLOYMENT: ((deploy_env))
+          BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          BOSH_AZ: z2
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-manifest
+        CONTEXT: z2
 
   - name: az-c-is-enabled-in-manifest
     serial: true
     plan:
-      - get: az-is-enabled-in-manifest-timer
-        trigger: true
+      - in_parallel:
+        - get: az-is-enabled-in-manifest-timer
+          trigger: true
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
       - task: check-az-c-is-enabled-in-manifest
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            BOSH_CA_CERT: ((bosh-ca-cert))
-            BOSH_DEPLOYMENT: ((deploy_env))
-            BOSH_CLIENT_SECRET: ((bosh-client-secret))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo 'instance_groups with z3 enabled:'
-                BOSH_CLIENT='admin' bosh -d "${DEPLOY_ENV}" manifest \
-                  | yq eval -e '.instance_groups[] | select(.azs[] | select(. == "z3")) | .name' -
-    on_failure:
-      task: send-email-alert
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-manifest.yml
         params:
-          AWS_DEFAULT_REGION: ((aws_region))
           DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-in-manifest" \
-                  "z3"
-              else
-                echo "email alerts disabled"
-              fi
+          BOSH_ENVIRONMENT: ((bosh_fqdn))
+          BOSH_CA_CERT: ((bosh-ca-cert))
+          BOSH_DEPLOYMENT: ((deploy_env))
+          BOSH_CLIENT_SECRET: ((bosh-client-secret))
+          BOSH_AZ: z3
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-manifest
+        CONTEXT: z3
 
   - name: az-a-is-enabled-in-vpc
     serial: true
@@ -2188,6 +2106,7 @@ jobs:
           - get: az-is-enabled-in-vpc-timer
             trigger: true
           - <<: *get-paas-cf
+            passed: ['pipeline-lock']
           - get: vpc-tfstate
 
       - task: extract-terraform-variables
@@ -2211,60 +2130,22 @@ jobs:
 
       - task: check-az-a-is-enabled-in-vpc
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-          run:
-            path: ash
-            args:
-              - -e
-              - -c
-              - |
-                . terraform-variables/vpc.tfvars.sh
-
-                echo "Checking for network ACL disabling AZ..."
-                # shellcheck disable=SC2154
-                aws ec2 describe-network-acls \
-                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
-                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == "disable_az_((aws_region))a"))' < network-acls.json > /dev/null ; then
-                  echo "Found, therefore AZ disabled. Failing."
-                  false
-                else
-                  echo "Not found"
-                fi
-    on_failure:
-      task: send-email-alert
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-vpc.yml
         params:
           AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-vpc" \
-                  "a"
-              else
-                echo "email alerts disabled"
-              fi
+          EXPECTED_ACL_NAME: disable_az_((aws_region))a
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-vpc
+        CONTEXT: a
 
   - name: az-b-is-enabled-in-vpc
     serial: true
@@ -2273,6 +2154,7 @@ jobs:
           - get: az-is-enabled-in-vpc-timer
             trigger: true
           - <<: *get-paas-cf
+            passed: ['pipeline-lock']
           - get: vpc-tfstate
 
       - task: extract-terraform-variables
@@ -2296,60 +2178,23 @@ jobs:
 
       - task: check-az-b-is-enabled-in-vpc
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-          run:
-            path: ash
-            args:
-              - -e
-              - -c
-              - |
-                . terraform-variables/vpc.tfvars.sh
-
-                echo "Checking for network ACL disabling AZ..."
-                # shellcheck disable=SC2154
-                aws ec2 describe-network-acls \
-                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
-                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == "disable_az_((aws_region))b"))' < network-acls.json > /dev/null ; then
-                  echo "Found, therefore AZ disabled. Failing."
-                  false
-                else
-                  echo "Not found"
-                fi
-    on_failure:
-      task: send-email-alert
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-vpc.yml
         params:
           AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-vpc" \
-                  "b"
-              else
-                echo "email alerts disabled"
-              fi
+          EXPECTED_ACL_NAME: disable_az_((aws_region))b
+
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-vpc
+        CONTEXT: b
 
   - name: az-c-is-enabled-in-vpc
     serial: true
@@ -2358,6 +2203,7 @@ jobs:
           - get: az-is-enabled-in-vpc-timer
             trigger: true
           - <<: *get-paas-cf
+            passed: ['pipeline-lock']
           - get: vpc-tfstate
 
       - task: extract-terraform-variables
@@ -2381,60 +2227,23 @@ jobs:
 
       - task: check-az-c-is-enabled-in-vpc
         tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          params:
-            AWS_DEFAULT_REGION: ((aws_region))
-          inputs:
-            - name: terraform-variables
-            - name: paas-cf
-          run:
-            path: ash
-            args:
-              - -e
-              - -c
-              - |
-                . terraform-variables/vpc.tfvars.sh
-
-                echo "Checking for network ACL disabling AZ..."
-                # shellcheck disable=SC2154
-                aws ec2 describe-network-acls \
-                  --filters "Name=vpc-id,Values=${TF_VAR_vpc_id}" > network-acls.json
-                if jq -e '.NetworkAcls[] | select(.Tags[] | select(.Key == "Name" and .Value == "disable_az_((aws_region))c"))' < network-acls.json > /dev/null ; then
-                  echo "Found, therefore AZ disabled. Failing."
-                  false
-                else
-                  echo "Not found"
-                fi
-    on_failure:
-      task: send-email-alert
-      tags: [colocated-with-web]
-      config:
-        platform: linux
-        image_resource: *awscli-image-resource
+        file: paas-cf/concourse/tasks/check-az-is-enabled-in-vpc.yml
         params:
           AWS_DEFAULT_REGION: ((aws_region))
-          DEPLOY_ENV: ((deploy_env))
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
-          ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
-        run:
-          path: ash
-          args:
-            - -e
-            - -c
-            - |
-              if [ "$ENABLE_ALERT_NOTIFICATIONS" = "true" ]; then
-                paas-cf/concourse/scripts/nagging_email.sh \
-                  "${DEPLOY_ENV}" \
-                  "${SYSTEM_DNS_ZONE_NAME}" \
-                  "${ALERT_EMAIL_ADDRESS}" \
-                  "az-disabled-vpc" \
-                  "c"
-              else
-                echo "email alerts disabled"
-              fi
+          EXPECTED_ACL_NAME: disable_az_((aws_region))c
+
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-disabled-vpc
+        CONTEXT: c
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
