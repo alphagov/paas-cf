@@ -1,0 +1,11 @@
+- type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/maximum_health_check_timeout?
+  value: ((cc_maximum_health_check_timeout_in_seconds))
+
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/maximum_health_check_timeout?
+  value: ((cc_maximum_health_check_timeout_in_seconds))
+
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/maximum_health_check_timeout?
+  value: ((cc_maximum_health_check_timeout_in_seconds))
