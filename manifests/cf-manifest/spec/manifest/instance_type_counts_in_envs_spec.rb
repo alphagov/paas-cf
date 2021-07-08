@@ -36,7 +36,7 @@ RSpec.describe "Instance counts in different environments" do
           half_with_headroom = round_up(half, doppler_az_count) + doppler_az_count
 
           expect(doppler_instance_count).to be >= half, "doppler instance count #{doppler_instance_count} is wrong. Rule of thumb is there should be at least half the count of cells in dopplers. Currently set to #{doppler_instance_count}, expecting at least #{half}."
-          expect(doppler_instance_count).to be <= half_with_headroom, "doppler instance count #{doppler_instance_count} is too high. There is no need to allow more headroom than a single set of three. Currently set to #{doppler_instance_count}, expecting at least #{half_with_headroom}."
+          expect(doppler_instance_count).to be <= half_with_headroom, "doppler instance count #{doppler_instance_count} is too high. There is no need to allow more headroom than a single set of #{doppler_az_count}. Currently set to #{doppler_instance_count}, expecting at least #{half_with_headroom}."
         end
       end
 
@@ -54,6 +54,38 @@ RSpec.describe "Instance counts in different environments" do
 
           expect(log_api_instances_count).to be >= half, "log-api instance count #{log_api_instances_count} is wrong. Rule of thumb is there should be at least half the count of dopplers in log-api. Currently set to #{log_api_instances_count}, expecting at least #{half}."
           expect(log_api_instances_count).to be <= half_with_headroom, "log-api instance count #{log_api_instances_count} is too high. There is no need to allow more headroom than a single set of three. Currently set to #{log_api_instances_count}, expecting at least #{half_with_headroom}."
+        end
+      end
+
+      describe "cc-worker" do
+        it_behaves_like(:evenly_distributable, "cc-worker")
+
+        it "instance count should be at least half of the API instance count" do
+          cc_worker_ig = env_manifest.fetch("instance_groups.cc-worker")
+          api_instance_count = env_manifest.fetch("instance_groups.api").dig("instances").to_f
+          cc_worker_instances_count = cc_worker_ig.dig("instances").to_f
+          cc_worker_az_count = cc_worker_ig.fetch("azs").size
+
+          half = api_instance_count / 2
+          half_with_headroom = round_up(half, cc_worker_az_count) + cc_worker_az_count
+
+          expect(cc_worker_instances_count).to be >= half, "cc-worker instance count #{cc_worker_instances_count} is wrong. Rule of thumb is there should be at least half the count of api in cc-workers. Currently set to #{cc_worker_instances_count}, expecting at least #{half}."
+          expect(cc_worker_instances_count).to be <= half_with_headroom, "cc-worker instance count #{cc_worker_instances_count} is too high. There is no need to allow more headroom than a single set of #{cc_worker_az_count}. Currently set to #{cc_worker_instances_count}, expecting at least #{half_with_headroom}."
+        end
+      end
+
+      describe "scheduler" do
+        it "instance count should be at least half of the API instance count" do
+          scheduler_ig = env_manifest.fetch("instance_groups.scheduler")
+          api_instance_count = env_manifest.fetch("instance_groups.api").dig("instances").to_f
+          scheduler_instances_count = scheduler_ig.dig("instances").to_f
+          scheduler_az_count = scheduler_ig.fetch("azs").size
+
+          half = api_instance_count / 2
+          half_with_headroom = round_up(half, scheduler_az_count) + scheduler_az_count
+
+          expect(scheduler_instances_count).to be >= half, "scheduler instance count #{scheduler_instances_count} is wrong. Rule of thumb is there should be at least half the count of api in schedulers. Currently set to #{scheduler_instances_count}, expecting at least #{half}."
+          expect(scheduler_instances_count).to be <= half_with_headroom, "log-api instance count #{scheduler_instances_count} is too high. There is no need to allow more headroom than a single set of #{scheduler_az_count}. Currently set to #{scheduler_instances_count}, expecting at least #{half_with_headroom}."
         end
       end
     end
