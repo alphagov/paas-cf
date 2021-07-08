@@ -21,7 +21,8 @@ write_message_json() {
   "Body": {
     "Html": {
       "Data": "Bosh's resurrector is currently disabled in <b>${DEPLOY_ENV}</b>. Presumably \
-      this is deliberate, but you probably want to re-enable it as soon as you deem sensible, \
+      this is deliberate, but you probably want to \
+      <a href='https://team-manual.cloud.service.gov.uk/guides/restoring_bosh_director/'>re-enable it as soon as you deem sensible</a>, \
       to avoid having to go and recreate dead instances manually. See \
       <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?group=health'>Concourse</a> \
       for details<br/>Alternatively, something else caused this check to fail, which is also \
