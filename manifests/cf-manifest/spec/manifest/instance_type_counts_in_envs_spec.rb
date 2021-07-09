@@ -2,7 +2,7 @@ def round_up(value, increment)
   increment * ((value + increment - 1) / increment)
 end
 
-RSpec.shared_examples :evenly_distributable do |group_name|
+RSpec.shared_examples "evenly distributable" do |group_name|
   it "by ensuring instance count is a multiple of AZ count" do
     expect(group_name).not_to be_nil
     ig = subject.fetch("instance_groups." + group_name)
@@ -16,15 +16,16 @@ end
 RSpec.describe "Instance counts in different environments" do
   %w[prod prod-lon stg-lon].each do |env|
     context "for the #{env} environment" do
-      let(:env_manifest) { manifest_for_env(env) }
       subject { manifest_for_env(env) }
 
+      let(:env_manifest) { manifest_for_env(env) }
+
       describe "cells" do
-        it_behaves_like(:evenly_distributable, "diego-cell")
+        it_behaves_like("evenly distributable", "diego-cell")
       end
 
       describe "doppler" do
-        it_behaves_like(:evenly_distributable, "doppler")
+        it_behaves_like("evenly distributable", "doppler")
 
         it "instance count should be at least half of the cell count" do
           doppler_ig = env_manifest.fetch("instance_groups.doppler")
@@ -41,7 +42,7 @@ RSpec.describe "Instance counts in different environments" do
       end
 
       describe "log-api" do
-        it_behaves_like(:evenly_distributable, "log-api")
+        it_behaves_like("evenly distributable", "log-api")
 
         it "instance count should be at least half of the doppler count" do
           log_api_ig = env_manifest.fetch("instance_groups.log-api")
@@ -58,7 +59,7 @@ RSpec.describe "Instance counts in different environments" do
       end
 
       describe "cc-worker" do
-        it_behaves_like(:evenly_distributable, "cc-worker")
+        it_behaves_like("evenly distributable", "cc-worker")
 
         it "instance count should be at least half of the API instance count" do
           cc_worker_ig = env_manifest.fetch("instance_groups.cc-worker")
