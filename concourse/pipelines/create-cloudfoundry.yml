@@ -590,9 +590,9 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing.git
-      branch: main
-      tag_filter: ((deploy_env_tag_prefix))
-      commit_verification_keys: ((gpg_public_keys))
+      branch: performance_data_exporter_176541815
+      #tag_filter: ((deploy_env_tag_prefix))
+      #commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-accounts
     type: git
@@ -5138,8 +5138,8 @@ jobs:
             LOGIT_ADDRESS: ((logit_syslog_address))
             LOGIT_PORT: ((logit_syslog_port))
             API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
+            CF_USERNAME: ((cf_admin))
+            CF_PASSWORD: ((cf_pass))
           inputs:
             - name: paas-cf
             - name: paas-billing
@@ -5158,7 +5158,7 @@ jobs:
                 fi
 
                 cf api "${API_ENDPOINT}"
-                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf auth
 
                 cf target -o admin -s billing
 
@@ -5263,6 +5263,46 @@ jobs:
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
                 make acceptance
+
+      - task: deploy-paas-performance-data-exporter
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            API_ENDPOINT: ((api_endpoint))
+            CF_USERNAME: ((cf_admin))
+            CF_PASSWORD: ((cf_pass))
+            TARGET_ENVIRONMENT_FILE: ((env_specific_bosh_vars_file))
+            GOOGLE_SERVICE_ACCOUNT_CREDENTIALS: ((performance_data_exporter_credentials))
+          inputs:
+            - name: paas-billing
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth
+                cf target -o admin -s billing
+
+                cd paas-billing/performance_data_exporter/
+
+                cat <<SECRETS > google_credentials.yml
+                ---
+                google_api_credentials: '${GOOGLE_SERVICE_ACCOUNT_CREDENTIALS}'
+                SECRETS
+
+                cf cancel-deployment paas-performance-data-exporter || true
+                cf push \
+                  --strategy=rolling \
+                  --vars-file="${TARGET_ENVIRONMENT_FILE}" \
+                  --vars-file="google_credentials.yml" \
+                  -f manifest.yml \
+                  paas-performance-data-exporter
 
       - task: tag-repo
         tags: [colocated-with-web]
