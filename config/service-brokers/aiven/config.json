@@ -311,6 +311,46 @@
             }
           },
           {
+            "id": "e30f5f31-a6bb-46f1-a40c-6f704c3089a8",
+            "name": "medium-1.x",
+            "aiven_plan": "startup-14",
+            "description": "NOT Highly Available, 1 dedicated VM, 2 CPU per VM, 15GB RAM per VM, 140GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Medium",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": false,
+                "nodes": 1,
+                "cpu": 2,
+                "memory": {"amount": 15, "unit": "GB"},
+                "storage": {"amount": 140, "unit": "GB"},
+                "version": "1"
+              }
+            }
+          },
+          {
+            "id": "90464f28-2d09-4f2f-8645-10ae0ccaa0a9",
+            "name": "large-1.x",
+            "aiven_plan": "startup-28",
+            "description": "NOT Highly Available, 1 dedicated VM, 4 CPU per VM, 31GB RAM per VM, 280GB disk space.",
+            "free": false,
+            "metadata": {
+              "displayName": "Large",
+              "AdditionalMetadata": {
+                "backups": true,
+                "encrypted": true,
+                "highlyAvailable": false,
+                "nodes": 1,
+                "cpu": 4,
+                "memory": {"amount": 31, "unit": "GB"},
+                "storage": {"amount": 280, "unit": "GB"},
+                "version": "1"
+              }
+            }
+          },
+          {
             "id": "cc1ec730-918a-45cd-ae7c-fd1ec6414750",
             "name": "xxl-1.x",
             "aiven_plan": "startup-112",

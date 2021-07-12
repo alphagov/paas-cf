@@ -25,6 +25,32 @@
 	]
 },
 {
+	"name": "influxdb medium-1.x",
+	"valid_from": "2021-07-01",
+	"plan_guid": "e30f5f31-a6bb-46f1-a40c-6f704c3089a8",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_influxdb_startup_14") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "influxdb large-1.x",
+	"valid_from": "2021-07-01",
+	"plan_guid": "90464f28-2d09-4f2f-8645-10ae0ccaa0a9",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_influxdb_startup_28") %>",
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
 	"name": "influxdb xxl-1.x",
 	"valid_from": "2021-04-01",
 	"plan_guid": "cc1ec730-918a-45cd-ae7c-fd1ec6414750",
