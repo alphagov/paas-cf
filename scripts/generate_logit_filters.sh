@@ -27,8 +27,10 @@ set -u
 apk update && apk add git
 
 cd /tmp
-git clone --branch="${logsearch_for_cloudfoundry_tag}" --depth=1 https://github.com/cloudfoundry-community/logsearch-for-cloudfoundry.git
-cd logsearch-for-cloudfoundry/src/logsearch-config
+git clone https://github.com/cloudfoundry-community/logsearch-for-cloudfoundry.git
+cd logsearch-for-cloudfoundry
+git checkout "${logsearch_for_cloudfoundry_tag}"
+cd src/logsearch-config
 rm Gemfile.lock
 bundle install
 bundle exec rake build

@@ -9,7 +9,7 @@ DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $
 DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$'; then echo "OK"; else echo ""; fi)
 
 LOGSEARCH_BOSHRELEASE_TAG=v211.1.0
-LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=v211.1.0
+LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=8be9abc6c8e50b0e83f80cbd8610baff7a9ee1e3
 
 .PHONY: check-env
 check-env:
