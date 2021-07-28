@@ -76,6 +76,7 @@ var _ = Describe("Postgres backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-12"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-12"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-12"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-12-deprecated"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-12"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-12"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-12"))

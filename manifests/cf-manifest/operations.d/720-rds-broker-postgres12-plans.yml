@@ -240,9 +240,37 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "44f6cc4c-6172-4efa-badc-c0f9453f2b09"
+    id: "9c103977-6278-4ea2-9968-6b43848914ee"
     name: "large-12"
-    description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 12. DB Instance Class: db.m5.2xlarge."
+    description: "564GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 12. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 564
+          unit: GB
+        version: '12'
+      displayName: Large
+      bullets:
+        - "Dedicated Postgres 12 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "44f6cc4c-6172-4efa-badc-c0f9453f2b09"
+    name: "large-12-deprecated"
+    description: "DEPRECATED, DO NOT USE. 512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 12. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
       AdditionalMetadata:

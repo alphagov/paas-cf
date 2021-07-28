@@ -105,6 +105,27 @@
 },
 {
   "name": "postgres large-12",
+  "valid_from": "2021-07-28",
+  "plan_guid": "9c103977-6278-4ea2-9968-6b43848914ee",
+  "storage_in_mb": 577536,
+  "memory_in_mb": 0,
+  "components": [
+    {
+      "name": "instance",
+      "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_2xlarge") %>",
+      "currency_code": "USD",
+      "vat_code": "Standard"
+    },
+    {
+      "name": "storage",
+      "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+      "currency_code": "USD",
+      "vat_code": "Standard"
+    }
+  ]
+},
+{
+  "name": "postgres large-12-deprecated",
   "valid_from": "2020-12-01",
   "plan_guid": "44f6cc4c-6172-4efa-badc-c0f9453f2b09",
   "storage_in_mb": 524288,
