@@ -35,13 +35,6 @@ resources:
       stop: 6:00 -0000
       interval: 2h
 
-  - name: bosh-vars-store
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: bosh-vars-store.yml
-
   - name: bosh-ca-crt
     type: s3-iam
     source:
@@ -62,7 +55,6 @@ jobs:
     plan:
       - get: delete-timer
         trigger: true
-      - get: bosh-vars-store
       - get: paas-cf
       - get: cf-manifest
       - get: bosh-ca-crt
@@ -121,12 +113,12 @@ jobs:
           platform: linux
           inputs:
             - name: delete-timer
-            - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: bosh-ca-crt/bosh-CA.crt
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
           outputs:
             - name: deployed-healthcheck
           image_resource:
@@ -140,11 +132,8 @@ jobs:
               - -e
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT='admin'
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
-                export BOSH_CLIENT_SECRET
 
 
                 bosh -n delete-deployment --force --deployment "((deploy_env))"

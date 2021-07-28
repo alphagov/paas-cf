@@ -49,13 +49,6 @@ resources:
       region_name: ((aws_region))
       key: ((pipeline_trigger_file))
 
-  - name: bosh-vars-store
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: bosh-vars-store.yml
-
   - name: bosh-ca-crt
     type: s3-iam
     source:
@@ -118,7 +111,6 @@ jobs:
           - get: pipeline-trigger
             passed: ['init']
             trigger: true
-          - get: bosh-vars-store
           - get: paas-cf
           - get: cf-manifest
           - get: bosh-ca-crt
@@ -165,11 +157,11 @@ jobs:
               tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
 
           inputs:
-            - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
             BOSH_CA_CERT: bosh-ca-crt/bosh-CA.crt
           outputs:
             - name: deployed-healthcheck
@@ -179,11 +171,8 @@ jobs:
               - -e
               - -c
               - |
-                VAL_FROM_YAML=$(pwd)/paas-cf/concourse/scripts/val_from_yaml.rb
                 BOSH_CLIENT='admin'
-                BOSH_CLIENT_SECRET=$($VAL_FROM_YAML admin_password bosh-vars-store/bosh-vars-store.yml)
                 export BOSH_CLIENT
-                export BOSH_CLIENT_SECRET
 
                 bosh -n delete-deployment --force --deployment "((deploy_env))"
                 bosh -n delete-deployment --force --deployment prometheus
