@@ -3592,7 +3592,12 @@ jobs:
                 xlarge-unencrypted-5.7
                 EOF
                 cat <<EOF | xargs -n1 cf disable-service-access postgres -p
+                large-10-deprecated
+                large-ha-10-deprecated
+                large-11-deprecated
+                large-ha-11-deprecated
                 large-12-deprecated
+                large-ha-12-deprecated
                 EOF
 
       - task: register-cdn-broker

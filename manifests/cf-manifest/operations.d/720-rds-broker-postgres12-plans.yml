@@ -91,6 +91,9 @@
     medium_plan_rds_properties: &medium_plan_rds_properties
       db_instance_class: "db.m5.large"
       allocated_storage: 100
+    old_large_plan_rds_properties: &old_large_plan_rds_properties
+      db_instance_class: "db.m5.2xlarge"
+      allocated_storage: 512
     large_plan_rds_properties: &large_plan_rds_properties
       db_instance_class: "db.m5.2xlarge"
       allocated_storage: 564
@@ -290,15 +293,43 @@
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
-      <<: *large_plan_rds_properties # yamllint disable-line
+      <<: *old_large_plan_rds_properties # yamllint disable-line
       storage_encrypted: true
-      allocated_storage: 512
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "fc32a7a3-d999-4fc0-aec9-68b104478acc"
+    name: "large-ha-12"
+    description: "564GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 12. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 564
+          unit: GB
+        version: '12'
+      displayName: Large highly-available
+      bullets:
+        - "Dedicated Postgres 12 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
 
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "5fbc649c-018a-4097-aa4f-d46358aadbe1"
-    name: "large-ha-12"
+    name: "large-ha-12-deprecated"
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 12. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
@@ -319,10 +350,9 @@
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
-      <<: *large_plan_rds_properties # yamllint disable-line
+      <<: *old_large_plan_rds_properties # yamllint disable-line
       multi_az: true
       storage_encrypted: true
-      allocated_storage: 512
 
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-

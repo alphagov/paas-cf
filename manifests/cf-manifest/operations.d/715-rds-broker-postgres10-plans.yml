@@ -91,9 +91,12 @@
     medium_plan_rds_properties: &medium_plan_rds_properties
       db_instance_class: "db.m4.large"
       allocated_storage: 100
-    large_plan_rds_properties: &large_plan_rds_properties
+    old_large_plan_rds_properties: &old_large_plan_rds_properties
       db_instance_class: "db.m4.2xlarge"
       allocated_storage: 512
+    large_plan_rds_properties: &large_plan_rds_properties
+      db_instance_class: "db.m4.2xlarge"
+      allocated_storage: 564
     xlarge_plan_rds_properties: &xlarge_plan_rds_properties
       db_instance_class: "db.m4.4xlarge"
       allocated_storage: 2048
@@ -240,8 +243,36 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "da44b024-52bd-459f-8078-38591d574c90"
+    id: "82e268a4-f714-4525-be7c-cb265458ddbe"
     name: "large-10"
+    description: "564GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 564
+          unit: GB
+        version: '10'
+      displayName: Large
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "da44b024-52bd-459f-8078-38591d574c90"
+    name: "large-10-deprecated"
     description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
@@ -262,14 +293,43 @@
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *old_large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "c10a4d53-0cfb-40c3-b0b6-183498343707"
+    name: "large-ha-10"
+    description: "564GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m4.2xlarge
+        storage:
+          amount: 564
+          unit: GB
+        version: '10'
+      displayName: Large highly-available
+      bullets:
+        - "Dedicated Postgres 10 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
       storage_encrypted: true
 
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "4140d479-601a-4585-ae1e-df67a9fa6b36"
-    name: "large-ha-10"
+    name: "large-ha-10-deprecated"
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 10. DB Instance Class: db.m4.2xlarge."
     free: false
     metadata:
@@ -290,7 +350,7 @@
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
-      <<: *large_plan_rds_properties # yamllint disable-line
+      <<: *old_large_plan_rds_properties # yamllint disable-line
       multi_az: true
       storage_encrypted: true
 

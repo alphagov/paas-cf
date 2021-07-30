@@ -139,10 +139,17 @@ RSpec.describe "RDS broker properties" do
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.large$/) }
     end
 
-    shared_examples "large sized plans" do
+    shared_examples "old large sized plans" do
       let(:rds_properties) { plan.fetch("rds_properties") }
 
       it { expect(rds_properties).to include("allocated_storage" => 512) }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.2xlarge$/) }
+    end
+
+    shared_examples "large sized plans" do
+      let(:rds_properties) { plan.fetch("rds_properties") }
+
+      it { expect(rds_properties).to include("allocated_storage" => 564) }
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.[a-z0-9]+\.2xlarge$/) }
     end
 
@@ -225,7 +232,9 @@ RSpec.describe "RDS broker properties" do
           "medium-10",
           "medium-ha-10",
           "large-10",
+          "large-10-deprecated",
           "large-ha-10",
+          "large-ha-10-deprecated",
           "xlarge-10",
           "xlarge-ha-10",
           "tiny-unencrypted-10-high-iops",
@@ -243,7 +252,9 @@ RSpec.describe "RDS broker properties" do
           "medium-11",
           "medium-ha-11",
           "large-11",
+          "large-11-deprecated",
           "large-ha-11",
+          "large-ha-11-deprecated",
           "xlarge-11",
           "xlarge-ha-11",
           "tiny-unencrypted-11-high-iops",
@@ -263,6 +274,7 @@ RSpec.describe "RDS broker properties" do
           "large-12",
           "large-12-deprecated",
           "large-ha-12",
+          "large-ha-12-deprecated",
           "xlarge-12",
           "xlarge-ha-12",
           "tiny-unencrypted-12-high-iops",
@@ -410,12 +422,34 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
+        describe "large-10-deprecated" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-10-deprecated" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 10 plans"
+          it_behaves_like "old large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "large-ha-10" do
           subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-10" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
           it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-10-deprecated" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-10-deprecated" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 10 plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -618,12 +652,34 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
+        describe "large-11-deprecated" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-11-deprecated" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "old large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "non-HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
         describe "large-ha-11" do
           subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-11" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
           it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-11-deprecated" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-11-deprecated" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 11 plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -831,7 +887,7 @@ RSpec.describe "RDS broker properties" do
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 12 plans"
-          it_behaves_like "large sized plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -843,6 +899,17 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 12 plans"
           it_behaves_like "large sized plans"
+          it_behaves_like "backup enabled plans"
+          it_behaves_like "HA plans"
+          it_behaves_like "Encryption enabled plans"
+        end
+
+        describe "large-ha-12-deprecated" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-12-deprecated" } }
+
+          it_behaves_like "all postgres plans"
+          it_behaves_like "postgres 12 plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -1193,7 +1260,7 @@ RSpec.describe "RDS broker properties" do
           subject(:plan) { my_plans.find { |p| p["name"] == "large-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -1203,7 +1270,7 @@ RSpec.describe "RDS broker properties" do
           subject(:plan) { my_plans.find { |p| p["name"] == "large-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -1213,7 +1280,7 @@ RSpec.describe "RDS broker properties" do
           subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-unencrypted-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption disabled plans"
@@ -1223,7 +1290,7 @@ RSpec.describe "RDS broker properties" do
           subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-5.7" } }
 
           it_behaves_like "all mysql 5.7 plans"
-          it_behaves_like "large sized plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -1423,7 +1490,7 @@ RSpec.describe "RDS broker properties" do
           subject(:plan) { my_plans.find { |p| p["name"] == "large-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "large sized plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "non-HA plans"
           it_behaves_like "Encryption enabled plans"
@@ -1433,7 +1500,7 @@ RSpec.describe "RDS broker properties" do
           subject(:plan) { my_plans.find { |p| p["name"] == "large-ha-8.0" } }
 
           it_behaves_like "all mysql 8.0 plans"
-          it_behaves_like "large sized plans"
+          it_behaves_like "old large sized plans"
           it_behaves_like "backup enabled plans"
           it_behaves_like "HA plans"
           it_behaves_like "Encryption enabled plans"
