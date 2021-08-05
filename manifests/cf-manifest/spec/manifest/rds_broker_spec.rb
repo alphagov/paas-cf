@@ -232,9 +232,9 @@ RSpec.describe "RDS broker properties" do
           "medium-10",
           "medium-ha-10",
           "large-10",
-          "large-10-deprecated",
+          "large-10-old",
           "large-ha-10",
-          "large-ha-10-deprecated",
+          "large-ha-10-old",
           "xlarge-10",
           "xlarge-ha-10",
           "tiny-unencrypted-10-high-iops",
@@ -252,9 +252,9 @@ RSpec.describe "RDS broker properties" do
           "medium-11",
           "medium-ha-11",
           "large-11",
-          "large-11-deprecated",
+          "large-11-old",
           "large-ha-11",
-          "large-ha-11-deprecated",
+          "large-ha-11-old",
           "xlarge-11",
           "xlarge-ha-11",
           "tiny-unencrypted-11-high-iops",
@@ -272,9 +272,9 @@ RSpec.describe "RDS broker properties" do
           "medium-12",
           "medium-ha-12",
           "large-12",
-          "large-12-deprecated",
+          "large-12-old",
           "large-ha-12",
-          "large-ha-12-deprecated",
+          "large-ha-12-old",
           "xlarge-12",
           "xlarge-ha-12",
           "tiny-unencrypted-12-high-iops",
@@ -422,8 +422,8 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
-        describe "large-10-deprecated" do
-          subject(:plan) { pg_plans.find { |p| p["name"] == "large-10-deprecated" } }
+        describe "large-10-old" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-10-old" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -444,8 +444,8 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
-        describe "large-ha-10-deprecated" do
-          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-10-deprecated" } }
+        describe "large-ha-10-old" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-10-old" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 10 plans"
@@ -652,8 +652,8 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
-        describe "large-11-deprecated" do
-          subject(:plan) { pg_plans.find { |p| p["name"] == "large-11-deprecated" } }
+        describe "large-11-old" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-11-old" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -674,8 +674,8 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
-        describe "large-ha-11-deprecated" do
-          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-11-deprecated" } }
+        describe "large-ha-11-old" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-11-old" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 11 plans"
@@ -882,8 +882,8 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
-        describe "large-12-deprecated" do
-          subject(:plan) { pg_plans.find { |p| p["name"] == "large-12-deprecated" } }
+        describe "large-12-old" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-12-old" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 12 plans"
@@ -904,8 +904,8 @@ RSpec.describe "RDS broker properties" do
           it_behaves_like "Encryption enabled plans"
         end
 
-        describe "large-ha-12-deprecated" do
-          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-12-deprecated" } }
+        describe "large-ha-12-old" do
+          subject(:plan) { pg_plans.find { |p| p["name"] == "large-ha-12-old" } }
 
           it_behaves_like "all postgres plans"
           it_behaves_like "postgres 12 plans"
