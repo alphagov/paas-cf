@@ -144,3 +144,33 @@ resource "aws_security_group" "service_brokers" {
   }
 }
 
+resource "aws_security_group" "paas_secrets" {
+  name_prefix = "${var.env}-paas-secrets"
+  description = "Group for paas secrets access"
+  vpc_id      = var.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port = 443
+    to_port   = 443
+    protocol  = "tcp"
+
+    security_groups = [
+      aws_security_group.cloud_controller.id,
+    ]
+  }
+
+  tags = {
+    Name = "${var.env}-paas-secrets"
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
