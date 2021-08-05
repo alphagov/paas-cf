@@ -199,6 +199,7 @@ dev: ## Set Environment to DEV
 	$(eval export ENABLE_DESTROY=true)
 	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export ENABLE_TEST_PIPELINES=true)
+	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	$(eval export APPS_HOSTED_ZONE_NAME=dev.cloudpipelineapps.digital)
@@ -225,6 +226,7 @@ dev: ## Set Environment to DEV
 dev01: dev
 	$(eval export DEPLOY_ENV=dev01)
 	$(eval export ENABLE_AUTODELETE=false)
+	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	@true
@@ -233,6 +235,7 @@ dev01: dev
 dev02: dev
 	$(eval export DEPLOY_ENV=dev02)
 	$(eval export ENABLE_AUTODELETE=false)
+	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
 	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	@true
@@ -243,6 +246,7 @@ stg-lon: ## Set Environment to stg-lon
 	$(eval export MAKEFILE_ENV_TARGET=stg-lon)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export ENABLE_AZ_HEALTHCHECK=true)
 	$(eval export OUTPUT_TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=london.staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=london.staging.cloudpipelineapps.digital)
@@ -268,6 +272,7 @@ prod: ## Set Environment to Production
 	$(eval export MAKEFILE_ENV_TARGET=prod)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export ENABLE_AZ_HEALTHCHECK=true)
 	$(eval export INPUT_TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
@@ -293,6 +298,7 @@ prod-lon: ## Set Environment to prod-lon
 	$(eval export MAKEFILE_ENV_TARGET=prod-lon)
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
+	$(eval export ENABLE_AZ_HEALTHCHECK=true)
 	$(eval export INPUT_TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=london.cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=london.cloudapps.digital)

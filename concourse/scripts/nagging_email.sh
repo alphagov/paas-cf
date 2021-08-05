@@ -66,6 +66,24 @@ EOF
   }
 }
 EOF
+  elif [ "${MESSAGE_TYPE}" = 'az-healthcheck' ]; then
+    cat <<EOF > message.json
+{
+  "Subject": {
+    "Data": "AZ ${CONTEXT} is no longer reachable in ${DEPLOY_ENV}'s VPC"
+  },
+  "Body": {
+    "Html": {
+      "Data": "<b>${DEPLOY_ENV}</b>'s VPC appears to be missing an AZ \
+      <b>${CONTEXT}</b>. If it's indeed Amazon's issue, we may need to consider disabling \
+      an AZ with boash. See \
+      <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?group=health'>Concourse</a> \
+      for details<br/>Alternatively, something else caused this check to fail, which is also \
+      something that should be investigated."
+    }
+  }
+}
+EOF
   fi
 }
 
