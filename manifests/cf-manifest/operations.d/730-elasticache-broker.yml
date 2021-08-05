@@ -8,7 +8,7 @@
       parameters:
         cluster-enabled: 'no'
         maxmemory-policy: volatile-lru
-        reserved-memory: '0'
+        reserved-memory-percent: '0'
 
     non_ha_plan: &elasticache_non_ha_plan
       replicas_per_node_group: 0
@@ -50,6 +50,11 @@
       engine: redis
       engine_version: 5.0.6
       cache_parameter_group_family: redis5.0
+
+    redis_6_x: &elasticache_redis_6_x
+      engine: redis
+      engine_version: 6.x
+      cache_parameter_group_family: redis6.x
 
 - type: replace
   path: /releases/-
@@ -391,6 +396,120 @@
                             unit: GB
                           version: '5'
 
+                    # 6.x
+                    - id: 1497f021-8d4c-46e0-90b7-ecc4cf66d115
+                      name: micro-6.x
+                      description: "568MB RAM, single node, no failover, daily backups. Free for trial orgs. Costs for billable orgs."
+                      free: true
+                      metadata:
+                        displayName: Tiny
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: false
+                          memory:
+                            amount: 568
+                            unit: MB
+                          version: '6'
+                    - id: 3eb66000-bd2b-467b-bf2f-8bbb1b39944f
+                      name: micro-ha-6.x
+                      description: "568MB RAM, highly-available, daily backups."
+                      free: false
+                      metadata:
+                        displayName: Tiny
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          memory:
+                            amount: 568
+                            unit: MB
+                          version: '6'
+                    - id: 5cebcc74-0ef5-4df8-8a89-e147a4833fe1
+                      name: tiny-6.x
+                      description: "1.5GB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
+                      free: true
+                      metadata:
+                        displayName: Tiny
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: false
+                          memory:
+                            amount: 1.5
+                            unit: GB
+                          version: '6'
+                    - id: b1e02f1c-6929-4d37-86dc-d9db72ee371d
+                      name: tiny-ha-6.x
+                      description: 1.5GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Tiny
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          memory:
+                            amount: 1.5
+                            unit: GB
+                          version: '6'
+                    - id: 5c67ef39-46fc-4e07-b66e-167e817371f5
+                      name: small-ha-6.x
+                      description: 3GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Small
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          memory:
+                            amount: 3
+                            unit: GB
+                          version: '6'
+                    - id: 490883f3-fb6c-4ad6-8106-466eb65e5872
+                      name: medium-ha-6.x
+                      description: 6.37GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Medium
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          memory:
+                            amount: 6.37
+                            unit: GB
+                          version: '6'
+                    - id: f348cad2-8006-4cd4-af71-11fb8d152c6b
+                      name: large-ha-6.x
+                      description: 12.93GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: Large
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          memory:
+                            amount: 12.93
+                            unit: GB
+                          version: '6'
+                    - id: aeebc36b-dda6-4e4a-9417-1bd9c4862ad7
+                      name: xlarge-ha-6.x
+                      description: 26.04GB RAM, highly-available, daily backups
+                      free: false
+                      metadata:
+                        displayName: XLarge
+                        AdditionalMetadata:
+                          backups: true
+                          encrypted: true
+                          highlyAvailable: true
+                          memory:
+                            amount: 26.04
+                            unit: GB
+                          version: '6'
+
             plan_configs:
               3a51701c-eef3-447c-882b-907ad2bcb7ab: #tiny-clustered-3.2
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
@@ -506,6 +625,54 @@
               f60443d9-3e9f-4c9b-8653-c83b6418292e: #xlarge-ha-5.x
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
                 <<: *elasticache_redis_5_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_xlarge_plan # yamllint disable-line
+
+              1497f021-8d4c-46e0-90b7-ecc4cf66d115: #micro-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
+                <<: *elasticache_non_ha_plan # yamllint disable-line
+                <<: *elasticache_micro_plan # yamllint disable-line
+
+              3eb66000-bd2b-467b-bf2f-8bbb1b39944f: #micro-ha-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_micro_plan # yamllint disable-line
+
+              5cebcc74-0ef5-4df8-8a89-e147a4833fe1: #tiny-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
+                <<: *elasticache_non_ha_plan # yamllint disable-line
+                <<: *elasticache_tiny_plan # yamllint disable-line
+
+              b1e02f1c-6929-4d37-86dc-d9db72ee371d: #tiny-ha-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_tiny_plan # yamllint disable-line
+
+              5c67ef39-46fc-4e07-b66e-167e817371f5: #small-ha-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_small_plan # yamllint disable-line
+
+              490883f3-fb6c-4ad6-8106-466eb65e5872: #medium-ha-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_medium_plan # yamllint disable-line
+
+              f348cad2-8006-4cd4-af71-11fb8d152c6b: #large-ha-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
+                <<: *elasticache_ha_plan # yamllint disable-line
+                <<: *elasticache_large_plan # yamllint disable-line
+
+              aeebc36b-dda6-4e4a-9417-1bd9c4862ad7: #xlarge-ha-6.x
+                <<: *elasticache_cache_cluster_config # yamllint disable-line
+                <<: *elasticache_redis_6_x # yamllint disable-line
                 <<: *elasticache_ha_plan # yamllint disable-line
                 <<: *elasticache_xlarge_plan # yamllint disable-line
 

@@ -3017,6 +3017,118 @@
 			]
 		},
 		{
+			"name": "redis micro-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "1497f021-8d4c-46e0-90b7-ecc4cf66d115",
+			"number_of_nodes": 1,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.018",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis micro-ha-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "3eb66000-bd2b-467b-bf2f-8bbb1b39944f",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.018",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis tiny-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "5cebcc74-0ef5-4df8-8a89-e147a4833fe1",
+			"number_of_nodes": 1,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.036",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis tiny-ha-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "b1e02f1c-6929-4d37-86dc-d9db72ee371d",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.036",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis small-ha-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "5c67ef39-46fc-4e07-b66e-167e817371f5",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.073",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis medium-ha-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "490883f3-fb6c-4ad6-8106-466eb65e5872",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.172",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis large-ha-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "f348cad2-8006-4cd4-af71-11fb8d152c6b",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.343",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "redis xlarge-ha-6.x",
+			"valid_from": "2021-08-01",
+			"plan_guid": "aeebc36b-dda6-4e4a-9417-1bd9c4862ad7",
+			"number_of_nodes": 2,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "$number_of_nodes * ceil($time_in_seconds/3600) * 0.686",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
 			"name": "cloudfront cdn-route",
 			"valid_from": "2017-01-01",
 			"plan_guid": "fc055c72-1075-44c9-9aee-bddd52e1b053",
