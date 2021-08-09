@@ -673,6 +673,27 @@
 		},
 		{
 			"name": "postgres large-10.5",
+			"valid_from": "2021-07-01",
+			"plan_guid": "82e268a4-f714-4525-be7c-cb265458ddbe",
+			"storage_in_mb": 577536,
+			"memory_in_mb": 0,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 0.846",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "storage",
+					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "postgres large-10.5-old",
 			"valid_from": "2017-01-01",
 			"plan_guid": "da44b024-52bd-459f-8078-38591d574c90",
 			"storage_in_mb": 524288,
@@ -694,6 +715,27 @@
 		},
 		{
 			"name": "postgres large-ha-10.5",
+			"valid_from": "2021-07-01",
+			"plan_guid": "c10a4d53-0cfb-40c3-b0b6-183498343707",
+			"storage_in_mb": 577536,
+			"memory_in_mb": 0,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 1.693",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "storage",
+					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "postgres large-ha-10.5-old",
 			"valid_from": "2017-01-01",
 			"plan_guid": "4140d479-601a-4585-ae1e-df67a9fa6b36",
 			"storage_in_mb": 524288,
@@ -1051,6 +1093,27 @@
 		},
 		{
 			"name": "postgres large-11",
+			"valid_from": "2021-07-01",
+			"plan_guid": "d26cb3c0-45e2-48b8-b516-6263cd6bf99c",
+			"storage_in_mb": 577536,
+			"memory_in_mb": 0,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 0.824",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "storage",
+					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "postgres large-11-old",
 			"valid_from": "2019-10-01",
 			"plan_guid": "07faed7b-3ed9-4904-af64-8e0b75e1e355",
 			"storage_in_mb": 524288,
@@ -1072,6 +1135,27 @@
 		},
 		{
 			"name": "postgres large-ha-11",
+			"valid_from": "2021-07-01",
+			"plan_guid": "9fd4fea4-6b61-4f48-9ca1-47bd69dd255a",
+			"storage_in_mb": 577536,
+			"memory_in_mb": 0,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 1.648",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "storage",
+					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "postgres large-ha-11-old",
 			"valid_from": "2019-10-01",
 			"plan_guid": "1826881e-31a2-46ca-997d-d920eb9ecd20",
 			"storage_in_mb": 524288,
@@ -1429,6 +1513,27 @@
 		},
 		{
 			"name": "postgres large-12",
+			"valid_from": "2021-07-01",
+			"plan_guid": "9c103977-6278-4ea2-9968-6b43848914ee",
+			"storage_in_mb": 577536,
+			"memory_in_mb": 0,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 0.824",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "storage",
+					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.133",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "postgres large-12-old",
 			"valid_from": "2020-12-01",
 			"plan_guid": "44f6cc4c-6172-4efa-badc-c0f9453f2b09",
 			"storage_in_mb": 524288,
@@ -1450,6 +1555,27 @@
 		},
 		{
 			"name": "postgres large-ha-12",
+			"valid_from": "2021-07-01",
+			"plan_guid": "fc32a7a3-d999-4fc0-aec9-68b104478acc",
+			"storage_in_mb": 577536,
+			"memory_in_mb": 0,
+			"components": [
+				{
+					"name": "instance",
+					"formula": "ceil($time_in_seconds/3600) * 1.648",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				},
+				{
+					"name": "storage",
+					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.266",
+					"currency_code": "USD",
+					"vat_code": "Standard"
+				}
+			]
+		},
+		{
+			"name": "postgres large-ha-12-old",
 			"valid_from": "2020-12-01",
 			"plan_guid": "5fbc649c-018a-4097-aa4f-d46358aadbe1",
 			"storage_in_mb": 524288,

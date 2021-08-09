@@ -91,9 +91,12 @@
     medium_plan_rds_properties: &medium_plan_rds_properties
       db_instance_class: "db.m5.large"
       allocated_storage: 100
-    large_plan_rds_properties: &large_plan_rds_properties
+    old_large_plan_rds_properties: &old_large_plan_rds_properties
       db_instance_class: "db.m5.2xlarge"
       allocated_storage: 512
+    large_plan_rds_properties: &large_plan_rds_properties
+      db_instance_class: "db.m5.2xlarge"
+      allocated_storage: 564
     xlarge_plan_rds_properties: &xlarge_plan_rds_properties
       db_instance_class: "db.m5.4xlarge"
       allocated_storage: 2048
@@ -240,8 +243,36 @@
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
-    id: "07faed7b-3ed9-4904-af64-8e0b75e1e355"
+    id: "d26cb3c0-45e2-48b8-b516-6263cd6bf99c"
     name: "large-11"
+    description: "564GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 564
+          unit: GB
+        version: '11'
+      displayName: Large
+      bullets:
+        - "Dedicated Postgres 11 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "07faed7b-3ed9-4904-af64-8e0b75e1e355"
+    name: "large-11-old"
     description: "512GB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
@@ -262,14 +293,43 @@
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *old_large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "9fd4fea4-6b61-4f48-9ca1-47bd69dd255a"
+    name: "large-ha-11"
+    description: "564GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 564
+          unit: GB
+        version: '11'
+      displayName: Large highly-available
+      bullets:
+        - "Dedicated Postgres 11 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
       <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
       storage_encrypted: true
 
 - type: replace
   path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
   value:
     id: "1826881e-31a2-46ca-997d-d920eb9ecd20"
-    name: "large-ha-11"
+    name: "large-ha-11-old"
     description: "512GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 11. DB Instance Class: db.m5.2xlarge."
     free: false
     metadata:
@@ -290,7 +350,7 @@
         - "AWS RDS"
     rds_properties:
       <<: *default_postgres_rds_properties # yamllint disable-line
-      <<: *large_plan_rds_properties # yamllint disable-line
+      <<: *old_large_plan_rds_properties # yamllint disable-line
       multi_az: true
       storage_encrypted: true
 

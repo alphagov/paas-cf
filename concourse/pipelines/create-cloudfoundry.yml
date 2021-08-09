@@ -3591,6 +3591,14 @@ jobs:
                 xlarge-ha-unencrypted-5.7
                 xlarge-unencrypted-5.7
                 EOF
+                cat <<EOF | xargs -n1 cf disable-service-access postgres -p
+                large-10-old
+                large-ha-10-old
+                large-11-old
+                large-ha-11-old
+                large-12-old
+                large-ha-12-old
+                EOF
 
       - task: register-cdn-broker
         tags: [colocated-with-web]
