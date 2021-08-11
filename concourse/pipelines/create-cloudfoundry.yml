@@ -6581,6 +6581,7 @@ jobs:
                 - -c
                 - |
                   quarantine_policy="AWSCompromisedKeyQuarantine"
+                  quarantine_policy_v2="AWSCompromisedKeyQuarantineV2"
                   target_user_string='paas-s3-broker'
 
                   ###list all attached user policies
@@ -6597,7 +6598,7 @@ jobs:
 
                       for policy in ${attached_policies:-NO_POLICIES}; do
                        ###Check for the AWS Quarantine policy attached to a user
-                        if [ "${policy}" = "${quarantine_policy}" ]; then
+                        if [ "${policy}" = "${quarantine_policy}" ] || [ "${policy}" = "${quarantine_policy_v2}" ] ; then
 
                           echo "User ${user} has policy ${quarantine_policy} attached."
 
