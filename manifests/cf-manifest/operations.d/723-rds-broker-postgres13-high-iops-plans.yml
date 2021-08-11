@@ -1,0 +1,355 @@
+---
+- type: replace
+  path: /meta?/rds_broker
+  value:
+    default_postgres_rds_properties: &default_postgres_rds_properties
+      storage_type: "gp2"
+      auto_minor_version_upgrade: true
+      multi_az: false
+      storage_encrypted: false
+      publicly_accessible: false
+      copy_tags_to_snapshot: true
+      skip_final_snapshot: false
+      backup_retention_period: 7
+      db_subnet_group_name: ((terraform_outputs_rds_broker_dbs_subnet_group))
+      vpc_security_group_ids:
+        - ((terraform_outputs_rds_broker_dbs_security_group_id))
+      engine: "postgres"
+      engine_version: "13"
+      engine_family: "postgres13"
+      default_extensions: ["uuid-ossp", "citext"]
+      allowed_extensions: [
+        "address_standardizer",
+        "address_standardizer_data_us",
+        "bloom",
+        "bool_plperl",
+        "btree_gin",
+        "btree_gist",
+        "citext",
+        "cube",
+        "dict_int",
+        "dict_xsyn",
+        "earthdistance",
+        "fuzzystrmatch",
+        "hll",
+        "hstore",
+        "hstore_plperl",
+        "intagg",
+        "intarray",
+        "ip4r",
+        "isn",
+        "jsonb_plperl",
+        "ltree",
+        "orafce",
+        "pg_bigm",
+        "pg_hint_plan",
+        "pg_prewarm",
+        "pg_proctab",
+        "pg_similarity",
+        "pg_stat_statements",
+        "pg_trgm",
+        "pgaudit",
+        "pgcrypto",
+        "pgrouting",
+        "pgrowlocks",
+        "pgtap",
+        "plcoffee",
+        "plls",
+        "plperl",
+        "plpgsql",
+        "pltcl",
+        "plv8",
+        "postgis",
+        "postgis_raster",
+        "postgis_tiger_geocoder",
+        "postgis_topology",
+        "prefix",
+        "rdkit",
+        "sslinfo",
+        "tablefunc",
+        "test_parser",
+        "tsm_system_rows",
+        "tsm_system_time",
+        "unaccent",
+        "uuid-ossp"
+      ]
+
+    tiny_plan_rds_properties: &tiny_plan_rds_properties
+      db_instance_class: "db.t3.micro"
+      allocated_storage: 25
+      backup_retention_period: 0
+      skip_final_snapshot: true
+    small_plan_rds_properties: &small_plan_rds_properties
+      db_instance_class: "db.t3.small"
+      allocated_storage: 100
+    medium_plan_rds_properties: &medium_plan_rds_properties
+      db_instance_class: "db.m5.large"
+      allocated_storage: 500
+    large_plan_rds_properties: &large_plan_rds_properties
+      db_instance_class: "db.m5.2xlarge"
+      allocated_storage: 2560
+    xlarge_plan_rds_properties: &xlarge_plan_rds_properties
+      db_instance_class: "db.m5.4xlarge"
+      allocated_storage: 10240
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "6dbfcf62-98a8-4e6e-a820-b56737e6f2d5"
+    name: "tiny-unencrypted-13-high-iops"
+    description: "25GB Storage, NOT BACKED UP, Dedicated Instance, Max 50 Concurrent Connections. Postgres Version 13. DB Instance Class: db.t3.micro. Free for trial orgs. Costs for billable orgs."
+    free: true
+    metadata:
+      AdditionalMetadata:
+        backups: false
+        concurrentConnections: 50
+        encrypted: false
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.t3.micro
+        storage:
+          amount: 25
+          unit: GB
+        version: '13'
+      displayName: Tiny high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *tiny_plan_rds_properties # yamllint disable-line
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "201c2579-6887-4933-a19c-4c4f270e599a"
+    name: "small-13-high-iops"
+    description: "100GB Storage, Dedicated Instance, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 13. DB Instance Class: db.t3.small."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: '13'
+      displayName: Small high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "dc3acad6-3f0a-4624-a6bf-af36e71a5fd5"
+    name: "small-ha-13-high-iops"
+    description: "100GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 200 Concurrent Connections. Postgres Version 13. DB Instance Class: db.t3.small."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 200
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.t3.small
+        storage:
+          amount: 100
+          unit: GB
+        version: '13'
+      displayName: Small highly-available high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *small_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "d4ec545a-3b44-4b7c-88f7-a5be1ba081bb"
+    name: "medium-13-high-iops"
+    description: "500GB Storage, Dedicated Instance, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 13. DB Instance Class: db.m5.large."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.large
+        storage:
+          amount: 500
+          unit: GB
+        version: '13'
+      displayName: Medium high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "599d4f3b-c4e6-42ff-950d-b4b2c36f333d"
+    name: "medium-ha-13-high-iops"
+    description: "500GB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 500 Concurrent Connections. Postgres Version 13. DB Instance Class: db.m5.large."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 500
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.large
+        storage:
+          amount: 500
+          unit: GB
+        version: '13'
+      displayName: Medium highly-available high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *medium_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "c127fb33-3c71-4a66-8108-a648756c4d0e"
+    name: "large-13-high-iops"
+    description: "2.5TB Storage Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 13. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 2.5
+          unit: TB
+        version: '13'
+      displayName: Large high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "83eb4c8e-78ee-49b5-9346-bddd08db3634"
+    name: "large-ha-13-high-iops"
+    description: "2.5TB Storage Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 13. DB Instance Class: db.m5.2xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.2xlarge
+        storage:
+          amount: 2.5
+          unit: TB
+        version: '13'
+      displayName: Large highly-available high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *large_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "af1e4881-50f4-4d95-b34d-e8a43821ffe6"
+    name: "xlarge-13-high-iops"
+    description: "10TB Storage, Dedicated Instance, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 13. DB Instance Class: db.m5.4xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: false
+        highIOPS: true
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 10
+          unit: TB
+        version: '13'
+      displayName: Extra Large high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      storage_encrypted: true
+
+- type: replace
+  path: /instance_groups/name=rds_broker/jobs/name=rds-broker/properties/rds-broker/catalog/services/name=postgres/plans?/-
+  value:
+    id: "54e08489-46af-474d-936f-9c30f5cc4f48"
+    name: "xlarge-ha-13-high-iops"
+    description: "10TB Storage, Dedicated Instance, Highly Available, Storage Encrypted, Max 5000 Concurrent Connections. Postgres Version 13. DB Instance Class: db.m5.4xlarge."
+    free: false
+    metadata:
+      AdditionalMetadata:
+        backups: true
+        concurrentConnections: 5000
+        encrypted: true
+        highlyAvailable: true
+        highIOPS: true
+        instanceClass: db.m5.4xlarge
+        storage:
+          amount: 10
+          unit: TB
+        version: '13'
+      displayName: Extra Large highly-available high-IOPS
+      bullets:
+        - "Dedicated Postgres 13 server"
+        - "Storage Encrypted"
+        - "AWS RDS"
+    rds_properties:
+      <<: *default_postgres_rds_properties # yamllint disable-line
+      <<: *xlarge_plan_rds_properties # yamllint disable-line
+      multi_az: true
+      storage_encrypted: true
