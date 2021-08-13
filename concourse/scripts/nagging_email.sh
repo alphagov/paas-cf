@@ -76,7 +76,7 @@ EOF
     "Html": {
       "Data": "<b>${DEPLOY_ENV}</b>'s VPC appears to be missing an AZ \
       <b>${CONTEXT}</b>. If it's indeed Amazon's issue, we may need to consider disabling \
-      an AZ with boash. See \
+      an AZ with bosh. See \
       <a href='https://deployer.${SYSTEM_DNS_ZONE_NAME}/teams/main/pipelines/create-cloudfoundry?group=health'>Concourse</a> \
       for details<br/>Alternatively, something else caused this check to fail, which is also \
       something that should be investigated."
