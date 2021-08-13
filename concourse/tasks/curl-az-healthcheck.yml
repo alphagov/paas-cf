@@ -1,0 +1,34 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/curl-ssl
+    tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+params:
+  AVAILABILITY_ZONE:
+  ENABLE_AZ_HEALTHCHECK:
+inputs:
+  - name: terraform-variables
+  - name: paas-cf
+run:
+  path: ash
+  args:
+    - -e
+    - -c
+    - |
+      echo "Checking the ability to perform tests on ${AVAILABILITY_ZONE}..."
+
+      if [ "${ENABLE_AZ_HEALTHCHECK:-}" = "false" ]; then
+        echo "Availabilty Zone Healthchecks have been disabled."
+        exit 0
+      fi
+
+      echo "Loading up the terraform outputs..."
+      HEALTHCHECK_IP=$(cat "terraform-variables/${AVAILABILITY_ZONE}")
+      export HEALTHCHECK_IP
+
+      # shellcheck disable=SC2154
+      echo "Getting a response from the healthcheck in ${AVAILABILITY_ZONE} at ${HEALTHCHECK_IP}..."
+      curl "http://${HEALTHCHECK_IP}:3000"
+      

@@ -139,6 +139,7 @@ groups:
       - api-availability-tests
       - cf-terraform
       - psn-terraform
+      - az-healthcheck-terraform
       - vpc-peering-terraform
       - generate-cf-config
       - cf-deploy
@@ -241,6 +242,10 @@ groups:
       - az-a-is-enabled-in-vpc
       - az-b-is-enabled-in-vpc
       - az-c-is-enabled-in-vpc
+      - az-healthcheck-terraform
+      - az-a-healthcheck
+      - az-b-healthcheck
+      - az-c-healthcheck
   - name: credentials
     jobs:
       - set-smoke-test-creds
@@ -440,6 +445,26 @@ resources:
             "resources": []
         }
 
+  - name: az-healthcheck-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: azhc.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 4,
+            "terraform_version": "0.12.29",
+            "serial": 0,
+            "outputs": {
+              "healthcheck_address_a": { "value": "", "type": "string" },
+              "healthcheck_address_b": { "value": "", "type": "string" },
+              "healthcheck_address_c": { "value": "", "type": "string" }
+            },
+            "resources": []
+        }
+
   - name: cf-manifest
     type: s3-iam
     source:
@@ -558,6 +583,11 @@ resources:
     type: time
     source:
       interval: 30m
+
+  - name: az-healthcheck-timer
+    type: time
+    source:
+      interval: 10m
 
   - name: billing-smoke-tests-timer
     type: time
@@ -790,6 +820,7 @@ jobs:
             BRANCH: ((branch_name))
             MAKEFILE_ENV_TARGET: ((makefile_env_target))
             AWS_DEFAULT_REGION: ((aws_region))
+            ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
             SELF_UPDATE_PIPELINE: ((self_update_pipeline))
             PIPELINES_TO_UPDATE: ((pipeline_name))
             ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
@@ -1527,6 +1558,62 @@ jobs:
             file: updated-tfstate/vpc-peering.tfstate
       - *end-grafana-job-annotation
 
+  - name: az-healthcheck-terraform
+    serial_groups: [cf-deploy]
+    serial: true
+    plan:
+      - in_parallel:
+        - *add-grafana-job-annotation
+        - <<: *get-paas-cf
+          passed: ['pre-deploy']
+        - get: pipeline-trigger
+          passed: ['pre-deploy']
+          trigger: true
+        - get: az-healthcheck-tfstate
+
+      - task: terraform-apply-az-healthcheck
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: paas-cf
+            - name: az-healthcheck-tfstate
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_region: ((aws_region))
+            AWS_DEFAULT_REGION: ((aws_region))
+            ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                cp az-healthcheck-tfstate/azhc.tfstate updated-tfstate/azhc.tfstate
+
+                if [ "${ENABLE_AZ_HEALTHCHECK:-}" != "true" ]; then
+                  echo "Availabilty Zone Healthchecks have been disabled."
+                  exit 0
+                fi
+
+                terraform init paas-cf/terraform/az-monitoring
+
+                sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/azhc.tfstate
+
+                terraform apply \
+                  -auto-approve=true \
+                  -state=updated-tfstate/azhc.tfstate \
+                  paas-cf/terraform/az-monitoring
+
+        ensure:
+          put: az-healthcheck-tfstate
+          params:
+            file: updated-tfstate/azhc.tfstate
+
+      - *end-grafana-job-annotation
+
   - name: disable-az-a-vpc
     old_name: disable-az-a
     serial_groups: [operator]
@@ -2249,6 +2336,168 @@ jobs:
         ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
         MESSAGE_TYPE: az-disabled-vpc
         CONTEXT: c
+
+  - name: az-a-healthcheck
+    serial: true
+    plan:
+      - in_parallel:
+          - get: az-healthcheck-timer
+            trigger: ((enable_az_healthcheck))
+          - <<: *get-paas-cf
+            passed: ['az-healthcheck-terraform']
+          - get: az-healthcheck-tfstate
+            passed: ['az-healthcheck-terraform']
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: paas-cf
+            - name: az-healthcheck-tfstate
+          outputs:
+            - name: terraform-variables
+          params:
+            AVAILABILITY_ZONE: ((aws_region))a
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                terraform output \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -raw \
+                  healthcheck_address_a > "terraform-variables/${AVAILABILITY_ZONE}"
+
+      - task: curl-az-healthcheck-a
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/curl-az-healthcheck.yml
+        params:
+          AVAILABILITY_ZONE: ((aws_region))a
+          ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-healthcheck
+        CONTEXT: ((aws_region))a
+
+  - name: az-b-healthcheck
+    serial: true
+    plan:
+      - in_parallel:
+          - get: az-healthcheck-timer
+            trigger: ((enable_az_healthcheck))
+          - <<: *get-paas-cf
+            passed: ['az-healthcheck-terraform']
+          - get: az-healthcheck-tfstate
+            passed: ['az-healthcheck-terraform']
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: paas-cf
+            - name: az-healthcheck-tfstate
+          outputs:
+            - name: terraform-variables
+          params:
+            AVAILABILITY_ZONE: ((aws_region))b
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                terraform output \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -raw \
+                  healthcheck_address_b > "terraform-variables/${AVAILABILITY_ZONE}"
+
+      - task: curl-az-healthcheck-b
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/curl-az-healthcheck.yml
+        params:
+          AVAILABILITY_ZONE: ((aws_region))b
+          ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-healthcheck
+        CONTEXT: ((aws_region))b
+
+  - name: az-c-healthcheck
+    serial: true
+    plan:
+      - in_parallel:
+          - get: az-healthcheck-timer
+            trigger: ((enable_az_healthcheck))
+          - <<: *get-paas-cf
+            passed: ['az-healthcheck-terraform']
+          - get: az-healthcheck-tfstate
+            passed: ['az-healthcheck-terraform']
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: paas-cf
+            - name: az-healthcheck-tfstate
+          outputs:
+            - name: terraform-variables
+          params:
+            AVAILABILITY_ZONE: ((aws_region))c
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                terraform output \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -raw \
+                  healthcheck_address_c > "terraform-variables/${AVAILABILITY_ZONE}"
+
+      - task: curl-az-healthcheck-c
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/curl-az-healthcheck.yml
+        params:
+          AVAILABILITY_ZONE: ((aws_region))c
+          ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+
+    on_failure:
+      task: send-nagging-email-alert
+      tags: [colocated-with-web]
+      file: paas-cf/concourse/tasks/send-nagging-email-alert.yml
+      params:
+        AWS_DEFAULT_REGION: ((aws_region))
+        DEPLOY_ENV: ((deploy_env))
+        SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+        ALERT_EMAIL_ADDRESS: ((ALERT_EMAIL_ADDRESS))
+        ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+        MESSAGE_TYPE: az-healthcheck
+        CONTEXT: ((aws_region))c
 
   - name: generate-cf-config
     serial_groups: [cf-deploy]
