@@ -19,6 +19,7 @@ var _ = Describe("Redis backing service", func() {
 			"tiny-3.2",
 			"tiny-4.x",
 			"tiny-5.x",
+			"tiny-6.x",
 		}
 
 		knownPlanNames = []string{
@@ -41,6 +42,14 @@ var _ = Describe("Redis backing service", func() {
 			"medium-ha-5.x",
 			"large-ha-5.x",
 			"xlarge-ha-5.x",
+			"micro-6.x",
+			"micro-ha-6.x",
+			"tiny-6.x",
+			"tiny-ha-6.x",
+			"small-ha-6.x",
+			"medium-ha-6.x",
+			"large-ha-6.x",
+			"xlarge-ha-6.x",
 		}
 	)
 

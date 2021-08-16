@@ -136,6 +136,64 @@
 	  "guid" => "f60443d9-3e9f-4c9b-8653-c83b6418292e",
 	  "ha" => true,
 	  "aws_price" => price("elasticache_m5_2xlarge")
+	},
+
+	# Redis 6.x
+	{
+	  "name" => "micro-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "1497f021-8d4c-46e0-90b7-ecc4cf66d115",
+	  "ha" => false,
+	  "aws_price" => price("elasticache_t3_micro")
+	},
+	{
+	  "name" => "micro-ha-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "3eb66000-bd2b-467b-bf2f-8bbb1b39944f",
+	  "ha" => true,
+	  "aws_price" => price("elasticache_t3_micro")
+    },
+	{
+	  "name" => "tiny-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "5cebcc74-0ef5-4df8-8a89-e147a4833fe1",
+	  "ha" => false,
+	  "aws_price" => price("elasticache_t2_small")
+	},
+	{
+	  "name" => "tiny-ha-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "b1e02f1c-6929-4d37-86dc-d9db72ee371d",
+	  "ha" => true,
+	  "aws_price" => price("elasticache_t2_small")
+	},
+	{
+	  "name" => "small-ha-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "5c67ef39-46fc-4e07-b66e-167e817371f5",
+	  "ha" => true,
+		"aws_price" => price("elasticache_t2_medium")
+	},
+	{
+	  "name" => "medium-ha-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "490883f3-fb6c-4ad6-8106-466eb65e5872",
+	  "ha" => true,
+    "aws_price" => price("elasticache_m5_large")
+	},
+    {
+	  "name" => "large-ha-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "f348cad2-8006-4cd4-af71-11fb8d152c6b",
+	  "ha" => true,
+	  "aws_price" => price("elasticache_m5_xlarge")
+	},
+    {
+	  "name" => "xlarge-ha-6.x",
+	  "valid_from" => "2021-08-01",
+	  "guid" => "aeebc36b-dda6-4e4a-9417-1bd9c4862ad7",
+	  "ha" => true,
+	  "aws_price" => price("elasticache_m5_2xlarge")
 	}
 
 ] %>
