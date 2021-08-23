@@ -8,6 +8,7 @@
     "ccs-document-upload",
     "ccs-pmp-idam",
     "ccs-report-management-info",
+    "gds-digital-identity-authentication",
     "gds-document-checking-service",
     "gds-shielded-vulnerable-people-service",
     "govuk-accounts",
