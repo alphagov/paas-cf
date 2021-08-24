@@ -5702,7 +5702,24 @@ jobs:
                 export GOPATH="${PWD}"
                 export BILLING_API_URL="https://new-billing.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
+
+                wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+                echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
+
+                apt-get -q update
+                apt-get -q -y install postgresql-12 postgresql-client-12
+
+                cat > /etc/postgresql/12/main/pg_hba.conf <<-EOF
+                local   all   postgres   trust
+                host    all   postgres   127.0.0.1/32   trust
+                EOF
+
+                pg_ctlcluster 12 main start
+
+                export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
+
                 make acceptance
+
 
       - task: tag-repo
         tags: [colocated-with-web]
