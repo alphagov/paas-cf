@@ -2,7 +2,7 @@
 - type: replace
   path: /releases/name=uaa
   value:
-    name: uaa
-    version: 0.1.28
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-0.1.28.tgz
-    sha1: c1f955c9ba35f21ae03670cb29b82286044a1171
+    name: "uaa"
+    version: "75.7.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=75.7.0"
+    sha1: "d012f108cd87eca6f20a72d5c12014e7448cecd8"
