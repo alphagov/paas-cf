@@ -28,10 +28,6 @@ RSpec.describe "release versions" do
     end
 
     pinned_releases = {
-      "uaa" => {
-        local: "0.1.28",
-        upstream: "75.7.0",
-      },
     }
 
     manifest_releases = manifest_without_vars_store.fetch("releases").map { |release|
@@ -57,8 +53,6 @@ RSpec.describe "release versions" do
     pinned_releases.each do |name, pinned_versions|
       expect(manifest_releases).to have_key(name), "expected pinned release #{name} for found in manifest"
       expect(cf_deployment_releases).to have_key(name), "expected pinned release #{name} for found in cf-deployment"
-      expect(normalise_version(manifest_releases[name])).to be(normalise_version(pinned_versions[:local])),
-         "expected #{name} to be using our own built tarball #{pinned_versions[:local]} not #{manifest_releases[name]}"
 
       expect(normalise_version(cf_deployment_releases[name])).to be(normalise_version(pinned_versions[:upstream])),
         "expected #{name} upstream to be #{pinned_versions[:upstream]} not #{cf_deployment_releases[name]}. We might need to rebase our forked #{name} release and generate a new tarball, or use the upstream version."
