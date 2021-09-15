@@ -4,4 +4,4 @@
   value:
     - alias: default
       os: ubuntu-bionic
-      version: "1.13"
+      version: "1.25"
