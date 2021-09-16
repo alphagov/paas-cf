@@ -1,11 +1,14 @@
 {
 	"name": "aws-sqs-queue standard",
 	"valid_from": "2021-09-01",
+	"valid_to": "9999-12-31",
 	"plan_guid": "8ff216b8-afed-4833-a265-cd1f2feb919d",
 	"components": [
 		{
 			"name": "queue",
 			"formula": "ceil($time_in_seconds/3600) * <%= price("sqs_queue_default") %>",
+			"formula_new": "ceil($time_in_seconds/3600) * external_price",
+			"external_price": <%= price("sqs_queue_default") %>,
 			"currency_code": "USD",
 			"vat_code": "Standard"
 		}
@@ -14,11 +17,14 @@
 {
 	"name": "aws-sqs-queue fifo",
 	"valid_from": "2021-09-01",
+	"valid_to": "9999-12-31",
 	"plan_guid": "ac129e8a-6423-4792-aa0c-3a192408b3da",
 	"components": [
 		{
 			"name": "queue",
 			"formula": "ceil($time_in_seconds/3600) * <%= price("sqs_queue_default") %>",
+			"formula_new": "ceil($time_in_seconds/3600) * external_price",
+			"external_price": <%= price("sqs_queue_default") %>,
 			"currency_code": "USD",
 			"vat_code": "Standard"
 		}

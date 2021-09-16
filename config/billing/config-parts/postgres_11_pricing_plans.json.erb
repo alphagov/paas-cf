@@ -1,6 +1,7 @@
 {
   "name": "postgres tiny-unencrypted-11",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "9adbd87b-1ce8-4f9b-8562-b57041988fbe",
   "storage_in_mb": 5120,
   "memory_in_mb": 0,
@@ -8,12 +9,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_t3_micro") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_t3_micro") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -22,6 +27,7 @@
 {
   "name": "postgres small-11",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "b3fe2e1d-ffc5-4c35-8083-8c2b397b1e72",
   "storage_in_mb": 102400,
   "memory_in_mb": 0,
@@ -29,12 +35,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_t3_small") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_t3_small") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -43,6 +53,7 @@
 {
   "name": "postgres small-ha-11",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "9ec72113-5955-4385-96ad-52ef777c10fe",
   "storage_in_mb": 102400,
   "memory_in_mb": 0,
@@ -50,12 +61,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_t3_small_ha") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_t3_small_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -64,6 +79,7 @@
 {
   "name": "postgres medium-11",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "e1dac552-b77b-4ae8-8d72-2d6186bf3380",
   "storage_in_mb": 102400,
   "memory_in_mb": 0,
@@ -71,12 +87,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_large") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_large") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -85,6 +105,7 @@
 {
   "name": "postgres medium-ha-11",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "8bdac429-5789-4ee7-ac2e-8800c94ac747",
   "storage_in_mb": 102400,
   "memory_in_mb": 0,
@@ -92,12 +113,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_large_ha") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_large_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -106,6 +131,7 @@
 {
   "name": "postgres large-11",
   "valid_from": "2021-07-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "d26cb3c0-45e2-48b8-b516-6263cd6bf99c",
   "storage_in_mb": 577536,
   "memory_in_mb": 0,
@@ -113,12 +139,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_2xlarge") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_2xlarge") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -127,6 +157,7 @@
 {
   "name": "postgres large-11-old",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "07faed7b-3ed9-4904-af64-8e0b75e1e355",
   "storage_in_mb": 524288,
   "memory_in_mb": 0,
@@ -134,12 +165,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_2xlarge") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_2xlarge") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -148,6 +183,7 @@
 {
   "name": "postgres large-ha-11",
   "valid_from": "2021-07-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "9fd4fea4-6b61-4f48-9ca1-47bd69dd255a",
   "storage_in_mb": 577536,
   "memory_in_mb": 0,
@@ -155,12 +191,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_2xlarge_ha") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_2xlarge_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -169,6 +209,7 @@
 {
   "name": "postgres large-ha-11-old",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "1826881e-31a2-46ca-997d-d920eb9ecd20",
   "storage_in_mb": 524288,
   "memory_in_mb": 0,
@@ -176,12 +217,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_2xlarge_ha") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_2xlarge_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -190,6 +235,7 @@
 {
   "name": "postgres xlarge-11",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "0cc655f7-337b-4caf-9544-cbea6f30ccd4",
   "storage_in_mb": 2097152,
   "memory_in_mb": 0,
@@ -197,12 +243,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_4xlarge") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_4xlarge") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }
@@ -211,6 +261,7 @@
 {
   "name": "postgres xlarge-ha-11",
   "valid_from": "2019-10-01",
+  "valid_to": "9999-12-31",
   "plan_guid": "31cd6855-62b4-4786-925a-8df2c7f98f97",
   "storage_in_mb": 2097152,
   "memory_in_mb": 0,
@@ -218,12 +269,16 @@
     {
       "name": "instance",
       "formula": "ceil($time_in_seconds/3600) * <%= price("rds_pg_m5_4xlarge_ha") %>",
+      "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_pg_m5_4xlarge_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     },
     {
       "name": "storage",
       "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+      "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+      "external_price": <%= price("rds_storage_ha") %>,
       "currency_code": "USD",
       "vat_code": "Standard"
     }

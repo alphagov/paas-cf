@@ -1,6 +1,7 @@
 {
     "name": "mysql tiny-unencrypted-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "821e5039-2dde-433c-95ec-db998fdad7fd",
     "storage_in_mb": 5120,
     "memory_in_mb": 0,
@@ -8,12 +9,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_t3_micro") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_t3_micro") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -22,6 +27,7 @@
 {
     "name": "mysql small-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "393dd1f2-a729-489e-bad6-4569f9383dc7",
     "storage_in_mb": 102400,
     "memory_in_mb": 0,
@@ -29,12 +35,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_t3_small") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_t3_small") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -43,6 +53,7 @@
 {
     "name": "mysql small-ha-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "8f76414b-2d38-48bd-a3a8-dd5b47446534",
     "storage_in_mb": 102400,
     "memory_in_mb": 0,
@@ -50,12 +61,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_t3_small_ha") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_t3_small_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -64,6 +79,7 @@
 {
     "name": "mysql medium-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "dc01cd28-f438-4610-9eae-1e1eadd1acfc",
     "storage_in_mb": 102400,
     "memory_in_mb": 0,
@@ -71,12 +87,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_large") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_m5_large") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -85,6 +105,7 @@
 {
     "name": "mysql medium-ha-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "1f19321e-5d06-499d-ad2b-a5b9ec85c968",
     "storage_in_mb": 102400,
     "memory_in_mb": 0,
@@ -92,12 +113,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_large_ha") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_m5_large_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -106,6 +131,7 @@
 {
     "name": "mysql large-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "80e046e8-7cd5-43f4-b496-7cad7f8e8496",
     "storage_in_mb": 524288,
     "memory_in_mb": 0,
@@ -113,12 +139,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_2xlarge") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_m5_2xlarge") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -127,6 +157,7 @@
 {
     "name": "mysql large-ha-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "75fa17ff-8e2c-48ad-aac4-969f77b87309",
     "storage_in_mb": 524288,
     "memory_in_mb": 0,
@@ -134,12 +165,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_2xlarge_ha") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_m5_2xlarge_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -148,6 +183,7 @@
 {
     "name": "mysql xlarge-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "5d646dab-f0bf-4321-835f-4530a69f615c",
     "storage_in_mb": 2097152,
     "memory_in_mb": 0,
@@ -155,12 +191,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_4xlarge") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_m5_4xlarge") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }
@@ -169,6 +209,7 @@
 {
     "name": "mysql xlarge-ha-8.0",
     "valid_from": "2017-01-01",
+    "valid_to": "9999-12-31",
     "plan_guid": "ea6036aa-c6e1-4471-93af-e197bf92196d",
     "storage_in_mb": 2097152,
     "memory_in_mb": 0,
@@ -176,12 +217,16 @@
         {
             "name": "instance",
             "formula": "ceil($time_in_seconds/3600) * <%= price("rds_mysql_m5_4xlarge_ha") %>",
+            "formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_mysql_m5_4xlarge_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         },
         {
             "name": "storage",
             "formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("rds_storage_ha") %>",
+            "formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * <%= price("external_price") %>",
+            "external_price": <%= price("rds_storage_ha") %>,
             "currency_code": "USD",
             "vat_code": "Standard"
         }

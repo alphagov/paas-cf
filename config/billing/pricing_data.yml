@@ -2,10 +2,14 @@
 
 defaults: &defaults
   platform_fee: "0.40"
+  app_platform_fee_per_hour: "0.004"
   app_cost_per_gb_hour: "0.01"
   compose_mongodb_tiny: "((1936.57/(48*1024))/30/24)"
+  compose_mongodb_tiny_result: "0.00005472169099030671"
   compose_elasticsearh_tiny: "((1936.57/(48*1024))/30/24)"
+  compose_elasticsearh_tiny_result: "0.00005472169099030671"
   compose_redis_tiny: "((1936.57/(48*1024))/30/24)"
+  compose_redis_tiny_result: "0.00005472169099030671"
   aiven_elasticsearch_startup_4: "0.178"
   aiven_elasticsearch_business_4: "0.548"
   aiven_elasticsearch_business_8: "1.096"
@@ -16,6 +20,7 @@ defaults: &defaults
   aiven_influxdb_startup_14: "0.473"
   aiven_influxdb_startup_28: "0.801"
   aiven_influxdb_startup_112: "2.808"
+  external_price: "external_price"
 
 eu-west-1:
   <<: *defaults
