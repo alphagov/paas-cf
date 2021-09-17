@@ -17,7 +17,7 @@ import (
 var _ = Describe("Postgres backing service", func() {
 	const (
 		serviceName  = "postgres"
-		testPlanName = "tiny-unencrypted-12"
+		testPlanName = "tiny-unencrypted-13"
 	)
 
 	It("should have registered the postgres service", func() {
@@ -88,6 +88,25 @@ var _ = Describe("Postgres backing service", func() {
 			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-12-high-iops"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-12-high-iops"))
 			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-12-high-iops"))
+
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-13"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("tiny-unencrypted-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("small-ha-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("medium-ha-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("large-ha-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-13-high-iops"))
+			Expect(cfMarketplaceOutput).To(ContainSubstring("xlarge-ha-13-high-iops"))
 
 		})
 	})

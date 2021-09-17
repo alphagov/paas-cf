@@ -3840,6 +3840,32 @@ jobs:
                 xlarge-ha-12-high-iops
                 EOF
 
+                # Enable Postgres 13 plans
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-13
+                small-13
+                small-ha-13
+                medium-13
+                medium-ha-13
+                large-13
+                large-ha-13
+                xlarge-13
+                xlarge-ha-13
+                EOF
+
+                # Enable Postgres 13 High IOPS plans
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-13-high-iops
+                small-13-high-iops
+                small-ha-13-high-iops
+                medium-13-high-iops
+                medium-ha-13-high-iops
+                large-13-high-iops
+                large-ha-13-high-iops
+                xlarge-13-high-iops
+                xlarge-ha-13-high-iops
+                EOF
+
                 # Disable deprecated plans
                 cat <<EOF | xargs -n1 cf disable-service-access mysql -p
                 small-unencrypted-5.7
