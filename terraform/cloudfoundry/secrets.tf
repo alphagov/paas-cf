@@ -122,3 +122,26 @@ resource "aws_lb_target_group" "paas_secrets_mtls" {
 output "paas_secrets_mtls_target_group_name" {
   value = aws_lb_target_group.paas_secrets_mtls.name
 }
+
+################################################################################
+# DNS
+################################################################################
+resource "aws_route53_record" "bearer_auth_dns_record" {
+  name = "secrets.${var.system_dns_zone_name}"
+  type = "CNAME"
+  zone_id = var.system_dns_zone_id
+
+  records = [
+    aws_lb.paas_secrets_bearer.dns_name
+  ]
+}
+
+resource "aws_route53_record" "mtls_dns_record" {
+  name = "apps.secrets.${var.system_dns_zone_name}"
+  type = "CNAME"
+  zone_id = var.system_dns_zone_id
+
+  records = [
+    aws_lb.paas_secrets_mtls.dns_name
+  ]
+}
