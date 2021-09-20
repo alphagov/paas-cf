@@ -1,6 +1,7 @@
 locals {
   bearer_service_port = 8080
   mtls_service_port = 9090
+  healthcheck_port = 8080
   remote_port = 443
 }
 ################################################################################
@@ -55,7 +56,7 @@ resource "aws_lb_target_group" "paas_secrets_bearer" {
   vpc_id = var.vpc_id
 
   health_check {
-    port = local.bearer_service_port
+    port = local.healthcheck_port
     path = "/healthcheck"
     protocol = "HTTPS"
     interval = var.health_check_interval
@@ -105,7 +106,7 @@ resource "aws_lb_target_group" "paas_secrets_mtls" {
   vpc_id = var.vpc_id
 
   health_check {
-    port = local.mtls_service_port
+    port = local.healthcheck_port
     path = "/healthcheck"
     protocol = "HTTPS"
     interval = 10
