@@ -161,9 +161,12 @@ resource "aws_security_group" "paas_secrets" {
     to_port   = 443
     protocol  = "tcp"
 
-    security_groups = [
-      aws_security_group.cloud_controller.id,
-    ]
+    cidr_blocks = concat(
+      compact(var.admin_cidrs),
+      compact(var.api_access_cidrs),
+      ["${var.concourse_elastic_ip}/32"],
+      formatlist("%s/32", aws_eip.cf.*.public_ip),
+    )
   }
 
   tags = {
