@@ -80,7 +80,7 @@ output "paas_secrets_bearer_target_group_name" {
 resource "aws_lb" "paas_secrets_mtls" {
   #NLB
   name = "${var.env}-paas-secrets-mtls"
-  subnets = split(",", var.infra_subnet_ids)
+  subnets = aws_subnet.cell.*.id
   idle_timeout = var.elb_idle_timeout
   load_balancer_type = "network"
   internal = true
