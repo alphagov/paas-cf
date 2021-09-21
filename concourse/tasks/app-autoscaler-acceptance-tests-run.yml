@@ -10,9 +10,6 @@ inputs:
   - name: paas-cf
   - name: admin-creds
 
-  # FIXME: when there is a release that supports CF CLI v7 we can use
-  # the submodule in this repo again
-  - name: app-autoscaler-release-git
 outputs:
   - name: artifacts
 params:
@@ -57,7 +54,7 @@ run:
       fi
 
       echo "Running tests"
-      cd app-autoscaler-release-git
+      cd paas-cf/manifests/app-autoscaler/upstream
       source .envrc
       cd src/acceptance
       ./bin/test_default -p -nodes=8

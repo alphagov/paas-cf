@@ -697,20 +697,6 @@ resources:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
       branch: gds_main
 
-  # we want to use an app-autoscaler-release version which has acceptance tests
-  # compatible with the CF CLI v7.
-  # This exists as a git branch but not an official release
-  # we can use the develop branch and specify the version in the get: step
-  # the underlying version of the bosh release is still specified via a git
-  # submodule in this repo
-  - name: app-autoscaler-release-git
-    type: git
-    version:
-      ref: ce0fb696423739ed7796e4c75c4ae31d82df5f41
-    source:
-      uri: https://github.com/cloudfoundry/app-autoscaler-release.git
-      branch: main
-
   - name: grafana-overview-annotation-id
     type: s3-iam
     source:
@@ -4852,10 +4838,6 @@ jobs:
             passed: *smoke-tests-resource-passed
           - get: cf-manifest
             passed: ['post-deploy']
-
-            # FIXME: when there is a release that supports CF CLI v7 we can use
-            # the submodule in this repo again
-          - get: app-autoscaler-release-git
 
       - do:
         - task: create-temp-user
