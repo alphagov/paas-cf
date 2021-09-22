@@ -89,13 +89,15 @@ resource "aws_lb" "paas_secrets_mtls" {
 resource "aws_lb_listener" "paas_secrets_mtls" {
   load_balancer_arn = aws_lb.paas_secrets_mtls.arn
   port = local.remote_port
-  protocol = "TLS"
-  ssl_policy = var.default_elb_security_policy
-  certificate_arn = data.aws_acm_certificate.system.arn
+  protocol = "TCP" # To perform mTLS, we need the listener to act only on TCP, not TLS
 
   default_action {
     type = "forward"
     target_group_arn = aws_lb_target_group.paas_secrets_mtls.arn
+  }
+
+  lifecycle {
+    create_before_destroy = false
   }
 }
 
