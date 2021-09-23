@@ -122,7 +122,7 @@ resource "aws_lb_target_group" "paas_secrets_mtls" {
   }
 
   lifecycle {
-    create_before_destroy = true
+    create_before_destroy = false
   }
 }
 
