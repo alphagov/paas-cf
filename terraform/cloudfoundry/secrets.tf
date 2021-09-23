@@ -107,6 +107,11 @@ resource "aws_lb_target_group" "paas_secrets_mtls" {
   protocol = "TCP"
   vpc_id = var.vpc_id
 
+  stickiness {
+    type = "source_ip"
+    enabled = false
+  }
+
   health_check {
     port = local.healthcheck_port
     path = "/healthcheck"
