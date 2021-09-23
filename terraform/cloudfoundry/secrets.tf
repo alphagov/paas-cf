@@ -104,7 +104,7 @@ resource "aws_lb_listener" "paas_secrets_mtls" {
 resource "aws_lb_target_group" "paas_secrets_mtls" {
   name = "${var.env}-paas-secrets-mtls"
   port = local.mtls_service_port
-  protocol = "TLS"
+  protocol = "TCP"
   vpc_id = var.vpc_id
 
   health_check {
