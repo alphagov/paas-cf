@@ -108,7 +108,7 @@ resource "aws_lb_target_group" "paas_secrets_mtls" {
   vpc_id = var.vpc_id
 
   stickiness {
-    type = "source_ip"
+    type = "lb_cookie"
     enabled = false
   }
 
