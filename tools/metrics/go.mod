@@ -14,7 +14,7 @@ require (
 	github.com/hashicorp/go-multierror v1.0.0
 	github.com/jarcoal/httpmock v1.0.4
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
-	github.com/miekg/dns v0.0.0-20171128074819-6da3249dfb57
+	github.com/miekg/dns v1.1.25
 	github.com/onsi/ginkgo v1.8.0
 	github.com/onsi/gomega v1.9.0
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
