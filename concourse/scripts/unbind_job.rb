@@ -10,7 +10,7 @@ def remove_passed(obj)
     if obj.key?("get") && obj["get"] == "paas-cf"
       obj.delete("passed")
     else
-      obj.each { |k, v| remove_passed(v) if %w[do aggregate in_parallel].include?(k) }
+      obj.each { |k, v| remove_passed(v) if %w[do aggregate in_parallel steps].include?(k) }
     end
   end
 end
