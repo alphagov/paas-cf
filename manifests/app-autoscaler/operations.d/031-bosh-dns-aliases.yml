@@ -35,6 +35,14 @@
   value: cf
 
 - type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=nats.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=_.nats.service.cf.internal/targets/0/network
+  value: cf
+
+- type: replace
   path: /variables/name=metricsserver_server/options/alternative_names
   value:
     - "metricsserver.service.cf.internal"
