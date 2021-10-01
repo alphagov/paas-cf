@@ -1,5 +1,14 @@
 ---
 resource_types:
+  # FIX ME: The server certificate verification fails when using the concourse
+  # version of the resource_type `git`. As a temporary fix we have docker image
+  # of the resource. This resource_type can be deleted when the issue is resolved
+- name: git
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/git-resource
+    tag: 1f84d4a76b4a2491283e0107ae7ed4bc83c84d1b
+
 - name: s3-iam
   type: docker-image
   source:
