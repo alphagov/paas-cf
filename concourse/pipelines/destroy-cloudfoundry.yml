@@ -294,12 +294,13 @@ jobs:
                 . terraform-variables/cf-secrets.tfvars.sh
 
                 cp cf-tfstate/cf.tfstate updated-cf-tfstate/cf.tfstate
-                terraform init paas-cf/terraform/cloudfoundry
+                cd paas-cf/terraform/cloudfoundry || exit
+                terraform init
                 terraform destroy -force -var env="((deploy_env))" \
-                  -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                  -var-file="paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
-                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
-                  -state=updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
+                  -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \
+                  -state=../../../updated-cf-tfstate/cf.tfstate paas-cf/terraform/cloudfoundry
         ensure:
           put: cf-tfstate
           params:
