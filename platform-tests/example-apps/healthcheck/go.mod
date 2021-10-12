@@ -1,6 +1,6 @@
 module github.com/alphagov/paas-cf/platform-tests/example-apps/healthcheck
 
-go 1.15
+go 1.16
 
 require (
 	github.com/aws/aws-sdk-go v1.16.32
