@@ -5668,7 +5668,7 @@ jobs:
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
                   }
 
-                  api = YAML.load_file('manifest-api.yml')
+                  api = YAML.load_file('manifest-api2.yml')
                   api['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
@@ -5681,7 +5681,7 @@ jobs:
                     ]
                     app['health-check-http-endpoint'] = '/'
                   }
-                  File.write('manifest-api.yml', api.to_yaml)
+                  File.write('manifest-api2.yml', api.to_yaml)
 
                   collector = YAML.load_file('manifest-collector.yml')
                   collector['applications'].each { |app|
@@ -5696,7 +5696,7 @@ jobs:
                 "
 
                 cf cancel-deployment paas-billing-api || true
-                cf push --strategy=rolling paas-billing-api -f manifest-api.yml
+                cf push --strategy=rolling paas-billing-api -f manifest-api2.yml
 
                 cf cancel-deployment paas-billing-collector || true
                 cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
