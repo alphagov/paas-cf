@@ -52,8 +52,10 @@ for dir in "${PAAS_CF_DIR}"/terraform/*/ ; do
   [[ ${dir} == *"terraform/scripts"* ]] && continue
   [[ ${dir} == *"terraform/spec"* ]] && continue
 
-  terraform init -backend=false -chdir="${dir}" >/dev/null
-  terraform validate -chdir="${dir}"
+  cd "${dir}"
+  terraform init -backend=false >/dev/null
+  terraform validate
+  cd "${WORKING_DIR}"
 done
 
 terraform fmt -check -diff "${PAAS_CF_DIR}/terraform"
