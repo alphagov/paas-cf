@@ -196,7 +196,7 @@ output "ses_smtp_aws_access_key_id" {
 
 output "ses_smtp_password" {
   sensitive = true
-  value     = aws_iam_access_key.ses_smtp.ses_smtp_password
+  value     = aws_iam_access_key.ses_smtp.ses_smtp_password_v4
 }
 
 output "metrics_exporter_aws_access_key_id" {
