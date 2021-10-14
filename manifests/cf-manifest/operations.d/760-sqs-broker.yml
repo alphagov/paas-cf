@@ -57,7 +57,6 @@
                       Amazon Simple Queue Service (AWS SQS) is a service offered by Amazon Web Services (AWS) that
                       provides queues through a web service interface.
                     providerDisplayName: Amazon Web Services
-                    # TODO: write docs
                     documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/sqs/
                     supportUrl: https://www.cloud.service.gov.uk/support
                     shareable: true

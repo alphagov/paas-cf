@@ -3989,24 +3989,10 @@ jobs:
                   cf create-service-broker sqs-broker sqs-broker "${SQS_BROKER_PASS}" "https://${SQS_BROKER_SERVER}"
                 fi
 
-
-                ALLOWED_ORGS_CFG="./paas-cf/config/service-brokers/sqs/${DEPLOY_ENV}-config.json"
-                if [ -f "${ALLOWED_ORGS_CFG}" ]; then
-                  ALLOWED_ORGS="admin $(jq -r '.allowed_orgs[]' "${ALLOWED_ORGS_CFG}")"
-                else
-                  ALLOWED_ORGS="admin"
-                fi
-
-                for ORG in $ALLOWED_ORGS; do
-                  cf enable-service-access aws-sqs-queue \
-                    -b sqs-broker \
-                    -p standard \
-                    -o "${ORG}"
-                  cf enable-service-access aws-sqs-queue \
-                    -b sqs-broker \
-                    -p fifo \
-                    -o "${ORG}"
-                done
+                cat <<EOF | xargs -n1 cf enable-service-access aws-sqs-queue -b sqs-broker -p
+                standard
+                fifo
+                EOF
 
       - task: register-csls-splunk-broker
         tags: [colocated-with-web]
