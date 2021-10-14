@@ -78,6 +78,7 @@
                         displayName: Standard
                         AdditionalMetadata:
                           encrypted: true
+                          version: standard
 
                     - id: ac129e8a-6423-4792-aa0c-3a192408b3da
                       name: fifo
@@ -87,6 +88,7 @@
                         displayName: FIFO
                         AdditionalMetadata:
                           encrypted: true
+                          version: standard
 
 - type: replace
   path: /variables/-
