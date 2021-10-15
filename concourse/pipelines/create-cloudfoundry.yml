@@ -352,7 +352,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -368,7 +368,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.14.4",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -384,7 +384,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.14.4",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -400,7 +400,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.14.4",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -416,7 +416,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -432,7 +432,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -448,7 +448,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {"psn_security_group_seed_json": {
               "value": "[]",
@@ -467,7 +467,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {
               "healthcheck_address_a": { "value": "", "type": "string" },
@@ -2581,7 +2581,7 @@ jobs:
                       -state=./psn-tfstate/psn.tfstate \
                       psn_security_group_seed_json > terraform-outputs/psn-peering.json
 
-                      ls -la terraform-outputs
+                    ls -la terraform-outputs
 
         - task: generate-peer-opsfile
           tags: [colocated-with-web]
