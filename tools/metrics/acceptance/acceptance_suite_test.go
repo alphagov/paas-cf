@@ -85,7 +85,7 @@ func getMetricNames() ([]string, error) {
 }
 
 var _ = BeforeSuite(func() {
-	SetDefaultEventuallyTimeout(2 * time.Minute)          // Fail after 1m
+	SetDefaultEventuallyTimeout(10 * time.Minute)          // Fail after 10m
 	SetDefaultEventuallyPollingInterval(10 * time.Second) // Try every 10s
 
 	SetDefaultConsistentlyDuration(10 * time.Second)       // Test for 10s
