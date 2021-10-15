@@ -2578,7 +2578,7 @@ jobs:
                   - |
                     terraform output \
                       -raw \
-                      -state=../../../psn-tfstate/psn.tfstate \
+                      -state=./psn-tfstate/psn.tfstate \
                       psn_security_group_seed_json > terraform-outputs/psn-peering.json
 
                       ls -la terraform-outputs
