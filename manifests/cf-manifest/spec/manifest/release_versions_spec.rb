@@ -100,7 +100,7 @@ RSpec.describe "release versions" do
     expect(monitor_remote_smoke_tests_resource_version).to eq(cf_smoke_tests_resource_version)
   end
 
-  pinned_cf_acceptance_tests_version = "16.14"
+  pinned_cf_acceptance_tests_version = nil
   specify "cf-acceptance-tests version should be the same as the CF manifest version" do
     cf_manifest_version = cf_deployment_manifest
       .fetch("manifest_version")
