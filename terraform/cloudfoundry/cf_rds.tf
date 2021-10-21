@@ -35,6 +35,12 @@ resource "aws_db_parameter_group" "cf_pg_11" {
   description = "RDS Postgres 11 default parameter group"
 }
 
+resource "aws_db_parameter_group" "cf_pg_13" {
+  name        = "${var.env}-pg13-cf"
+  family      = "postgres13"
+  description = "RDS Postgres 13 default parameter group"
+}
+
 resource "aws_db_instance" "cf" {
   identifier           = "${var.env}-cf"
   allocated_storage    = 100
@@ -55,7 +61,7 @@ resource "aws_db_instance" "cf" {
   skip_final_snapshot       = var.cf_db_skip_final_snapshot
   vpc_security_group_ids    = [aws_security_group.cf_rds.id]
 
-  allow_major_version_upgrade = false
+  allow_major_version_upgrade = true
   auto_minor_version_upgrade  = false
   apply_immediately           = false
 
