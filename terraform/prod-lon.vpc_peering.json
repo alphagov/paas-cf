@@ -46,5 +46,11 @@
         "account_id": "011755346992",
         "vpc_id": "vpc-0e82d077854b512f3",
         "subnet_cidr": "172.18.12.0/22"
+    },
+    {
+        "peer_name": "dit-services_lite-icms",
+        "account_id": "516242164884",
+        "vpc_id": "vpc-0d61ec34a97c33898",
+        "subnet_cidr": "172.18.16.0/22"
     }
 ]
