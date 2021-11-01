@@ -94,12 +94,6 @@ resource "aws_security_group" "cdn_rds" {
   }
 }
 
-resource "aws_db_parameter_group" "cdn_pg_9_5" {
-  name        = "${var.env}-pg95-cdn"
-  family      = "postgres9.5"
-  description = "CDN Postgres 9.5 parameter group"
-}
-
 resource "aws_db_parameter_group" "cdn_pg_12" {
   name        = "${var.env}-pg12-cdn"
   family      = "postgres12"

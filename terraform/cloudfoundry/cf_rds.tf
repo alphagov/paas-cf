@@ -35,16 +35,22 @@ resource "aws_db_parameter_group" "cf_pg_11" {
   description = "RDS Postgres 11 default parameter group"
 }
 
+resource "aws_db_parameter_group" "cf_pg_13" {
+  name        = "${var.env}-pg13-cf"
+  family      = "postgres13"
+  description = "RDS Postgres 13 default parameter group"
+}
+
 resource "aws_db_instance" "cf" {
   identifier           = "${var.env}-cf"
   allocated_storage    = 100
   engine               = "postgres"
-  engine_version       = "11.12"
+  engine_version       = "13"
   instance_class       = var.cf_db_instance_type
   username             = "dbadmin"
   password             = var.secrets_cf_db_master_password
   db_subnet_group_name = aws_db_subnet_group.cf_rds.name
-  parameter_group_name = aws_db_parameter_group.cf_pg_11.id
+  parameter_group_name = aws_db_parameter_group.cf_pg_13.id
 
   storage_type              = "gp2"
   backup_window             = "02:00-03:00"
@@ -55,7 +61,7 @@ resource "aws_db_instance" "cf" {
   skip_final_snapshot       = var.cf_db_skip_final_snapshot
   vpc_security_group_ids    = [aws_security_group.cf_rds.id]
 
-  allow_major_version_upgrade = false
+  allow_major_version_upgrade = true
   auto_minor_version_upgrade  = false
   apply_immediately           = false
 
