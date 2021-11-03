@@ -11,72 +11,72 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     psql: &psql-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     node: &node-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     node-chromium: &node-chromium-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     golang: &golang-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     terraform: &terraform-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
 
 
   tasks:
@@ -272,7 +272,7 @@ resource_types:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+    tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
 
 - name: s3-iam
   type: docker-image
@@ -352,7 +352,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -368,7 +368,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.14.4",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -384,7 +384,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.14.4",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -400,7 +400,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.14.4",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -416,7 +416,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -432,7 +432,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -448,7 +448,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {"psn_security_group_seed_json": {
               "value": "[]",
@@ -467,7 +467,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "0.12.29",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {
               "healthcheck_address_a": { "value": "", "type": "string" },
@@ -830,7 +830,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+              tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
 
           inputs:
             - name: paas-cf
@@ -1299,18 +1299,17 @@ jobs:
                 . terraform-variables/cf-secrets.tfvars.sh
 
                 cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
-
-                terraform init paas-cf/terraform/cloudfoundry
-
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/cf.tfstate
+                cd paas-cf/terraform/cloudfoundry || exit
+
+                terraform init
 
                 terraform apply \
                   -auto-approve=true \
-                  -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                  -var-file="paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
-                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
-                  -state=updated-tfstate/cf.tfstate \
-                  paas-cf/terraform/cloudfoundry
+                  -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \
+                  -state=../../../updated-tfstate/cf.tfstate
         ensure:
           put: cf-tfstate
           params:
@@ -1347,16 +1346,17 @@ jobs:
 
                       cp cyber-tfstate/cyber.tfstate updated-tfstate/cyber.tfstate
 
-                      terraform init paas-cf/terraform/cyber
-
                       sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/cyber.tfstate
+
+                      cd paas-cf/terraform/cyber || exit
+
+                      terraform init
 
                       terraform apply \
                         -auto-approve=true \
-                        -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                        -var-file="paas-cf/terraform/((aws_region)).tfvars" \
-                        -state=updated-tfstate/cyber.tfstate \
-                        paas-cf/terraform/cyber
+                        -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
+                        -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \
+                        -state=../../../updated-tfstate/cyber.tfstate
               ensure:
                 put: cyber-tfstate
                 params:
@@ -1477,19 +1477,17 @@ jobs:
                 export TF_VAR_subnet_ids="[\"${TF_VAR_subnet0_id}\", \"${TF_VAR_subnet1_id}\"]"
                 # shellcheck disable=SC2154
                 export TF_VAR_security_group_name="${TF_VAR_default_security_group}"
-
-                terraform init paas-cf/terraform/psn
-
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/psn.tfstate
+                cd paas-cf/terraform/psn || exit
+
+                terraform init
 
                 terraform apply \
                   -auto-approve=true \
-                  -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                  -var-file="paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
-                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
-                  -state=updated-tfstate/psn.tfstate \
-                  paas-cf/terraform/psn
-
+                  -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \
+                  -state=../../../updated-tfstate/psn.tfstate
         ensure:
           put: psn-tfstate
           params:
@@ -1560,17 +1558,16 @@ jobs:
                 fi
 
                 cp vpc-peering-tfstate/vpc-peering.tfstate updated-tfstate/vpc-peering.tfstate
-
-                terraform init paas-cf/terraform/vpc-peering
-
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/vpc-peering.tfstate
+                cd paas-cf/terraform/vpc-peering || exit
+
+                terraform init
 
                 terraform apply \
                   -auto-approve=true \
-                  -var-file="paas-cf/terraform/((aws_account)).tfvars" \
-                  -var-file="paas-cf/terraform/((aws_region)).tfvars" \
-                  -state=updated-tfstate/vpc-peering.tfstate \
-                  paas-cf/terraform/vpc-peering
+                  -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \
+                  -state=../../../updated-tfstate/vpc-peering.tfstate
         ensure:
           put: vpc-peering-tfstate
           params:
@@ -1617,15 +1614,14 @@ jobs:
                   exit 0
                 fi
 
-                terraform init paas-cf/terraform/az-monitoring
-
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/azhc.tfstate
+                cd paas-cf/terraform/az-monitoring ||exit
+
+                terraform init
 
                 terraform apply \
                   -auto-approve=true \
-                  -state=updated-tfstate/azhc.tfstate \
-                  paas-cf/terraform/az-monitoring
-
+                  -state=../../../updated-tfstate/azhc.tfstate
         ensure:
           put: az-healthcheck-tfstate
           params:
@@ -1703,13 +1699,13 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
 
                 cp az-management-a-tfstate/az-management-a.tfstate updated-tfstate/az-management-a.tfstate
+                cd paas-cf/terraform/az-management ||exit
 
-                terraform init paas-cf/terraform/az-management
+                terraform init
 
                 terraform apply \
                   -auto-approve=true \
-                  -state=updated-tfstate/az-management-a.tfstate \
-                  paas-cf/terraform/az-management
+                  -state=../../../updated-tfstate/az-management-a.tfstate
         ensure:
           put: az-management-a-tfstate
           params:
@@ -1768,13 +1764,13 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
 
                 cp az-management-a-tfstate/az-management-a.tfstate updated-tfstate/az-management-a.tfstate
+                cd paas-cf/terraform/az-management || exit
 
-                terraform init paas-cf/terraform/az-management
+                terraform init
 
                 terraform destroy \
                   -auto-approve=true \
-                  -state=updated-tfstate/az-management-a.tfstate \
-                  paas-cf/terraform/az-management
+                  -state=../../../updated-tfstate/az-management-a.tfstate
         ensure:
           put: az-management-a-tfstate
           params:
@@ -1850,13 +1846,13 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
 
                 cp az-management-b-tfstate/az-management-b.tfstate updated-tfstate/az-management-b.tfstate
+                cd paas-cf/terraform/az-management || exit
 
-                terraform init paas-cf/terraform/az-management
+                terraform init
 
                 terraform apply \
                   -auto-approve=true \
-                  -state=updated-tfstate/az-management-b.tfstate \
-                  paas-cf/terraform/az-management
+                  -state=../../../updated-tfstate/az-management-b.tfstate
 
         ensure:
           put: az-management-b-tfstate
@@ -1916,13 +1912,13 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
 
                 cp az-management-b-tfstate/az-management-b.tfstate updated-tfstate/az-management-b.tfstate
+                cd paas-cf/terraform/az-management || exit
 
-                terraform init paas-cf/terraform/az-management
+                terraform init
 
                 terraform destroy \
                   -auto-approve=true \
-                  -state=updated-tfstate/az-management-b.tfstate \
-                  paas-cf/terraform/az-management
+                  -state=../../../updated-tfstate/az-management-b.tfstate
 
         ensure:
           put: az-management-b-tfstate
@@ -1999,14 +1995,13 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
 
                 cp az-management-c-tfstate/az-management-c.tfstate updated-tfstate/az-management-c.tfstate
+                cd paas-cf/terraform/az-management || exit
 
-                terraform init paas-cf/terraform/az-management
+                terraform init
 
                 terraform apply \
                   -auto-approve=true \
-                  -state=updated-tfstate/az-management-c.tfstate \
-                  paas-cf/terraform/az-management
-
+                  -state=../../../updated-tfstate/az-management-c.tfstate
         ensure:
           put: az-management-c-tfstate
           params:
@@ -2065,13 +2060,13 @@ jobs:
                 . terraform-variables/vpc.tfvars.sh
 
                 cp az-management-c-tfstate/az-management-c.tfstate updated-tfstate/az-management-c.tfstate
+                cd paas-cf/terraform/az-management || exit
 
-                terraform init paas-cf/terraform/az-management
+                terraform init
 
                 terraform destroy \
                   -auto-approve=true \
-                  -state=updated-tfstate/az-management-c.tfstate \
-                  paas-cf/terraform/az-management
+                  -state=../../../updated-tfstate/az-management-c.tfstate
 
         ensure:
           put: az-management-c-tfstate
@@ -2386,7 +2381,7 @@ jobs:
               - -c
               - |
                 terraform output \
-                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -state=../../../az-healthcheck-tfstate/azhc.tfstate \
                   -raw \
                   healthcheck_address_a > "terraform-variables/${AVAILABILITY_ZONE}"
 
@@ -2440,7 +2435,7 @@ jobs:
               - -c
               - |
                 terraform output \
-                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -state=../../../az-healthcheck-tfstate/azhc.tfstate \
                   -raw \
                   healthcheck_address_b > "terraform-variables/${AVAILABILITY_ZONE}"
 
@@ -2494,7 +2489,7 @@ jobs:
               - -c
               - |
                 terraform output \
-                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -state=../../../az-healthcheck-tfstate/azhc.tfstate \
                   -raw \
                   healthcheck_address_c > "terraform-variables/${AVAILABILITY_ZONE}"
 
@@ -2583,10 +2578,10 @@ jobs:
                   - |
                     terraform output \
                       -raw \
-                      -state=psn-tfstate/psn.tfstate \
+                      -state=./psn-tfstate/psn.tfstate \
                       psn_security_group_seed_json > terraform-outputs/psn-peering.json
 
-                      ls -la terraform-outputs
+                    ls -la terraform-outputs
 
         - task: generate-peer-opsfile
           tags: [colocated-with-web]
@@ -5130,7 +5125,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+              tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
 
           inputs:
             - name: paas-cf
@@ -5353,7 +5348,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+              tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
 
           inputs:
             - name: paas-admin-data
@@ -6459,7 +6454,7 @@ jobs:
           type: docker-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: a1262c2a552b9d3db7db2993c0494bde1f5ad5c2
+            tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
 
         inputs:
           - name: passwords

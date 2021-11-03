@@ -246,7 +246,7 @@ func terraformFindInfraCIDRs(region string, envName string) ([]string, error) {
 	//     ["10.0.0.0/24","10.0.1.0/24","10.0.2.0/24"]
 	//
 	// This was a change in behaviour between 0.13.x and 0.14.x
-	cmdText := fmt.Sprintf(`echo "jsonencode(values(var.infra_cidrs))" | terraform console -var-file %s.tfvars -var-file %s.tfvars . | sed ' s/\\//g' | sed 's/"\(.*\)"$/\1/'`, region, envName)
+	cmdText := fmt.Sprintf(`echo "jsonencode(values(var.infra_cidrs))" | terraform console -var-file %s.tfvars -var-file %s.tfvars | sed ' s/\\//g' | sed 's/"\(.*\)"$/\1/'`, region, envName)
 	cmd := exec.Command("bash", "-c", cmdText)
 
 	stdOut := bytes.Buffer{}
