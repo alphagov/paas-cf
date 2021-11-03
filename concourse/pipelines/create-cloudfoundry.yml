@@ -2381,7 +2381,7 @@ jobs:
               - -c
               - |
                 terraform output \
-                  -state=../../../az-healthcheck-tfstate/azhc.tfstate \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
                   -raw \
                   healthcheck_address_a > "terraform-variables/${AVAILABILITY_ZONE}"
 
@@ -2435,7 +2435,7 @@ jobs:
               - -c
               - |
                 terraform output \
-                  -state=../../../az-healthcheck-tfstate/azhc.tfstate \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
                   -raw \
                   healthcheck_address_b > "terraform-variables/${AVAILABILITY_ZONE}"
 
@@ -2489,7 +2489,7 @@ jobs:
               - -c
               - |
                 terraform output \
-                  -state=../../../az-healthcheck-tfstate/azhc.tfstate \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
                   -raw \
                   healthcheck_address_c > "terraform-variables/${AVAILABILITY_ZONE}"
 
