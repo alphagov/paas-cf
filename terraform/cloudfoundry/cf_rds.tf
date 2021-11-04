@@ -61,7 +61,7 @@ resource "aws_db_instance" "cf" {
   skip_final_snapshot       = var.cf_db_skip_final_snapshot
   vpc_security_group_ids    = [aws_security_group.cf_rds.id]
 
-  allow_major_version_upgrade = true
+  allow_major_version_upgrade = false
   auto_minor_version_upgrade  = false
   apply_immediately           = false
 
