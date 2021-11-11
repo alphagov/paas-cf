@@ -200,8 +200,8 @@ dev: ## Set Environment to DEV
 	$(eval export ENABLE_AUTODELETE=true)
 	$(eval export ENABLE_TEST_PIPELINES=true)
 	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
-	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
+	$(eval export SYSTEM_DNS_ZONE_NAME=$${DEPLOY_ENV}.dev.cloudpipeline.digital)
+	$(eval export APPS_DNS_ZONE_NAME=$${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	$(eval export APPS_HOSTED_ZONE_NAME=dev.cloudpipelineapps.digital)
 	$(eval export ALERT_EMAIL_ADDRESS?=govpaas-alerting-dev@digital.cabinet-office.gov.uk)
 	$(eval export NEW_ACCOUNT_EMAIL_ADDRESS?=the-multi-cloud-paas-team+dev@digital.cabinet-office.gov.uk)
@@ -222,23 +222,15 @@ dev: ## Set Environment to DEV
 	$(eval export DISABLED_AZS)
 	@true
 
-.PHONY: dev01
-dev01: dev
-	$(eval export DEPLOY_ENV=dev01)
+.PHONY: $(filter-out dev%,$(MAKECMDGOALS))
+dev%: dev
+	$(eval export DEPLOY_ENV=$@)
 	$(eval export ENABLE_AUTODELETE=false)
 	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
-	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
 	@true
 
-.PHONY: dev02
-dev02: dev
-	$(eval export DEPLOY_ENV=dev02)
-	$(eval export ENABLE_AUTODELETE=false)
-	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
-	$(eval export SYSTEM_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipeline.digital)
-	$(eval export APPS_DNS_ZONE_NAME=${DEPLOY_ENV}.dev.cloudpipelineapps.digital)
-	@true
+tnw-test: dev07
+	@env
 
 .PHONY: stg-lon
 stg-lon: ## Set Environment to stg-lon
@@ -325,6 +317,11 @@ bosh-cli:
 .PHONY: ssh_bosh
 ssh_bosh: ## SSH to the bosh server
 	@echo "ssh_bosh has moved to paas-bootstrap 🐝"
+
+.PHONY: current-branch
+current-branch: ## Deploy current checked out branch
+	$(eval export BRANCH=$(git rev-parse --abbrev-ref HEAD))
+	@true
 
 .PHONY: pipelines
 pipelines: check-env ## Upload pipelines to Concourse
