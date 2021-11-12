@@ -277,8 +277,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -303,8 +303,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -329,8 +329,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -355,8 +355,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -381,8 +381,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -407,8 +407,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -433,8 +433,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -459,8 +459,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -485,8 +485,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -511,8 +511,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -537,8 +537,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -563,8 +563,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -589,8 +589,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -615,8 +615,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -641,8 +641,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -667,8 +667,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -693,8 +693,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -719,8 +719,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -745,8 +745,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -771,8 +771,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -797,8 +797,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -823,8 +823,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -849,8 +849,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -875,8 +875,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -901,8 +901,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -927,8 +927,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -953,8 +953,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -979,8 +979,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1005,8 +1005,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1031,8 +1031,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1057,8 +1057,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1083,8 +1083,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1109,8 +1109,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1135,8 +1135,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1161,8 +1161,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1187,8 +1187,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1213,8 +1213,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1239,8 +1239,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1265,8 +1265,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1291,8 +1291,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1317,8 +1317,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1343,8 +1343,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1369,8 +1369,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1395,8 +1395,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1421,8 +1421,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1447,8 +1447,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1473,8 +1473,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1499,8 +1499,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1525,8 +1525,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1551,8 +1551,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1577,8 +1577,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1603,8 +1603,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1629,8 +1629,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1655,8 +1655,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1681,8 +1681,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1707,8 +1707,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1733,8 +1733,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1759,8 +1759,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1785,8 +1785,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1811,8 +1811,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1837,8 +1837,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1863,8 +1863,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1889,8 +1889,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1915,8 +1915,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1941,8 +1941,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1967,8 +1967,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -1993,8 +1993,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2019,8 +2019,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2045,8 +2045,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2071,8 +2071,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2097,8 +2097,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2123,8 +2123,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2149,8 +2149,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2175,8 +2175,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2201,8 +2201,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2227,8 +2227,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2253,8 +2253,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2279,8 +2279,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2305,8 +2305,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2331,8 +2331,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2357,8 +2357,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2383,8 +2383,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2409,8 +2409,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2435,8 +2435,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2461,8 +2461,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2487,8 +2487,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2513,8 +2513,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2539,8 +2539,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2565,8 +2565,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2591,8 +2591,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2617,8 +2617,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2643,8 +2643,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2669,8 +2669,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2695,8 +2695,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.127",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2721,8 +2721,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * $time_in_seconds/2678401 * 0.253",
+					"formula_new": "($storage_in_mb/1024) * $time_in_seconds/2678401 * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2747,8 +2747,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2773,8 +2773,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2799,8 +2799,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2825,8 +2825,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2851,8 +2851,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2877,8 +2877,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2903,8 +2903,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2929,8 +2929,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2955,8 +2955,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -2981,8 +2981,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3007,8 +3007,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3033,8 +3033,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3059,8 +3059,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3085,8 +3085,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3111,8 +3111,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3137,8 +3137,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3163,8 +3163,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3189,8 +3189,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3215,8 +3215,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3241,8 +3241,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3267,8 +3267,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3293,8 +3293,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3319,8 +3319,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3345,8 +3345,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3371,8 +3371,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3397,8 +3397,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3423,8 +3423,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3449,8 +3449,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3475,8 +3475,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3501,8 +3501,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3527,8 +3527,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3553,8 +3553,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3579,8 +3579,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3605,8 +3605,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3631,8 +3631,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3657,8 +3657,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3683,8 +3683,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3709,8 +3709,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3735,8 +3735,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3761,8 +3761,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3787,8 +3787,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3813,8 +3813,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3839,8 +3839,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.127",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.127",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.127,
 					"currency_code": "USD",
 					"vat_code": "Standard"
@@ -3865,8 +3865,8 @@
 				},
 				{
 					"name": "storage",
-					"formula": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * 0.253",
-					"formula_new": "($storage_in_mb/1024) * ceil($time_in_seconds/2678401) * external_price",
+					"formula": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * 0.253",
+					"formula_new": "($storage_in_mb/1024) * ($time_in_seconds/2678401) * external_price",
 					"external_price": 0.253,
 					"currency_code": "USD",
 					"vat_code": "Standard"
