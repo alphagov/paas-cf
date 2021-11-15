@@ -229,9 +229,6 @@ dev%: dev
 	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
 	@true
 
-tnw-test: dev07
-	@env
-
 .PHONY: stg-lon
 stg-lon: ## Set Environment to stg-lon
 	$(eval export AWS_ACCOUNT=staging)
@@ -320,7 +317,7 @@ ssh_bosh: ## SSH to the bosh server
 
 .PHONY: current-branch
 current-branch: ## Deploy current checked out branch
-	$(eval export BRANCH=$(git rev-parse --abbrev-ref HEAD))
+	$(eval export BRANCH=$(shell sh -c "git rev-parse --abbrev-ref HEAD"))
 	@true
 
 .PHONY: pipelines
