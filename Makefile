@@ -1,8 +1,8 @@
 .DEFAULT_GOAL := help
 
 .PHONY: help
-help:
-	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+help: ## Display this help
+	@ruby scripts/makefile_help.rb
 
 DEPLOY_ENV_MAX_LENGTH=8
 DEPLOY_ENV_VALID_LENGTH=$(shell if [ $$(printf "%s" $(DEPLOY_ENV) | wc -c) -gt $(DEPLOY_ENV_MAX_LENGTH) ]; then echo ""; else echo "OK"; fi)
@@ -19,6 +19,18 @@ check-env:
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	@./scripts/validate_aws_credentials.sh
 
+
+.PHONY: pingdom
+pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
+	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
+	@terraform/scripts/set-up-pingdom.sh ${ACTION}
+
+.PHONY: find_diverged_forks
+find_diverged_forks: ## Check all github forks belonging to paas to see if they've diverged upstream
+	$(if ${GITHUB_TOKEN},,$(error Must pass GITHUB_TOKEN=<personal github token>))
+	./scripts/find_diverged_forks.py alphagov --prefix=paas --github-token=${GITHUB_TOKEN}
+
+##SECTION Tests
 .PHONY: test
 test:
 	make $$(cat .travis.yml  | ruby -ryaml -e 'puts YAML.load(STDIN.read)["jobs"].map { |j| j["script"] }.map { |j| j.gsub("make ", "") }.join(" ")')
@@ -173,7 +185,7 @@ lint_symlinks:
 lint: lint_yaml lint_terraform lint_shellcheck lint_concourse lint_ruby lint_posix_newlines lint_symlinks ## Run linting tests
 
 GPG = $(shell command -v gpg2 || command -v gpg)
-
+##SECTION Merge keys
 .PHONY: list_merge_keys
 list_merge_keys: ## List all GPG keys allowed to sign merge commits.
 	$(if $(GPG),,$(error "gpg2 or gpg not found in PATH"))
@@ -190,6 +202,7 @@ list_merge_keys: ## List all GPG keys allowed to sign merge commits.
 update_merge_keys:
 	ruby concourse/scripts/generate-public-key-vars.rb
 
+##SECTION Deploy environment selection
 .PHONY: dev
 dev: ## Set Environment to DEV
 	$(eval export AWS_DEFAULT_REGION ?= eu-west-1)
@@ -307,6 +320,7 @@ prod-lon: ## Set Environment to prod-lon
 	$(eval export DISABLED_AZS)
 	@true
 
+##SECTION CLI utilities
 .PHONY: bosh-cli
 bosh-cli:
 	@echo "bosh-cli has moved to paas-bootstrap 🐝"
@@ -315,23 +329,59 @@ bosh-cli:
 ssh_bosh: ## SSH to the bosh server
 	@echo "ssh_bosh has moved to paas-bootstrap 🐝"
 
+.PHONY: ssh_concourse
+ssh_concourse: check-env ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
+	@echo "ssh_concourse has moved to paas-bootstrap 🐝"
+
+.PHONY: tunnel
+tunnel: check-env ## SSH tunnel to internal IPs
+	@echo "tunnel has moved to paas-bootstrap 🐝"
+
+.PHONY: stop-tunnel
+stop-tunnel: check-env ## Stop SSH tunnel
+	@echo "stop-tunnel has moved to paas-bootstrap 🐝"
+
+.PHONY: credhub
+credhub:
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
+	@scripts/credhub_shell.sh
+
+.PHONY: showenv
+showenv: ## Display environment information
+	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
+	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
+	@scripts/showenv.sh
+
+.PHONY: logit-filters
+logit-filters:
+	mkdir -p config/logit/output
+	docker run --rm -it \
+		-v $(CURDIR):/mnt:ro \
+		-v $(CURDIR)/config/logit/output:/output:rw \
+		-w /mnt \
+		jruby:9.2-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
+	@echo "updated $(CURDIR)/config/logit/output/generated_logit_filters.conf"
+
+.PHONY: show-tenant-comms-addresses
+show-tenant-comms-addresses:
+	$(eval export API_TOKEN=`cf oauth-token | cut -f 2 -d ' '`)
+	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
+	$(eval export ADMIN_ENDPOINT=https://admin.${SYSTEM_DNS_ZONE_NAME}/organisations/)
+	@cd tools/user_emails/ && go build && API_TOKEN=$(API_TOKEN) ADMIN_ENDPOINT=$(ADMIN_ENDPOINT) ./user_emails
+
+
+##SECTION Branch selection
 .PHONY: current-branch
 current-branch: ## Deploy current checked out branch
 	$(eval export BRANCH=$(shell sh -c "git rev-parse --abbrev-ref HEAD"))
 	@true
 
+##SECTION Concourse actions
+
 .PHONY: pipelines
 pipelines: check-env ## Upload pipelines to Concourse
 	concourse/scripts/pipelines-cloudfoundry.sh
-
-# This target matches any "monitor-" prefix; the "$(*)" magic variable
-# contains the wildcard suffix (not the entire target name).
-monitor-%: export MONITORED_DEPLOY_ENV=$(*)
-monitor-%: export MONITORED_STATE_BUCKET=gds-paas-$(*)-state
-monitor-%: export PIPELINES_TO_UPDATE=monitor-$(*)
-monitor-%: check-env ## Upload an optional, cross-region monitoring pipeline to Concourse
-	MONITORED_AWS_REGION=$$(aws s3api get-bucket-location --bucket $$MONITORED_STATE_BUCKET --output text --query LocationConstraint) \
-		concourse/scripts/pipelines-cloudfoundry.sh
 
 .PHONY: trigger-deploy
 trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
@@ -345,13 +395,23 @@ pause-kick-off: check-env ## Pause the morning kick-off of deployment.
 unpause-kick-off: check-env ## Unpause the morning kick-off of deployment.
 	concourse/scripts/pause-kick-off.sh unpin
 
-.PHONY: showenv
-showenv: ## Display environment information
-	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
-	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
-	@scripts/showenv.sh
+.PHONY: run_job
+run_job: check-env ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it
+	$(if ${JOB},,$(error Must pass JOB=<name>))
+	./concourse/scripts/run_job.sh ${JOB}
 
+# This target matches any "monitor-" prefix; the "$(*)" magic variable
+# contains the wildcard suffix (not the entire target name).
+monitor-%: export MONITORED_DEPLOY_ENV=$(*)
+monitor-%: export MONITORED_STATE_BUCKET=gds-paas-$(*)-state
+monitor-%: export PIPELINES_TO_UPDATE=monitor-$(*)
+monitor-%: check-env ## Upload an optional, cross-region monitoring pipeline to Concourse
+	MONITORED_AWS_REGION=$$(aws s3api get-bucket-location --bucket $$MONITORED_STATE_BUCKET --output text --query LocationConstraint) \
+		concourse/scripts/pipelines-cloudfoundry.sh
+
+##SECTION Secrets
 .PHONY: upload-all-secrets
+upload-all-secrets: ## Decrypt and upload all possible secrets
 upload-all-secrets: upload-google-oauth-secrets upload-microsoft-oauth-secrets upload-splunk-secrets upload-mailchimp-secrets upload-cronitor-secrets upload-notify-secrets upload-aiven-secrets upload-logit-secrets upload-pagerduty-secrets upload-cyber-secrets upload-paas-trusted-people upload-zendesk-secrets upload-pingdom-secrets upload-psn-secrets
 
 .PHONY: upload-google-oauth-secrets
@@ -441,53 +501,3 @@ upload-slack-secrets: check-env ## Decrypt and upload Slack credentials to Credh
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
 	@scripts/upload-secrets/upload-slack-secrets.rb
-
-.PHONY: pingdom
-pingdom: check-env ## Use custom Terraform provider to set up Pingdom check
-	$(if ${ACTION},,$(error Must pass ACTION=<plan|apply|...>))
-	@terraform/scripts/set-up-pingdom.sh ${ACTION}
-
-.PHONY: find_diverged_forks
-find_diverged_forks: ## Check all github forks belonging to paas to see if they've diverged upstream
-	$(if ${GITHUB_TOKEN},,$(error Must pass GITHUB_TOKEN=<personal github token>))
-	./scripts/find_diverged_forks.py alphagov --prefix=paas --github-token=${GITHUB_TOKEN}
-
-.PHONY: run_job
-run_job: check-env ## Unbind paas-cf of $JOB in create-cloudfoundry pipeline and then trigger it
-	$(if ${JOB},,$(error Must pass JOB=<name>))
-	./concourse/scripts/run_job.sh ${JOB}
-
-.PHONY: ssh_concourse
-ssh_concourse: check-env ## SSH to the concourse server. Set SSH_CMD to pass a command to execute.
-	@echo "ssh_concourse has moved to paas-bootstrap 🐝"
-
-.PHONY: tunnel
-tunnel: check-env ## SSH tunnel to internal IPs
-	@echo "tunnel has moved to paas-bootstrap 🐝"
-
-.PHONY: stop-tunnel
-stop-tunnel: check-env ## Stop SSH tunnel
-	@echo "stop-tunnel has moved to paas-bootstrap 🐝"
-
-.PHONY: logit-filters
-logit-filters:
-	mkdir -p config/logit/output
-	docker run --rm -it \
-		-v $(CURDIR):/mnt:ro \
-		-v $(CURDIR)/config/logit/output:/output:rw \
-		-w /mnt \
-		jruby:9.2-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
-	@echo "updated $(CURDIR)/config/logit/output/generated_logit_filters.conf"
-
-.PHONY: show-tenant-comms-addresses
-show-tenant-comms-addresses:
-	$(eval export API_TOKEN=`cf oauth-token | cut -f 2 -d ' '`)
-	$(eval export API_ENDPOINT=https://api.${SYSTEM_DNS_ZONE_NAME})
-	$(eval export ADMIN_ENDPOINT=https://admin.${SYSTEM_DNS_ZONE_NAME}/organisations/)
-	@cd tools/user_emails/ && go build && API_TOKEN=$(API_TOKEN) ADMIN_ENDPOINT=$(ADMIN_ENDPOINT) ./user_emails
-
-.PHONY: credhub
-credhub:
-	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
-	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
-	@scripts/credhub_shell.sh
