@@ -5037,12 +5037,23 @@ jobs:
                 USER_UUID=$(curl --silent --fail --header "Authorization: $(cf oauth-token)" "https://login.${SYSTEM_DNS_ZONE_NAME}/userinfo" | jq '.user_id' --raw-output)
                 USERNAME=$(curl --silent --fail --header "Authorization: $(cf oauth-token)" "https://login.${SYSTEM_DNS_ZONE_NAME}/userinfo" | jq '.email' --raw-output)
 
-                res=$(curl --silent --fail --include \
+                res=$(curl --silent \
+                  -o /dev/null -w "%{http_code}" \
                   --request GET \
                   --user "admin:${BASIC_AUTH_PASSWORD}" \
-                  "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users/${USER_UUID}" || echo "no user")
+                  "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users/${USER_UUID}")
 
-                if [ "${res}" = "no user" ]; then
+                case $res in
+                2*)
+                 echo "Updating admin user's username"
+                 curl --silent --fail --include \
+                   --request PATCH \
+                   --user "admin:${BASIC_AUTH_PASSWORD}" \
+                   --header "Content-Type: application/json" \
+                   --data "{\"user_uuid\":\"${USER_UUID}\",\"user_email\":null,\"username\":\"${USERNAME}\"}" \
+                    "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users/${USER_UUID}"
+                 ;;
+                4*)
                   echo "Admin user not found"
                   curl --silent --fail --include \
                     --request POST \
@@ -5050,15 +5061,10 @@ jobs:
                     --header "Content-Type: application/json" \
                     --data "{\"user_uuid\":\"${USER_UUID}\",\"user_email\":null,\"username\":\"${USERNAME}\"}" \
                      "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users"
-                else
-                  echo "Updating admin user's username"
-                  curl --silent --fail --include \
-                    --request PATCH \
-                    --user "admin:${BASIC_AUTH_PASSWORD}" \
-                    --header "Content-Type: application/json" \
-                    --data "{\"user_uuid\":\"${USER_UUID}\",\"user_email\":null,\"username\":\"${USERNAME}\"}" \
-                     "https://accounts.${SYSTEM_DNS_ZONE_NAME}/users/${USER_UUID}"
-                fi
+                  ;;
+                *)
+                  echo "Unexpected response code ${res}"
+                esac
 
                 echo "Uploading documents"
                 cd paas-cf/config/accounts/documents
