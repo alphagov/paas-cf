@@ -56,6 +56,7 @@ bosh interpolate \
   "${APP_AUTOSCALER_BOSHRELEASE_DIR}/templates/app-autoscaler-deployment.yml" \
 | sed "s@dns_api_client_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_client_tls.@g" \
 | sed "s@dns_api_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_server_tls.@g" \
+| sed "s@/bosh-autoscaler/cf/nats_client_cert[.]@/$DEPLOY_ENV/$DEPLOY_ENV/nats_client_cert.@g" \
 | sed "s@dns_healthcheck_client_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_healthcheck_client_tls.@g" \
 | sed "s@dns_healthcheck_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_healthcheck_server_tls.@g" \
 | sed "s@loggregator_tls_rlp[.]@/$DEPLOY_ENV/$DEPLOY_ENV/loggregator_tls_rlp.@g" \
