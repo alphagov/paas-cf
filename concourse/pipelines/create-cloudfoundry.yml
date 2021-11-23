@@ -6092,10 +6092,6 @@ jobs:
                     logit-syslog-drain \
                     -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
                 fi
-                
-                ## TODO: remove me after deployed everywhere
-                # remove vestigial environment variable
-                cf unset-env aiven-broker "SERVICE_NAME_PREFIX" || true
 
                 ruby -ryaml -e "
                   env = {
