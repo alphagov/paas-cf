@@ -1,0 +1,80 @@
+{
+	"name": "opensearch tiny-1",
+	"valid_from": "2021-11-01",
+	"valid_to": "9999-12-31",
+	"plan_guid": "e89c01df-6996-4628-ab36-b3dcc556bded",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_opensearch_startup_4") %>",
+			"formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+			"external_price": <%= price("aiven_opensearch_startup_4") %>,
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "opensearch small-ha-1",
+	"valid_from": "2021-11-01",
+	"valid_to": "9999-12-31",
+	"plan_guid": "ff5f62c7-766b-4c86-baa2-62522453f442",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_opensearch_business_4") %>",
+			"formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+			"external_price": <%= price("aiven_opensearch_business_4") %>,
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "opensearch medium-ha-1",
+	"valid_from": "2021-11-01",
+	"valid_to": "9999-12-31",
+	"plan_guid": "86fd8be5-aac2-473f-b019-d6067ce05d28",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_opensearch_business_8") %>",
+			"formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+			"external_price": <%= price("aiven_opensearch_business_8") %>,
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "opensearch large-ha-1",
+	"valid_from": "2021-11-01",
+	"valid_to": "9999-12-31",
+	"plan_guid": "e36ba208-e3d4-452e-86d0-5bc48053e0ab",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_opensearch_business_16") %>",
+			"formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+			"external_price": <%= price("aiven_opensearch_business_16") %>,
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},
+{
+	"name": "opensearch xlarge-ha-1",
+	"valid_from": "2021-11-01",
+	"valid_to": "9999-12-31",
+	"plan_guid": "823c908e-ec61-4d9d-a9da-bf4f04ae4756",
+	"components": [
+		{
+			"name": "instance",
+			"formula": "ceil($time_in_seconds/3600) * <%= price("aiven_opensearch_business_32") %>",
+			"formula_new": "ceil($time_in_seconds/3600) * <%= price("external_price") %>",
+			"external_price": <%= price("aiven_opensearch_business_32") %>,
+			"currency_code": "USD",
+			"vat_code": "Standard"
+		}
+	]
+},

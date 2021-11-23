@@ -6057,7 +6057,7 @@ jobs:
           params:
             AIVEN_API_TOKEN: ((aiven_api_token))
             AIVEN_PROMETHEUS_ENDPOINT_ID: ((aiven_prometheus_endpoint_id))
-            SERVICE_NAME_PREFIX: ((deploy_env))
+            DEPLOY_ENV: ((deploy_env))
             AIVEN_PROJECT: paas-cf-((aws_account))
             AIVEN_CLOUD: aws-((aws_region))
             APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
@@ -6092,6 +6092,10 @@ jobs:
                     logit-syslog-drain \
                     -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
                 fi
+                
+                ## TODO: remove me after deployed everywhere
+                # remove vestigial environment variable
+                cf unset-env aiven-broker "SERVICE_NAME_PREFIX" || true
 
                 ruby -ryaml -e "
                   env = {
@@ -6099,7 +6103,8 @@ jobs:
                     'AIVEN_PASSWORD' => '$AIVEN_BROKER_PASS',
                     'AIVEN_API_TOKEN' => '$AIVEN_API_TOKEN',
                     'AIVEN_PROMETHEUS_ENDPOINT_ID' => '$AIVEN_PROMETHEUS_ENDPOINT_ID',
-                    'SERVICE_NAME_PREFIX' => '$SERVICE_NAME_PREFIX',
+                    'DEPLOY_ENV' => '$DEPLOY_ENV',
+                    'BROKER_NAME' => '$DEPLOY_ENV',
                     'AIVEN_PROJECT' => '$AIVEN_PROJECT',
                     'AIVEN_CLOUD' => '$AIVEN_CLOUD',
                     'IP_WHITELIST' => '$BROKER_IP_WHITELIST',
@@ -6137,6 +6142,7 @@ jobs:
                 EOF
 
                 cf enable-service-access influxdb -b aiven-broker
+                cf enable-service-access opensearch -b aiven-broker
 
       - do:
         - task: create-temp-user
