@@ -119,6 +119,11 @@
       - name: route_registrar
         release: routing
         properties:
+          nats:
+            tls:
+              enabled: true
+              client_cert: "((nats_client_cert.certificate))"
+              client_key: "((nats_client_cert.private_key))"
           route_registrar:
             routes:
               - name: prometheus
