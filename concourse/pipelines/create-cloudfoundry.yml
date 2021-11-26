@@ -2966,6 +2966,13 @@ jobs:
                 PAAS_ADMIN_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_access_key_id cf-terraform-outputs.yml)
                 PAAS_ADMIN_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_admin_metrics_aws_secret_access_key cf-terraform-outputs.yml)
                 PAAS_ADMIN_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/paas_admin_prometheus_password")
+
+                if [ -z "$(credhub get -q -n "${DEPLOY_ENV}/prometheus/prometheus_password")" ]; then
+                  echo 'Setting dummy password for prometheus_password'
+                  credhub set --name="${DEPLOY_ENV}/prometheus/prometheus_password" --type password --password "password"
+                else
+                  echo 'Found prometheus_password'
+                fi
                 PLATFORM_PROMETHEUS_PASSWORD=$(credhub get -q -n "${DEPLOY_ENV}/prometheus/prometheus_password")
                 PAAS_PROMETHEUS_ENDPOINTS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_access_key_id cf-terraform-outputs.yml)
                 PAAS_PROMETHEUS_ENDPOINTS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_secret_access_key cf-terraform-outputs.yml)
