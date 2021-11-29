@@ -29,6 +29,14 @@ destroyed in reverse order so as not to leave any orphaned resources:
 The word *environment* is used herein to describe a single Cloud Foundry
 installation and its supporting infrastructure.
 
+These instructions contain placeholders where the exact command may vary. The below table explains the purpose of those placeholders
+
+| Placeholder   | Purpose                                                                                                                                                                                                           |
+| ------------- | ------------------------------------------|
+| `$ACCOUNT`    | The AWS account being targeted (e.g. `dev`, `staging`)|
+| `$ENV` | <p>The name of the environment being targeted. In the case of short lived development environments, this should have a value of `dev`, and the specific environment is set by the `DEPLOY_ENV` environment variable (max 8 chars).</p>|
+
+
 ## Deployer Concourse
 
 This runs within an environment and is responsible for deploying everything
@@ -48,53 +56,55 @@ services for the platform.
 
 ### Prerequisites
 
-* **You will need a working [Deployer Concourse](#deployer-concourse).** which will be responsible for provisioning and deploying your infrastructure. (Follow the instructions in [paas-bootstrap](https://github.com/alphagov/paas-bootstrap#readme) to create a `deployer concourse`).
-* **You will need access to the credentials store.**
+- [ ] A working [Deployer Concourse](#deployer-concourse), which will be responsible for provisioning and deploying your infrastructure. Follow the instructions in [paas-bootstrap](https://github.com/alphagov/paas-bootstrap#readme) to create a `deployer concourse`.
+- [ ] Make
+- [ ] [GDS CLI](https://github.com/alphagov/gds-cli)
+- [ ] Connection to the GDS VPN
+- [ ] Access to paas-credentials (private repository) and tools installed. If you do not currently have access to the credentials store you may ask a team member upload the necessary credentials on your behalf.
 
-Upload the necessary credentials. _This step assumes that the credentials repository and tooling (paas-pass) has been installed. If you do not currently have access to the credentials store you may ask a team member to do this step on your behalf._
 
-```
-make dev upload-all-secrets
-```
+1. Upload the necessary credentials. _If you do not currently have access to the credentials store you may ask a team member to do this step on your behalf._
 
-Deploy the pipeline configurations using `make`. Select the target based on
-which AWS account you want to work with. For instance, execute:
+   ```shell
+   gds aws paas-$ACCOUNT-admin -- make $ENV upload-all-secrets
+   ```
 
-```
-make dev pipelines
-```
-if you want to deploy to DEV account.
+2. Deploy the pipeline configurations using `make`. This will upload/update the pipelines. Select the target based on
+which AWS account you want to work with:
+
+   ```shell
+   gds aws paas-$ACCOUNT-admin -- make $ENV pipelines
+   ```
 
 ### Deploy
 
-Run the `create-cloudfoundry` pipeline. This configure and deploy CloudFoundry.
-
-Run `make dev showenv` to show environment information such as system URLs.
-
-Run `make dev credhub` to get access to the credhub credential store.
+Run the `create-cloudfoundry` pipeline. This configures and deploys CloudFoundry.
+It might take a couple of hours to complete.
 
 This pipeline implements locking, to prevent two executions of the
-same pipelines to happen at the same time. More details
+same pipelines from happening at the same time. More details
 in [Additional Notes](#check-and-release-pipeline-locking).
 
-NB: The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
+NB: For personal development environments The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
 overnight](#overnight-deletion-of-environments) by default.
 
+Run `gds aws paas-dev-admin -- make dev showenv` to show environment information such as system URLs.
+
+Run `gds aws paas-dev-admin -- make dev credhub` to get access to the credhub credential store.
+
 ### Shared development environments
-In March 2021, we introduced two shared development environments: `dev01` and `dev02`. They are identical to other development
-environments, other than that they aren't torn down overnight. 
+We work in shared development environments: `dev01`, `dev02` and `dev03`. They are identical to other development
+environments, but they are not torn down overnight.
 
-To work with them, use their respective `dev01` and `dev02` Make targets; e.g.
+You can use the `make` targets to work with them; e.g.
 
 ```
-make dev01 showenv
-make dev02 pipelines
+gds aws paas-dev-admin -- make dev02 showenv
+gds aws paas-dev-admin -- make dev02 pipelines
 ```
 
-They were introduced to try to reduce the burden of individuals  running their own environments, and having them be 
-very slow to start up in a morning. We opted for two shared environments over having every development environment not shut
-down overnight because it was cheaper in the long run.
-
+Shared environments reduce the burden on individuals running their own environments,
+and prevents them from having to wait for them to start up in the morning.
 
 ### Destroy
 
@@ -107,12 +117,12 @@ Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, a
 To interact with a CloudFoundry environment you will need the following:
 
 - the `cf` command line tool ([installation instructions](https://github.com/cloudfoundry/cli#downloads))
-- The API endpoint from `make dev showenv`.
+- The API endpoint from `gds aws paas-$ACCOUNT-admin -- make $ENV showenv`.
 
-To login, you should prefer using your Google account, by logging in using `cf login --sso` as [documented here](https://docs.cloud.service.gov.uk/get_started.html#use-single-sign-on)
+Login using `cf login --sso` as [documented here](https://docs.cloud.service.gov.uk/get_started.html#use-single-sign-on)
 
 Alternatively, you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login), 
-to log in as the `admin` user, using the CF admin password from `make dev credhub`.
+to log in as the `admin` user, using the `cf_admin_password` from `gds aws paas-$ACCOUNT-admin -- make $ENV credhub`.
 
 ## Running tests locally
 
@@ -128,14 +138,14 @@ the `create-cloudfoundry` pipeline implements pipeline locking using
 This lock is acquired at the beginning and released the end of all the
 pipeline if it finishes successfully.
 
-In occasions it might be required to check the state or force the release
-of the lock. For that you can manually trigger the jobs `pipeline-check-lock`
+To check the state or force the release
+of the lock, you can manually trigger the jobs `pipeline-check-lock`
 and `pipeline-release-lock` in the job group `Operator`.
 
+## Optional flags
+### Override the branch used by pipelines
 
-## Optionally override the branch used by pipelines
-
-All of the pipeline scripts honour a
+All the pipeline scripts honour a
 `BRANCH` environment variable which allows you to override the git branch
 used within the pipeline. This is useful for development and code review:
 
@@ -143,19 +153,25 @@ used within the pipeline. This is useful for development and code review:
 BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev pipelines
 ```
 
-## Optionally override pipeline self updating
+Alternatively, you can use the `current-branch` option:
+```shell
+gds aws paas-dev-admin -- make dev02 current-branch pipelines
+```
 
-In case you want to prevent pipelines to self update, for example because you
-want to upload and test changes that you have made while developing, but not
-yet pushed to the branch pipeline is currently configured to pull from, you
-can use SELF_UPDATE_PIPELINE environment variable, set to false (true is default):
-`SELF_UPDATE_PIPELINE=false make dev pipelines`
+### Override pipeline self updating
+The pipelines are configured watch a specific branch and self-update when changes
+are pushed.
 
-## Optionally deploy to a different AWS account
+You can prevent this from happening by setting `SELF_UPDATE_PIPELINE=false` (it is true by default):
 
-See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
+```
+gds aws paas-dev-admin -- SELF_UPDATE_PIPELINE=false make dev pipelines
+```
 
-## Optionally disable run of acceptance tests
+This can be useful when you want to upload and test changes that you have made while developing, but not
+yet pushed to the branch pipeline is currently configured to pull from
+
+###  Disable run of acceptance tests
 
 Acceptance tests can be optionally disabled by setting the environment
 variable `DISABLE_CF_ACCEPTANCE_TESTS=true`. This is default in staging and prod.
@@ -169,7 +185,7 @@ be still configured in concourse.
 
 *Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run immediately enabling the acceptance tests again.
 
-## Optionally disable run of custom acceptance tests
+### Disable run of custom acceptance tests
 
 Custom acceptance tests can be optionally disabled by setting the environment
 variable `DISABLE_CUSTOM_ACCEPTANCE_TESTS=true`.
@@ -182,7 +198,7 @@ This will only disable the execution of the test, but the job will be still conf
 
 *Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run reverting to default, which is to run the tests.
 
-## Optionally disable pipeline locking
+###  Disable pipeline locking
 
 Pipeline locking is turned on by default to prevent jobs in the pipeline run while previous changes are still being applied. You can optionally
 disable this by setting the environment variable `DISABLE_PIPELINE_LOCKING=true`. This is default in dev to speed up pipeline execution.
@@ -193,7 +209,7 @@ DISABLE_PIPELINE_LOCKING=true SELF_UPDATE_PIPELINE=false make dev pipelines
 
 Self update pipeline has to be disabled, otherwise it would revert to default value in the pipeline and unlock job would fail since pipeline was not locked before it self updated.
 
-## Optionally run specific job in the create-cloudfoundry pipeline
+### Run specific job in the create-cloudfoundry pipeline
 
 `create-cloudfoundry` is our main pipeline. When we are making changes or
 adding new features to our deployment we many times wish to test only the
@@ -208,10 +224,14 @@ to remove `passed` dependencies for `paas-cf` in the specified job. This means
 that your job will pick the latest changes to `paas-cf` directly, without the
 need to run the pipeline from start in order to bring the changes forward.
 
+##  Deploy to a different AWS account
+
+See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
+
 ## Concourse credentials
 
 When run from your laptop, the environment setup script does not interact with
-Concourse using long lived credentials. If you need to get persistent Concourse
+Concourse using long-lived credentials. If you need to get persistent Concourse
 credentials please use `make <env> credhub`.
 
 ## Overnight deletion of environments
