@@ -79,7 +79,17 @@ which AWS account you want to work with:
 ### Deploy
 
 Run the `create-cloudfoundry` pipeline. This configures and deploys CloudFoundry.
-It might take a couple of hours to complete.
+It might take a couple of hours to complete. 
+
+#### Known issues:
+- `deploy-paas-admin`, `deploy-paas-billing`, `deploy-new-paas-billing` and `deploy-paas-aiven-broker` will error on the first run. 
+Example error:
+   ```
+   failed to interpolate task config: undefined vars: paas-admin-git-keys.private_key, paas-admin-git-keys.public_key
+   ```
+  Solution: 
+  - run the `generate-paas-admin-git-keys`, `generate-paas-billing-git-keys` and `generate-paas-aiven-broker-git-keys` jobs in the job group `operator`
+  - when done, re-run the erroring jobs
 
 This pipeline implements locking, to prevent two executions of the
 same pipelines from happening at the same time. More details
