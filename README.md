@@ -63,7 +63,7 @@ services for the platform.
 - [ ] Access to paas-credentials (private repository) and tools installed. If you do not currently have access to the credentials store you may ask a team member upload the necessary credentials on your behalf.
 
 
-1. Upload the necessary credentials. _If you do not currently have access to the credentials store you may ask a team member to do this step on your behalf._
+1. Upload the necessary credentials:
 
    ```shell
    gds aws paas-$ACCOUNT-admin -- make $ENV upload-all-secrets
@@ -98,9 +98,9 @@ in [Additional Notes](#check-and-release-pipeline-locking).
 NB: For personal development environments The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
 overnight](#overnight-deletion-of-environments) by default.
 
-Run `gds aws paas-dev-admin -- make dev showenv` to show environment information such as system URLs.
+Run `gds aws paas-$ACCOUNT-admin -- make $ENV showenv` to show environment information such as system URLs.
 
-Run `gds aws paas-dev-admin -- make dev credhub` to get access to the credhub credential store.
+Run `gds aws paas-$ACCOUNT-admin -- make $ENV credhub` to get access to the credhub credential store.
 
 ### Shared development environments
 We work in shared development environments: `dev01`, `dev02` and `dev03`. They are identical to other development
@@ -153,41 +153,41 @@ of the lock, you can manually trigger the jobs `pipeline-check-lock`
 and `pipeline-release-lock` in the job group `Operator`.
 
 ## Optional flags
-### Override the branch used by pipelines
+### Overriding the branch used by pipelines
 
 All the pipeline scripts honour a
 `BRANCH` environment variable which allows you to override the git branch
 used within the pipeline. This is useful for development and code review:
 
 ```
-BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev pipelines
+gds aws paas-$ACCOUNT-admin -- BRANCH=$(git rev-parse --abbrev-ref HEAD) make $ENV pipelines
 ```
 
-Alternatively, you can use the `current-branch` option:
+Alternatively, you can use the `current-branch` option, for example:
 ```shell
 gds aws paas-dev-admin -- make dev02 current-branch pipelines
 ```
 
-### Override pipeline self updating
+### Overriding pipeline self updating
 The pipelines are configured watch a specific branch and self-update when changes
 are pushed.
 
 You can prevent this from happening by setting `SELF_UPDATE_PIPELINE=false` (it is true by default):
 
 ```
-gds aws paas-dev-admin -- SELF_UPDATE_PIPELINE=false make dev pipelines
+gds aws paas-$ACCOUNT-admin -- SELF_UPDATE_PIPELINE=false make $ENV pipelines
 ```
 
 This can be useful when you want to upload and test changes that you have made while developing, but not
-yet pushed to the branch pipeline is currently configured to pull from
+yet pushed to the branch the pipeline is currently configured to pull from
 
-###  Disable run of acceptance tests
+###  Disabling run of acceptance tests
 
 Acceptance tests can be optionally disabled by setting the environment
 variable `DISABLE_CF_ACCEPTANCE_TESTS=true`. This is default in staging and prod.
 
 ```
-DISABLE_CF_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
+gds aws paas-$ACCOUNT-admin -- DISABLE_CF_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make $ENV pipelines
 ```
 
 This will only disable the execution of the test, but the job will
@@ -195,31 +195,31 @@ be still configured in concourse.
 
 *Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run immediately enabling the acceptance tests again.
 
-### Disable run of custom acceptance tests
+### Disabling run of custom acceptance tests
 
 Custom acceptance tests can be optionally disabled by setting the environment
 variable `DISABLE_CUSTOM_ACCEPTANCE_TESTS=true`.
 
 ```
-DISABLE_CUSTOM_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
+gds aws paas-$ACCOUNT-admin -- DISABLE_CUSTOM_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make $ENV pipelines
 ```
 
 This will only disable the execution of the test, but the job will be still configured in concourse.
 
 *Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run reverting to default, which is to run the tests.
 
-###  Disable pipeline locking
+###  Disabling pipeline locking
 
 Pipeline locking is turned on by default to prevent jobs in the pipeline run while previous changes are still being applied. You can optionally
 disable this by setting the environment variable `DISABLE_PIPELINE_LOCKING=true`. This is default in dev to speed up pipeline execution.
 
 ```
-DISABLE_PIPELINE_LOCKING=true SELF_UPDATE_PIPELINE=false make dev pipelines
+gds aws paas-$ACCOUNT-admin -- DISABLE_PIPELINE_LOCKING=true SELF_UPDATE_PIPELINE=false make $ENV pipelines
 ```
 
 Self update pipeline has to be disabled, otherwise it would revert to default value in the pipeline and unlock job would fail since pipeline was not locked before it self updated.
 
-### Run specific job in the create-cloudfoundry pipeline
+### Running specific job in the create-cloudfoundry pipeline
 
 `create-cloudfoundry` is our main pipeline. When we are making changes or
 adding new features to our deployment we many times wish to test only the
@@ -227,14 +227,14 @@ specific changes we have just made. To do that, it's many times enough to run
 only the job that is applying the change. In order to do that, you can use
 `run_job` makefile target. Specify the job name you want to execute by setting
 the `JOB` variable. You also have to specify your environment type, e.g.
-`JOB=performance-tests make dev run_job`.
+`JOB=performance-tests make $ENV run_job`.
 
 This will not only tigger the job, but before that it will modify the pipeline
 to remove `passed` dependencies for `paas-cf` in the specified job. This means
 that your job will pick the latest changes to `paas-cf` directly, without the
 need to run the pipeline from start in order to bring the changes forward.
 
-##  Deploy to a different AWS account
+##  Deploying to a different AWS account
 
 See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
 
@@ -242,7 +242,7 @@ See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
 
 When run from your laptop, the environment setup script does not interact with
 Concourse using long-lived credentials. If you need to get persistent Concourse
-credentials please use `make <env> credhub`.
+credentials please use `make $ENV credhub`.
 
 ## Overnight deletion of environments
 
@@ -267,7 +267,7 @@ This feature is opt-in and must be enable **every day** by unpausing the
 by running:
 
 ```
-make dev unpause-kick-off
+gds aws paas-$ACCOUNT-admin -- make $ENV unpause-kick-off
 ```
 
 The `deployment-timer` would be disabled automatically just after the
