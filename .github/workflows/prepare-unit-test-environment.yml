@@ -1,0 +1,95 @@
+on:
+  workflow_call:
+    inputs:
+      bosh_cli_version:
+        required: true
+        type: string
+      go_version:
+        required: true
+        type: string
+      prometheus_version:
+        required: true
+        type: string
+      ruby_version:
+        required: true
+        type: string
+      shellcheck_version:
+        required: true
+        type: string
+      terraform_version:
+        required: true
+        type: string
+      test_to_run:
+        required: true
+        type: string
+jobs:
+  prepare-environment:
+    runs-on: ubuntu-latest
+    env:
+      BOSH_CLI_VERSION: ${{ inputs.bosh_cli_version }}
+      DEPLOY_ENV: "github"
+      GO_VERSION: ${{ inputs.go_version }}
+      PROMETHEUS_VERSION: ${{ inputs.prometheus_version }}
+      RUBY_VERSION: ${{ inputs.ruby_version }}
+      SHELLCHECK_VERSION: ${{ inputs.shellcheck_version }}
+      TF_VERSION: ${{ inputs.terraform_version }}
+    steps:
+      ## Setup
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: Install Shellcheck
+        run: |
+          wget -qO- "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJv
+          sudo cp "shellcheck-v${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
+
+      - name: "Install Terraform ${{env.TF_VERSION}}"
+        run: |
+          cd "${{runner.temp}}"
+          wget -q -O terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
+          unzip terraform.zip
+          chmod +x ./terraform
+          sudo mv -f ./terraform /usr/local/bin
+
+      - name: Install Bosh CLI v2
+        run: |
+          set -e
+          wget -q "https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64"
+          sudo mv "bosh-cli-${BOSH_CLI_VERSION}-linux-amd64" /usr/local/bin/bosh && sudo chmod +x /usr/local/bin/bosh
+          set +e
+
+      - name: "Install Promtool ${{env.PROMETHEUS_VERSION}}"
+        run: |
+          wget -q -O prometheus.tgz "https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz"
+          sudo tar xzf "prometheus.tgz" -C /usr/local/bin --wildcards --wildcards-match-slash --strip-components=1 '*promtool'
+
+      - name: "Install Go ${{env.GO_VERSION}}"
+        uses: actions/setup-go@v2
+        with:
+          go-version: "${{env.GO_VERSION}}"
+
+      - name: Install pipecleaner
+        run: (cd tools/pipecleaner && go install -mod=vendor)
+
+      - name: Install Python packages
+        run: pip install --user yamllint
+
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "${{env.RUBY_VERSION}}"
+
+      - name: Install bundle
+        run: |
+          gem install bundler
+          bundle install --jobs 4 --retry 3
+
+      - name: "Run test (${{inputs.test_to_run}})"
+        env:
+          TMPDIR: "${{runner.temp}}"
+          TF_IN_AUTOMATION: yes
+          GOPATH: "/home/runner/go"
+          GOBIN: "/home/runner/go/bin"
+        run: "make ${{ inputs.test_to_run}}"

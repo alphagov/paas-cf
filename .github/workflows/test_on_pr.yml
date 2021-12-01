@@ -10,78 +10,101 @@ env:
   RUBY_VERSION: "2.7"
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        make_task:
-          - "lint"
-          - "config_spec"
-          - "scripts_spec"
-          - "tools_spec"
-          - "concourse_spec"
-          - "manifests_spec"
-          - "terraform_spec"
-          - "platform_tests_spec"
-          - "compile_platform_tests"
-    steps:
-      ## Setup
-      - name: Checkout repo
-        uses: actions/checkout@v2
-        with:
-          submodules: true
+  lint:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "lint"
 
-      - name: Install Shellcheck
-        run: |
-          wget -qO- "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJv
-          sudo cp "shellcheck-v${SHELLCHECK_VERSION}/shellcheck" /usr/local/bin
+  config:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "config_spec"
 
-      - name: "Install Terraform ${{env.TF_VERSION}}"
-        run: |
-          cd "${{runner.temp}}"
-          wget -q -O terraform.zip "https://releases.hashicorp.com/terraform/${TF_VERSION}/terraform_${TF_VERSION}_linux_amd64.zip"
-          unzip terraform.zip
-          chmod +x ./terraform
-          sudo mv -f ./terraform /usr/local/bin
+  scripts:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "scripts_spec"
 
-      - name: Install Bosh CLI v2
-        run: |
-          set -e
-          wget -q "https://s3.amazonaws.com/bosh-cli-artifacts/bosh-cli-${BOSH_CLI_VERSION}-linux-amd64"
-          sudo mv "bosh-cli-${BOSH_CLI_VERSION}-linux-amd64" /usr/local/bin/bosh && sudo chmod +x /usr/local/bin/bosh
-          set +e
+  tools:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "tools_spec"
 
-      - name: "Install Promtool ${{env.PROMETHEUS_VERSION}}"
-        run: |
-          wget -q -O prometheus.tgz "https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz"
-          sudo tar xzf "prometheus.tgz" -C /usr/local/bin --wildcards --wildcards-match-slash --strip-components=1 '*promtool'
+  concourse:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "concourse_spec"
 
-      - name: "Install Go ${{env.GO_VERSION}}"
-        uses: actions/setup-go@v2
-        with:
-          go-version: "${{env.GO_VERSION}}"
-          
-      - name: Install pipecleaner
-        run: (cd tools/pipecleaner && go install -mod=vendor)
+  manifests:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "manifests_spec"
 
-      - name: Install Python packages
-        run: pip install --user yamllint
+  test_terraform:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "terraform_spec"
 
-      - name: Install Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: "${{env.RUBY_VERSION}}"
+  platform_tests:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "platform_tests_spec"
 
-      - name: Install bundle
-        run: |
-          gem install bundler
-          bundle install --jobs 4 --retry 3
-
-      ## Tests
-      - name: "make ${{ matrix.make_task }}"
-        env:
-          TMPDIR: "${{runner.temp}}"
-          TF_IN_AUTOMATION: yes
-          GOPATH: "/home/runner/go"
-          GOBIN: "/home/runner/go/bin"
-        run: "make ${{ matrix.make_task }}"
+  compile_platform_tests:
+    uses: alphagov/paas-cf/.github/workflows/prepare-unit-test-environment.yml@main
+    with:
+      bosh_cli_version: ${{ env.BOSH_CLI_VERSION }}
+      go_version: ${{ env.GO_VERSION }}
+      prometheus_version: ${{ env.PROMETHEUS_VERSION }}
+      ruby_version: ${{ env.RUBY_VERSION }}
+      shellcheck_version: ${{ env.SHELLCHECK_VERSION }}
+      terraform_version:  ${{ env.TF_VERSION }}
+      test_to_run: "compile_platform_tests"
