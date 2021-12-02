@@ -11,6 +11,7 @@ scheduler_instances: 2
 cc_worker_instances: 2
 cc_hourly_rate_limit: 15000
 cc_staging_timeout_in_seconds: 900
+cc_max_package_size: 1073741824
 cc_maximum_health_check_timeout_in_seconds: 300
 paas_region_name: dev
 

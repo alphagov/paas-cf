@@ -30,6 +30,16 @@
   value: ((environment))-cf-packages
 
 - type: replace
+  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/packages/max_package_size?
+  value: ((cc_max_package_size))
+- type: replace
+  path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/packages/max_package_size?
+  value: ((cc_max_package_size))
+- type: replace
+  path: /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/packages/max_package_size?
+  value: ((cc_max_package_size))
+
+- type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/resource_pool/resource_directory_key?
   value: ((environment))-cf-resources
 - type: replace
