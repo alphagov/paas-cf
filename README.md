@@ -1,264 +1,135 @@
-[![Build Status](https://travis-ci.com/alphagov/paas-cf.svg?branch=master)](https://travis-ci.com/alphagov/paas-cf)
-
-<!-- 2020-01-26[T]10:00:00  -->
-
 # paas-cf
 
 ⚠️
-When merging pull requests,
-please use the [gds-cli](https://github.com/alphagov/gds-cli)
-or [github_merge_sign](https://rubygems.org/gems/github_merge_sign)
+When merging pull requests, use the [gds-cli](https://github.com/alphagov/gds-cli): `gds git merge-sign alphagov/paas-cf PR_NUMBER`
 ⚠️
 
-This repository contains [Concourse][] pipelines and related [Terraform][]
-and [BOSH][] manifests that allow provisioning of [CloudFoundry][] on AWS.
+GOV.UK Platform as a Service (PaaS) CF creates a deployment of [Cloud Foundry](https://www.cloudfoundry.org/) (CF) on VMs for GOV.UK PaaS. It builds upon the foundations laid out in [`paas-bootstrap`](https://github.com/alphagov/paas-bootstrap) and it handles the following non-exhaustive list of duties:
 
-[Concourse]: http://concourse-ci.org/
-[Terraform]: https://terraform.io/
-[BOSH]: https://bosh.io/
-[CloudFoundry]: https://www.cloudfoundry.org/
++ [Deploying CF using Concourse](https://github.com/alphagov/paas-cf/blob/main/concourse/pipelines/create-cloudfoundry.yml)
++ [Configuring CF](https://github.com/alphagov/paas-cf/tree/main/manifests/cf-manifest) based on [`cf-deployment`](https://github.com/cloudfoundry/cf-deployment)
++ [Provisioning AWS resources using Terraform](https://github.com/alphagov/paas-cf/tree/main/terraform/cloudfoundry). This includes
+   + load balancers
+   + databases
+   + IAM roles and policies
+   + DNS records
+   + networking
+   + S3 buckets
++ [Configuring Prometheus](https://github.com/alphagov/paas-cf/tree/main/manifests/prometheus) based on [`prometheus-boshrelease`](https://github.com/bosh-prometheus/prometheus-boshrelease)
++ Running continuous [platform-level tests](https://github.com/alphagov/paas-cf/tree/main/platform-tests)
++ Deploying and configuring our different service brokers (for example, the [RDS broker](https://github.com/alphagov/paas-cf/blob/main/manifests/cf-manifest/operations.d/710-rds-broker.yml) and [Aiven broker](https://github.com/alphagov/paas-cf/blob/main/manifests/cf-manifest/operations.d/741-aiven-broker.yml))
 
-## Overview
+It does not include the AWS IAM roles which are assumed by different system components. Those are created in the account wide terraform (private repository).
 
-The following components needs to be deployed in order. They should be
-destroyed in reverse order so as not to leave any orphaned resources:
+## Contents
+1. [What does `paas-cf` contain?](#what-does-paas-cf-contain)
+1. [Deploying a new environment](#deploying-a-new-environment)
+1. [Cloud Foundry deployment configuration options](#cloud-foundry-deployment-configuration-options)
+1. [Accessing Concourse](#accessing-concourse)
+1. [Finding configuration](#finding-configuration)
 
-1. [Deployer Concourse](#deployer-concourse)
-1. [CloudFoundry](#cloudfoundry)
+## What does `paas-cf` contain?
+`paas-cf` separates the responsibility for configuring, deploying, running, and monitoring Cloud Foundry, from those responsibilities held by [`paas-bootstrap`](https://github.com/alphagov/paas-bootstrap).
 
-The word *environment* is used herein to describe a single Cloud Foundry
-installation and its supporting infrastructure.
+This repository does not itself contain the code that runs in an environment (for the most part), but instead serves to compose the different pieces into a cohesive whole. As a result, it contains a variety of pieces that tell only part of the story. The table under the heading [Finding configuration](#Finding-configuration) outlines some key directories and their purposes.
 
-## Deployer Concourse
+## Deploying a new environment
+At a very high level, the [`create-cloudfoundry` Concourse pipeline](https://github.com/alphagov/paas-cf/blob/main/concourse/pipelines/create-cloudfoundry.yml) generates a [Bosh manifest](https://bosh.io/docs/manifest-v2/) which describes the virtual machines and their networking which make up the Cloud Foundry deployment, as well as the software which runs on each machine. The manifest is then [submitted](https://github.com/alphagov/paas-cf/blob/main/concourse/pipelines/create-cloudfoundry.yml#L2899) to the Bosh director configured in `paas-bootstrap`.
 
-This runs within an environment and is responsible for deploying everything
-else to that environment, such as AWS infrastructure and
-[CloudFoundry](#cloudfoundry). It should be kept running while that
-environment exists.
+### Pre-requisites
+Before you can get a Cloud Foundry deployment up and running, you will need the following available
 
-It is deployed using [paas-bootstrap]. Follow the instructions in that repo to
-create a concourse instance using the `deployer-concourse` profiles etc.
++ [ ] A running [`deployer-concourse` instance from `paas-bootstrap`](https://github.com/alphagov/paas-bootstrap)
++ [ ] Make
++ [ ] Ruby >= 2.7
++ [ ] [GDS CLI](https://github.com/alphagov/gds-cli)
++ [ ] Access to `paas-credentials` (private repository) and tools installed
++ [ ] Connection to GDS VPN
++ [ ] Permission to assume the `Admin` role of the relevant AWS account (dev, ci, staging, production)
++ [ ] `AWS_DEFAULT_REGION` environment set the desired region for the environment
++ [ ] [cf CLI](https://docs.cloudfoundry.org/cf-cli/install-go-cli.html) >=7
 
-[paas-bootstrap]: https://github.com/alphagov/paas-bootstrap#readme
+### Deploy Cloud Foundry
 
-## Cloudfoundry
+These instructions contain placeholders where the exact command may vary. The below table explains the purpose of those placeholders:
 
-The deployer concourse is responsible for deploying CloudFoundry and supporting
-services for the platform.
+| Placeholder   | Purpose                                                                                                                                                                                                           |
+| ------------- | ------------------------------------------|
+| `$ACCOUNT`    | The AWS account being targeted (for example, `dev`, `staging`)|
+| `$ENV` | The name of the environment being targeted. In the case of short lived development environments, this should have a value of `dev`, and the specific environment is set by the `DEPLOY_ENV` environment variable (max 8 chars)|
 
-### Prerequisites
+1. Log in to [CredHub](https://docs.cloudfoundry.org/credhub/) in the environment by running this and following the instructions on screen. This will take you into a new shell session.
+   ```shell
+   gds aws paas-$ACCOUNT-admin -- make $ENV credhub
+   ```
 
-* **You will need a working [Deployer Concourse](#deployer-concourse).** which will be responsible for provisioning and deploying your infrastructure. (Follow the instructions in [paas-bootstrap](https://github.com/alphagov/paas-bootstrap#readme) to create a `deployer concourse`).
-* **You will need access to the credentials store.**
+1. Upload the secrets to CredHub from the CredHub shell session.
+   ```shell
+   make $ENV upload-all-secrets
+   ```
 
-Upload the necessary credentials. _This step assumes that the credentials repository and tooling (paas-pass) has been installed. If you do not currently have access to the credentials store you may ask a team member to do this step on your behalf._
+   Note: you do not need to use GDS CLI here because the CredHub shell session contains the AWS credentials in environment variables
 
-```
-make dev upload-all-secrets
-```
+1. Exit the CredHub shell session
 
-Deploy the pipeline configurations using `make`. Select the target based on
-which AWS account you want to work with. For instance, execute:
+1. Deploy the pipeline configurations using `make`. This will upload or update the pipelines. Select the target based on which AWS account you want to work with:
 
-```
-make dev pipelines
-```
-if you want to deploy to DEV account.
+   ```shell
+   gds aws paas-$ACCOUNT-admin -- make $ENV pipelines
+   ```
+1. Log in to Concourse. See the [Accessing Concourse](#accessing-concourse).
 
-### Deploy
+1. Tun the `generate-paas-admin-git-keys`, `generate-paas-billing-git-keys` and `generate-paas-aiven-broker-git-keys` jobs in the job group `operator`. This will generate and store some SSH keys needed by other jobs.
 
-Run the `create-cloudfoundry` pipeline. This configure and deploy CloudFoundry.
+1. Run the `create-cloudfoundry` pipeline, starting from the left-hand `pipeline-lock` job. This will configure and deploy Cloud Foundry. It might take a couple of hours to complete.
 
-Run `make dev showenv` to show environment information such as system URLs.
+## Cloud Foundry deployment configuration options
 
-Run `make dev credhub` to get access to the credhub credential store.
-
-This pipeline implements locking, to prevent two executions of the
-same pipelines to happen at the same time. More details
-in [Additional Notes](#check-and-release-pipeline-locking).
-
-NB: The CloudFoundry deployment (but not the supporting infrastructure) will [auto-delete
-overnight](#overnight-deletion-of-environments) by default.
-
-### Shared development environments
-In March 2021, we introduced two shared development environments: `dev01` and `dev02`. They are identical to other development
-environments, other than that they aren't torn down overnight. 
-
-To work with them, use their respective `dev01` and `dev02` Make targets; e.g.
-
-```
-make dev01 showenv
-make dev02 pipelines
-```
-
-They were introduced to try to reduce the burden of individuals  running their own environments, and having them be 
-very slow to start up in a morning. We opted for two shared environments over having every development environment not shut
-down overnight because it was cheaper in the long run.
-
-
-### Destroy
-
-Run the `destroy-cloudfoundry` pipeline to delete the CloudFoundry deployment, and supporting infrastructure.
-
-# Additional notes
-
-## Accessing CloudFoundry
-
-To interact with a CloudFoundry environment you will need the following:
-
-- the `cf` command line tool ([installation instructions](https://github.com/cloudfoundry/cli#downloads))
-- The API endpoint from `make dev showenv`.
-
-To login, you should prefer using your Google account, by logging in using `cf login --sso` as [documented here](https://docs.cloud.service.gov.uk/get_started.html#use-single-sign-on)
-
-Alternatively, you can use `cf login` as [documented here](http://docs.cloudfoundry.org/cf-cli/getting-started.html#login), 
-to log in as the `admin` user, using the CF admin password from `make dev credhub`.
-
-## Running tests locally
-
-You will need to install some dependencies to run the unit tests on your own
-machine. The most up-to-date reference for these is the Travis CI
-configuration in [`.travis.yml`](.travis.yml).
-
-## Check and release pipeline locking
-
-the `create-cloudfoundry` pipeline implements pipeline locking using
-[the concourse pool resource](https://github.com/concourse/pool-resource).
-
-This lock is acquired at the beginning and released the end of all the
-pipeline if it finishes successfully.
-
-In occasions it might be required to check the state or force the release
-of the lock. For that you can manually trigger the jobs `pipeline-check-lock`
-and `pipeline-release-lock` in the job group `Operator`.
-
-
-## Optionally override the branch used by pipelines
-
-All of the pipeline scripts honour a
-`BRANCH` environment variable which allows you to override the git branch
-used within the pipeline. This is useful for development and code review:
+There are a handful of configuration options which can change a Cloud Foundry deployment which can only be set at pipeline level. Each of the properties in the below table should be set as [Make variables](https://www.gnu.org/software/make/manual/make.html#Environment) when setting the pipelines:
 
 ```
-BRANCH=$(git rev-parse --abbrev-ref HEAD) make dev pipelines
+gds aws paas-$ACCOUNT-admin -- make $ENV pipelines VAR=value
 ```
 
-## Optionally override pipeline self updating
+| Property (VAR) | Type | Default | Description |
+| -- | -- | -- | -- |
+| `BRANCH` | String | `main` | Sets the `paas-cf` branch which will be used in the pipeline |
+| `DEPLOY_ENV` | String | `null` for short-lived dev envs, fixed in `Makefile` for other envs | Sets the name of the environment |
+| `SELF_UPDATE_PIPELINE` | Bool | `true` | Whether the pipeline should update its own definition from the current branch at runtime. Disable this if you're making a pipeline change which has not been pushed to branch yet |
+| `SLIM_DEV_DEPLOYMET` | Bool| `true` in dev, `false` elsewhere | If `true`, reduces the number and size of VMs created for each component to 2. In dev, set this to `false` when testing the impact of a change on platform availability |
+|`DISABLED_AZS` | String list, space separated | `""` | <p>Disables the given availability zones in Bosh. This is used when an availability zone goes away, and we need to redistribute virtual machines away from that AZ. </p><p> Set to a value like `"z1 z2"`</p>|
+|`ENABLE_AUTODELETE` | Bool | `true` in dev, `false` elsewhere | <p>If `true`, deploys a pipeline which tears down Cloud Foundry at 8pm each day as a cost saving measure.</p><p>This should absolutely never be set to `true` in a staging or production deployment</p> |
+|`ENABLE_DESTROY` | Bool | `true` in dev, `false` elsewhere |<p>If `true`, deploys a pipeline which, when run, will completely destroy Cloud Foundry and all of its data</p><p>This should absolutely never be set to `true` in a staging or production deployment</p>|
 
-In case you want to prevent pipelines to self update, for example because you
-want to upload and test changes that you have made while developing, but not
-yet pushed to the branch pipeline is currently configured to pull from, you
-can use SELF_UPDATE_PIPELINE environment variable, set to false (true is default):
-`SELF_UPDATE_PIPELINE=false make dev pipelines`
+## Accessing Concourse
+Once deployed, Concourse can be accessed from the URLs below. By default, authentication with Github is enabled.
 
-## Optionally deploy to a different AWS account
+| Environment type | Environment name | URL |
+| ---------------- | ---------------- | --- |
+| Dev | Unique name | https://deployer.$NAME.dev.cloudpipeline.digital/ |
+| Dev | Dev[0-9]+ | https://deployer.dev$NUMBER.dev.cloudpipeline.digital/ |
+| Staging | `stg-lon` | https://deployer.london.staging.cloudpipeline.digital/ |
+| CI | `build` | https://concourse.build.ci.cloudpipeline.digital/ |
+| Production | `prod` | https://deployer.cloud.service.gov.uk/ |
+| Production | `prod-lon` | https://deployer.london.cloud.service.gov.uk/ |
 
-See [doc/non_dev_deployments.md](doc/non_dev_deployments.md).
+Non-development URLs are also accessible via the `gds paas open` command.
 
-## Optionally disable run of acceptance tests
+## Finding configuration
+The following table outlines some important directories in the repository, their purpose, and when you might need to look in them.
 
-Acceptance tests can be optionally disabled by setting the environment
-variable `DISABLE_CF_ACCEPTANCE_TESTS=true`. This is default in staging and prod.
-
-```
-DISABLE_CF_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
-```
-
-This will only disable the execution of the test, but the job will
-be still configured in concourse.
-
-*Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run immediately enabling the acceptance tests again.
-
-## Optionally disable run of custom acceptance tests
-
-Custom acceptance tests can be optionally disabled by setting the environment
-variable `DISABLE_CUSTOM_ACCEPTANCE_TESTS=true`.
-
-```
-DISABLE_CUSTOM_ACCEPTANCE_TESTS=true SELF_UPDATE_PIPELINE=false make dev pipelines
-```
-
-This will only disable the execution of the test, but the job will be still configured in concourse.
-
-*Note:* `SELF_UPDATE_PIPELINE` is also disabled because enabling it would result in the first run reverting to default, which is to run the tests.
-
-## Optionally disable pipeline locking
-
-Pipeline locking is turned on by default to prevent jobs in the pipeline run while previous changes are still being applied. You can optionally
-disable this by setting the environment variable `DISABLE_PIPELINE_LOCKING=true`. This is default in dev to speed up pipeline execution.
-
-```
-DISABLE_PIPELINE_LOCKING=true SELF_UPDATE_PIPELINE=false make dev pipelines
-```
-
-Self update pipeline has to be disabled, otherwise it would revert to default value in the pipeline and unlock job would fail since pipeline was not locked before it self updated.
-
-## Optionally run specific job in the create-cloudfoundry pipeline
-
-`create-cloudfoundry` is our main pipeline. When we are making changes or
-adding new features to our deployment we many times wish to test only the
-specific changes we have just made. To do that, it's many times enough to run
-only the job that is applying the change. In order to do that, you can use
-`run_job` makefile target. Specify the job name you want to execute by setting
-the `JOB` variable. You also have to specify your environment type, e.g.
-`JOB=performance-tests make dev run_job`.
-
-This will not only tigger the job, but before that it will modify the pipeline
-to remove `passed` dependencies for `paas-cf` in the specified job. This means
-that your job will pick the latest changes to `paas-cf` directly, without the
-need to run the pipeline from start in order to bring the changes forward.
-
-## Concourse credentials
-
-When run from your laptop, the environment setup script does not interact with
-Concourse using long lived credentials. If you need to get persistent Concourse
-credentials please use `make <env> credhub`.
-
-## Overnight deletion of environments
-
-In order to avoid unnecessary costs in AWS, there is some logic to
-stop environments and VMs at night:
-
- * **Cloud Foundry deployment**: The `autodelete-cloudfoundry` pipeline
-   will be triggered every night to delete the specific deployment.
-
-In all cases, to prevent this from happening, you can simply pause the
-pipelines or its resources or jobs.
-
-Note that the *Deployer Concourse* and *MicroBOSH* VMs will be kept running.
-
-## Morning kick-off of deployment
-
-The pipeline `deployment-kick-off` can trigger for you the deployment in
-the morning, so the environment is ready for you before you start work.
-
-This feature is opt-in and must be enable **every day** by unpausing the
-`deployment-timer` resource in `deployment-kick-off`, either manually or
-by running:
-
-```
-make dev unpause-kick-off
-```
-
-The `deployment-timer` would be disabled automatically just after the
-deployment is kick-off, to prevent the next day to happen again. You can
-avoid this by pausing the job `pause-kick-off`
-
-## aws-cli
-
-You might need [aws-cli][] installed on your machine to debug a deployment.
-You can install it using [Homebrew][] or a [variety of other methods][]. You
-should provide [access keys using environment variables][] instead of
-providing them to the interactive configure command.
-
-[aws-cli]: https://aws.amazon.com/cli/
-[Homebrew]: http://brew.sh/
-[variety of other methods]: http://docs.aws.amazon.com/cli/latest/userguide/installing.html
-[access keys using environment variables]: http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html#cli-environment
-
-
-## Pingdom checks
-Visit [Pingdom documentation page](https://github.com/alphagov/paas-cf/blob/master/doc/pingdom.md)
-
-## Other useful commands
-Type `make` to get the list of all available commands.
+| Directory | Purpose | I will need this when .. |
+| -- | -- | -- |
+| `concourse/pipelines/` | YAML definitions of the Concourse pipelines | I want to make a change to how the platform is deployed, monitored, or torn down |
+| `config/billing/` | The scripts and static files used to generate configuration for the billing system.| <ul><li>I'm adding a new backing service, so that I can set how much it costs.</li><li>The VAT rate has changed </li><li>The cost of an AWS resource has changed</li></ul>|
+| `manifests/cf-manifest/` | The Bosh manifest configuration for Cloud Foundry | See specific directories below |
+| `manifests/cf-manifest/operations.d/` | Customisations applied to `cf-deployment`, applicable to all environments | <ul><li>I want to make a configuration change that will affect every environment</li><li>I want to deploy a new piece of software with a Bosh release</li></ul>
+| `manifests/cf-manifest/operations` | Customisations applied to `cf-deployment` [based on some condition](https://github.com/alphagov/paas-cf/blob/main/manifests/cf-manifest/scripts/generate-manifest.sh#L18) | I want to make a configuration change that will only be applied in certain circumstances |
+|`manifests/cf-manifest/spec`| Unit tests applied to the generated manifest file | I want to make sure a property of the manifest is not invalidated (for example, correct number of instances of some VM) |
+|`manifests/cf-manifest/env-specific`| Values of variables per environment | I want to change things like the number of Diego cells deployed in an environment |
+| `terraform/az-monitoring` | Terraform configuration for out availability zone monitoring solution | I want to make a change to how we monitoring how alive an availability zone is |
+| `terraform/cloudfoundry` | Terraform configuration for the AWS resources associated with running Cloud Foundry | <ul><li>I want to set/unset DNS records</li><li>I want to configure ingress for a new service broker</li><li>I want to alter Cloud Foundry's AWS network architecture</li></ul>|
+| `terraform/spec` | Unit tests applied to Terraform configuration | I want to make an assertion about Terraform configuration as part of the unit tests
+| `terraform/vpc-peering` | Terraform configuration for VPC peering between the Cloud Foundry VPC and others | I want to change a property of our existing VPC peers, and future ones |
+| `tools/buildpacks` | Golang implementation of our regular buildpack update emails | I want to make a change to the email we send to tenants about buildpack updates |
+| `tools/metrics` | A Prometheus exporter which exposes a variety of platform-level metrics collected from different sources | <ul><li>I want to add a new metrics</li><li>I want to change the frequency of the measurement of an existing metric</li></ul>|
