@@ -2,11 +2,11 @@
 uaa_instances: 3
 nats_instances: 3
 diego_api_instances: 3
-cell_instances: 126
+cell_instances: 138
 router_instances: 15
 api_instances: 12
-doppler_instances: 63
-log_api_instances: 33
+doppler_instances: 69
+log_api_instances: 36
 scheduler_instances: 8
 cc_worker_instances: 8
 cc_hourly_rate_limit: 60000
