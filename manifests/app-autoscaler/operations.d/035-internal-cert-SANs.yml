@@ -1,0 +1,65 @@
+---
+- type: replace
+  path: /variables/name=scalingengine_server/options/alternative_names
+  value:
+    - scalingengine.service.cf.internal
+- type: replace
+  path: /variables/name=scalingengine_server/update_mode
+  value: converge
+
+- type: replace
+  path: /variables/name=eventgenerator_server/options/alternative_names
+  value:
+    - eventgenerator.service.cf.internal
+- type: replace
+  path: /variables/name=eventgenerator_server/update_mode
+  value: converge
+
+- type: replace
+  path: /variables/name=apiserver_server/options/alternative_names
+  value:
+    - apiserver.service.cf.internal
+- type: replace
+  path: /variables/name=apiserver_server/update_mode
+  value: converge
+
+- type: replace
+  path: /variables/name=apiserver_public_server/options/alternative_names
+  value:
+    - autoscaler.((system_domain))
+- type: replace
+  path: /variables/name=apiserver_public_server/update_mode
+  value: converge
+
+- type: replace
+  path: /variables/name=servicebroker_server/options/alternative_names
+  value:
+    - servicebroker.service.cf.internal
+- type: replace
+  path: /variables/name=servicebroker_server/update_mode
+  value: converge
+
+- type: replace
+  path: /variables/name=servicebroker_public_server/options/alternative_names
+  value:
+    - autoscalerservicebroker.((system_domain))
+- type: replace
+  path: /variables/name=servicebroker_public_server/update_mode
+  value: converge
+
+- type: replace
+  path: /variables/name=scheduler_server/options/alternative_names
+  value:
+    - autoscalerscheduler.service.cf.internal
+- type: replace
+  path: /variables/name=scheduler_server/update_mode
+  value: converge
+
+- type: replace
+  path: /variables/name=postgres_server/options/alternative_names
+  value:
+    - autoscalerpostgres.service.cf.internal
+- type: replace
+  path: /variables/name=postgres_server/update_mode
+  value: converge
+
