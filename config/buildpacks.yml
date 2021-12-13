@@ -158,10 +158,10 @@ buildpacks:
 - name: java_buildpack
   repo_name: java-buildpack
   stack: cflinuxfs3
-  version: v4.42
-  sha: cac14ccd627992dad17b04ef93a22d5000a682d74b8628f8ecdfe78bc7ba8c14
-  filename: java-buildpack-v4.42.zip
-  url: https://github.com/cloudfoundry/java-buildpack/releases/download/v4.42/java-buildpack-v4.42.zip
+  version: v4.44
+  sha: 374db7fe474f8704ac8ed86b82f3f1dbcd729af2c59b3757c003f6b8f4b8d174
+  filename: java-buildpack-v4.44.zip
+  url: https://github.com/cloudfoundry/java-buildpack/releases/download/v4.44/java-buildpack-v4.44.zip
   dependencies: []
 - name: nodejs_buildpack
   repo_name: nodejs-buildpack
