@@ -1,4 +1,4 @@
 ---
-number_of_cells: 24
+number_of_cells: 36
 isolation_segment_name: govuk-notify-production
 vm_type: high_cpu_cell
