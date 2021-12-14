@@ -210,25 +210,25 @@ buildpacks:
 - name: php_buildpack
   repo_name: php-buildpack
   stack: cflinuxfs3
-  version: v4.4.45
-  sha: 31848f7988f460c55a99605b36e1ab344de82017ffd573c150001c52445c9b74
-  filename: php-buildpack-cflinuxfs3-v4.4.45.zip
-  url: https://github.com/cloudfoundry/php-buildpack/releases/download/v4.4.45/php-buildpack-cflinuxfs3-v4.4.45.zip
+  version: v4.4.52
+  sha: adb296b4662e8b3cf8017706896ad8fffdeb5f49dd0ad871961676d20d0b6c7b
+  filename: php-buildpack-cflinuxfs3-v4.4.52.zip
+  url: https://github.com/cloudfoundry/php-buildpack/releases/download/v4.4.52/php-buildpack-cflinuxfs3-v4.4.52.zip
   dependencies:
   - name: CAAPM
     version: 20.11.0
     cf_stacks:
     - cflinuxfs3
   - name: appdynamics
-    version: 20.4.0.3759
+    version: 21.12.0.401
     cf_stacks:
     - cflinuxfs3
   - name: composer
-    version: 2.1.6
+    version: 2.1.14
     cf_stacks:
     - cflinuxfs3
   - name: httpd
-    version: 2.4.48
+    version: 2.4.51
     cf_stacks:
     - cflinuxfs3
   - name: newrelic
@@ -236,35 +236,35 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: nginx
-    version: 1.20.1
+    version: 1.20.2
     cf_stacks:
     - cflinuxfs3
   - name: nginx
-    version: 1.21.1
+    version: 1.21.4
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.3.29
+    version: 7.3.32
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.3.30
+    version: 7.3.33
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.4.21
+    version: 7.4.25
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 7.4.23
+    version: 7.4.26
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 8.0.8
+    version: 8.0.12
     cf_stacks:
     - cflinuxfs3
   - name: php
-    version: 8.0.10
+    version: 8.0.13
     cf_stacks:
     - cflinuxfs3
 - name: python_buildpack
