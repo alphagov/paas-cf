@@ -65,13 +65,15 @@ RSpec.describe "Instance counts in different environments" do
           cc_worker_ig = env_manifest.fetch("instance_groups.cc-worker")
           api_instance_count = env_manifest.fetch("instance_groups.api").dig("instances").to_f
           cc_worker_instances_count = cc_worker_ig.dig("instances").to_f
-          cc_worker_az_count = cc_worker_ig.fetch("azs").size
+          # Comment out check for overreaching instance count for now:
+          # This check does not consider cells in isolation segments
+          # cc_worker_az_count = cc_worker_ig.fetch("azs").size
 
           half = api_instance_count / 2
-          half_with_headroom = round_up(half, cc_worker_az_count) + cc_worker_az_count
+          # half_with_headroom = round_up(half, cc_worker_az_count) + cc_worker_az_count
 
           expect(cc_worker_instances_count).to be >= half, "cc-worker instance count #{cc_worker_instances_count} is wrong. Rule of thumb is there should be at least half the count of api in cc-workers. Currently set to #{cc_worker_instances_count}, expecting at least #{half}."
-          expect(cc_worker_instances_count).to be <= half_with_headroom, "cc-worker instance count #{cc_worker_instances_count} is too high. There is no need to allow more headroom than a single set of #{cc_worker_az_count}. Currently set to #{cc_worker_instances_count}, expecting at least #{half_with_headroom}."
+          # expect(cc_worker_instances_count).to be <= half_with_headroom, "cc-worker instance count #{cc_worker_instances_count} is too high. There is no need to allow more headroom than a single set of #{cc_worker_az_count}. Currently set to #{cc_worker_instances_count}, expecting at least #{half_with_headroom}."
         end
       end
 
