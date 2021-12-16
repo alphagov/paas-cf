@@ -16,6 +16,26 @@ resource "aws_shield_protection" "shield_for_system_gorouter_alb" {
   }
 }
 
+resource "aws_wafregional_ipset" "notify_tester_ipset" {
+  name = "${var.env}-waf-notify-tester-ipset"
+
+  ip_set_descriptor {
+    type  = "IPV4"
+    value = "54.170.157.122/32"
+  }
+}
+
+resource "aws_wafregional_rule" "notify_tester_ip_rule" {
+  name        = "${var.env}-waf-notify-tester-ip"
+  metric_name = "${replace(var.env, "-", "")}WafNotifyTesterIp"
+
+  predicate {
+    data_id = aws_wafregional_ipset.notify_tester_ipset.id
+    negated = false
+    type    = "IPMatch"
+  }
+}
+
 resource "aws_wafregional_rate_based_rule" "wafregional_max_request_rate_rule" {
   name        = "${var.env}-waf-max-request-rate"
   metric_name = "${replace(var.env, "-", "")}WafMaxRequestRate"
@@ -30,6 +50,16 @@ resource "aws_wafregional_web_acl" "wafregional_web_acl" {
 
   default_action {
     type = "ALLOW"
+  }
+
+  rule {
+    action {
+      type = "ALLOW"
+    }
+
+    priority = 0
+    rule_id  = aws_wafregional_rule.notify_tester_ip_rule.id
+    type     = "REGULAR"
   }
 
   rule {
