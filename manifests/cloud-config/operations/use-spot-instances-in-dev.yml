@@ -39,6 +39,14 @@
   value: ((xlarge_vm_spot_bid_price))
 
 - type: replace
+  path: /vm_types/name=high_cpu_xlarge/cloud_properties/spot_ondemand_fallback?
+  value: true
+
+- type: replace
+  path: /vm_types/name=high_cpu_xlarge/cloud_properties/spot_bid_price?
+  value: ((high_cpu_xlarge_vm_spot_bid_price))
+
+- type: replace
   path: /vm_types/name=router/cloud_properties/spot_ondemand_fallback?
   value: true
 
