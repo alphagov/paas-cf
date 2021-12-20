@@ -5570,7 +5570,6 @@ jobs:
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.12.2
                 cd src/github.com/alphagov/paas-billing
-                make acceptance
 
 
                 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
@@ -5587,6 +5586,7 @@ jobs:
                 pg_ctlcluster 12 main start
 
                 export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
+                make acceptance
 
                 cd gherkin
                 GO111MODULE=off ../../../../../bin/godog
