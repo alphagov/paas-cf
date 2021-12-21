@@ -210,17 +210,17 @@ buildpacks:
 - name: php_buildpack
   repo_name: php-buildpack
   stack: cflinuxfs3
-  version: v4.4.52
-  sha: adb296b4662e8b3cf8017706896ad8fffdeb5f49dd0ad871961676d20d0b6c7b
-  filename: php-buildpack-cflinuxfs3-v4.4.52.zip
-  url: https://github.com/cloudfoundry/php-buildpack/releases/download/v4.4.52/php-buildpack-cflinuxfs3-v4.4.52.zip
+  version: v4.4.53
+  sha: 40060086e2779691b41b0054495a60ae2f2fd089989121e5213fd9af6d078569
+  filename: php-buildpack-cflinuxfs3-v4.4.53.zip
+  url: https://github.com/cloudfoundry/php-buildpack/releases/download/v4.4.53/php-buildpack-cflinuxfs3-v4.4.53.zip
   dependencies:
   - name: CAAPM
     version: 20.11.0
     cf_stacks:
     - cflinuxfs3
   - name: appdynamics
-    version: 21.12.0.401
+    version: 21.12.0.404
     cf_stacks:
     - cflinuxfs3
   - name: composer
