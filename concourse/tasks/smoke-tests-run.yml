@@ -17,6 +17,7 @@ run:
   args:
   - -c
   - |
+    export GO111MODULE="off"
     paas-cf/platform-tests/upstream/run_smoke_tests.sh
     TEST_EXIT_CODE=$?
     if [ "$EMAIL_ON_SMOKE_TEST_FAILURE" = "true" ]; then
