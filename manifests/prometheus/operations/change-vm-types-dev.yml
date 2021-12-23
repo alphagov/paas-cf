@@ -1,0 +1,7 @@
+---
+
+# dev Prometheus environments don't need upscaled instances
+
+- type: replace
+  path: /instance_groups/name=firehose/vm_type
+  value: large
