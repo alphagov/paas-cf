@@ -13,6 +13,7 @@ for i in "${PAAS_CF_DIR}"/manifests/prometheus/operations.d/*.yml; do
 done
 
 if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
+  opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/change-vm-types-dev.yml "
   opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/scale-down-dev.yml "
   opsfile_args+="-o ${PAAS_CF_DIR}/manifests/prometheus/operations/speed-up-deployment-dev.yml "
 fi
