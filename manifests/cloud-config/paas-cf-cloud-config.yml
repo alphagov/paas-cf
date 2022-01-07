@@ -212,7 +212,7 @@ vm_types:
   cloud_properties:
     instance_type: ((cell_instance_type))
     ephemeral_disk:
-      size: 204800
+      size: 307200
       type: gp3
     security_groups:
     - ((terraform_outputs_rds_broker_db_clients_security_group))
@@ -223,7 +223,7 @@ vm_types:
   cloud_properties:
     instance_type: ((high_cpu_cell_instance_type))
     ephemeral_disk:
-      size: 204800
+      size: 307200
       type: gp3
     security_groups:
       - ((terraform_outputs_rds_broker_db_clients_security_group))
@@ -234,7 +234,7 @@ vm_types:
   cloud_properties:
     instance_type: ((small_cell_instance_type))
     ephemeral_disk:
-      size: 102400
+      size: 153600
       type: gp3
     security_groups:
     - ((terraform_outputs_rds_broker_db_clients_security_group))
