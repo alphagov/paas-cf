@@ -491,3 +491,8 @@ credhub:
 	$(if ${MAKEFILE_ENV_TARGET},,$(error Must set MAKEFILE_ENV_TARGET))
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
 	@scripts/credhub_shell.sh
+
+.PHONY: buildpack-upgrade
+buildpack-upgrade:
+	@scripts/update_buildpacks.sh
+	@scripts/create_buildpacks_email.sh
