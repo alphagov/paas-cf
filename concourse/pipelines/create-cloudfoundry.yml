@@ -11,72 +11,72 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     psql: &psql-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     node: &node-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     node-chromium: &node-chromium-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     golang: &golang-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     terraform: &terraform-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
 
 
   tasks:
@@ -272,7 +272,7 @@ resource_types:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+    tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
 
 - name: s3-iam
   type: docker-image
@@ -527,7 +527,7 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf16.25
+      branch: cf17.0
 
   - name: cf-smoke-tests-release
     type: git
@@ -697,20 +697,6 @@ resources:
       uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
       branch: gds_main
 
-  # we want to use an app-autoscaler-release version which has acceptance tests
-  # compatible with the CF CLI v7.
-  # This exists as a git branch but not an official release
-  # we can use the develop branch and specify the version in the get: step
-  # the underlying version of the bosh release is still specified via a git
-  # submodule in this repo
-  - name: app-autoscaler-release-git
-    type: git
-    version:
-      ref: ce0fb696423739ed7796e4c75c4ae31d82df5f41
-    source:
-      uri: https://github.com/cloudfoundry/app-autoscaler-release.git
-      branch: main
-
   - name: grafana-overview-annotation-id
     type: s3-iam
     source:
@@ -830,7 +816,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+              tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
 
           inputs:
             - name: paas-cf
@@ -4853,10 +4839,6 @@ jobs:
           - get: cf-manifest
             passed: ['post-deploy']
 
-            # FIXME: when there is a release that supports CF CLI v7 we can use
-            # the submodule in this repo again
-          - get: app-autoscaler-release-git
-
       - do:
         - task: create-temp-user
           tags: [colocated-with-web]
@@ -5138,7 +5120,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+              tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
 
           inputs:
             - name: paas-cf
@@ -5361,7 +5343,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+              tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
 
           inputs:
             - name: paas-admin-data
@@ -6493,7 +6475,7 @@ jobs:
           type: docker-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+            tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
 
         inputs:
           - name: passwords

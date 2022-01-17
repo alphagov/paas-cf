@@ -30,7 +30,7 @@ RSpec.describe "release versions" do
     pinned_releases = {
       "uaa" => {
         local: "0.1.34",
-        upstream: "75.8.0",
+        upstream: "75.9.0",
       },
     }
 
@@ -51,7 +51,7 @@ RSpec.describe "release versions" do
       next unless manifest_releases.key? name
 
       expect(normalise_version(manifest_releases[name])).to be >= normalise_version(version),
-        "expected #{name} release version #{manifest_releases[name]} to be older than #{version} as defined in cf-deployment. Maybe you need to pin it?"
+        "expected #{name} release version #{manifest_releases[name]} to be newer than or the same as #{version} as defined in cf-deployment. Maybe you need to pin it?"
     end
 
     pinned_releases.each do |name, pinned_versions|

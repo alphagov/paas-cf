@@ -4,15 +4,12 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-    tag: 168a6c8b43fdec99607fd8bc01c5986a46a72dc0
+    tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
 
 inputs:
   - name: paas-cf
   - name: admin-creds
 
-  # FIXME: when there is a release that supports CF CLI v7 we can use
-  # the submodule in this repo again
-  - name: app-autoscaler-release-git
 outputs:
   - name: artifacts
 params:
@@ -57,7 +54,7 @@ run:
       fi
 
       echo "Running tests"
-      cd app-autoscaler-release-git
+      cd paas-cf/manifests/app-autoscaler/upstream
       source .envrc
       cd src/acceptance
       ./bin/test_default -p -nodes=8

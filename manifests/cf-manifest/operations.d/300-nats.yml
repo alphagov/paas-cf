@@ -1,12 +1,4 @@
 ---
-# This is set differently to the cf-deployment manifest for historical reasons.
-# Ideally, we'd change this to match cf-deployment, but it's non-trivial to
-# change the username without downtime to apps on the platform as there will be
-# a period while route registration won't work..
-
-- type: replace
-  path: /instance_groups/name=nats/jobs/name=nats/properties/nats/user
-  value: nats_user
 
 - type: replace
   path: /instance_groups/name=nats/instances
