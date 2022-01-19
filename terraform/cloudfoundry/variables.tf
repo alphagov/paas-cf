@@ -21,7 +21,7 @@ variable "apps_wildcard_weight" {
 variable "aws_backing_service_cidrs" {
   description = "CIDR for AWS backing service subnets indexed by AZ"
 
-  default  = {
+  default = {
     zone0  = "10.0.52.0/24"
     zone1  = "10.0.53.0/24"
     zone2  = "10.0.54.0/24"
