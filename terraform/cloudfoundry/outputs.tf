@@ -74,7 +74,7 @@ output "aws_backing_service_ip_range_start" {
 }
 
 output "aws_backing_service_ip_range_stop" {
-  value = cidrhost(var.aws_backing_service_cidrs["zone8"], -1)
+  value = cidrhost(var.aws_backing_service_cidrs["zone11"], -1)
 }
 
 output "rds_broker_db_clients_security_group" {
