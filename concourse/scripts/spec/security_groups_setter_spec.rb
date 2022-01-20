@@ -28,9 +28,10 @@ RSpec.describe SecurityGroupsSetter do
   end
 
   before do
-    allow(sg_setter).to receive(:`).with("cf security-groups") do
+    allow(sg_setter).to receive(:`).with("cf curl /v3/security_groups?per_page=1000") do
       system("exit 0") # setup $?
-      ""
+      # heavily abbreviated response
+      '{"resources": []}'
     end
   end
 
@@ -43,14 +44,10 @@ RSpec.describe SecurityGroupsSetter do
 
     context "with no extant security groups" do
       before do
-        allow(sg_setter).to receive(:`).with("cf security-groups") do
+        allow(sg_setter).to receive(:`).with("cf curl /v3/security_groups?per_page=1000") do
           system("exit 0") # setup $?
-          <<-EOT
-Getting security groups as admin
-OK
-
-     Name                   Organization   Space
-          EOT
+          # heavily abbreviated response
+          '{"resources": []}'
         end
       end
 
@@ -77,16 +74,17 @@ OK
       end
 
       before do
-        allow(sg_setter).to receive(:`).with("cf security-groups") do
+        allow(sg_setter).to receive(:`).with("cf curl /v3/security_groups?per_page=1000") do
           system("exit 0") # setup $?
+          # heavily abbreviated response
           <<-EOT
-Getting security groups as admin
-OK
-
-     Name                   Organization   Space
-#0   public_networks
-#1   dns
-#2   rds_broker_instances
+{
+  "resources": [
+    {"name": "public_networks"},
+    {"name": "dns"},
+    {"name": "rds_broker_instances"}
+  ]
+}
           EOT
         end
         security_group_definitions << { "name" => "dns", "rules" => dns_rules }

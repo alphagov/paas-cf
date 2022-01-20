@@ -47,17 +47,10 @@ private
   end
 
   def fetch_security_groups
-    groups = []
+    response = `cf curl /v3/security_groups?per_page=1000`
+    abort "security_groups request failed" unless $CHILD_STATUS.success?
 
-    security_groups = `cf security-groups`
-    abort security_groups unless $CHILD_STATUS.success?
-
-    security_groups.each_line do |line|
-      if line =~ /\A#\d+\s+(\S+)\s*/
-        groups << Regexp.last_match(1)
-      end
-    end
-    groups
+    JSON.parse(response)["resources"].map { |sg| sg["name"] }
   end
 
   def cf(*args)
