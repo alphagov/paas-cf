@@ -7,8 +7,8 @@ router_instances: 15
 api_instances: 12
 doppler_instances: 69
 log_api_instances: 36
-scheduler_instances: 8
-cc_worker_instances: 8
+scheduler_instances: 10
+cc_worker_instances: 10
 cc_hourly_rate_limit: 60000
 cc_staging_timeout_in_seconds: 2700
 cc_maximum_health_check_timeout_in_seconds: 300
