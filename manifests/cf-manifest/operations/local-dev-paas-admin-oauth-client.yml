@@ -1,0 +1,10 @@
+- type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/paas-admin-local?
+  value:
+    override: true
+    authorized-grant-types: authorization_code,client_credentials,refresh_token
+    autoapprove: true
+    secret: "local-dev"
+    scope: cloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.write,scim.me,openid,profile,uaa.user,cloud_controller.admincloud_controller.read,cloud_controller.admin_read_only,cloud_controller.global_auditor,cloud_controller.write,scim.me,openid,profile,uaa.user,cloud_controller.admin
+    authorities: scim.userids,scim.invite,scim.read,scim.write,oauth.login
+    redirect-uri: "http://localhost:3000/auth/login/callback"
