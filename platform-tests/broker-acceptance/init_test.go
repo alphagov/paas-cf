@@ -57,10 +57,12 @@ func TestSuite(t *testing.T) {
 
 		Expect(systemDomain).NotTo(Equal(""))
 
+		username := testContext.RegularUserContext().Username
+
 		var err error
 		cfClient, err = cfclient.NewClient(&cfclient.Config{
 			ApiAddress: "https://" + testContext.RegularUserContext().ApiUrl,
-			Username:   testContext.RegularUserContext().Username,
+			Username:   username,
 			Password:   testContext.RegularUserContext().Password,
 		})
 		Expect(err).NotTo(HaveOccurred())
@@ -68,18 +70,20 @@ func TestSuite(t *testing.T) {
 		// Enable service access for the ephemeral test org.
 		// FIXME: remove this block once sqs is enabled for all
 		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
-			standard := cf.Cf("enable-service-access", "aws-sqs-queue",
-				"-o", testContext.TestSpace.OrganizationName(),
-				"-b", "sqs-broker",
-				"-p", "standard",
-			).Wait(testConfig.DefaultTimeoutDuration())
-			Expect(standard).To(Exit(0))
+			orgManager := cf.Cf("set-org-role", username, testContext.TestSpace.OrganizationName(), "OrgManager").Wait(testConfig.DefaultTimeoutDuration())
+			Expect(orgManager).To(Exit(0))
 			fifo := cf.Cf("enable-service-access", "aws-sqs-queue",
 				"-o", testContext.TestSpace.OrganizationName(),
 				"-b", "sqs-broker",
 				"-p", "fifo",
 			).Wait(testConfig.DefaultTimeoutDuration())
 			Expect(fifo).To(Exit(0))
+			standard := cf.Cf("enable-service-access", "aws-sqs-queue",
+				"-o", testContext.TestSpace.OrganizationName(),
+				"-b", "sqs-broker",
+				"-p", "standard",
+			).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(standard).To(Exit(0))
 		})
 	})
 
@@ -112,6 +116,17 @@ func pollForServiceCreationCompletion(dbInstanceName string) {
 		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf service creation phase: ", string(command.Out.Contents())))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("create succeeded"))
+	fmt.Fprint(GinkgoWriter, "done\n")
+}
+
+func pollForCdnServiceCreationCompletion(cdnInstanceName string) {
+	fmt.Fprint(GinkgoWriter, "Polling for CDN service creation to complete")
+	Eventually(func() *Buffer {
+		fmt.Fprint(GinkgoWriter, ".")
+		command := quietCf("cf", "service", cdnInstanceName).Wait(testConfig.DefaultTimeoutDuration())
+		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf service creation phase: ", string(command.Out.Contents())))
+		return command.Out
+	}, DB_CREATE_TIMEOUT, 15*time.Second).Should(Say("PENDING_VALIDATION"))
 	fmt.Fprint(GinkgoWriter, "done\n")
 }
 
