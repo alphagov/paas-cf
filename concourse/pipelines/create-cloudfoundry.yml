@@ -2731,6 +2731,7 @@ jobs:
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
               DISABLED_AZS: ((disabled_azs))
               VCAP_PASSWORD: ((vcap-password))
+              MAKEFILE_ENV_TARGET: ((makefile_env_target))
             run:
               path: sh
               args:

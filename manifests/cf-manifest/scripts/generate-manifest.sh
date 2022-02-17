@@ -21,6 +21,14 @@ if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
   opsfile_args="$opsfile_args -o ${CF_MANIFEST_DIR}/operations/speed-up-deployment-dev.yml"
 fi
 
+if [ "${MAKEFILE_ENV_TARGET-}" = "dev" ] && [ "${DEPLOY_ENV-}" != "prod" ] && [ "${DEPLOY_ENV-}" != "prod-lon" ] && [ "${DEPLOY_ENV-}" != "stg-lon" ]; then
+  echo "Adding static OAuth credentials for PaaS admin local development." 1>&2
+  echo "The callback URL for this client is localhost." 1>&2
+  echo "This should only be available in development environments." 1>&2
+  echo "If you're seeing this outside a development environment, stop the deployment and find out why." 1>&2
+  opsfile_args="$opsfile_args -o ${CF_MANIFEST_DIR}/operations/local-dev-paas-admin-oauth-client.yml"
+fi
+
 # We are going to generate a manifest, as if we did not have any isolation
 # segments.
 #
