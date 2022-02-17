@@ -17,6 +17,7 @@ variable "admin_cidrs" {
     "82.71.58.244/32",   # LP remote
     "51.148.163.199/32", # TW remote
     "217.155.48.99/32",  # RP remote
+    "90.250.4.159/32",   # SMS remote
   ]
 }
 
