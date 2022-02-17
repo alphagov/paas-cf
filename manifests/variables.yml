@@ -1,4 +1,9 @@
 ---
+#
+# Before you go changing instance types, remember we may have reserved
+# instances of some types.
+#
+
 compilation_vm_instance_type: c5.large
 
 nano_vm_instance_type: t3.nano
