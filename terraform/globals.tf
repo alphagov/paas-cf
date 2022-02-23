@@ -36,9 +36,15 @@ variable "aws_account" {
   description = "the AWS account being deployed to"
 }
 
+# See https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html#tls-security-policies
+variable "default_load_balancer_security_policy" {
+  description = "Which Security policy to use for ALBs and NLBs. This controls things like available SSL protocols/ciphers."
+  default     = "ELBSecurityPolicy-TLS-1-2-Ext-2018-06"
+}
+
 # See https://docs.aws.amazon.com/elasticloadbalancing/latest/classic/elb-security-policy-table.html
-variable "default_elb_security_policy" {
-  description = "Which Security policy to use for ELBs. This controls things like available SSL protocols/ciphers."
+variable "default_classic_load_balancer_security_policy" {
+  description = "Which Security policy to use for classic load balancers. This controls things like available SSL protocols/ciphers."
   default     = "ELBSecurityPolicy-TLS-1-2-2017-01"
 }
 

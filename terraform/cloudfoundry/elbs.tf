@@ -2,7 +2,7 @@ resource "random_pet" "elb_cipher" {
   length = 1
 
   keepers = {
-    default_elb_security_policy = var.default_elb_security_policy
+    default_classic_load_balancer_security_policy = var.default_classic_load_balancer_security_policy
   }
 }
 
