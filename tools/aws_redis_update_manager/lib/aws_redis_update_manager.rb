@@ -109,6 +109,8 @@ class AwsRedisUpdateManager
     cf_org_finder = CloudFoundryOrgFinder.new
     notifier = TenantNotifier.new(notify_api_key)
 
+    failed_email_addresses = []
+
     find_service_instances_to_update
       .group_by(&:org_guid)
       .each do |org_guid, org_service_instances|
@@ -122,17 +124,23 @@ class AwsRedisUpdateManager
 
           puts "  Sending email to #{org_manager.email}"
 
-          notifier.notify_tenant(
-            tenant_email_address: org_manager.email,
-            org_name: org.org_name,
-            service_instances: org_service_instances,
-            maintenance_window_date: maintenance_window_date,
-            maintenance_window_time_range: maintenance_window_time_range,
-            region: region,
-          )
+          begin
+            notifier.notify_tenant(
+              tenant_email_address: org_manager.email,
+              org_name: org.org_name,
+              service_instances: org_service_instances,
+              maintenance_window_date: maintenance_window_date,
+              maintenance_window_time_range: maintenance_window_time_range,
+              region: region,
+            )
+          rescue Notifications::Client::BadRequestError => e
+            puts "  Failed sending email to #{org_manager.email}: #{e}"
+            failed_email_addresses << org_manager.email
+          end
 
           puts "    Sent email to #{org_manager.email}"
         end
       end
+    puts "Failed emails: #{failed_email_addresses}"
   end
 end
