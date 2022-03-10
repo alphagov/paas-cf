@@ -68,11 +68,17 @@ end
 unless expiring_certificate_names.empty?
   separator
 
-  puts "The following certificates are expiring and require operator intervention:"
+  puts "The following certificates are expiring very soon:"
 
   expiring_certificate_names.each do |cert|
     puts cert.red
   end
+
+  puts <<~HELP
+    The deployment pipeline must be re-run from the beginning to complete the certificate rotation process before these have a chance to expire.
+
+    You may need to do this multiple times before this message goes away.
+  HELP
 end
 
 unless invalid_certificate_names.empty?
