@@ -4878,6 +4878,7 @@ jobs:
             DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
             SYSTEM_DOMAIN: ((system_dns_zone_name))
             APPS_DOMAIN: ((apps_dns_zone_name))
+            SKIP_SSL_VALIDATION: false
           ensure:
             task: upload-test-artifacts
             tags: [colocated-with-web]
