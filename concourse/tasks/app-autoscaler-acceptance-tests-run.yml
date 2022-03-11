@@ -33,7 +33,7 @@ run:
         "service_name": "autoscaler",
         "service_plan": "autoscaler-free-plan",
         "aggregate_interval": 120,
-        "skip_ssl_validation": $(SKIP_SSL_VALIDATION),
+        "skip_ssl_validation": $SKIP_SSL_VALIDATION,
         "use_http": false,
 
         "default_timeout": 60,
