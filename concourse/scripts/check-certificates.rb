@@ -68,7 +68,10 @@ end
 unless expiring_certificate_names.empty?
   separator
 
-  puts "The following certificates are expiring and require operator intervention:"
+  puts <<~HELP
+  There are certificates that require intervention. It is likely that you need to re-trigger the whole pipeline to roll the cells.
+  The following certificates are expiring and require operator intervention:"
+  HELP
 
   expiring_certificate_names.each do |cert|
     puts cert.red
