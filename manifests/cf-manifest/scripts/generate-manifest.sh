@@ -87,5 +87,10 @@ if [ -n "${DISABLED_AZS}" ]; then
   done
 fi
 
-# Now we have a manifest with isolation segments, ready for BOSH
-echo "$manifest_with_isolation_segments"
+final_ordered_manifest="$(
+  ruby "${CF_MANIFEST_DIR}/scripts/reorder-yaml.rb" \
+    <<< "${manifest_with_isolation_segments}"
+)"
+
+# Now we have a finally-ordered manifest with isolation segments, ready for BOSH
+echo "$final_ordered_manifest"
