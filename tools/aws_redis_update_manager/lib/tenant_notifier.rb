@@ -56,7 +56,7 @@ class TenantNotifier
 
   # If the timing of the update doesn’t work for you
 
-  Please reply to this email to request this alternative slot.
+  Please reply to this email to request an alternative slot.
 
   If you have any further questions, please contact GOV.UK PaaS support on gov-uk-paas-support@digital.cabinet-office.gov.uk.
 
