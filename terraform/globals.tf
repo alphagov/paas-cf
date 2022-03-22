@@ -3,11 +3,12 @@ variable "admin_cidrs" {
   description = "List of CIDR addresses with access to operator/admin endpoints"
 
   default = [
-    "213.86.153.211/32", # New BYOD VPN IP
+    "85.133.67.244/32",
+    "213.86.153.211/32",
     "213.86.153.212/32",
     "213.86.153.213/32",
     "213.86.153.214/32",
-    "213.86.153.231/32", # New BYOD VPN IP
+    "213.86.153.231/32",
     "213.86.153.235/32",
     "213.86.153.236/32",
     "213.86.153.237/32",
