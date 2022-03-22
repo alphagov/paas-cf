@@ -120,7 +120,7 @@ resource "aws_lb_listener" "prometheus" {
   load_balancer_arn = aws_lb.prometheus.arn
   port              = "443"
   protocol          = "HTTPS"
-  ssl_policy        = var.default_elb_security_policy
+  ssl_policy        = var.default_load_balancer_security_policy
   certificate_arn   = data.aws_acm_certificate.system.arn
 
   default_action {
