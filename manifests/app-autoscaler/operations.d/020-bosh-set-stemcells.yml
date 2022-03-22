@@ -3,5 +3,5 @@
   path: /stemcells
   value:
     - alias: default
-      os: ubuntu-xenial
-      version: "621.123"
+      os: ubuntu-bionic
+      version: "1.61"

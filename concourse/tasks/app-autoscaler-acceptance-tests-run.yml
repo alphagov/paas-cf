@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-    tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+    tag: ac168a5d15cf992d15ae0f589caf70988c167287
 
 inputs:
   - name: paas-cf
@@ -16,6 +16,7 @@ params:
   DISABLE_CUSTOM_ACCEPTANCE_TESTS:
   SYSTEM_DOMAIN:
   APPS_DOMAIN:
+  SKIP_SSL_VALIDATION:
 run:
   path: bash
   args:
@@ -31,7 +32,9 @@ run:
       {
         "service_name": "autoscaler",
         "service_plan": "autoscaler-free-plan",
-        "aggregate_interval": 60,
+        "aggregate_interval": 120,
+        "skip_ssl_validation": $SKIP_SSL_VALIDATION,
+        "use_http": false,
 
         "default_timeout": 60,
         "sleep_timeout": 60,

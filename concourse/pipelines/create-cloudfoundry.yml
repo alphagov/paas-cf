@@ -11,72 +11,72 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     psql: &psql-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     node: &node-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     node-chromium: &node-chromium-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     golang: &golang-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     terraform: &terraform-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+        tag: ac168a5d15cf992d15ae0f589caf70988c167287
 
 
   tasks:
@@ -272,7 +272,7 @@ resource_types:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+    tag: ac168a5d15cf992d15ae0f589caf70988c167287
 
 - name: s3-iam
   type: docker-image
@@ -816,7 +816,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+              tag: ac168a5d15cf992d15ae0f589caf70988c167287
 
           inputs:
             - name: paas-cf
@@ -4878,6 +4878,7 @@ jobs:
             DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
             SYSTEM_DOMAIN: ((system_dns_zone_name))
             APPS_DOMAIN: ((apps_dns_zone_name))
+            SKIP_SSL_VALIDATION: false
           ensure:
             task: upload-test-artifacts
             tags: [colocated-with-web]
@@ -5143,7 +5144,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+              tag: ac168a5d15cf992d15ae0f589caf70988c167287
 
           inputs:
             - name: paas-cf
@@ -5366,7 +5367,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+              tag: ac168a5d15cf992d15ae0f589caf70988c167287
 
           inputs:
             - name: paas-admin-data
@@ -6498,7 +6499,7 @@ jobs:
           type: docker-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: 5adc49952d6b25505dc443ceff18975ad6d5165b
+            tag: ac168a5d15cf992d15ae0f589caf70988c167287
 
         inputs:
           - name: passwords
