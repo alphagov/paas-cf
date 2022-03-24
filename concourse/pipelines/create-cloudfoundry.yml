@@ -3198,6 +3198,9 @@ jobs:
               API_ENDPOINT: ((api_endpoint))
               CF_ADMIN: ((cf_admin))
               CF_PASS: ((cf_pass))
+
+              LOGIT_ADDRESS: ((logit_syslog_address))
+              LOGIT_PORT: ((logit_syslog_port))
             inputs:
               - name: paas-cf
               - name: config
@@ -3237,6 +3240,16 @@ jobs:
                         AWS_SECRET_ACCESS_KEY: "${YACE_AWS_SECRET_ACCESS_KEY}"
                       command: "src -listen-address=0.0.0.0:\$PORT"
                   EOF
+
+                  if ! cf service logit-syslog-drain > /dev/null; then
+                    cf create-user-provided-service \
+                      logit-syslog-drain \
+                      -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                  else
+                    cf update-user-provided-service \
+                      logit-syslog-drain \
+                      -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                  fi
 
                   cf cancel-deployment cloudwatch-exporter || true
                   cf push --strategy=rolling cloudwatch-exporter
