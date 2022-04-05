@@ -15,6 +15,9 @@
   path: /instance_groups/name=log-api/vm_type
   value: high_cpu_xlarge
 - type: replace
+  path: /instance_groups/name=log-cache/vm_type
+  value: large
+- type: replace
   path: /instance_groups/name=nats/vm_type
   value: medium
 - type: replace

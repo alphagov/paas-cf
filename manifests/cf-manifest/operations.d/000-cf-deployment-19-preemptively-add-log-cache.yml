@@ -1,0 +1,36 @@
+---
+# create an initial, simplified log-cache instance group, just to give
+# the dns alias something to point at
+#
+# to be modified further by later operations as per usual.
+
+- type: replace
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/-
+  value:
+    domain: log-cache.service.cf.internal
+    targets:
+    - query: '*'
+      instance_group: log-cache
+      # use custom deployment_name and network_name (this would usually be done by
+      # an upstream opsfile that doesn't know about the log-cache alias yet)
+      deployment: ((deployment_name))
+      network: ((network_name))
+      domain: bosh
+
+- type: replace
+  path: /instance_groups/-
+  value:
+    name: log-cache
+    azs:
+    - z1
+    - z2
+    instances: 1
+    vm_type: small
+    stemcell: default
+    networks:
+    # use custom network_name (this would usually be done by an upstream opsfile
+    # that doesn't know about the log-cache instance_group yet)
+    - name: ((network_name))
+    # no jobs so we can avoid dragging in bits of the cf-deployment v19 manifest
+    # related to them
+    jobs: []
