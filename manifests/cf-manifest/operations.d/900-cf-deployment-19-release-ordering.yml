@@ -1,0 +1,43 @@
+---
+# specify explicit order of instance_groups for the cf-deployment v19
+# upgrade deployment
+
+- type: replace
+  path: /instance_groups/name=log-cache/__paas_order?
+  value: -10
+
+- type: replace
+  path: /instance_groups/name=log-cache/update?/serial?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=scheduler/__paas_order?
+  value: -9
+
+- type: replace
+  path: /instance_groups/name=scheduler/update?/serial?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=api/__paas_order?
+  value: -8
+
+- type: replace
+  path: /instance_groups/name=api/update?/serial?
+  value: true
+
+- type: replace
+  path: /instance_groups/name=doppler/__paas_order?
+  value: 10
+
+- type: replace
+  path: /instance_groups/name=doppler/update?/serial?
+  value: true
+
+# prevent new log-cache instances advertising their external routes until
+# the new dopplers (which won't be listening on port 8083) start to roll out
+- type: replace
+  path: /instance_groups/name=log-cache/jobs/name=route_registrar/properties/route_registrar/routes/name=log-cache-reverse-proxy/health_check?
+  value:
+    name: wait-for-dopplers-to-roll
+    script_path: "! /bin/nc -z doppler.service.cf.internal 8083"
