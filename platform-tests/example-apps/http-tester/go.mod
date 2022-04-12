@@ -1,3 +1,3 @@
 module github.com/alphagov/paas-cf/platform-tests/example-apps/http-tester
 
-go 1.17
+go 1.18
