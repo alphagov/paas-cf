@@ -24,7 +24,7 @@ fi
 
 set -u
 
-apk update && apk add git
+apt update && apt install git -y
 
 cd /tmp
 git clone https://github.com/cloudfoundry-community/logsearch-for-cloudfoundry.git
