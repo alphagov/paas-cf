@@ -6,6 +6,7 @@ cell_instances: 3
 router_instances: 2
 api_instances: 2
 doppler_instances: 6
+log_cache_instances: 2
 log_api_instances: 2
 scheduler_instances: 2
 cc_worker_instances: 2

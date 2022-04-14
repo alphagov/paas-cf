@@ -20,10 +20,17 @@ RSpec.describe "Environment specific configuration" do
     expect(default_api_instances).to be < prod_api_instances
   end
 
-  it "allows a higher number of instances of Doppler instances in production" do
+  it "allows a higher number of instances of Doppler in production" do
     default_doppler_instances = get_instance_group_instances(default_manifest, "doppler")
     prod_doppler_instances = get_instance_group_instances(prod_manifest, "doppler")
 
     expect(default_doppler_instances).to be < prod_doppler_instances
+  end
+
+  it "allows a higher number of instances of log cache in production" do
+    default_log_cache_instances = get_instance_group_instances(default_manifest, "log-cache")
+    prod_log_cache_instances = get_instance_group_instances(prod_manifest, "log-cache")
+
+    expect(default_log_cache_instances).to be < prod_log_cache_instances
   end
 end
