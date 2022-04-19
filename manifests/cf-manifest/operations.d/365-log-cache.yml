@@ -6,4 +6,4 @@
 
 - type: replace
   path: /instance_groups/name=log-cache/instances
-  value: ((doppler_instances))
+  value: ((log_cache_instances))
