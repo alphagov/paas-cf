@@ -1,0 +1,30 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - spec/alerts/fixtures/rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 5m
+    input_series:
+      - series: 'paas_cdn_tls_certificates_expiry_days{hostname="not-expiring"}'
+        values: 90
+      - series: 'paas_cdn_tls_certificates_expiry_days{hostname="expiring"}'
+        values: 10
+      - series: 'paas_cdn_tls_certificates_expiry_days{hostname="expired"}'
+        values: -5
+
+    alert_rule_test:
+      - alertname: CloudFrontTLSCertificateExpiresSoon
+        eval_time: 5m
+        exp_alerts:
+          - exp_annotations:
+              summary: "A tenant/CloudFront TLS certificate is close to expiry"
+              description: "The CloudFront TLS certificate for the tenant domain expiring expires in 10 days"
+              url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#invalid-certificates"
+            exp_labels:
+              severity: warning
+              service: cloudfront
+              layer: tenant
+              hostname: expiring

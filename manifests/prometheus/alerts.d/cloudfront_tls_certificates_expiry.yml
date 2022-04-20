@@ -8,12 +8,12 @@
     rules:
 
       - alert: CloudFrontTLSCertificateExpiresSoon
-        expr: "paas_cdn_tls_certificates_expiry_days <= 21"
+        expr: "paas_cdn_tls_certificates_expiry_days <= 21 >= 0"
         for: 5m
         annotations:
           summary: "A tenant/CloudFront TLS certificate is close to expiry"
           description: "The CloudFront TLS certificate for the tenant domain {{ $labels.hostname }} expires in {{ $value }} days"
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#invalid-certificates"
         labels:
           severity: warning
           service: cloudfront
