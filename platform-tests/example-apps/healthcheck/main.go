@@ -13,7 +13,7 @@ func main() {
 	fmt.Println("Listening on", addr)
 	http.HandleFunc("/", staticHandler)
 	http.HandleFunc("/db", dbHandler)
-	http.HandleFunc("/elasticsearch-test", elasticsearchHandler)
+	http.HandleFunc("/opensearch-test", opensearchHandler)
 	http.HandleFunc("/influxdb-test", influxdbHandler)
 	http.HandleFunc("/redis-test", redisHandler)
 	http.HandleFunc("/s3-test", s3Handler)
