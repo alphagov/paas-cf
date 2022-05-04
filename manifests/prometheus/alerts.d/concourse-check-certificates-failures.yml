@@ -7,7 +7,8 @@
     name: ConcourseCheckCertificatesFailures
     rules:
       - record: "concourse_check_certificates_failures"
-        expr: sum(concourse_builds_finished{exported_job="check-certificates",pipeline="create-cloudfoundry",status="failed"} or (absent(concourse_builds_finished{exported_job="check-certificates",pipeline="create-cloudfoundry",status="failed"})-1))
+        # in english: "only fill in gaps in the concourse_builds_finished counter with 0 if there haven't been any values for 12h, otherwise fill in with the maximum value from the last 12h"
+        expr: sum(concourse_builds_finished{exported_job="check-certificates",pipeline="create-cloudfoundry",status="failed"} or absent_over_time(concourse_builds_finished{exported_job="check-certificates",pipeline="create-cloudfoundry",status="failed"}[12h])-1 or max_over_time(concourse_builds_finished{exported_job="check-certificates",pipeline="create-cloudfoundry",status="failed"}[12h]))
 
       - alert: ConcourseCheckCertificatesFailures
         expr: increase(concourse_check_certificates_failures[1h]) >= 1

@@ -3,7 +3,7 @@ on: pull_request
 env:
   TF_VERSION: "1.0.8"
   BOSH_CLI_VERSION: "2.0.48"
-  PROMETHEUS_VERSION: "2.6.1"
+  PROMETHEUS_VERSION: "2.22.2"
   DEPLOY_ENV: "github"
   SHELLCHECK_VERSION: "0.7.1"
   GO_VERSION: "1.17"
@@ -55,6 +55,7 @@ jobs:
         run: |
           wget -q -O prometheus.tgz "https://github.com/prometheus/prometheus/releases/download/v${PROMETHEUS_VERSION}/prometheus-${PROMETHEUS_VERSION}.linux-amd64.tar.gz"
           sudo tar xzf "prometheus.tgz" -C /usr/local/bin --wildcards --wildcards-match-slash --strip-components=1 '*promtool'
+          promtool --version
 
       - name: "Install Go ${{env.GO_VERSION}}"
         uses: actions/setup-go@v2
