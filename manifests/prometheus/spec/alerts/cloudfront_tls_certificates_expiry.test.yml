@@ -13,7 +13,7 @@ tests:
       - series: 'paas_cdn_tls_certificates_expiry_days{hostname="expiring"}'
         values: 10
       - series: 'paas_cdn_tls_certificates_expiry_days{hostname="expired"}'
-        values: -5
+        values: 0
 
     alert_rule_test:
       - alertname: CloudFrontTLSCertificateExpiresSoon
