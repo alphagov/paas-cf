@@ -1,4 +1,6 @@
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
 
 env:
   GO_VERSION: "1.17"
