@@ -20,6 +20,15 @@ jobs:
         with:
           go-version: "${{env.GO_VERSION}}"
 
-      - name: blah
+      - name: generate-buildpacks-yml
         run: |
           ./scripts/update_buildpacks.sh
+
+      - name: commit-and-push
+        run: |
+          export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '%Y%m%dT%H%M')"
+          git checkout -b "$NEW_BRANCH_NAME"
+          git add config/buildpacks.yml
+          git commit -m 'bump buildpacks'
+          git push origin "$NEW_BRANCH_NAME"
+          echo "NEW_BRANCH_NAME=$NEW_BRANCH_NAME" >> $GITHUB_ENV
