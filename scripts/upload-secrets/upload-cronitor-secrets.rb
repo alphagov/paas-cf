@@ -14,8 +14,10 @@ credhub_namespaces = [
 ]
 
 cronitor_smoke_test_monitor_code = ENV["CRONITOR_SMOKE_TEST_MONITOR_CODE"] || get_secret("cronitor/#{ENV['MAKEFILE_ENV_TARGET']}/smoke_test_monitor_code", "__NO_CRONITOR_SMOKE_TEST_MONITOR_CODE__")
+cronitor_billing_smoke_test_monitor_code = ENV["CRONITOR_BILLING_SMOKE_TEST_MONITOR_CODE"] || get_secret("cronitor/#{ENV['MAKEFILE_ENV_TARGET']}/billing_smoke_test_monitor_code", "__NO_CRONITOR_SMOKE_TEST_MONITOR_CODE__")
 
 upload_secrets(
   credhub_namespaces,
   "cronitor_smoke_test_monitor_code" => cronitor_smoke_test_monitor_code,
+  "cronitor_billing_smoke_test_monitor_code" => cronitor_billing_smoke_test_monitor_code,
 )
