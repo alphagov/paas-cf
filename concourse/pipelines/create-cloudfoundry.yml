@@ -235,7 +235,6 @@ groups:
     jobs:
       - continuous-smoke-tests
       - continuous-billing-smoke-tests
-      - continuous-new-billing-smoke-tests
       - continuous-leaked-aws-key-check
       - check-certificates
       - resurrector-is-enabled
@@ -7138,70 +7137,6 @@ jobs:
           DEPLOY_ENV: ((deploy_env))
           CCI_BUILD_NUMBER: $BUILD_NAME
           CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+finished+with+errors"
-
-  - name: continuous-new-billing-smoke-tests
-    serial_groups: [smoke-tests]
-    build_logs_to_retain: 10000
-    plan:
-      - in_parallel:
-        - get: billing-smoke-tests-timer
-          trigger: true
-        - get: new-paas-billing
-          passed: ['deploy-new-paas-billing']
-        - <<: *get-paas-cf
-          passed: ['pipeline-lock']
-        - get: cf-manifest
-          passed: ['post-deploy']
-
-      - do:
-        - task: create-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: cont-billing-smoketest-user
-            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
-
-        - task: run-new-billing-smoke-tests
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *cf-acceptance-tests-image-resource
-            params:
-              AWS_REGION: ((aws_region))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              DEPLOY_ENV: ((deploy_env))
-            inputs:
-              - name: paas-cf
-              - name: new-paas-billing
-                path: src/github.com/alphagov/paas-billing
-              - name: admin-creds
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  cf api "https://api.${SYSTEM_DNS_ZONE_NAME}"
-                  cf auth  "$(cat admin-creds/username)" "$(cat admin-creds/password)"
-
-                  cf target -o admin -s new-billing
-
-                  export GOPATH="${PWD}"
-                  export BILLING_API_URL="https://new-billing.${SYSTEM_DNS_ZONE_NAME}"
-                  cd src/github.com/alphagov/paas-billing
-                  make smoke
-
-        ensure:
-          in_parallel:
-            - task: remove-temp-user
-              tags: [colocated-with-web]
-              file: paas-cf/concourse/tasks/delete_admin.yml
-              timeout: 5m
-              params:
-                API_ENDPOINT: ((api_endpoint))
-                CF_ADMIN: ((cf_admin))
-                CF_PASS: ((cf_pass))
 
   - name: continuous-leaked-aws-key-check
     serial_groups: [security-checks]
