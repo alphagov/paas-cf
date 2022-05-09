@@ -15,7 +15,7 @@ applications:
     command: "./bin/app-autoscaler-cpu-usage"
 
     env:
-      GOVERSION: go1.16
+      GOVERSION: go1.18
       GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
 
       DURATION: 11m
