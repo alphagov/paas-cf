@@ -16,7 +16,7 @@ then
 fi
 
 root_dir="$(cd "$(dirname "$0")/.." && pwd)"
-temp_file="$(mktemp -t buildpacks.yml)"
+temp_file="$(mktemp)"
 trap '{ rm -f ${temp_file}; }' EXIT
 
 cd "$root_dir/tools/buildpacks"
