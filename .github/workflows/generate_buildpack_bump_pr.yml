@@ -43,7 +43,7 @@ jobs:
 
       - name: Create PR
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
         run: |
           gh pr create \
             --base main \
