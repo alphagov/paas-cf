@@ -4,6 +4,8 @@ on:
 
 env:
   GO_VERSION: "1.17"
+  GIT_AUTHOR_NAME: skipper
+  GIT_AUTHOR_EMAIL: skipper@paas.example.com
 
 jobs:
   generate-buildpack-bump-pr:
@@ -26,7 +28,7 @@ jobs:
 
       - name: commit-and-push
         run: |
-          export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '%Y%m%dT%H%M')"
+          export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '+%Y%m%dT%H%M')"
           git checkout -b "$NEW_BRANCH_NAME"
           git add config/buildpacks.yml
           git commit -m 'bump buildpacks'
