@@ -48,7 +48,7 @@ jobs:
           gh pr create \
             --base main \
             --head "$NEW_BRANCH_NAME" \
-            --title "Buildpack upgrades, $(date -u '+%B %Y')"
+            --title "Buildpack upgrades, $(date -u '+%B %Y')" \
             --body-file - <<-EOF
             This is an automatically generated pull request.
 
