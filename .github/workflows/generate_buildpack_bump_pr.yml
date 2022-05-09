@@ -49,7 +49,7 @@ jobs:
             --base main \
             --head "$NEW_BRANCH_NAME" \
             --title "Buildpack upgrades, $(date -u '+%B %Y')"
-            --body - <<-EOF
+            --body-file - <<-EOF
             This is an automatically generated pull request.
 
             These are the results of running the \`update_buildpacks.sh\` script against commit $GITHUB_SHA.
