@@ -4,6 +4,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 env:
   GO_VERSION: "1.17"
@@ -29,7 +30,7 @@ jobs:
         run: |
           ./scripts/update_buildpacks.sh
 
-      - name: commit-and-push
+      - name: Commit and push
         run: |
           export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '+%Y%m%dT%H%M')"
           export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL
@@ -39,3 +40,15 @@ jobs:
           git commit -m 'bump buildpacks'
           git push origin "$NEW_BRANCH_NAME"
           echo "NEW_BRANCH_NAME=$NEW_BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Create PR
+        run: |
+          gh pr create \
+            --base main \
+            --head "$NEW_BRANCH_NAME" \
+            --title "Buildpack upgrades, $(date -u '+%B %Y')"
+            --body - <<-EOF
+            This is an automatically generated pull request.
+
+            These are the results of running the \`update_buildpacks.sh\` script against commit $GITHUB_SHA.
+          EOF
