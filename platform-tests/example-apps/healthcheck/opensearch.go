@@ -10,10 +10,10 @@ import (
 	"net/url"
 )
 
-func elasticsearchHandler(w http.ResponseWriter, r *http.Request) {
+func opensearchHandler(w http.ResponseWriter, r *http.Request) {
 	tls := r.FormValue("tls") != "false"
 
-	err := testElasticsearchConnection(tls)
+	err := testOpensearchConnection(tls)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -24,11 +24,11 @@ func elasticsearchHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func testElasticsearchConnection(tls bool) error {
+func testOpensearchConnection(tls bool) error {
 	var credentials struct {
 		URI string `json:"uri"`
 	}
-	err := getVCAPServiceCredentials("elasticsearch", &credentials)
+	err := getVCAPServiceCredentials("opensearch", &credentials)
 	if err != nil {
 		return err
 	}

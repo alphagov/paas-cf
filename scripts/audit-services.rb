@@ -70,8 +70,8 @@ if service_plan_guid.nil?
   Get service-plan-guid with:
 
   ```
-  CF_TRACE=1 cf m | grep -A10 "elasticsearch"
-  "label": "elasticsearch",
+  CF_TRACE=1 cf m | grep -A10 "opensearch"
+  "label": "opensearch",
   ...
   "service_plans_url": "/v2/services/0c248093-6025-4d07-b559-ef647c2f58d1/service_plans", <<<<< SERVICE_PLAN_GUID = "0c248093-6025-4d07-b559-ef647c2f58d1"
   ```
