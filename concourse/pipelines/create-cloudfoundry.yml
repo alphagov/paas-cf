@@ -7011,6 +7011,17 @@ jobs:
         - get: cf-manifest
           passed: ['post-deploy']
 
+      - try:
+          task: ping-cronitor-billing-test-start
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
+          params:
+            CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
+            CRONITOR_MONITOR_PING_ENDPOINT: "run"
+            DEPLOY_ENV: ((deploy_env))
+            CCI_BUILD_NUMBER: $BUILD_NAME
+            CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+has+started"
+
       - do:
         - task: create-temp-user
           tags: [colocated-with-web]
@@ -7060,6 +7071,54 @@ jobs:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
                 CF_PASS: ((cf_pass))
+
+    on_success:
+      try:
+        task: ping-cronitor-continuous-billing-smoke-tests-completed
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
+        params:
+          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
+          CRONITOR_MONITOR_PING_ENDPOINT: "complete"
+          DEPLOY_ENV: ((deploy_env))
+          CCI_BUILD_NUMBER: $BUILD_NAME
+          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+has+completed+successfully"
+
+    on_failure:
+      try:
+        task: ping-cronitor-continuous-billing-smoke-tests-failed
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
+        params:
+          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
+          CRONITOR_MONITOR_PING_ENDPOINT: "fail"
+          DEPLOY_ENV: ((deploy_env))
+          CCI_BUILD_NUMBER: $BUILD_NAME
+          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+has+failed"
+
+    on_abort:
+      try:
+        task: ping-cronitor-continuous-billing-smoke-tests-aborted
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
+        params:
+          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
+          CRONITOR_MONITOR_PING_ENDPOINT: "fail"
+          DEPLOY_ENV: ((deploy_env))
+          CCI_BUILD_NUMBER: $BUILD_NAME
+          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+was+aborted"
+
+    on_error:
+      try:
+        task: ping-cronitor-continuous-billing-smoke-tests-errored
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
+        params:
+          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
+          CRONITOR_MONITOR_PING_ENDPOINT: "fail"
+          DEPLOY_ENV: ((deploy_env))
+          CCI_BUILD_NUMBER: $BUILD_NAME
+          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+finished+with+errors"
 
   - name: continuous-new-billing-smoke-tests
     serial_groups: [smoke-tests]
