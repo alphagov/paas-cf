@@ -675,7 +675,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-prometheus-endpoints.git
       branch: main
-      tag_filter: v0.16.0
+      tag_filter: v0.17.0
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
