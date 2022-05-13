@@ -1,0 +1,16 @@
+# Source: firehose-exporter
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: AlertingWatchdog
+    rules:
+      - alert: AlertingWatchdog
+        expr: vector(1)
+        labels:
+          severity: none
+        annotations:
+          summary: "An alert that should always be firing to certify that Alertmanager is working properly"
+          description: This is an alert meant to ensure that the entire alerting pipeline is functional.
+
+          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#alerting-watchdog"
