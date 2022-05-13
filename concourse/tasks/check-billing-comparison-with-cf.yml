@@ -1,0 +1,24 @@
+---
+platform: linux
+image_resource:
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/cf-acceptance-tests
+    tag: ac168a5d15cf992d15ae0f589caf70988c167287
+inputs:
+  - name: paas-billing
+params:
+  CF_ADMIN: admin
+  CF_PASS: ((cf_pass))
+  SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+run:
+  path: bash
+  args:
+    - -e
+    - -c
+    - |
+      API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+      cf api "${API_ENDPOINT}"
+      cf auth "${CF_ADMIN}" "${CF_PASS}"
+      cd paas-billing/reconcilliation-test
+      BILLING_API_URL=https://billing.${SYSTEM_DNS_ZONE_NAME} CF_API_URL=${API_ENDPOINT} CF_BEARER_TOKEN=$(cf oauth-token | cut -d' ' -f 2) go run cf_billing_reconcilliation.go

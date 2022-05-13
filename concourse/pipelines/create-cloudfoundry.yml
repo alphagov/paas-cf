@@ -239,6 +239,7 @@ groups:
       - continuous-leaked-aws-key-check
       - check-certificates
       - resurrector-is-enabled
+      - check-billing-comparison-with-cf
       - az-a-is-enabled-in-manifest
       - az-b-is-enabled-in-manifest
       - az-c-is-enabled-in-manifest
@@ -6858,6 +6859,20 @@ jobs:
             args:
             - release-version/number
 
+  - name: check-billing-comparison-with-cf
+    build_logs_to_retain: 100
+    plan:
+      - get: paas-billing
+      - get: paas-cf
+      - do:
+        - task: check-billing-comparison-with-cf
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/check-billing-comparison-with-cf.yml
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CF_ADMIN: admin
+            CF_PASS: ((cf_pass))
+
   - name: continuous-smoke-tests
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
@@ -6867,6 +6882,7 @@ jobs:
           trigger: true
         - get: deployed-healthcheck
         - get: cf-smoke-tests-release
+        - get: paas-billing
         - <<: *get-paas-cf
           passed: ['pipeline-lock']
         - get: cf-manifest
