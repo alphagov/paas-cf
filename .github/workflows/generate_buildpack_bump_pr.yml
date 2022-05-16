@@ -1,0 +1,57 @@
+on:
+  schedule:
+    - cron: "0 9 1 * *"
+
+permissions:
+  contents: write
+
+env:
+  GO_VERSION: "1.18"
+  GIT_AUTHOR_NAME: github-actions
+  GIT_AUTHOR_EMAIL: github-actions@github.com
+
+jobs:
+  generate-buildpack-bump-pr:
+    runs-on: ubuntu-latest
+    steps:
+      ## Setup
+      - name: Checkout repo
+        uses: actions/checkout@v2
+        with:
+          submodules: true
+
+      - name: "Install Go ${{env.GO_VERSION}}"
+        uses: actions/setup-go@v2
+        with:
+          go-version: "${{env.GO_VERSION}}"
+
+      - name: generate-buildpacks-yml
+        run: |
+          ./scripts/update_buildpacks.sh
+
+      - name: Commit and push
+        run: |
+          export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '+%Y%m%dT%H%M')"
+          export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL
+          export GIT_COMMITTER_NAME=$GIT_AUTHOR_NAME
+          git checkout -b "$NEW_BRANCH_NAME"
+          git add config/buildpacks.yml
+          git commit -m 'bump buildpacks'
+          git push origin "$NEW_BRANCH_NAME"
+          echo "NEW_BRANCH_NAME=$NEW_BRANCH_NAME" >> $GITHUB_ENV
+
+      - name: Create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "$NEW_BRANCH_NAME" \
+            --title "Buildpack upgrades, $(date -u '+%B %Y')" \
+            --body-file - <<-EOF
+            This is an automatically generated pull request.
+
+            These are the results of running the \`update_buildpacks.sh\` script against commit $GITHUB_SHA.
+
+            A human should checkout this branch and run the script `scripts/create_buildpacks_email.sh` locally to generate the email we'll send to tenants, then continue following the instructions at https://team-manual.cloud.service.gov.uk/guides/upgrading_CF,_bosh_and_stemcells/#buildpacks.
+          EOF
