@@ -41,6 +41,7 @@ RSpec.describe "database encryption keys" do
         /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/database_encryption/keys/((cc_db_encryption_key_id))
         /instance_groups/name=scheduler/jobs/name=cloud_controller_clock/properties/cc/db_encryption_key
         /instance_groups/name=scheduler/jobs/name=cc_deployment_updater/properties/cc/db_encryption_key
+        /instance_groups/name=scheduler/jobs/name=cc_deployment_updater/properties/cc/database_encryption/keys/encryption_key_0
       ]
       expect(found_locations).to contain_exactly(*expected_locations)
     end
