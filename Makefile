@@ -20,8 +20,8 @@ check-env:
 	@./scripts/validate_aws_credentials.sh
 
 .PHONY: test
-test:
-	make $$(cat .travis.yml  | ruby -ryaml -e 'puts YAML.load(STDIN.read)["jobs"].map { |j| j["script"] }.map { |j| j.gsub("make ", "") }.join(" ")')
+test: # Run the same tests that run on a PR
+	make $$(cat .github/workflows/test_on_pr.yml  | ruby -ryaml -e 'puts YAML.load(STDIN.read)["jobs"]["tests"]["strategy"]["matrix"]["make_task"].map { |j| puts j}')
 
 .PHONY: scripts_spec
 scripts_spec:
