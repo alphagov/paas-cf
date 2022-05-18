@@ -177,13 +177,56 @@ isolation_segment
     "vpa" => { "as" => "vpa-#{seg_def['isolation_segment_name']}" },
   }
 
-%w[silk-daemon silk-cni].each do |consumer|
-  isolation_segment
-    .fetch("jobs")
-    .find { |job| job["name"] == consumer }["consumes"] = {
-      "vpa" => { "from" => "vpa-#{seg_def['isolation_segment_name']}" },
-    }
-end
+isolation_segment
+.fetch("jobs")
+.find { |job| job["name"] ==  "vxlan-policy-agent" }["consumes"] = {
+  "cni_config" => { "from" => "cni_config-#{seg_def['isolation_segment_name']}" },
+  "iptables" => { "from" => "iptables-#{seg_def['isolation_segment_name']}" },
+}
+
+isolation_segment
+  .fetch("jobs")
+  .find { |job| job["name"] == "silk-cni" }["provides"] = {
+    "cni_config" => { "as" => "cni_config-#{seg_def['isolation_segment_name']}" },
+  }
+
+isolation_segment
+  .fetch("jobs")
+  .find { |job| job["name"] == "silk-cni" }["consumes"] = {
+    "vpa" => { "from" => "vpa-#{seg_def['isolation_segment_name']}" },
+  }
+
+isolation_segment
+  .fetch("jobs")
+  .find { |job| job["name"] == "garden" }["provides"] = {
+    "iptables" => { "as" => "iptables-#{seg_def['isolation_segment_name']}" },
+  }
+
+isolation_segment
+  .fetch("jobs")
+  .find { |job| job["name"] == "garden" }["consumes"] = {
+    "vpa" => { "from" => "vpa-#{seg_def['isolation_segment_name']}" },
+  }
+
+isolation_segment
+  .fetch("jobs")
+  .find { |job| job["name"] == "silk-daemon" }["provides"] = {
+    "vpa" => { "as" => "vpa-#{seg_def['isolation_segment_name']}" },
+    "iptables" => { "as" => "iptables-#{seg_def['isolation_segment_name']}" },
+  }
+
+isolation_segment
+  .fetch("jobs")
+  .find { |job| job["name"] == "silk-daemon" }["consumes"] = {
+    "vpa" => { "from" => "vpa-#{seg_def['isolation_segment_name']}" },
+    "iptables" => { "from" => "iptables-#{seg_def['isolation_segment_name']}" },
+  }
+
+isolation_segment
+  .fetch("jobs")
+  .find { |job| job["name"] == "netmon" }["consumes"] = {
+    "iptables" => { "from" => "iptables-#{seg_def['isolation_segment_name']}" },
+  }
 
 puts [{
   "type"  => "replace",

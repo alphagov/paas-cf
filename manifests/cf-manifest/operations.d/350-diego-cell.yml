@@ -72,3 +72,27 @@
   path: /instance_groups/name=diego-cell/jobs/name=silk-daemon/consumes?/vpa?
   value:
     from: vpa-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=silk-daemon/consumes?/iptables?
+  value:
+    from: iptables-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=silk-cni/provides?/cni_config?
+  value:
+    as: cni_config-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/consumes?/cni_config?
+  value:
+    from: cni_config-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=vxlan-policy-agent/consumes?/iptables?
+  value:
+    from: iptables-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=garden/provides?/iptables?
+  value:
+    as: iptables-default
+- type: replace
+  path: /instance_groups/name=diego-cell/jobs/name=netmon/consumes?/iptables?
+  value:
+    from: iptables-default
