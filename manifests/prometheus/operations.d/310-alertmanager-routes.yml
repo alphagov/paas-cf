@@ -1,5 +1,4 @@
 ---
-
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/route?
   value:
@@ -18,6 +17,12 @@
       - receiver: silence
         match:
           alertname: CFAppUnhealthy
+        continue: false
+      # Dead man's snitch alerts
+      - receiver: cronitor-alertingwatchdog
+        repeat_interval: 5m
+        match:
+          alertname: AlertingWatchdog
         continue: false
       # Loud alerts
       - receiver: warning-receiver
@@ -46,7 +51,15 @@
       - from: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
         to: govpaas-alerting-((aws_account))+warning@digital.cabinet-office.gov.uk
         headers:
-          Subject: "[((metrics_environment))] [warning] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
+          Subject: '[((metrics_environment))] [warning] {{ .GroupLabels.SortedPairs.Values | join " " }}'
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
+  value:
+    name: cronitor-alertingwatchdog
+    webhook_configs:
+      - url: "https://cronitor.link/p/((cronitor_telemetry_api_key))/((cronitor_alertingwatchdog_heartbeat_code))"
+        send_resolved: false
 
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
@@ -56,7 +69,7 @@
       - from: govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk
         to: govpaas-alerting-((aws_account))+critical@digital.cabinet-office.gov.uk
         headers:
-          Subject: "[((metrics_environment))] [critical] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
+          Subject: '[((metrics_environment))] [critical] {{ .GroupLabels.SortedPairs.Values | join " " }}'
 
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
@@ -64,7 +77,7 @@
     name: pagerduty-24-7-receiver
     pagerduty_configs:
       - service_key: ((alertmanager_pagerduty_24_7_service_key))
-        description: "[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
+        description: '[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join " " }}'
 
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
@@ -72,7 +85,7 @@
     name: pagerduty-in-hours-receiver
     pagerduty_configs:
       - service_key: ((alertmanager_pagerduty_in_hours_service_key))
-        description: "[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join \" \" }}"
+        description: '[((metrics_environment))] {{ .GroupLabels.SortedPairs.Values | join " " }}'
 
 - type: replace
   path: /instance_groups/name=alertmanager/jobs/name=alertmanager/properties/alertmanager/receivers?/-
