@@ -665,21 +665,41 @@
             },
             {
                 "cacheTimeout": null,
-                "colorBackground": true,
-                "colorValue": false,
-                "colors": [
-                    "#299c46",
-                    "rgba(237, 129, 40, 0.89)",
-                    "#d44a3a"
-                ],
                 "datasource": "prometheus",
-                "format": "none",
-                "gauge": {
-                    "maxValue": 100,
-                    "minValue": 0,
-                    "show": false,
-                    "thresholdLabels": false,
-                    "thresholdMarkers": true
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "#299c46",
+                                    "value": null
+                                },
+                                {
+                                    "color": "rgba(237, 129, 40, 0.89)",
+                                    "value": 1
+                                },
+                                {
+                                    "color": "#d44a3a",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": []
                 },
                 "gridPos": {
                     "h": 4,
@@ -693,75 +713,78 @@
                     {
                         "targetBlank": true,
                         "title": "Currently firing alerts",
-                        "type": "absolute",
                         "url": "https://grafana-1.__SYSTEM_DNS_ZONE_NAME__/explore?left=%5B\"now-24h\",\"now\",\"prometheus\",%7B\"expr\":\"ALERTS%7Balertstate%3D%5C\"firing%5C\",layer%3D%5C\"%5C\",alertname!~%5C\"%5ECFApp.*$%5C\",severity!%3D%5C\"none%5C\"%7D\",\"format\":\"time_series\",\"instant\":true,\"intervalFactor\":1,\"legendFormat\":null,\"step\":null%7D,%7B\"ui\":%5Btrue,true,true,\"none\"%5D%7D%5D"
                     }
                 ],
-                "mappingType": 1,
-                "mappingTypes": [
-                    {
-                        "name": "value to text",
-                        "value": 1
-                    },
-                    {
-                        "name": "range to text",
-                        "value": 2
-                    }
-                ],
                 "maxDataPoints": 100,
-                "nullPointMode": "connected",
-                "nullText": null,
-                "postfix": "",
-                "postfixFontSize": "50%",
-                "prefix": "",
-                "prefixFontSize": "50%",
-                "rangeMaps": [],
-                "sparkline": {
-                    "fillColor": "rgba(31, 118, 189, 0.18)",
-                    "full": false,
-                    "lineColor": "rgb(31, 120, 193)",
-                    "show": false
+                "options": {
+                    "colorMode": "background",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "text": {},
+                    "textMode": "auto"
                 },
-                "tableColumn": "",
+                "pluginVersion": "7.5.15",
                 "targets": [
                     {
+                        "exemplar": true,
                         "expr": "(count(ALERTS{alertstate=\"firing\",layer=\"\",alertname!~\"^CFApp.*$\",severity!=\"none\"}) - (avg(alertmanager_alerts{state=\"suppressed\"}) or vector(0))) or vector(0)",
                         "format": "time_series",
                         "instant": true,
+                        "interval": "",
                         "intervalFactor": 1,
+                        "legendFormat": "",
                         "refId": "A"
                     }
                 ],
-                "thresholds": "1,1",
                 "title": "Platform Alerts",
-                "type": "singlestat",
-                "valueFontSize": "200%",
-                "valueMaps": [
-                    {
-                        "op": "=",
-                        "text": "N/A",
-                        "value": "null"
-                    }
-                ],
-                "valueName": "current"
+                "type": "stat"
             },
             {
                 "cacheTimeout": null,
-                "colorBackground": true,
-                "colorValue": false,
-                "colors": [
-                    "#299c46",
-                    "#1f1f1f",
-                    "#1f1f1f"
-                ],
                 "datasource": "prometheus",
-                "format": "none",
-                "gauge": {
-                    "maxValue": 100,
-                    "minValue": 0,
-                    "show": false,
-                    "thresholdLabels": false,
-                    "thresholdMarkers": true
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "#299c46",
+                                    "value": null
+                                },
+                                {
+                                    "color": "#1f1f1f",
+                                    "value": 1
+                                },
+                                {
+                                    "color": "#1f1f1f",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": []
                 },
                 "gridPos": {
                     "h": 4,
@@ -775,36 +798,26 @@
                     {
                         "targetBlank": true,
                         "title": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts",
-                        "type": "absolute",
                         "url": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts"
                     }
                 ],
-                "mappingType": 1,
-                "mappingTypes": [
-                    {
-                        "name": "value to text",
-                        "value": 1
-                    },
-                    {
-                        "name": "range to text",
-                        "value": 2
-                    }
-                ],
                 "maxDataPoints": 100,
-                "nullPointMode": "connected",
-                "nullText": null,
-                "postfix": "",
-                "postfixFontSize": "50%",
-                "prefix": "",
-                "prefixFontSize": "50%",
-                "rangeMaps": [],
-                "sparkline": {
-                    "fillColor": "rgba(31, 118, 189, 0.18)",
-                    "full": false,
-                    "lineColor": "rgb(31, 120, 193)",
-                    "show": false
+                "options": {
+                    "colorMode": "background",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "lastNotNull"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "text": {},
+                    "textMode": "auto"
                 },
-                "tableColumn": "",
+                "pluginVersion": "7.5.15",
                 "targets": [
                     {
                         "expr": "count(ALERTS{alertstate=\"firing\",layer=~\"^.+$\"}) or vector(0)",
@@ -814,18 +827,8 @@
                         "refId": "A"
                     }
                 ],
-                "thresholds": "1,1",
                 "title": "Other Alerts",
-                "type": "singlestat",
-                "valueFontSize": "200%",
-                "valueMaps": [
-                    {
-                        "op": "=",
-                        "text": "N/A",
-                        "value": "null"
-                    }
-                ],
-                "valueName": "current"
+                "type": "stat"
             }
         ],
         "refresh": "5s",
