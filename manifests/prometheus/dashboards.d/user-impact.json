@@ -694,7 +694,7 @@
                         "targetBlank": true,
                         "title": "Currently firing alerts",
                         "type": "absolute",
-                        "url": "https://grafana-1.__SYSTEM_DNS_ZONE_NAME__/explore?left=%5B\"now-24h\",\"now\",\"prometheus\",%7B\"expr\":\"ALERTS%7Balertstate%3D%5C\"firing%5C\",layer%3D%5C\"%5C\",alertname!~%5C\"%5ECFApp.*$%5C\"%7D\",\"format\":\"time_series\",\"instant\":true,\"intervalFactor\":1,\"legendFormat\":null,\"step\":null%7D,%7B\"ui\":%5Btrue,true,true,\"none\"%5D%7D%5D"
+                        "url": "https://grafana-1.__SYSTEM_DNS_ZONE_NAME__/explore?left=%5B\"now-24h\",\"now\",\"prometheus\",%7B\"expr\":\"ALERTS%7Balertstate%3D%5C\"firing%5C\",layer%3D%5C\"%5C\",alertname!~%5C\"%5ECFApp.*$%5C\",severity!%3D%5C\"none%5C\"%7D\",\"format\":\"time_series\",\"instant\":true,\"intervalFactor\":1,\"legendFormat\":null,\"step\":null%7D,%7B\"ui\":%5Btrue,true,true,\"none\"%5D%7D%5D"
                     }
                 ],
                 "mappingType": 1,
@@ -725,7 +725,7 @@
                 "tableColumn": "",
                 "targets": [
                     {
-                        "expr": "(count(ALERTS{alertstate=\"firing\",layer=\"\",alertname!~\"^CFApp.*$\"}) - (avg(alertmanager_alerts{state=\"suppressed\"}) or vector(0))) or vector(0)",
+                        "expr": "(count(ALERTS{alertstate=\"firing\",layer=\"\",alertname!~\"^CFApp.*$\",severity!=\"none\"}) - (avg(alertmanager_alerts{state=\"suppressed\"}) or vector(0))) or vector(0)",
                         "format": "time_series",
                         "instant": true,
                         "intervalFactor": 1,
