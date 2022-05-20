@@ -1,7 +1,8 @@
 {
     "dashboard": {
         "annotations": {
-            "list": [{
+            "list": [
+                {
                     "builtIn": 1,
                     "datasource": "-- Grafana --",
                     "enable": true,
@@ -47,7 +48,8 @@
         "graphTooltip": 0,
         "id": null,
         "links": [],
-        "panels": [{
+        "panels": [
+            {
                 "aliasColors": {
                     "4xx Responses": "orange",
                     "5xx Responses": "red",
@@ -84,17 +86,20 @@
                 "pointradius": 5,
                 "points": false,
                 "renderer": "flot",
-                "seriesOverrides": [{
-                    "alias": "All Responses",
-                    "fill": 3,
-                    "linewidth": 0,
-                    "yaxis": 2,
-                    "zindex": -3
-                }],
+                "seriesOverrides": [
+                    {
+                        "alias": "All Responses",
+                        "fill": 3,
+                        "linewidth": 0,
+                        "yaxis": 2,
+                        "zindex": -3
+                    }
+                ],
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
-                "targets": [{
+                "targets": [
+                    {
                         "expr": "sum(rate(firehose_counter_event_gorouter_responses_total[2m]))",
                         "format": "time_series",
                         "intervalFactor": 1,
@@ -134,7 +139,8 @@
                     "show": true,
                     "values": []
                 },
-                "yaxes": [{
+                "yaxes": [
+                    {
                         "format": "reqps",
                         "label": "",
                         "logBase": 1,
@@ -193,17 +199,20 @@
                 "pointradius": 5,
                 "points": false,
                 "renderer": "flot",
-                "seriesOverrides": [{
-                    "alias": "2xx Responses",
-                    "fill": 3,
-                    "linewidth": 0,
-                    "yaxis": 2,
-                    "zindex": -3
-                }],
+                "seriesOverrides": [
+                    {
+                        "alias": "2xx Responses",
+                        "fill": 3,
+                        "linewidth": 0,
+                        "yaxis": 2,
+                        "zindex": -3
+                    }
+                ],
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
-                "targets": [{
+                "targets": [
+                    {
                         "expr": "sum(rate(firehose_value_metric_cc_http_status_2_xx[2m]))",
                         "format": "time_series",
                         "intervalFactor": 1,
@@ -243,7 +252,8 @@
                     "show": true,
                     "values": []
                 },
-                "yaxes": [{
+                "yaxes": [
+                    {
                         "format": "reqps",
                         "label": "",
                         "logBase": 1,
@@ -300,7 +310,8 @@
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
-                "targets": [{
+                "targets": [
+                    {
                         "expr": "max(firehose_value_metric_bbs_lr_ps_running)",
                         "format": "time_series",
                         "interval": "",
@@ -333,7 +344,8 @@
                     "show": true,
                     "values": []
                 },
-                "yaxes": [{
+                "yaxes": [
+                    {
                         "decimals": 0,
                         "format": "none",
                         "label": null,
@@ -393,17 +405,20 @@
                 "pointradius": 5,
                 "points": false,
                 "renderer": "flot",
-                "seriesOverrides": [{
-                    "alias": "2xx Responses",
-                    "fill": 3,
-                    "linewidth": 0,
-                    "yaxis": 2,
-                    "zindex": -3
-                }],
+                "seriesOverrides": [
+                    {
+                        "alias": "2xx Responses",
+                        "fill": 3,
+                        "linewidth": 0,
+                        "yaxis": 2,
+                        "zindex": -3
+                    }
+                ],
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
-                "targets": [{
+                "targets": [
+                    {
                         "expr": "sum(rate(firehose_value_metric_uaa_requests_global_status_2_xx_count[2m]))",
                         "format": "time_series",
                         "intervalFactor": 1,
@@ -442,7 +457,8 @@
                     "show": true,
                     "values": []
                 },
-                "yaxes": [{
+                "yaxes": [
+                    {
                         "format": "reqps",
                         "label": null,
                         "logBase": 1,
@@ -501,7 +517,8 @@
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
-                "targets": [{
+                "targets": [
+                    {
                         "expr": "count(firehose_value_metric_rep_capacity_total_memory{bosh_job_name=\"diego-cell\"})",
                         "format": "time_series",
                         "instant": false,
@@ -535,7 +552,8 @@
                     "show": true,
                     "values": []
                 },
-                "yaxes": [{
+                "yaxes": [
+                    {
                         "decimals": 0,
                         "format": "short",
                         "label": null,
@@ -595,13 +613,15 @@
                 "spaceLength": 10,
                 "stack": false,
                 "steppedLine": false,
-                "targets": [{
-                    "expr": "max(firehose_value_metric_cc_job_queue_length_total)",
-                    "format": "time_series",
-                    "intervalFactor": 1,
-                    "legendFormat": "CC Job Queue Length",
-                    "refId": "A"
-                }],
+                "targets": [
+                    {
+                        "expr": "max(firehose_value_metric_cc_job_queue_length_total)",
+                        "format": "time_series",
+                        "intervalFactor": 1,
+                        "legendFormat": "CC Job Queue Length",
+                        "refId": "A"
+                    }
+                ],
                 "thresholds": [],
                 "timeFrom": null,
                 "timeShift": null,
@@ -619,7 +639,8 @@
                     "show": true,
                     "values": []
                 },
-                "yaxes": [{
+                "yaxes": [
+                    {
                         "decimals": 0,
                         "format": "none",
                         "label": null,
@@ -668,14 +689,17 @@
                 },
                 "id": 5,
                 "interval": null,
-                "links": [{
-                    "targetBlank": true,
-                    "title": "Currently firing alerts",
-                    "type": "absolute",
-                    "url": "https://grafana-1.__SYSTEM_DNS_ZONE_NAME__/explore?left=%5B\"now-24h\",\"now\",\"prometheus\",%7B\"expr\":\"ALERTS%7Balertstate%3D%5C\"firing%5C\",layer%3D%5C\"%5C\",alertname!~%5C\"%5ECFApp.*$%5C\"%7D\",\"format\":\"time_series\",\"instant\":true,\"intervalFactor\":1,\"legendFormat\":null,\"step\":null%7D,%7B\"ui\":%5Btrue,true,true,\"none\"%5D%7D%5D"
-                }],
+                "links": [
+                    {
+                        "targetBlank": true,
+                        "title": "Currently firing alerts",
+                        "type": "absolute",
+                        "url": "https://grafana-1.__SYSTEM_DNS_ZONE_NAME__/explore?left=%5B\"now-24h\",\"now\",\"prometheus\",%7B\"expr\":\"ALERTS%7Balertstate%3D%5C\"firing%5C\",layer%3D%5C\"%5C\",alertname!~%5C\"%5ECFApp.*$%5C\"%7D\",\"format\":\"time_series\",\"instant\":true,\"intervalFactor\":1,\"legendFormat\":null,\"step\":null%7D,%7B\"ui\":%5Btrue,true,true,\"none\"%5D%7D%5D"
+                    }
+                ],
                 "mappingType": 1,
-                "mappingTypes": [{
+                "mappingTypes": [
+                    {
                         "name": "value to text",
                         "value": 1
                     },
@@ -699,22 +723,26 @@
                     "show": false
                 },
                 "tableColumn": "",
-                "targets": [{
-                    "expr": "(count(ALERTS{alertstate=\"firing\",layer=\"\",alertname!~\"^CFApp.*$\"}) - (avg(alertmanager_alerts{state=\"suppressed\"}) or vector(0))) or vector(0)",
-                    "format": "time_series",
-                    "instant": true,
-                    "intervalFactor": 1,
-                    "refId": "A"
-                }],
+                "targets": [
+                    {
+                        "expr": "(count(ALERTS{alertstate=\"firing\",layer=\"\",alertname!~\"^CFApp.*$\"}) - (avg(alertmanager_alerts{state=\"suppressed\"}) or vector(0))) or vector(0)",
+                        "format": "time_series",
+                        "instant": true,
+                        "intervalFactor": 1,
+                        "refId": "A"
+                    }
+                ],
                 "thresholds": "1,1",
                 "title": "Platform Alerts",
                 "type": "singlestat",
                 "valueFontSize": "200%",
-                "valueMaps": [{
-                    "op": "=",
-                    "text": "N/A",
-                    "value": "null"
-                }],
+                "valueMaps": [
+                    {
+                        "op": "=",
+                        "text": "N/A",
+                        "value": "null"
+                    }
+                ],
                 "valueName": "current"
             },
             {
@@ -743,14 +771,17 @@
                 },
                 "id": 14,
                 "interval": null,
-                "links": [{
-                    "targetBlank": true,
-                    "title": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts",
-                    "type": "absolute",
-                    "url": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts"
-                }],
+                "links": [
+                    {
+                        "targetBlank": true,
+                        "title": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts",
+                        "type": "absolute",
+                        "url": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts"
+                    }
+                ],
                 "mappingType": 1,
-                "mappingTypes": [{
+                "mappingTypes": [
+                    {
                         "name": "value to text",
                         "value": 1
                     },
@@ -774,22 +805,26 @@
                     "show": false
                 },
                 "tableColumn": "",
-                "targets": [{
-                    "expr": "count(ALERTS{alertstate=\"firing\",layer=~\"^.+$\"}) or vector(0)",
-                    "format": "time_series",
-                    "instant": true,
-                    "intervalFactor": 1,
-                    "refId": "A"
-                }],
+                "targets": [
+                    {
+                        "expr": "count(ALERTS{alertstate=\"firing\",layer=~\"^.+$\"}) or vector(0)",
+                        "format": "time_series",
+                        "instant": true,
+                        "intervalFactor": 1,
+                        "refId": "A"
+                    }
+                ],
                 "thresholds": "1,1",
                 "title": "Other Alerts",
                 "type": "singlestat",
                 "valueFontSize": "200%",
-                "valueMaps": [{
-                    "op": "=",
-                    "text": "N/A",
-                    "value": "null"
-                }],
+                "valueMaps": [
+                    {
+                        "op": "=",
+                        "text": "N/A",
+                        "value": "null"
+                    }
+                ],
                 "valueName": "current"
             }
         ],
