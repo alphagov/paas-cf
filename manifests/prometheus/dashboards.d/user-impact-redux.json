@@ -410,8 +410,8 @@
         "links": [
           {
             "targetBlank": true,
-            "title": "https://prometheus-1.andyhunt.dev.cloudpipeline.digital/alerts",
-            "url": "https://prometheus-1.andyhunt.dev.cloudpipeline.digital/alerts"
+            "title": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts",
+            "url": "https://prometheus-1.__SYSTEM_DNS_ZONE_NAME__/alerts"
           }
         ],
         "mappingType": 1,
