@@ -115,7 +115,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/alpine
-              tag: ac168a5d15cf992d15ae0f589caf70988c167287
+              tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
           inputs:
             - name: paas-cf
           params:
@@ -142,7 +142,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/bosh-cli-v2
-              tag: ac168a5d15cf992d15ae0f589caf70988c167287
+              tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
           run:
             path: sh
             args:
@@ -178,7 +178,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/awscli
-              tag: ac168a5d15cf992d15ae0f589caf70988c167287
+              tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
           run:
             path: ./paas-cf/concourse/scripts/rds_instances.sh
             args:
