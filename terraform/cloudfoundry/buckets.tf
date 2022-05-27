@@ -22,9 +22,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "droplets-s3" {
     id      = "Expire old previous versions"
     status = "Enabled"
     prefix  = ""
-    aabort_incomplete_multipart_upload_days {
-      days_after_initiation ="3"
-    }
 
     noncurrent_version_expiration {
       noncurrent_days = 36
@@ -32,6 +29,14 @@ resource "aws_s3_bucket_lifecycle_configuration" "droplets-s3" {
 
     expiration {
       expired_object_delete_marker = true
+    }
+  }
+  rule {
+    id     = "Delete old incomplete multi-part uploads"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 3
     }
   }
 }
@@ -60,9 +65,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "buildpacks-s3" {
     id      = "Expire old previous versions"
     status = "Enabled"
     prefix  = ""
-    abort_incomplete_multipart_upload_days {
-      days_after_initiation ="3"
-    }
+
 
     noncurrent_version_expiration {
       noncurrent_days = 36
@@ -70,6 +73,14 @@ resource "aws_s3_bucket_lifecycle_configuration" "buildpacks-s3" {
 
     expiration {
       expired_object_delete_marker = true
+    }
+  }
+  rule {
+    id     = "Delete old incomplete multi-part uploads"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 3
     }
   }
 }
@@ -97,9 +108,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "packages-s3" {
     id      = "Expire old previous versions"
     status = "Enabled"
     prefix  = ""
-    abort_incomplete_multipart_upload_days {
-      days_after_initiation ="3"
-    }
 
     noncurrent_version_expiration {
       noncurrent_days = 36
@@ -107,6 +115,14 @@ resource "aws_s3_bucket_lifecycle_configuration" "packages-s3" {
 
     expiration {
       expired_object_delete_marker = true
+    }
+  }
+  rule {
+    id     = "Delete old incomplete multi-part uploads"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 3
     }
   }
 }
@@ -131,12 +147,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "resources-s3" {
   bucket = aws_s3_bucket.resources-s3.id
 
   rule {
-    id      = "Expire old previous versions"
+    id     = "Expire old previous versions"
     status = "Enabled"
-    prefix  = ""
-    abort_incomplete_multipart_upload_days {
-      days_after_initiation ="3"
-    }
+    prefix = ""
 
     noncurrent_version_expiration {
       noncurrent_days = 36
@@ -146,10 +159,17 @@ resource "aws_s3_bucket_lifecycle_configuration" "resources-s3" {
       expired_object_delete_marker = true
     }
   }
-}
+  rule {
+    id     = "Delete old incomplete multi-part uploads"
+    status = "Enabled"
 
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 3
+    }
+  }
+}
 resource "aws_s3_bucket" "test-artifacts" {
-  bucket = "gds-paas-${var.env}-test-artifacts"
+  bucket        = "gds-paas-${var.env}-test-artifacts"
   force_destroy = "true"
 }
 
@@ -159,13 +179,13 @@ resource "aws_s3_bucket_acl" "test-artifacts" {
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "test-artifacts" {
-  bucket        = aws_s3_bucket.test-artifacts.id
+  bucket = aws_s3_bucket.test-artifacts.id
 
 
   rule {
     id     = "Expire old previous versions"
     status = "Enabled"
-    prefix  = ""
+    prefix = ""
 
     expiration {
       days = 7
@@ -184,7 +204,7 @@ resource "aws_s3_bucket" "elb_access_log" {
 
 resource "aws_s3_bucket_acl" "elb_access_log" {
   bucket = aws_s3_bucket.elb_access_log.id
-  acl           = "private"
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_policy" "elb_access_log" {
@@ -201,7 +221,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "elb_access_log" {
   rule {
     id     = "Expire old previous versions"
     status = "Enabled"
-    prefix  = ""
+    prefix = ""
 
     expiration {
       days = 30
