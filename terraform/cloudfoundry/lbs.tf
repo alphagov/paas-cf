@@ -240,8 +240,8 @@ resource "aws_lb_listener" "cf_router_system_domain_https" {
 }
 
 resource "aws_lb_listener_certificate" "cf_router_metrics_domain_https" {
-  listener_arn    = "${aws_lb_listener.cf_router_system_domain_https.arn}"
-  certificate_arn = "${aws_acm_certificate.metrics.arn}"
+  listener_arn    = aws_lb_listener.cf_router_system_domain_https.arn
+  certificate_arn = aws_acm_certificate.metrics.arn
 }
 
 resource "aws_lb_target_group" "cf_router_system_domain_https" {

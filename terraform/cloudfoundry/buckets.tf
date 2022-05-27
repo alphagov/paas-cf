@@ -19,9 +19,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "droplets-s3" {
   bucket = aws_s3_bucket.droplets-s3.id
 
   rule {
-    id      = "Expire old previous versions"
+    id     = "Expire old previous versions"
     status = "Enabled"
-    prefix  = ""
+    prefix = ""
 
     noncurrent_version_expiration {
       noncurrent_days = 36
@@ -62,9 +62,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "buildpacks-s3" {
   bucket = aws_s3_bucket.buildpacks-s3.id
 
   rule {
-    id      = "Expire old previous versions"
+    id     = "Expire old previous versions"
     status = "Enabled"
-    prefix  = ""
+    prefix = ""
 
 
     noncurrent_version_expiration {
@@ -105,9 +105,9 @@ resource "aws_s3_bucket_lifecycle_configuration" "packages-s3" {
   bucket = aws_s3_bucket.packages-s3.id
 
   rule {
-    id      = "Expire old previous versions"
+    id     = "Expire old previous versions"
     status = "Enabled"
-    prefix  = ""
+    prefix = ""
 
     noncurrent_version_expiration {
       noncurrent_days = 36

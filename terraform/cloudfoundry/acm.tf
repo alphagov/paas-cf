@@ -31,7 +31,7 @@ resource "aws_acm_certificate_validation" "apps" {
   certificate_arn = aws_acm_certificate.apps.arn
 
   validation_record_fqdns = [
-  for record in aws_route53_record.apps_cert_validation : record.fqdn
+    for record in aws_route53_record.apps_cert_validation : record.fqdn
   ]
 }
 

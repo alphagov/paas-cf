@@ -147,7 +147,7 @@ resource "aws_lb_listener_rule" "p8s_alertmanager" {
   condition {
     host_header {
       values = [
-        "alertmanager-${count.index + 1}.*"]
+      "alertmanager-${count.index + 1}.*"]
     }
   }
 }
@@ -165,7 +165,7 @@ resource "aws_lb_listener_rule" "p8s_grafana" {
   condition {
     host_header {
       values = [
-        "grafana-${count.index + 1}.*"]
+      "grafana-${count.index + 1}.*"]
     }
   }
 }
@@ -183,7 +183,7 @@ resource "aws_lb_listener_rule" "p8s_prometheus" {
   condition {
     host_header {
       values = [
-        "prometheus-${count.index + 1}.*"]
+      "prometheus-${count.index + 1}.*"]
     }
   }
 }

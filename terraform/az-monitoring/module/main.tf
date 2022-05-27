@@ -21,9 +21,9 @@ resource "aws_security_group" "access_sg" {
   vpc_id      = aws_subnet.main.vpc_id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
     // https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-connect-set-up.html#ec2-instance-connect-setup-security-group
     cidr_blocks = ["18.202.216.48/29", "3.8.37.24/29"]
   }
