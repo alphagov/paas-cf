@@ -1286,10 +1286,6 @@ jobs:
                 . terraform-variables/cf-secrets.tfvars.sh
 
                 cp cf-tfstate/cf.tfstate updated-tfstate/cf.tfstate
-                terraform import aws_s3_bucket_lifecycle_configuration.droplets-s3 ((deploy_env))-cf-droplets
-                terraform import aws_s3_bucket_lifecycle_configuration.buildpacks-s3 ((deploy_env))-cf-buildpacks
-                terraform import aws_s3_bucket_lifecycle_configuration.packages-s3 ((deploy_env))-cf-packages
-                terraform import aws_s3_bucket_lifecycle_configuration.resources-s3 ((deploy_env))-cf-resources
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/cf.tfstate
                 cd paas-cf/terraform/cloudfoundry || exit
 
