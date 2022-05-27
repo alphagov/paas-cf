@@ -353,7 +353,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -369,7 +369,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -385,7 +385,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -401,7 +401,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -417,7 +417,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -433,7 +433,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {},
             "resources": []
@@ -449,7 +449,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {"psn_security_group_seed_json": {
               "value": "[]",
@@ -468,7 +468,7 @@ resources:
       initial_content_text: |
         {
             "version": 4,
-            "terraform_version": "1.2.0",
+            "terraform_version": "1.0.8",
             "serial": 0,
             "outputs": {
               "healthcheck_address_a": { "value": "", "type": "string" },
