@@ -8,8 +8,6 @@ variable "pingdom_user" { type = string }
 variable "system_dns_zone_name" { type = string }
 
 provider "pingdom" {
-  version = "1.1.2"
-
   user          = var.pingdom_user
   password      = var.pingdom_password
   api_key       = var.pingdom_api_key
