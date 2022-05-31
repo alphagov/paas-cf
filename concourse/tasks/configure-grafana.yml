@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/ruby
-    tag: ac168a5d15cf992d15ae0f589caf70988c167287
+    tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
 inputs:
   - name: paas-trusted-people
 run:

@@ -80,6 +80,19 @@ app_autoscaler_manifest_spec:
 .PHONY: manifest_spec
 manifests_spec: cloud_config_manifests_spec runtime_config_manifests_spec cf_manifest_spec prometheus_manifest_spec app_autoscaler_manifest_spec
 
+.PHONY: lint-terraform
+lint-terraform:
+	@./scripts/lint-terraform.sh
+
+.PHONY: terraform-fmt
+terraform-fmt: ## Run terraform fmt to print out changes that need to be made
+	@terraform fmt -write=false -diff -recursive terraform/
+
+.PHONY: terraform-fix
+terraform-fix: ## Run terraform fmt to print out and make the changes that need to be made
+	@terraform fmt -write=true -diff -recursive terraform/
+
+
 .PHONY: terraform_spec
 terraform_spec:
 	cd terraform &&\
