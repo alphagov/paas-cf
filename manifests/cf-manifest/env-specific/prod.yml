@@ -2,7 +2,7 @@
 uaa_instances: 3
 nats_instances: 3
 diego_api_instances: 3
-cell_instances: 36
+cell_instances: 24
 router_instances: 72
 api_instances: 9
 doppler_instances: 54
