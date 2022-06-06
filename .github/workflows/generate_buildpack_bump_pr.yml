@@ -1,4 +1,5 @@
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 9 1 * *"
 
@@ -48,10 +49,4 @@ jobs:
             --base main \
             --head "$NEW_BRANCH_NAME" \
             --title "Buildpack upgrades, $(date -u '+%B %Y')" \
-            --body-file - <<-EOF
-            This is an automatically generated pull request.
-
-            These are the results of running the \`update_buildpacks.sh\` script against commit $GITHUB_SHA.
-
-            A human should checkout this branch and run the script `scripts/create_buildpacks_email.sh` locally to generate the email we'll send to tenants, then continue following the instructions at https://team-manual.cloud.service.gov.uk/guides/upgrading_CF,_bosh_and_stemcells/#buildpacks.
-          EOF
+            --body-file "./.github/workflows/automatic_buildpack_bump_pr_body.md"
