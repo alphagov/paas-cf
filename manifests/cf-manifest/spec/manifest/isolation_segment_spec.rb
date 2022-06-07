@@ -56,15 +56,31 @@ RSpec.describe "isolation_segments" do
         ).to eq("vpa" => { "as" => "vpa-egress-restricted-1" })
       end
 
-      %w[silk-cni silk-daemon].each do |consumer|
-        it "has an override for #{consumer} consumer" do
-          expect(
-            instance_group
-              .dig("jobs")
-              .find { |j| j["name"] == consumer }
-              .dig("consumes"),
-          ).to eq("vpa" => { "from" => "vpa-egress-restricted-1" })
-        end
+      it "has an override for garden provider" do
+        expect(
+          instance_group
+            .dig("jobs")
+            .find { |j| j["name"] == "garden" }
+            .dig("provides"),
+        ).to eq("iptables" => { "as" => "iptables-egress-restricted-1" })
+      end
+
+      it "has an override for silk-cni consumer" do
+        expect(
+          instance_group
+            .dig("jobs")
+            .find { |j| j["name"] == "silk-cni" }
+            .dig("consumes"),
+        ).to eq("vpa" => { "from" => "vpa-egress-restricted-1" })
+      end
+
+      it "has an override for silk-daemon consumer" do
+        expect(
+          instance_group
+            .dig("jobs")
+            .find { |j| j["name"] == "silk-daemon" }
+            .dig("consumes"),
+        ).to eq("iptables" => { "from" => "iptables-egress-restricted-1" }, "vpa" => { "from" => "vpa-egress-restricted-1" })
       end
 
       it "is added to bosh-dns-aliases for cells" do
@@ -209,6 +225,15 @@ RSpec.describe "isolation_segments" do
         ).to eq("vpa" => { "as" => "vpa-not-egress-restricted-1" })
       end
 
+      it "has an override for garden provider" do
+        expect(
+          instance_group
+            .dig("jobs")
+            .find { |j| j["name"] == "garden" }
+            .dig("provides"),
+        ).to eq("iptables" => { "as" => "iptables-not-egress-restricted-1" })
+      end
+
       it "does not include the coredns job" do
         expect(
           instance_group
@@ -226,15 +251,22 @@ RSpec.describe "isolation_segments" do
         ).to eq(["169.254.0.2"])
       end
 
-      %w[silk-cni silk-daemon].each do |consumer|
-        it "has an override for #{consumer} consumer" do
-          expect(
-            instance_group
-              .dig("jobs")
-              .find { |j| j["name"] == consumer }
-              .dig("consumes"),
-          ).to eq("vpa" => { "from" => "vpa-not-egress-restricted-1" })
-        end
+      it "has an override for silk-cni consumer" do
+        expect(
+          instance_group
+            .dig("jobs")
+            .find { |j| j["name"] == "silk-cni" }
+            .dig("consumes"),
+        ).to eq("vpa" => { "from" => "vpa-not-egress-restricted-1" })
+      end
+
+      it "has an override for silk-daemon consumer" do
+        expect(
+          instance_group
+            .dig("jobs")
+            .find { |j| j["name"] == "silk-daemon" }
+            .dig("consumes"),
+        ).to eq("iptables" => { "from" => "iptables-not-egress-restricted-1" }, "vpa" => { "from" => "vpa-not-egress-restricted-1" })
       end
 
       it "is added to bosh-dns-aliases for cells" do

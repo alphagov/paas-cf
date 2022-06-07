@@ -1,8 +1,0 @@
----
-- type: replace
-  path: /releases/name=capi
-  value:
-    name: "capi"
-    version: "1.127.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.127.0"
-    sha1: "2552942c605a5b57556ffb1c8a44ef8bb601b9ce"
