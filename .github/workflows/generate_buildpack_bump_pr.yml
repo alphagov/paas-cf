@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 env:
   GO_VERSION: "1.18"
@@ -42,8 +43,6 @@ jobs:
           echo "NEW_BRANCH_NAME=$NEW_BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Create PR
-        env:
-          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
         run: |
           gh pr create \
             --base main \
