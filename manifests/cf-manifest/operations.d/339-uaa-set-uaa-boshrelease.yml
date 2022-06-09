@@ -3,6 +3,6 @@
   path: /releases/name=uaa
   value:
     name: uaa
-    version: 0.1.35
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-0.1.35.tgz
-    sha1: 1d0cbd3bf11252fda305763518c7b29addb4af36
+    version: 75.19.0
+    url: https://bosh.io/d/github.com/cloudfoundry/uaa-release?v=75.19.0
+    sha1: 7a1fe64957930074d1591d66d72aac9c3aed2dbe
