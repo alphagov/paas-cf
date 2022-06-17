@@ -29,6 +29,7 @@ var (
 	testConfig  config.CatsConfig
 	httpClient  *http.Client
 	testContext *workflowhelpers.ReproducibleTestSuiteSetup
+	altOrgName string
 
 	systemDomain = os.Getenv("SYSTEM_DNS_ZONE_NAME")
 
@@ -51,6 +52,7 @@ func TestSuite(t *testing.T) {
 	}
 
 	testContext = workflowhelpers.NewTestSuiteSetup(testConfig)
+	altOrgName = testContext.TestSpace.OrganizationName() + "-alt"
 
 	BeforeSuite(func() {
 		testContext.Setup()
@@ -67,27 +69,22 @@ func TestSuite(t *testing.T) {
 		})
 		Expect(err).NotTo(HaveOccurred())
 
-		// Enable service access for the ephemeral test org.
-		// FIXME: remove this block once sqs is enabled for all
 		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
 			orgManager := cf.Cf("set-org-role", username, testContext.TestSpace.OrganizationName(), "OrgManager").Wait(testConfig.DefaultTimeoutDuration())
 			Expect(orgManager).To(Exit(0))
-			fifo := cf.Cf("enable-service-access", "aws-sqs-queue",
-				"-o", testContext.TestSpace.OrganizationName(),
-				"-b", "sqs-broker",
-				"-p", "fifo",
-			).Wait(testConfig.DefaultTimeoutDuration())
-			Expect(fifo).To(Exit(0))
-			standard := cf.Cf("enable-service-access", "aws-sqs-queue",
-				"-o", testContext.TestSpace.OrganizationName(),
-				"-b", "sqs-broker",
-				"-p", "standard",
-			).Wait(testConfig.DefaultTimeoutDuration())
-			Expect(standard).To(Exit(0))
+
+			altOrg := cf.Cf("create-org", altOrgName).Wait(testConfig.DefaultTimeoutDuration())
+			Expect(altOrg).To(Exit(0))
+			altOrgManager := cf.Cf("set-org-role", username, altOrgName, "OrgManager").Wait(testConfig.DefaultTimeoutDuration())
+			Expect(altOrgManager).To(Exit(0))
 		})
 	})
 
 	AfterSuite(func() {
+		workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
+			deleteAltOrg := cf.Cf("delete-org", altOrgName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+			Expect(deleteAltOrg).To(Exit(0))
+		})
 		testContext.Teardown()
 	})
 
