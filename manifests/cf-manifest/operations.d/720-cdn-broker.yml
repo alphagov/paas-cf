@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: cdn-broker
-    version: 0.1.47
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.47.tgz
-    sha1: cfbb094c441764bd7ddf08e0b90d9097c40afcf7
+    version: 0.1.48
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.48.tgz
+    sha1: ee6b435b00869191c4ac189ab222fe3ac253d1a2
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -40,7 +40,7 @@
             aws_access_key_id: ""
             aws_secret_access_key: ""
             api_address: https://api.((terraform_outputs_cf_root_domain))
-            client_id: "cdn_broker"
+            client_id: "cdn-broker"
             client_secret: ((secrets_uaa_clients_cdn_broker_secret))
             default_origin: ((terraform_outputs_cf_apps_domain))
             aws_region: "((terraform_outputs_region))"
@@ -51,22 +51,7 @@
       - name: cf
 
 - type: replace
-  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/clients/cdn_broker?
-  value:
-    authorities: uaa.none
-    authorized-grant-types: password
-    override: true
-    scope: cloud_controller.admin_read_only
-    secret: ((secrets_uaa_clients_cdn_broker_secret))
-
-- type: replace
   path: /variables/-
   value:
     name: secrets_cdn_broker_admin_password
-    type: password
-
-- type: replace
-  path: /variables/-
-  value:
-    name: secrets_uaa_clients_cdn_broker_secret
     type: password

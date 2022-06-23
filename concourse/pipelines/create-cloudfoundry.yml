@@ -2976,6 +2976,7 @@ jobs:
                 UAA_CLIENTS_PAAS_ADMIN_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_paas_admin_secret")
                 UAA_CLIENTS_PAAS_AUDITOR_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret")
                 UAA_CLIENTS_PAAS_PROMETHEUS_ENDPOINTS_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_prometheus_endpoints_secret")
+                UAA_CLIENTS_CDN_BROKER_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_cdn_broker_secret")
                 SECRETS_TEST_USER_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_test_user_password")
                 CUSTOM_BROKER_ACCEPTANCE_PROMETHEUS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/custom_broker_acceptance_prometheus_password")
 
@@ -3011,6 +3012,7 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_admin_secret" --type password --password "${UAA_CLIENTS_PAAS_ADMIN_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_auditor_secret" --type password --password "${UAA_CLIENTS_PAAS_AUDITOR_SECRET}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_paas_prometheus_endpoints_secret" --type password --password "${UAA_CLIENTS_PAAS_PROMETHEUS_ENDPOINTS_SECRET}"
+                credhub set --name="${PIPELINE_NS}/uaa_clients_cdn_broker_secret" --type password --password "${UAA_CLIENTS_CDN_BROKER_SECRET}"
                 credhub set --name="${PIPELINE_NS}/secrets_test_user_password" --type password --password "${SECRETS_TEST_USER_PASSWORD}"
                 credhub set --name="${PIPELINE_NS}/platform_prometheus_password" --type password --password "${PLATFORM_PROMETHEUS_PASSWORD}"
 
@@ -6557,6 +6559,7 @@ jobs:
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_metrics_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_prometheus_endpoints_secret" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_cdn_broker_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_cf_exporter_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_cf_smoke_tests_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret" -t password
