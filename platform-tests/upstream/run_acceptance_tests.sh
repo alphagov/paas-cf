@@ -15,7 +15,6 @@ SLOW_SPEC_THRESHOLD=120
 SKIP_REGEX="${SKIP_REGEX:+${SKIP_REGEX}|}routing.API"
 SKIP_REGEX="${SKIP_REGEX}|Adding a wildcard route to a domain"
 SKIP_REGEX="${SKIP_REGEX}|when app has multiple ports mapped"
-SKIP_REGEX="${SKIP_REGEX}|Dynamic ASGs"
 SKIP_REGEX="${SKIP_REGEX// /\\s}" # Replace ' ' with \s
 
 export CONFIG
