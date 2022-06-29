@@ -1,0 +1,4 @@
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties?/prometheus/storage/tsdb/allow_overlapping_blocks?
+  value: true
