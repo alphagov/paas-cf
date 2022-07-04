@@ -20,6 +20,7 @@ func AssertTLSErrorOnClassicLB(err error) {
 	Expect(err).To(HaveOccurred())
 	Expect(err).To(SatisfyAny(
 		MatchError("tls: no supported versions satisfy MinVersion and MaxVersion"),
+		MatchError("tls: protocol version not supported"),
 		MatchError("EOF"),
 	))
 }
@@ -33,6 +34,7 @@ func AssertTLSErrorOnALB(err error) {
 		// but will return an error, which crypto/tls can
 		// translate in to the below, when connecting with SSL.
 		ContainSubstring("tls: no supported versions satisfy MinVersion and MaxVersion"),
+		ContainSubstring("tls: protocol version not supported"),
 	))
 }
 
