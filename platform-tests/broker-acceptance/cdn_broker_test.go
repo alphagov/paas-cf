@@ -58,6 +58,33 @@ var _ = Describe("CDN broker", func() {
 			})
 		})
 
+		It("can create a CDN when we cf create-domain a parent domain", func() {
+
+			orgName := testContext.TestSpace.OrganizationName()
+			parentDomainName := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "cdn-broker") + ".net"
+			domainName := "foo.bar." + parentDomainName
+			domainNameList := fmt.Sprintf(`{"domain": "%s"}`, domainName)
+
+			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-cdn")
+
+			// best effort tidyup - we don't really care if these pass or fail
+			defer pollForServiceDeletionCompletion(serviceInstanceName)
+			defer cf.Cf("delete-domain", parentDomainName, "-f")
+			defer cf.Cf("delete-service", serviceInstanceName, "-f")
+
+			By("creating a CDN instance: "+serviceInstanceName, func() {
+				Expect(cf.Cf("create-domain", orgName, parentDomainName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				Expect(cf.Cf("create-service", serviceName, serviceName, serviceInstanceName, "-c", domainNameList).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				pollForCdnServiceCreationCompletion(serviceInstanceName)
+			})
+
+			By("deleting a standard CDN service", func() {
+				Expect(cf.Cf("delete-service", serviceInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				Expect(cf.Cf("delete-domain", parentDomainName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				pollForServiceDeletionCompletion(serviceInstanceName)
+			})
+		})
+
 		It("refuses to create a CDN for a domain without a cf create-domain", func() {
 			domainName := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "cdn-broker") + ".net"
 			domainNameList := fmt.Sprintf(`{"domain": "%s"}`, domainName)
