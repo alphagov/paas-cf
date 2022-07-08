@@ -9,6 +9,7 @@ If you have any problems using the new versions in the buildpacks, or working to
 Regards,
 
 The GOV.UK PaaS team
+
 {{- if .HasAnyHighlights }}
 # Highlights
 {{- range $index := .Data }}
@@ -32,5 +33,6 @@ The GOV.UK PaaS team
 Release notes:
 {{ range $version := .ReleaseNoteVersions }}
 * https://github.com/cloudfoundry/{{ $buildpack.RepoName }}/releases/tag/{{ $version }}{{ end }}
+
 --------{{ if $index }}
 {{ end }}{{ end }}
