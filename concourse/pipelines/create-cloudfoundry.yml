@@ -151,7 +151,6 @@ groups:
       - deploy-paas-admin-data
       - deploy-paas-auditor
       - deploy-paas-billing
-      - deploy-new-paas-billing
       - deploy-paas-metrics
       - deploy-paas-aiven-broker
       - deploy-paas-prometheus-endpoints
@@ -196,7 +195,6 @@ groups:
       - deploy-paas-admin-data
       - deploy-paas-auditor
       - deploy-paas-billing
-      - deploy-new-paas-billing
       - deploy-paas-metrics
       - deploy-paas-aiven-broker
   - name: operator
@@ -235,7 +233,6 @@ groups:
     jobs:
       - continuous-smoke-tests
       - continuous-billing-smoke-tests
-      - continuous-new-billing-smoke-tests
       - continuous-leaked-aws-key-check
       - check-certificates
       - resurrector-is-enabled
@@ -640,13 +637,6 @@ resources:
       uri: https://github.com/alphagov/paas-billing.git
       branch: main
       tag_filter: ((deploy_env_tag_prefix))
-      commit_verification_keys: ((gpg_public_keys))
-
-  - name: new-paas-billing
-    type: git
-    source:
-      uri: https://github.com/alphagov/paas-billing.git
-      branch: new-billing-integration
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-accounts
@@ -3666,7 +3656,6 @@ jobs:
                 cf create-space service-brokers -o admin
                 cf create-space healthchecks -o admin
                 cf create-space billing -o admin
-                cf create-space new-billing -o admin
                 cf create-space public -o admin
                 cf create-space assets -o admin
 
@@ -5194,7 +5183,6 @@ jobs:
                     OAUTH_CLIENT_SECRET: ((uaa_clients_paas_admin_secret))
                     API_URL: "https://api.${SYSTEM_DNS_ZONE_NAME}"
                     BILLING_URL: "https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                    NEW_BILLING_URL: "https://new-billing.${SYSTEM_DNS_ZONE_NAME}"
                     ACCOUNTS_URL: "https://accounts.${SYSTEM_DNS_ZONE_NAME}"
                     ACCOUNTS_SECRET: ((paas_accounts_password))
                     MAILCHIMP_API_KEY: "${MAILCHIMP_API_KEY}"
@@ -5618,189 +5606,6 @@ jobs:
         file: paas-cf/concourse/tasks/tag-repo.yml
         input_mapping:
           git-repo: paas-billing
-        params:
-          DEPLOY_ENV: ((deploy_env))
-          GIT_EMAIL: the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk
-          GIT_REPO_SSH: git@github.com:alphagov/paas-billing.git
-          GIT_SSH_PRIVATE_KEY: ((paas-billing-git-keys.private_key))
-          GIT_SSH_PUBLIC_KEY: ((paas-billing-git-keys.public_key))
-          GIT_USER: gov-paas-((deploy_env))
-
-      - *end-grafana-job-annotation
-
-  - name: deploy-new-paas-billing
-    serial: true
-    plan:
-      - *add-grafana-job-annotation
-      - get: new-paas-billing
-        trigger: true
-
-      - in_parallel:
-        - <<: *get-paas-cf
-          trigger: true
-          passed: ['post-deploy']
-
-      - task: deploy-new-paas-billing
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *cf-cli-image-resource
-          params:
-            AWS_REGION: ((aws_region))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-            CF_CLIENT_SECRET: ((cf_client_secret))
-            LOGIT_ADDRESS: ((logit_syslog_address))
-            LOGIT_PORT: ((logit_syslog_port))
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
-          inputs:
-            - name: paas-cf
-            - name: new-paas-billing
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                BILLING_DB_PLAN="tiny-unencrypted-12"
-                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
-                  BILLING_DB_PLAN="medium-12"
-                elif [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ]; then
-                  BILLING_DB_PLAN="large-12"
-                fi
-
-                cf api "${API_ENDPOINT}"
-                cf auth "${CF_ADMIN}" "${CF_PASS}"
-
-                cf target -o admin -s new-billing
-
-                if ! cf service billing-db > /dev/null; then
-                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
-                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
-                    echo "Waiting for creation of billing-db service to complete..."
-                    sleep 30
-                  done
-                fi
-
-                if ! cf service billing-logit-ssl-drain > /dev/null; then
-                  cf create-user-provided-service \
-                    billing-logit-ssl-drain \
-                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
-                else
-                  cf update-user-provided-service \
-                    billing-logit-ssl-drain \
-                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
-                fi
-
-                cp "paas-cf/config/billing/output/${AWS_REGION}.json" new-paas-billing/config.json
-
-                cd new-paas-billing
-
-                ruby -ryaml -e "
-                  env = {
-                    'CF_CLIENT_ID' => 'paas-billing',
-                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
-                    'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
-                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
-                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
-                  }
-
-                  api = YAML.load_file('manifest-api2.yml')
-                  api['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'] = app['env'].merge(env)
-                    app['services'] = [
-                      'billing-db',
-                      'billing-logit-ssl-drain'
-                    ]
-                    app['routes'] = [
-                      { 'route' => 'new-billing.${SYSTEM_DNS_ZONE_NAME}' }
-                    ]
-                    app['health-check-http-endpoint'] = '/'
-                  }
-                  File.write('manifest-api2.yml', api.to_yaml)
-
-                  collector = YAML.load_file('manifest-collector.yml')
-                  collector['applications'].each { |app|
-                    app['env'] = {} unless app['env']
-                    app['env'] = app['env'].merge(env)
-                    app['services'] = [
-                      'billing-db',
-                      'billing-logit-ssl-drain'
-                    ]
-                  }
-                  File.write('manifest-collector.yml', collector.to_yaml)
-                "
-
-                cf cancel-deployment paas-billing-api || true
-                cf push --strategy=rolling paas-billing-api -f manifest-api2.yml
-
-                cf cancel-deployment paas-billing-collector || true
-                cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
-
-                while ! cf service billing-logit-ssl-drain | grep -c 'create succeeded' | grep 2 > /dev/null; do
-                  echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
-                  sleep 10
-                done
-
-      - task: paas-billing-acceptance-tests
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *cf-acceptance-tests-image-resource
-          params:
-            AWS_REGION: ((aws_region))
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
-          inputs:
-            - name: paas-cf
-            - name: new-paas-billing
-              path: src/github.com/alphagov/paas-billing
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                cf api "${API_ENDPOINT}"
-                cf auth "${CF_ADMIN}" "${CF_PASS}"
-
-                cf target -o admin -s new-billing
-
-                export GOPATH="${PWD}"
-                export BILLING_API_URL="https://new-billing.${SYSTEM_DNS_ZONE_NAME}"
-                cd src/github.com/alphagov/paas-billing
-
-                wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-                echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
-
-                apt-get -q update
-                apt-get -q -y install postgresql-12 postgresql-client-12
-
-                cat > /etc/postgresql/12/main/pg_hba.conf <<-EOF
-                local   all   postgres   trust
-                host    all   postgres   127.0.0.1/32   trust
-                EOF
-
-                pg_ctlcluster 12 main start
-
-                export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
-
-                make acceptance
-
-
-      - task: tag-repo
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/tag-repo.yml
-        input_mapping:
-          git-repo: new-paas-billing
         params:
           DEPLOY_ENV: ((deploy_env))
           GIT_EMAIL: the-multi-cloud-paas-team+deployer-ci@digital.cabinet-office.gov.uk
@@ -7138,70 +6943,6 @@ jobs:
           DEPLOY_ENV: ((deploy_env))
           CCI_BUILD_NUMBER: $BUILD_NAME
           CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+finished+with+errors"
-
-  - name: continuous-new-billing-smoke-tests
-    serial_groups: [smoke-tests]
-    build_logs_to_retain: 10000
-    plan:
-      - in_parallel:
-        - get: billing-smoke-tests-timer
-          trigger: true
-        - get: new-paas-billing
-          passed: ['deploy-new-paas-billing']
-        - <<: *get-paas-cf
-          passed: ['pipeline-lock']
-        - get: cf-manifest
-          passed: ['post-deploy']
-
-      - do:
-        - task: create-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: cont-billing-smoketest-user
-            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
-
-        - task: run-new-billing-smoke-tests
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *cf-acceptance-tests-image-resource
-            params:
-              AWS_REGION: ((aws_region))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              DEPLOY_ENV: ((deploy_env))
-            inputs:
-              - name: paas-cf
-              - name: new-paas-billing
-                path: src/github.com/alphagov/paas-billing
-              - name: admin-creds
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  cf api "https://api.${SYSTEM_DNS_ZONE_NAME}"
-                  cf auth  "$(cat admin-creds/username)" "$(cat admin-creds/password)"
-
-                  cf target -o admin -s new-billing
-
-                  export GOPATH="${PWD}"
-                  export BILLING_API_URL="https://new-billing.${SYSTEM_DNS_ZONE_NAME}"
-                  cd src/github.com/alphagov/paas-billing
-                  make smoke
-
-        ensure:
-          in_parallel:
-            - task: remove-temp-user
-              tags: [colocated-with-web]
-              file: paas-cf/concourse/tasks/delete_admin.yml
-              timeout: 5m
-              params:
-                API_ENDPOINT: ((api_endpoint))
-                CF_ADMIN: ((cf_admin))
-                CF_PASS: ((cf_pass))
 
   - name: continuous-leaked-aws-key-check
     serial_groups: [security-checks]
