@@ -4,6 +4,6 @@
 aws_limits_elasticache_cache_parameter_groups: 20
 aws_limits_elasticache_nodes: 100
 aws_limits_s3_buckets: 100
-prometheus_disk_size: 100GB
+prometheus_disk_size: 500GB
 aws_limits_cloudfront_distributions: 200
 
