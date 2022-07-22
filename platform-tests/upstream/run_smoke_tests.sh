@@ -30,4 +30,4 @@ ln -s "$(pwd)/artifacts" /tmp/artifacts
 cd "${CF_GOPATH}/cf-smoke-tests"
 
 echo "Starting smoke tests"
-./bin/test -keepGoing
+./bin/test --keep-going

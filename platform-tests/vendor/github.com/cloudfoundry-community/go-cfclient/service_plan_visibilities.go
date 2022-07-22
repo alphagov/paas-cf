@@ -44,6 +44,7 @@ func (c *Client) ListServicePlanVisibilitiesByQuery(query url.Values) ([]Service
 		if err != nil {
 			return nil, errors.Wrap(err, "Error requesting service plan visibilities")
 		}
+		defer resp.Body.Close()
 		resBody, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return nil, errors.Wrap(err, "Error reading service plan visibilities request:")
@@ -78,10 +79,11 @@ func (c *Client) GetServicePlanVisibilityByGuid(guid string) (ServicePlanVisibil
 	if err != nil {
 		return ServicePlanVisibility{}, err
 	}
+	defer resp.Body.Close()
 	return respBodyToServicePlanVisibility(resp.Body, c)
 }
 
-//a uniqueID is the id of the service in the catalog and not in cf internal db
+// a uniqueID is the id of the service in the catalog and not in cf internal db
 func (c *Client) CreateServicePlanVisibilityByUniqueId(uniqueId string, organizationGuid string) (ServicePlanVisibility, error) {
 	q := url.Values{}
 	q.Set("q", fmt.Sprintf("unique_id:%s", uniqueId))
@@ -102,6 +104,7 @@ func (c *Client) CreateServicePlanVisibility(servicePlanGuid string, organizatio
 	if err != nil {
 		return ServicePlanVisibility{}, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		return ServicePlanVisibility{}, errors.Wrapf(err, "Error creating service plan visibility, response code: %d", resp.StatusCode)
 	}
@@ -128,6 +131,7 @@ func (c *Client) DeleteServicePlanVisibility(guid string, async bool) error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusNoContent {
 		return errors.Wrapf(err, "Error deleting service plan visibility, response code: %d", resp.StatusCode)
 	}
@@ -144,6 +148,7 @@ func (c *Client) UpdateServicePlanVisibility(guid string, servicePlanGuid string
 	if err != nil {
 		return ServicePlanVisibility{}, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		return ServicePlanVisibility{}, errors.Wrapf(err, "Error updating service plan visibility, response code: %d", resp.StatusCode)
 	}

@@ -140,6 +140,7 @@ func (s *Space) Org() (Org, error) {
 	if err != nil {
 		return Org{}, errors.Wrap(err, "Error requesting org")
 	}
+	defer resp.Body.Close()
 	resBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return Org{}, errors.Wrap(err, "Error reading org request")
@@ -164,8 +165,8 @@ func (s *Space) Quota() (*SpaceQuota, error) {
 	if err != nil {
 		return &SpaceQuota{}, errors.Wrap(err, "Error requesting space quota")
 	}
-	resBody, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
+	resBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return &SpaceQuota{}, errors.Wrap(err, "Error reading space quota body")
 	}
@@ -187,8 +188,8 @@ func (s *Space) Summary() (SpaceSummary, error) {
 	if err != nil {
 		return SpaceSummary{}, errors.Wrap(err, "Error requesting space summary")
 	}
-	resBody, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
+	resBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return SpaceSummary{}, errors.Wrap(err, "Error reading space summary body")
 	}
@@ -231,6 +232,7 @@ func (c *Client) CreateSpace(req SpaceRequest) (Space, error) {
 	if err != nil {
 		return Space{}, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		return Space{}, fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
 	}
@@ -247,6 +249,7 @@ func (c *Client) DeleteSpace(guid string, recursive, async bool) error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusNoContent {
 		return errors.Wrapf(err, "Error deleting space %s, response code: %d", guid, resp.StatusCode)
 	}
@@ -296,6 +299,29 @@ func (c *Client) ListSpaceDevelopers(spaceGUID string) ([]User, error) {
 	return c.ListSpaceDevelopersByQuery(spaceGUID, nil)
 }
 
+func (c *Client) ListSpaceServiceInstances(spaceGUID string) ([]ServiceInstance, error) {
+	return c.ListSpaceServiceInstancesByQuery(spaceGUID, nil)
+}
+
+func (c *Client) ListSpaceServiceInstancesByQuery(spaceGUID string, query url.Values) ([]ServiceInstance, error) {
+	var instances []ServiceInstance
+	requestURL := fmt.Sprintf("/v2/spaces/%s/service_instances?%s", spaceGUID, query.Encode())
+	for {
+		res, err := c.getServiceInstancesResponse(requestURL)
+		if err != nil {
+			return instances, err
+		}
+		for _, instance := range res.Resources {
+			instances = append(instances, c.mergeServiceInstance(instance))
+		}
+		requestURL = res.NextUrl
+		if requestURL == "" || query.Get("page") != "" {
+			break
+		}
+	}
+	return instances, nil
+}
+
 func (c *Client) AssociateSpaceDeveloper(spaceGUID, userGUID string) (Space, error) {
 	space := Space{Guid: spaceGUID, c: c}
 	return space.AssociateDeveloper(userGUID)
@@ -304,6 +330,11 @@ func (c *Client) AssociateSpaceDeveloper(spaceGUID, userGUID string) (Space, err
 func (c *Client) AssociateSpaceDeveloperByUsername(spaceGUID, name string) (Space, error) {
 	space := Space{Guid: spaceGUID, c: c}
 	return space.AssociateDeveloperByUsername(name)
+}
+
+func (c *Client) AssociateSpaceDeveloperByUsernameAndOrigin(spaceGUID, name, origin string) (Space, error) {
+	space := Space{Guid: spaceGUID, c: c}
+	return space.AssociateDeveloperByUsernameAndOrigin(name, origin)
 }
 
 func (c *Client) RemoveSpaceDeveloper(spaceGUID, userGUID string) error {
@@ -316,6 +347,11 @@ func (c *Client) RemoveSpaceDeveloperByUsername(spaceGUID, name string) error {
 	return space.RemoveDeveloperByUsername(name)
 }
 
+func (c *Client) RemoveSpaceDeveloperByUsernameAndOrigin(spaceGUID, name, origin string) error {
+	space := Space{Guid: spaceGUID, c: c}
+	return space.RemoveDeveloperByUsernameAndOrigin(name, origin)
+}
+
 func (c *Client) AssociateSpaceAuditor(spaceGUID, userGUID string) (Space, error) {
 	space := Space{Guid: spaceGUID, c: c}
 	return space.AssociateAuditor(userGUID)
@@ -324,6 +360,11 @@ func (c *Client) AssociateSpaceAuditor(spaceGUID, userGUID string) (Space, error
 func (c *Client) AssociateSpaceAuditorByUsername(spaceGUID, name string) (Space, error) {
 	space := Space{Guid: spaceGUID, c: c}
 	return space.AssociateAuditorByUsername(name)
+}
+
+func (c *Client) AssociateSpaceAuditorByUsernameAndOrigin(spaceGUID, name, origin string) (Space, error) {
+	space := Space{Guid: spaceGUID, c: c}
+	return space.AssociateAuditorByUsernameAndOrigin(name, origin)
 }
 
 func (c *Client) RemoveSpaceAuditor(spaceGUID, userGUID string) error {
@@ -336,6 +377,11 @@ func (c *Client) RemoveSpaceAuditorByUsername(spaceGUID, name string) error {
 	return space.RemoveAuditorByUsername(name)
 }
 
+func (c *Client) RemoveSpaceAuditorByUsernameAndOrigin(spaceGUID, name, origin string) error {
+	space := Space{Guid: spaceGUID, c: c}
+	return space.RemoveAuditorByUsernameAndOrigin(name, origin)
+}
+
 func (c *Client) AssociateSpaceManager(spaceGUID, userGUID string) (Space, error) {
 	space := Space{Guid: spaceGUID, c: c}
 	return space.AssociateManager(userGUID)
@@ -344,6 +390,11 @@ func (c *Client) AssociateSpaceManager(spaceGUID, userGUID string) (Space, error
 func (c *Client) AssociateSpaceManagerByUsername(spaceGUID, name string) (Space, error) {
 	space := Space{Guid: spaceGUID, c: c}
 	return space.AssociateManagerByUsername(name)
+}
+
+func (c *Client) AssociateSpaceManagerByUsernameAndOrigin(spaceGUID, name, origin string) (Space, error) {
+	space := Space{Guid: spaceGUID, c: c}
+	return space.AssociateManagerByUsernameAndOrigin(name, origin)
 }
 
 func (c *Client) RemoveSpaceManager(spaceGUID, userGUID string) error {
@@ -356,12 +407,21 @@ func (c *Client) RemoveSpaceManagerByUsername(spaceGUID, name string) error {
 	return space.RemoveManagerByUsername(name)
 }
 
+func (c *Client) RemoveSpaceManagerByUsernameAndOrigin(spaceGUID, name, origin string) error {
+	space := Space{Guid: spaceGUID, c: c}
+	return space.RemoveManagerByUsernameAndOrigin(name, origin)
+}
+
 func (s *Space) AssociateDeveloper(userGUID string) (Space, error) {
 	return s.associateRole(userGUID, "developers")
 }
 
 func (s *Space) AssociateDeveloperByUsername(name string) (Space, error) {
-	return s.associateUserByRole(name, "developers")
+	return s.associateUserByRole(name, "developers", "")
+}
+
+func (s *Space) AssociateDeveloperByUsernameAndOrigin(name, origin string) (Space, error) {
+	return s.associateUserByRole(name, "developers", origin)
 }
 
 func (s *Space) RemoveDeveloper(userGUID string) error {
@@ -369,7 +429,11 @@ func (s *Space) RemoveDeveloper(userGUID string) error {
 }
 
 func (s *Space) RemoveDeveloperByUsername(name string) error {
-	return s.removeUserByRole(name, "developers")
+	return s.removeUserByRole(name, "developers", "")
+}
+
+func (s *Space) RemoveDeveloperByUsernameAndOrigin(name, origin string) error {
+	return s.removeUserByRole(name, "developers", origin)
 }
 
 func (s *Space) AssociateAuditor(userGUID string) (Space, error) {
@@ -377,7 +441,11 @@ func (s *Space) AssociateAuditor(userGUID string) (Space, error) {
 }
 
 func (s *Space) AssociateAuditorByUsername(name string) (Space, error) {
-	return s.associateUserByRole(name, "auditors")
+	return s.associateUserByRole(name, "auditors", "")
+}
+
+func (s *Space) AssociateAuditorByUsernameAndOrigin(name, origin string) (Space, error) {
+	return s.associateUserByRole(name, "auditors", origin)
 }
 
 func (s *Space) RemoveAuditor(userGUID string) error {
@@ -385,7 +453,11 @@ func (s *Space) RemoveAuditor(userGUID string) error {
 }
 
 func (s *Space) RemoveAuditorByUsername(name string) error {
-	return s.removeUserByRole(name, "auditors")
+	return s.removeUserByRole(name, "auditors", "")
+}
+
+func (s *Space) RemoveAuditorByUsernameAndOrigin(name, origin string) error {
+	return s.removeUserByRole(name, "auditors", origin)
 }
 
 func (s *Space) AssociateManager(userGUID string) (Space, error) {
@@ -393,7 +465,11 @@ func (s *Space) AssociateManager(userGUID string) (Space, error) {
 }
 
 func (s *Space) AssociateManagerByUsername(name string) (Space, error) {
-	return s.associateUserByRole(name, "managers")
+	return s.associateUserByRole(name, "managers", "")
+}
+
+func (s *Space) AssociateManagerByUsernameAndOrigin(name, origin string) (Space, error) {
+	return s.associateUserByRole(name, "managers", origin)
 }
 
 func (s *Space) RemoveManager(userGUID string) error {
@@ -401,7 +477,10 @@ func (s *Space) RemoveManager(userGUID string) error {
 }
 
 func (s *Space) RemoveManagerByUsername(name string) error {
-	return s.removeUserByRole(name, "managers")
+	return s.removeUserByRole(name, "managers", "")
+}
+func (s *Space) RemoveManagerByUsernameAndOrigin(name, origin string) error {
+	return s.removeUserByRole(name, "managers", origin)
 }
 
 func (s *Space) associateRole(userGUID, role string) (Space, error) {
@@ -411,16 +490,22 @@ func (s *Space) associateRole(userGUID, role string) (Space, error) {
 	if err != nil {
 		return Space{}, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		return Space{}, errors.Wrapf(err, "Error associating %s %s, response code: %d", role, userGUID, resp.StatusCode)
 	}
 	return s.c.handleSpaceResp(resp)
 }
 
-func (s *Space) associateUserByRole(name, role string) (Space, error) {
+func (s *Space) associateUserByRole(name, role, origin string) (Space, error) {
 	requestUrl := fmt.Sprintf("/v2/spaces/%s/%s", s.Guid, role)
 	buf := bytes.NewBuffer(nil)
-	err := json.NewEncoder(buf).Encode(map[string]string{"username": name})
+	payload := make(map[string]string)
+	payload["username"] = name
+	if origin != "" {
+		payload["origin"] = origin
+	}
+	err := json.NewEncoder(buf).Encode(payload)
 	if err != nil {
 		return Space{}, err
 	}
@@ -429,6 +514,7 @@ func (s *Space) associateUserByRole(name, role string) (Space, error) {
 	if err != nil {
 		return Space{}, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		return Space{}, errors.Wrapf(err, "Error associating %s %s, response code: %d", role, name, resp.StatusCode)
 	}
@@ -442,24 +528,38 @@ func (s *Space) removeRole(userGUID, role string) error {
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusNoContent {
 		return errors.Wrapf(err, "Error removing %s %s, response code: %d", role, userGUID, resp.StatusCode)
 	}
 	return nil
 }
 
-func (s *Space) removeUserByRole(name, role string) error {
-	requestUrl := fmt.Sprintf("/v2/spaces/%s/%s", s.Guid, role)
+func (s *Space) removeUserByRole(name, role, origin string) error {
+	var requestURL string
+	var method string
+
 	buf := bytes.NewBuffer(nil)
-	err := json.NewEncoder(buf).Encode(map[string]string{"username": name})
+	payload := make(map[string]string)
+	payload["username"] = name
+	if origin != "" {
+		payload["origin"] = origin
+		requestURL = fmt.Sprintf("/v2/spaces/%s/%s/remove", s.Guid, role)
+		method = "POST"
+	} else {
+		requestURL = fmt.Sprintf("/v2/spaces/%s/%s", s.Guid, role)
+		method = "DELETE"
+	}
+	err := json.NewEncoder(buf).Encode(payload)
 	if err != nil {
 		return err
 	}
-	r := s.c.NewRequestWithBody("DELETE", requestUrl, buf)
+	r := s.c.NewRequestWithBody(method, requestURL, buf)
 	resp, err := s.c.DoRequest(r)
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return errors.Wrapf(err, "Error removing %s %s, response code: %d", role, name, resp.StatusCode)
 	}
@@ -481,6 +581,7 @@ func (s *Space) ListSecGroups() (secGroups []SecGroup, err error) {
 		if err != nil {
 			return nil, errors.Wrap(err, "Error requesting sec groups")
 		}
+		defer resp.Body.Close()
 		resBody, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
 			return nil, errors.Wrap(err, "Error reading sec group response body")
@@ -503,9 +604,7 @@ func (s *Space) ListSecGroups() (secGroups []SecGroup, err error) {
 				if err != nil {
 					return nil, err
 				}
-				for _, space := range spaces {
-					secGroup.Entity.SpacesData = append(secGroup.Entity.SpacesData, space)
-				}
+				secGroup.Entity.SpacesData = append(secGroup.Entity.SpacesData, spaces...)
 			}
 			secGroups = append(secGroups, secGroup.Entity)
 		}
@@ -525,7 +624,7 @@ func (s *Space) GetServiceOfferings() (ServiceOfferingResponse, error) {
 	if err != nil {
 		return ServiceOfferingResponse{}, errors.Wrap(err, "Error requesting service offerings")
 	}
-
+	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return ServiceOfferingResponse{}, errors.Wrap(err, "Error reading service offering response")
@@ -550,6 +649,7 @@ func (s *Space) Update(req SpaceRequest) (Space, error) {
 	if err != nil {
 		return Space{}, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		return Space{}, fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
 	}
@@ -557,14 +657,19 @@ func (s *Space) Update(req SpaceRequest) (Space, error) {
 }
 
 func (c *Client) ListSpacesByQuery(query url.Values) ([]Space, error) {
-	return c.fetchSpaces("/v2/spaces?" + query.Encode())
+	return c.fetchSpaces("/v2/spaces", query)
+}
+
+func (c *Client) ListSpacesByOrgGuid(orgGuid string) ([]Space, error) {
+	return c.fetchSpaces(fmt.Sprintf("/v2/organizations/%s/spaces", orgGuid), url.Values{})
 }
 
 func (c *Client) ListSpaces() ([]Space, error) {
 	return c.ListSpacesByQuery(nil)
 }
 
-func (c *Client) fetchSpaces(requestUrl string) ([]Space, error) {
+func (c *Client) fetchSpaces(path string, query url.Values) ([]Space, error) {
+	requestUrl := path + "?" + query.Encode()
 	var spaces []Space
 	for {
 		spaceResp, err := c.getSpaceResponse(requestUrl)
@@ -575,24 +680,26 @@ func (c *Client) fetchSpaces(requestUrl string) ([]Space, error) {
 			spaces = append(spaces, c.mergeSpaceResource(space))
 		}
 		requestUrl = spaceResp.NextUrl
-		if requestUrl == "" {
+		if requestUrl == "" || query.Get("page") != "" {
 			break
 		}
 	}
 	return spaces, nil
 }
 
-func (c *Client) GetSpaceByName(spaceName string, orgGuid string) (space Space, err error) {
+func (c *Client) GetSpaceByName(spaceName string, orgGuid string) (Space, error) {
 	query := url.Values{}
 	query.Add("q", fmt.Sprintf("organization_guid:%s", orgGuid))
 	query.Add("q", fmt.Sprintf("name:%s", spaceName))
 	spaces, err := c.ListSpacesByQuery(query)
 	if err != nil {
-		return
+		return Space{}, err
 	}
 
 	if len(spaces) == 0 {
-		return space, fmt.Errorf("No space found with name: `%s` in org with GUID: `%s`", spaceName, orgGuid)
+		cfErr := NewSpaceNotFoundError()
+		cfErr.Description = fmt.Sprintf(cfErr.Description, spaceName)
+		return Space{}, cfErr
 	}
 
 	return spaces[0], nil
@@ -606,6 +713,7 @@ func (c *Client) GetSpaceByGuid(spaceGUID string) (Space, error) {
 	if err != nil {
 		return Space{}, errors.Wrap(err, "Error requesting space info")
 	}
+	defer resp.Body.Close()
 	return c.handleSpaceResp(resp)
 }
 
@@ -616,8 +724,8 @@ func (c *Client) getSpaceResponse(requestUrl string) (SpaceResponse, error) {
 	if err != nil {
 		return SpaceResponse{}, errors.Wrap(err, "Error requesting spaces")
 	}
-	resBody, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
+	resBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return SpaceResponse{}, errors.Wrap(err, "Error reading space request")
 	}
@@ -635,8 +743,8 @@ func (c *Client) getSpaceRolesResponse(requestUrl string) (SpaceRoleResponse, er
 	if err != nil {
 		return roleResp, errors.Wrap(err, "Error requesting space roles")
 	}
-	resBody, err := ioutil.ReadAll(resp.Body)
 	defer resp.Body.Close()
+	resBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return roleResp, errors.Wrap(err, "Error reading space roles request")
 	}
@@ -713,6 +821,7 @@ func (c *Client) updateSpaceIsolationSegment(spaceGUID string, data interface{})
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusOK {
 		return errors.Wrapf(err, "Error setting isolation segment for space %s, response code: %d", spaceGUID, resp.StatusCode)
 	}

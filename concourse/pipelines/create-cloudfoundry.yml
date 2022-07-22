@@ -11,72 +11,72 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     psql: &psql-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     node: &node-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     node-chromium: &node-chromium-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     golang: &golang-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     terraform: &terraform-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: 36ed580ea6b5062feb10b1c45395696d75941020
 
 
   tasks:
@@ -270,7 +270,7 @@ resource_types:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+    tag: 36ed580ea6b5062feb10b1c45395696d75941020
 
 - name: s3-iam
   type: docker-image
@@ -525,13 +525,13 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf21.3
+      branch: cf21.4
 
   - name: cf-smoke-tests-release
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-smoke-tests-release
-      tag_filter: "42.0.0"
+      tag_filter: "42.0.4"
       submodules:
       - "src/smoke_tests"
 
@@ -666,7 +666,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-prometheus-endpoints.git
       branch: main
-      tag_filter: v0.17.0
+      tag_filter: v0.18.0
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
@@ -807,7 +807,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+              tag: 36ed580ea6b5062feb10b1c45395696d75941020
 
           inputs:
             - name: paas-cf
@@ -1025,7 +1025,7 @@ jobs:
 
                 echo "Running app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
-                go test -timeout 12h -ginkgo.v
+                ginkgo -timeout=12h
 
   - name: internal-app-availability-tests
     serial: true
@@ -1083,7 +1083,7 @@ jobs:
 
                 echo "Running internal-app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
-                go test -timeout 12h -ginkgo.v
+                ginkgo -timeout=12h
 
   - name: api-availability-tests
     serial: true
@@ -1176,7 +1176,7 @@ jobs:
 
                 echo "Running api-availability-tests"
                 cd paas-cf/platform-tests/availability/api
-                go test -timeout 12h
+                ginkgo -timeout=12h
 
         ensure:
           task: delete-job-file
@@ -5149,7 +5149,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+              tag: 36ed580ea6b5062feb10b1c45395696d75941020
 
           inputs:
             - name: paas-cf
@@ -5371,7 +5371,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+              tag: 36ed580ea6b5062feb10b1c45395696d75941020
 
           inputs:
             - name: paas-admin-data
@@ -5578,7 +5578,7 @@ jobs:
 
                 export GOPATH="${PWD}"
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.12.2
+                go install github.com/cucumber/godog/cmd/godog@v0.12.5
                 cd src/github.com/alphagov/paas-billing
 
 
@@ -5599,7 +5599,7 @@ jobs:
                 make acceptance
 
                 cd gherkin
-                GO111MODULE=off ../../../../../bin/godog
+                godog run
 
       - task: tag-repo
         tags: [colocated-with-web]
@@ -5732,7 +5732,7 @@ jobs:
               - -e
               - -c
               - |
-                go get github.com/onsi/ginkgo/ginkgo
+                go install github.com/onsi/ginkgo/v2/ginkgo@latest
 
                 cd paas-cf/tools/metrics
                 echo 'Waiting 2 minutes before running the acceptance tests'
@@ -6309,7 +6309,7 @@ jobs:
           type: docker-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+            tag: 36ed580ea6b5062feb10b1c45395696d75941020
 
         inputs:
           - name: passwords

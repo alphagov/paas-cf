@@ -29,7 +29,7 @@ type result struct {
 type Monitor struct {
 	tasks             []*Task
 	taskRatePerSecond int64
-	reporter          chan *Report
+	reporter          chan *Review
 	queue             chan *Task
 	results           chan *result
 	halt              chan bool
@@ -48,7 +48,7 @@ func (m *Monitor) Add(name string, fn TaskFunc) {
 }
 
 func (m *Monitor) statsCollector() {
-	report := &Report{
+	report := &Review{
 		Errors:   map[*Task]map[string]int{},
 		Warnings: map[*Task]map[string]int{},
 	}
@@ -101,7 +101,7 @@ func (m *Monitor) statsCollector() {
 }
 
 // Run launches N worker routines to continually execute tasks and blocks until Stop is called
-func (m *Monitor) Run() *Report {
+func (m *Monitor) Run() *Review {
 	if m.halt != nil {
 		panic("Run() called twice")
 	}
@@ -163,7 +163,7 @@ func (m *Monitor) taskRateToDuration() time.Duration {
 	return time.Second / time.Duration(m.taskRatePerSecond)
 }
 
-func (m *Monitor) HaveTestsPassed(r Report) bool {
+func (m *Monitor) HaveTestsPassed(r Review) bool {
 	if m.targetReliability == 0.0 {
 		return false // targetReliability has not been set, always fail
 	}
@@ -184,7 +184,7 @@ func NewMonitor(
 	targetReliability float64,
 ) *Monitor {
 	m := &Monitor{
-		reporter:          make(chan *Report),
+		reporter:          make(chan *Review),
 		results:           make(chan *result, numWorkers),
 		clientCfg:         clientCfg,
 		numWorkers:        numWorkers,

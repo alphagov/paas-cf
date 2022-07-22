@@ -5,6 +5,7 @@ import (
 )
 
 type CatsConfig interface {
+	GetIncludeAppSyslogTcp() bool
 	GetIncludeApps() bool
 	GetIncludeContainerNetworking() bool
 	GetIncludeCredhubAssisted() bool
@@ -12,7 +13,6 @@ type CatsConfig interface {
 	GetIncludeDetect() bool
 	GetIncludeDocker() bool
 	GetIncludeInternetDependent() bool
-	GetIncludeInternetless() bool
 	GetIncludePrivateDockerRegistry() bool
 	GetIncludeRouteServices() bool
 	GetIncludeRouting() bool
@@ -20,6 +20,7 @@ type CatsConfig interface {
 	GetIncludeSSO() bool
 	GetIncludeSecurityGroups() bool
 	GetIncludeServices() bool
+	GetIncludeUserProvidedServices() bool
 	GetIncludeServiceDiscovery() bool
 	GetIncludeSsh() bool
 	GetIncludeTasks() bool
@@ -28,6 +29,8 @@ type CatsConfig interface {
 	GetIncludeIsolationSegments() bool
 	GetIncludeRoutingIsolationSegments() bool
 	GetIncludeServiceInstanceSharing() bool
+	GetIncludeTCPIsolationSegments() bool
+	GetIncludeHTTP2Routing() bool
 	GetIncludeTCPRouting() bool
 	GetIncludeWindows() bool
 	GetIncludeVolumeServices() bool

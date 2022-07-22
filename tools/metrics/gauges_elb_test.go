@@ -11,12 +11,12 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/pingdumb"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 )
 
-var _ = Describe("ELB Gauges", func() {
+var _ = Describe("ELB Gauges", Ordered, func() {
 
 	var (
 		logger    lager.Logger
@@ -31,7 +31,7 @@ var _ = Describe("ELB Gauges", func() {
 		}
 	)
 
-	BeforeSuite(func() {
+	BeforeAll(func() {
 		resolvers = []*net.Resolver{
 			&net.Resolver{
 				Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
@@ -49,7 +49,7 @@ var _ = Describe("ELB Gauges", func() {
 		server = fakes.ListenAndServeHTTP(":8580")
 	})
 
-	AfterSuite(func() {
+	AfterAll(func() {
 		fakes.ShutdownDNS()
 		server.Close()
 	})

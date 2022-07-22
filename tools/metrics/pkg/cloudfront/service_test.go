@@ -5,7 +5,7 @@ import (
 
 	"github.com/aws/aws-sdk-go/aws"
 	awscf "github.com/aws/aws-sdk-go/service/cloudfront"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"

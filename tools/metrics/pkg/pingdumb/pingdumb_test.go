@@ -10,15 +10,15 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/fakes"
 	. "github.com/alphagov/paas-cf/tools/metrics/pkg/pingdumb"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("Pingdumb", func() {
+var _ = Describe("Pingdumb", Ordered, func() {
 	var resolvers []*net.Resolver
 	var server *http.Server
 
-	BeforeSuite(func() {
+	BeforeAll(func() {
 		resolvers = []*net.Resolver{
 			&net.Resolver{
 				Dial: func(ctx context.Context, network, address string) (net.Conn, error) {
@@ -55,7 +55,7 @@ var _ = Describe("Pingdumb", func() {
 			Timeout:   1 * time.Second,
 		}
 		var (
-			r   *Report
+			r   *Review
 			err error
 		)
 		Eventually(func() error {

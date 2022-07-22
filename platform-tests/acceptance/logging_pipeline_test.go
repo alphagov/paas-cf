@@ -1,10 +1,10 @@
 package acceptance_test
 
 import (
-	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
-	. "github.com/onsi/ginkgo"
+	"github.com/cloudfoundry/cf-test-helpers/cf"
+	"github.com/cloudfoundry/cf-test-helpers/generator"
+	"github.com/cloudfoundry/cf-test-helpers/helpers"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	gbytes "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"

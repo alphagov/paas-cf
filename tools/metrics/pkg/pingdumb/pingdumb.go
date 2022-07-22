@@ -66,14 +66,14 @@ func (c *Check) Err() error {
 	return nil
 }
 
-type Report struct {
+type Review struct {
 	Start  time.Time
 	Stop   time.Time
 	Checks []*Check
 	Target string
 }
 
-func (r *Report) Failures() []*Check {
+func (r *Review) Failures() []*Check {
 	failures := []*Check{}
 	for _, check := range r.Checks {
 		if check.Err() != nil {
@@ -83,7 +83,7 @@ func (r *Report) Failures() []*Check {
 	return failures
 }
 
-func (r *Report) OK() bool {
+func (r *Review) OK() bool {
 	failures := r.Failures()
 	return len(failures) == 0
 }
@@ -170,13 +170,13 @@ func lookupAddrs(target string, resolvers []*net.Resolver) ([]string, error) {
 
 // getReport makes multiple HTTP GET requests to a target url (one request
 // per IP addr found from DNS lookup)
-func GetReport(config ReportConfig) (*Report, error) {
+func GetReport(config ReportConfig) (*Review, error) {
 	addrs, err := lookupAddrs(config.Target, config.resolvers())
 	if err != nil {
 		return nil, err
 	}
 	var wg sync.WaitGroup
-	r := &Report{
+	r := &Review{
 		Start:  time.Now(),
 		Target: config.Target,
 	}

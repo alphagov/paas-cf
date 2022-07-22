@@ -4,7 +4,7 @@ import (
 	"code.cloudfoundry.org/lager"
 	"errors"
 	. "github.com/alphagov/paas-cf/tools/metrics"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gstruct"
 	"github.com/onsi/gomega/types"
