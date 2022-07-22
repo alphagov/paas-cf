@@ -35,6 +35,10 @@ disk_types:
   disk_size: 768000
   cloud_properties:
     type: gp3
+- name: 1TB
+  disk_size: 1024000
+  cloud_properties:
+    type: gp3
 
 networks:
 - name: cf

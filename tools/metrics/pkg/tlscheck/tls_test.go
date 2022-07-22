@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 
 	. "github.com/alphagov/paas-cf/tools/metrics/pkg/tlscheck"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -69,7 +69,7 @@ var _ = Describe("TLSCheck", func() {
 		})
 	})
 
-	Context("CertificateAuthority", func(){
+	Context("CertificateAuthority", func() {
 		It("returns the root certificate authority which signed the certificate", func() {
 			authority, err := checker.CertificateAuthority("healthcheck.london.cloudapps.digital:443", &tls.Config{})
 			Expect(err).ToNot(HaveOccurred())

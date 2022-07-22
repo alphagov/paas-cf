@@ -41,7 +41,7 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: a7d93f08b5a6cb03353022f615719b10f65a455b
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
@@ -525,13 +525,13 @@ resources:
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-acceptance-tests
-      branch: cf21.3
+      branch: cf21.4
 
   - name: cf-smoke-tests-release
     type: git
     source:
       uri: https://github.com/cloudfoundry/cf-smoke-tests-release
-      tag_filter: "42.0.0"
+      tag_filter: "42.0.4"
       submodules:
       - "src/smoke_tests"
 
@@ -1025,7 +1025,7 @@ jobs:
 
                 echo "Running app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
-                go test -timeout 12h -ginkgo.v
+                ginkgo -timeout=12h
 
   - name: internal-app-availability-tests
     serial: true
@@ -1083,7 +1083,7 @@ jobs:
 
                 echo "Running internal-app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
-                go test -timeout 12h -ginkgo.v
+                ginkgo -timeout=12h
 
   - name: api-availability-tests
     serial: true
@@ -1176,7 +1176,7 @@ jobs:
 
                 echo "Running api-availability-tests"
                 cd paas-cf/platform-tests/availability/api
-                go test -timeout 12h
+                ginkgo -timeout=12h
 
         ensure:
           task: delete-job-file
@@ -5576,11 +5576,9 @@ jobs:
                 cp "paas-cf/config/billing/output/${AWS_REGION}.json" ./src/github.com/alphagov/paas-billing/config.json
                 cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
 
-                export GOPATH="${PWD}"
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                GO111MODULE=on go get github.com/cucumber/godog/cmd/godog@v0.12.2
+                go install github.com/cucumber/godog/cmd/godog@v0.12.5
                 cd src/github.com/alphagov/paas-billing
-
 
                 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
                 echo "deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
@@ -5599,7 +5597,7 @@ jobs:
                 make acceptance
 
                 cd gherkin
-                GO111MODULE=off ../../../../../bin/godog
+                godog run
 
       - task: tag-repo
         tags: [colocated-with-web]
@@ -5732,7 +5730,7 @@ jobs:
               - -e
               - -c
               - |
-                go get github.com/onsi/ginkgo/ginkgo
+                go install github.com/onsi/ginkgo/v2/ginkgo@latest
 
                 cd paas-cf/tools/metrics
                 echo 'Waiting 2 minutes before running the acceptance tests'

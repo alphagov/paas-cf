@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 
 	"time"
@@ -18,20 +21,22 @@ import (
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-//Client used to communicate with Cloud Foundry
+// Client used to communicate with Cloud Foundry
 type Client struct {
 	Config   Config
 	Endpoint Endpoint
 }
 
 type Endpoint struct {
-	DopplerEndpoint string `json:"doppler_logging_endpoint"`
-	LoggingEndpoint string `json:"logging_endpoint"`
-	AuthEndpoint    string `json:"authorization_endpoint"`
-	TokenEndpoint   string `json:"token_endpoint"`
+	DopplerEndpoint   string `json:"doppler_logging_endpoint"`
+	LoggingEndpoint   string `json:"logging_endpoint"`
+	AuthEndpoint      string `json:"authorization_endpoint"`
+	TokenEndpoint     string `json:"token_endpoint"`
+	AppSSHEndpoint    string `json:"app_ssh_endpoint"`
+	AppSSHOauthClient string `json:"app_ssh_oauth_client"`
 }
 
-//Config is used to configure the creation of a client
+// Config is used to configure the creation of a client
 type Config struct {
 	ApiAddress          string `json:"api_url"`
 	Username            string `json:"user"`
@@ -44,6 +49,11 @@ type Config struct {
 	TokenSource         oauth2.TokenSource
 	tokenSourceDeadline *time.Time
 	UserAgent           string `json:"user_agent"`
+	Origin              string `json:"-"`
+}
+
+type LoginHint struct {
+	Origin string `json:"origin"`
 }
 
 // Request is used to help build up a request
@@ -55,9 +65,69 @@ type Request struct {
 	obj    interface{}
 }
 
-//DefaultConfig configuration for client
-//Keep LoginAdress for backward compatibility
-//Need to be remove in close future
+type cfHomeConfig struct {
+	AccessToken           string
+	RefreshToken          string
+	Target                string
+	AuthorizationEndpoint string
+	OrganizationFields    struct {
+		Name string
+	}
+	SpaceFields struct {
+		Name string
+	}
+	SSLDisabled bool
+}
+
+func NewConfigFromCF() (*Config, error) {
+	return NewConfigFromCFHome("")
+}
+
+func NewConfigFromCFHome(cfHomeDir string) (*Config, error) {
+	var err error
+
+	if cfHomeDir == "" {
+		cfHomeDir = os.Getenv("CF_HOME")
+		if cfHomeDir == "" {
+			cfHomeDir, err = os.UserHomeDir()
+			if err != nil {
+				return nil, err
+			}
+		}
+	}
+
+	cfHomeConfig, err := loadCFHomeConfig(cfHomeDir)
+	if err != nil {
+		return nil, err
+	}
+
+	cfg := DefaultConfig()
+	cfg.Token = cfHomeConfig.AccessToken
+	cfg.ApiAddress = cfHomeConfig.Target
+	cfg.SkipSslValidation = cfHomeConfig.SSLDisabled
+
+	return cfg, nil
+}
+
+func loadCFHomeConfig(cfHomeDir string) (*cfHomeConfig, error) {
+	cfConfigDir := filepath.Join(cfHomeDir, ".cf")
+	cfJSON, err := ioutil.ReadFile(filepath.Join(cfConfigDir, "config.json"))
+	if err != nil {
+		return nil, err
+	}
+
+	var cfg cfHomeConfig
+	err = json.Unmarshal(cfJSON, &cfg)
+	if err == nil {
+		if len(cfg.AccessToken) > len("bearer ") {
+			cfg.AccessToken = cfg.AccessToken[len("bearer "):]
+		}
+	}
+
+	return &cfg, nil
+}
+
+// DefaultConfig creates a default config object used by CF client
 func DefaultConfig() *Config {
 	return &Config{
 		ApiAddress:        "http://api.bosh-lite.com",
@@ -160,6 +230,16 @@ func getUserAuth(ctx context.Context, config Config, endpoint *Endpoint) (Config
 			AuthURL:  endpoint.AuthEndpoint + "/oauth/auth",
 			TokenURL: endpoint.TokenEndpoint + "/oauth/token",
 		},
+	}
+	if config.Origin != "" {
+		loginHint := LoginHint{config.Origin}
+		origin, err := json.Marshal(loginHint)
+		if err != nil {
+			return config, errors.Wrap(err, "Error creating login_hint")
+		}
+		val := url.Values{}
+		val.Set("login_hint", string(origin))
+		authConfig.Endpoint.TokenURL = fmt.Sprintf("%s?%s", authConfig.Endpoint.TokenURL, val.Encode())
 	}
 
 	token, err := authConfig.PasswordCredentialsToken(ctx, config.Username, config.Password)
@@ -283,16 +363,27 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 	}
 
 	if resp.StatusCode >= http.StatusBadRequest {
-		var cfErr CloudFoundryError
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			return resp, CloudFoundryHTTPError{
-				StatusCode: resp.StatusCode,
-				Status:     resp.Status,
-				Body:       body,
-			}
+		return c.handleError(resp)
+	}
+
+	return resp, nil
+}
+
+func (c *Client) handleError(resp *http.Response) (*http.Response, error) {
+	body, err := ioutil.ReadAll(resp.Body)
+
+	if err != nil {
+		return resp, CloudFoundryHTTPError{
+			StatusCode: resp.StatusCode,
+			Status:     resp.Status,
+			Body:       body,
 		}
-		defer resp.Body.Close()
+	}
+	defer resp.Body.Close()
+
+	// Unmarshal V2 error response
+	if strings.HasPrefix(resp.Request.URL.Path, "/v2/") {
+		var cfErr CloudFoundryError
 		if err := json.Unmarshal(body, &cfErr); err != nil {
 			return resp, CloudFoundryHTTPError{
 				StatusCode: resp.StatusCode,
@@ -303,7 +394,16 @@ func (c *Client) Do(req *http.Request) (*http.Response, error) {
 		return nil, cfErr
 	}
 
-	return resp, nil
+	// Unmarshal a V3 error response and convert it into a V2 model
+	var cfErrorsV3 CloudFoundryErrorsV3
+	if err := json.Unmarshal(body, &cfErrorsV3); err != nil {
+		return resp, CloudFoundryHTTPError{
+			StatusCode: resp.StatusCode,
+			Status:     resp.Status,
+			Body:       body,
+		}
+	}
+	return nil, NewCloudFoundryErrorFromV3Errors(cfErrorsV3)
 }
 
 func (c *Client) refreshEndpoint() error {
@@ -384,4 +484,68 @@ func (c *Client) GetToken() (string, error) {
 		return "", errors.Wrap(err, "Error getting bearer token")
 	}
 	return "bearer " + token.AccessToken, nil
+}
+
+var ErrPreventRedirect = errors.New("prevent-redirect")
+
+func (c *Client) GetSSHCode() (string, error) {
+	authorizeUrl, err := url.Parse(c.Endpoint.TokenEndpoint)
+	if err != nil {
+		return "", err
+	}
+
+	values := url.Values{}
+	values.Set("response_type", "code")
+	values.Set("grant_type", "authorization_code")
+	values.Set("client_id", c.Endpoint.AppSSHOauthClient) // client_id，used by cf server
+
+	authorizeUrl.Path = "/oauth/authorize"
+	authorizeUrl.RawQuery = values.Encode()
+
+	req, err := http.NewRequest("GET", authorizeUrl.String(), nil)
+	if err != nil {
+		return "", err
+	}
+
+	token, err := c.GetToken()
+	if err != nil {
+		return "", err
+	}
+
+	req.Header.Add("authorization", token)
+	httpClient := &http.Client{
+		CheckRedirect: func(req *http.Request, _ []*http.Request) error {
+			return ErrPreventRedirect
+		},
+		Timeout: 30 * time.Second,
+		Transport: &http.Transport{
+			DisableKeepAlives: true,
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: c.Config.SkipSslValidation,
+			},
+			Proxy:               http.ProxyFromEnvironment,
+			TLSHandshakeTimeout: 10 * time.Second,
+		},
+	}
+
+	resp, err := httpClient.Do(req)
+	if err == nil {
+		return "", errors.New("authorization server did not redirect with one time code")
+	}
+	defer resp.Body.Close()
+	if netErr, ok := err.(*url.Error); !ok || netErr.Err != ErrPreventRedirect {
+		return "", errors.New(fmt.Sprintf("error requesting one time code from server: %s", err.Error()))
+	}
+
+	loc, err := resp.Location()
+	if err != nil {
+		return "", errors.New(fmt.Sprintf("error getting the redirected location:  %s", err.Error()))
+	}
+
+	codes := loc.Query()["code"]
+	if len(codes) != 1 {
+		return "", errors.New("unable to acquire one time code from authorization response")
+	}
+
+	return codes[0], nil
 }

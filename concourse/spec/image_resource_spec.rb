@@ -47,7 +47,7 @@ RSpec.describe "image resources" do
         .select { |repo, _| repo.match?(%r{^ghcr.io/alphagov/paas/}) }
         .reject { |repo, _| repo.match?(/-resource$/) }
         .to_h.values .flatten .uniq.tap do |all_tags|
-          it "onlies have one tag" do
+          it "only has one tag" do
             expect(all_tags).to have_attributes(size: 1)
           end
         end

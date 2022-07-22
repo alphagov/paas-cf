@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-type Report struct {
+type Review struct {
 	SuccessCount int64
 	FailureCount int64
 	WarningCount int64
@@ -14,23 +14,23 @@ type Report struct {
 	Elapsed      time.Duration
 }
 
-func (r *Report) badExecutions() int64 {
+func (r *Review) badExecutions() int64 {
 	return r.FailureCount + r.WarningCount
 }
 
-func (r *Report) TotalExecutions() int64 {
+func (r *Review) TotalExecutions() int64 {
 	return r.SuccessCount + r.badExecutions()
 }
 
-func (r *Report) PercentageGoodExecutions() float64 {
+func (r *Review) PercentageGoodExecutions() float64 {
 	return 100.0 * (float64(r.SuccessCount) / float64(r.TotalExecutions()))
 }
 
-func (r *Report) tasksPerSecond() float64 {
+func (r *Review) tasksPerSecond() float64 {
 	return float64(r.TotalExecutions()) / r.Elapsed.Seconds()
 }
 
-func (r *Report) String() string {
+func (r *Review) String() string {
 	s := "\nReport:\n"
 	s += "==============\n"
 	s += fmt.Sprintf("Total task executions: %d\n", r.TotalExecutions())

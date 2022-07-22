@@ -11,7 +11,7 @@ import (
 	awscf "github.com/aws/aws-sdk-go/service/cloudfront"
 
 	. "github.com/alphagov/paas-cf/tools/metrics"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 
@@ -280,10 +280,10 @@ var _ = Describe("TLS gauges", func() {
 
 	})
 
-	Describe("CDN TLS certificate authority gauge", func(){
+	Describe("CDN TLS certificate authority gauge", func() {
 		It("counts the number of certificates per certificate authority", func() {
 			cloudFrontClient.ListDistributionsPagesStub = listDistributionsPageStub
-			tlsChecker.CertificateAuthorityCalls(func(_ string, tlsConfig *tls.Config) (string, error){
+			tlsChecker.CertificateAuthorityCalls(func(_ string, tlsConfig *tls.Config) (string, error) {
 				switch tlsConfig.ServerName {
 				case "s1.service.gov.uk":
 					return "Amazon", nil

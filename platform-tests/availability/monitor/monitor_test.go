@@ -6,7 +6,7 @@ import (
 	"time"
 
 	cfclient "github.com/cloudfoundry-community/go-cfclient"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -36,10 +36,10 @@ var _ = Describe("Monitor", func() {
 			})
 			report := monitor.Run()
 
-			Expect(report.SuccessCount).To(BeNumerically(">", 0))
-			Expect(report.FailureCount).To(Equal(int64(0)))
-			Expect(report.WarningCount).To(Equal(int64(0)))
-		}, 4)
+			Eventually(report.SuccessCount, 4*time.Second).Should(BeNumerically(">", 0))
+			Eventually(report.FailureCount, 4*time.Second).Should(Equal(int64(0)))
+			Eventually(report.WarningCount, 4*time.Second).Should(Equal(int64(0)))
+		})
 
 		It("should handle errors", func() {
 			monitor := NewMonitor(
@@ -55,10 +55,10 @@ var _ = Describe("Monitor", func() {
 			})
 			report := monitor.Run()
 
-			Expect(report.SuccessCount).To(Equal(int64(0)))
-			Expect(report.FailureCount).To(BeNumerically(">", 0))
-			Expect(report.WarningCount).To(Equal(int64(0)))
-		}, 4)
+			Eventually(report.SuccessCount, 4*time.Second).Should(Equal(int64(0)))
+			Eventually(report.FailureCount, 4*time.Second).Should(BeNumerically(">", 0))
+			Eventually(report.WarningCount, 4*time.Second).Should(Equal(int64(0)))
+		})
 
 		It("should handle specific errors as warning", func() {
 			monitor := NewMonitor(
@@ -75,11 +75,10 @@ var _ = Describe("Monitor", func() {
 			})
 			report := monitor.Run()
 
-			Expect(report.SuccessCount).To(Equal(int64(0)))
-			Expect(report.FailureCount).To(Equal(int64(0)))
-			Expect(report.WarningCount).To(BeNumerically(">", 0))
-		}, 4)
-
+			Eventually(report.SuccessCount, 4*time.Second).Should(Equal(int64(0)))
+			Eventually(report.FailureCount, 4*time.Second).Should(Equal(int64(0)))
+			Eventually(report.WarningCount, 4*time.Second).Should(BeNumerically(">", 0))
+		})
 	})
 
 	Context("Rate limiting", func() {
@@ -109,7 +108,7 @@ var _ = Describe("Monitor", func() {
 				taskRatePerSecond, 0.0,
 			)
 
-			Expect(monitor.HaveTestsPassed(Report{})).To(Equal(false))
+			Expect(monitor.HaveTestsPassed(Review{})).To(Equal(false))
 		})
 
 		It("should fail if the tests have not run", func() {
@@ -118,7 +117,7 @@ var _ = Describe("Monitor", func() {
 				taskRatePerSecond, targetReliability,
 			)
 
-			report := Report{
+			report := Review{
 				SuccessCount: 0, WarningCount: 0, FailureCount: 0,
 			}
 
@@ -131,7 +130,7 @@ var _ = Describe("Monitor", func() {
 				taskRatePerSecond, targetReliability,
 			)
 
-			report := Report{
+			report := Review{
 				SuccessCount: 0, WarningCount: 7, FailureCount: 9,
 			}
 
@@ -144,7 +143,7 @@ var _ = Describe("Monitor", func() {
 				taskRatePerSecond, targetReliability,
 			)
 
-			report := Report{
+			report := Review{
 				SuccessCount: 1, WarningCount: 0, FailureCount: 0,
 			}
 
@@ -157,7 +156,7 @@ var _ = Describe("Monitor", func() {
 				taskRatePerSecond, targetReliability,
 			)
 
-			report := Report{
+			report := Review{
 				SuccessCount: 5000, WarningCount: 2, FailureCount: 0,
 			}
 
@@ -170,7 +169,7 @@ var _ = Describe("Monitor", func() {
 				taskRatePerSecond, targetReliability,
 			)
 
-			report := Report{
+			report := Review{
 				SuccessCount: 5000, WarningCount: 0, FailureCount: 2,
 			}
 
@@ -183,7 +182,7 @@ var _ = Describe("Monitor", func() {
 				taskRatePerSecond, targetReliability,
 			)
 
-			report := Report{
+			report := Review{
 				SuccessCount: 5000, WarningCount: 1, FailureCount: 1,
 			}
 

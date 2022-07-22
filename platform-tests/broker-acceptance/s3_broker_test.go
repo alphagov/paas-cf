@@ -4,10 +4,10 @@ import (
 	"io/ioutil"
 	"time"
 
-	"github.com/cloudfoundry-incubator/cf-test-helpers/cf"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/generator"
-	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
-	. "github.com/onsi/ginkgo"
+	"github.com/cloudfoundry/cf-test-helpers/cf"
+	"github.com/cloudfoundry/cf-test-helpers/generator"
+	"github.com/cloudfoundry/cf-test-helpers/helpers"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gbytes"
 	. "github.com/onsi/gomega/gexec"
@@ -175,13 +175,12 @@ var _ = Describe("S3 broker", func() {
 				unbindServiceFromAppAsync(appOneName, serviceInstanceName, unbindAppOneChan)
 				unbindServiceFromAppAsync(appTwoName, serviceInstanceName, unbindAppTwoChan)
 
-				Expect(<-unbindAppOneChan).To(Equal(0))
-				Expect(<-unbindAppTwoChan).To(Equal(0))
+				Eventually(<-unbindAppOneChan, 60*time.Second).Should(Equal(0))
+				Eventually(<-unbindAppTwoChan, 60*time.Second).Should(Equal(0))
 			})
 
 			close(done)
-		}, 60, // Override default timeout of 1 second for async to be one minute
-		)
+		})
 	})
 })
 
