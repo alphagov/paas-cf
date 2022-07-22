@@ -17,7 +17,7 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+        tag: a7d93f08b5a6cb03353022f615719b10f65a455b
 
     cf-cli: &cf-cli-image-resource
       type: docker-image
