@@ -8,6 +8,11 @@
   path: /update/max_in_flight
   value: 30%
 
+# tenant apps might not be as well behaved as cf components
+- type: replace
+  path: /instance_groups/name=diego-cell/update/max_in_flight
+  value: 25%
+
 - type: replace
   path: /update/canary_watch_time
   value: 30000-420000
