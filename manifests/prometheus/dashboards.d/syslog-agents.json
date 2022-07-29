@@ -1,0 +1,886 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 1,
+    "id": null,
+    "iteration": 1659101589968,
+    "links": [],
+    "panels": [
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateYlOrRd",
+          "exponent": 0.5,
+          "max": null,
+          "min": null,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 4,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "rate(firehose_counter_event_loggregator_syslog_agent_ingress_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[10m])",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Ingress",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "cps",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateYlOrRd",
+          "exponent": 0.5,
+          "max": null,
+          "min": null,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 8,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "rate(firehose_counter_event_loggregator_syslog_agent_egress_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[10m])",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Egress",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "cps",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "aliasColors": {},
+        "bars": true,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 0,
+          "y": 8
+        },
+        "hiddenSeries": false,
+        "id": 15,
+        "legend": {
+          "alignAsTable": true,
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "rightSide": true,
+          "show": false,
+          "sideWidth": 300,
+          "sort": "total",
+          "sortDesc": true,
+          "total": true,
+          "values": true
+        },
+        "lines": false,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.15",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "rate(firehose_counter_event_loggregator_syslog_agent_messages_dropped_per_drain_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[10m]) > 0",
+            "interval": "",
+            "legendFormat": "{{bosh_job_name}} {{bosh_job_ip}} {{drain_scope}}→{{drain_url}}",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Dropped messages",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "$$hashKey": "object:516",
+            "format": "cps",
+            "label": null,
+            "logBase": 2,
+            "max": null,
+            "min": null,
+            "show": true
+          },
+          {
+            "$$hashKey": "object:517",
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {
+            "color": {
+              "mode": "thresholds"
+            },
+            "custom": {
+              "align": null,
+              "filterable": false
+            },
+            "mappings": [],
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                {
+                  "color": "green",
+                  "value": null
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            },
+            "unit": "short"
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "bosh_job_name"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 76
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "bosh_job_ip"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 84
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "drain_url"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 187
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "direction"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 120
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 75
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "drain_scope"
+              },
+              "properties": [
+                {
+                  "id": "custom.width",
+                  "value": 41
+                }
+              ]
+            }
+          ]
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 6,
+          "x": 6,
+          "y": 8
+        },
+        "id": 16,
+        "options": {
+          "showHeader": true,
+          "sortBy": [
+            {
+              "desc": true,
+              "displayName": "Value"
+            }
+          ]
+        },
+        "pluginVersion": "7.5.15",
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "increase(firehose_counter_event_loggregator_syslog_agent_messages_dropped_per_drain_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[$__range]) > 0",
+            "format": "table",
+            "instant": true,
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Dropped messages over period",
+        "transformations": [
+          {
+            "id": "organize",
+            "options": {
+              "excludeByName": {
+                "Time": true,
+                "bosh_deployment": true,
+                "bosh_job_id": true,
+                "direction": true,
+                "environment": true,
+                "instance": true,
+                "instance_id": true,
+                "job": true,
+                "metrics_version": true,
+                "origin": true,
+                "source_id": true
+              },
+              "indexByName": {
+                "Time": 0,
+                "Value": 15,
+                "bosh_deployment": 1,
+                "bosh_job_id": 2,
+                "bosh_job_ip": 4,
+                "bosh_job_name": 3,
+                "direction": 7,
+                "drain_scope": 6,
+                "drain_url": 5,
+                "environment": 8,
+                "instance": 9,
+                "instance_id": 10,
+                "job": 11,
+                "metrics_version": 12,
+                "origin": 13,
+                "source_id": 14
+              },
+              "renameByName": {
+                "Time": ""
+              }
+            }
+          }
+        ],
+        "type": "table"
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateYlOrRd",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 7,
+          "w": 12,
+          "x": 12,
+          "y": 8
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 9,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "firehose_value_metric_loggregator_syslog_agent_drains{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}",
+            "instant": false,
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Drains",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": "",
+        "yAxis": {
+          "decimals": null,
+          "format": "short",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateYlOrRd",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 0,
+          "y": 15
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 7,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "rate(firehose_counter_event_loggregator_syslog_agent_binding_refresh_count_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[10m]) * 60",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Binding refreshes",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "cpm",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateYlOrRd",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 6,
+          "y": 15
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 11,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "firehose_value_metric_loggregator_syslog_agent_latency_for_last_binding_refresh{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Last binding refresh latency",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "ms",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateYlOrRd",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 12,
+          "y": 15
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 5,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "firehose_value_metric_loggregator_syslog_agent_active_drains{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}",
+            "instant": false,
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Active Drains",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": "",
+        "yAxis": {
+          "decimals": null,
+          "format": "short",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateYlOrRd",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 6,
+          "x": 18,
+          "y": 15
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 10,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "firehose_value_metric_loggregator_syslog_agent_invalid_drains{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}",
+            "instant": false,
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Invalid Drains",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": "",
+        "yAxis": {
+          "decimals": null,
+          "format": "short",
+          "logBase": 2,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 27,
+    "style": "dark",
+    "tags": [
+      "cf",
+      "loggregator"
+    ],
+    "templating": {
+      "list": [
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": null,
+          "definition": "label_values(firehose_counter_event_loggregator_syslog_agent_ingress_total, bosh_job_name)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "Job",
+          "multi": false,
+          "name": "bosh_job_name",
+          "options": [],
+          "query": {
+            "query": "label_values(firehose_counter_event_loggregator_syslog_agent_ingress_total, bosh_job_name)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": null,
+          "definition": "label_values(firehose_counter_event_loggregator_syslog_agent_ingress_total{bosh_job_name=~\"$bosh_job_name\"}, bosh_job_id)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": null,
+          "multi": false,
+          "name": "bosh_job_id",
+          "options": [],
+          "query": {
+            "query": "label_values(firehose_counter_event_loggregator_syslog_agent_ingress_total{bosh_job_name=~\"$bosh_job_name\"}, bosh_job_id)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 5,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": null,
+          "definition": "label_values(firehose_counter_event_loggregator_syslog_agent_ingress_total{bosh_job_name=~\"$bosh_job_name\"}, bosh_job_ip)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": null,
+          "multi": false,
+          "name": "bosh_job_ip",
+          "options": [],
+          "query": {
+            "query": "label_values(firehose_counter_event_loggregator_syslog_agent_ingress_total{bosh_job_name=~\"$bosh_job_name\"}, bosh_job_ip)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-7d",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Syslog agents",
+    "uid": "syslog-agents",
+    "version": 16
+  },
+  "overwrite": true,
+  "folderId": 0
+}

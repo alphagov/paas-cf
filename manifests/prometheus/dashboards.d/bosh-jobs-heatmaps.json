@@ -1,0 +1,1205 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 0,
+    "id": null,
+    "iteration": 1658933273235,
+    "links": [
+      {
+        "asDropdown": true,
+        "icon": "external link",
+        "includeVars": true,
+        "keepTime": true,
+        "tags": [
+          "bosh"
+        ],
+        "targetBlank": false,
+        "title": "BOSH",
+        "type": "dashboards"
+      },
+      {
+        "icon": "external link",
+        "tags": [],
+        "targetBlank": true,
+        "title": "BOSH Docs",
+        "type": "link",
+        "url": "http://bosh.io/docs"
+      }
+    ],
+    "panels": [
+      {
+        "cacheTimeout": null,
+        "colorBackground": true,
+        "colorValue": false,
+        "colors": [
+          "rgba(245, 54, 54, 0.9)",
+          "rgba(237, 129, 40, 0.89)",
+          "rgba(50, 172, 45, 0.97)"
+        ],
+        "datasource": "prometheus",
+        "editable": true,
+        "error": false,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "format": "none",
+        "gauge": {
+          "maxValue": 100,
+          "minValue": 0,
+          "show": false,
+          "thresholdLabels": false,
+          "thresholdMarkers": true
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 0,
+          "y": 0
+        },
+        "hideTimeOverride": false,
+        "id": 1,
+        "interval": null,
+        "links": [],
+        "mappingType": 2,
+        "mappingTypes": [
+          {
+            "name": "value to text",
+            "value": 1
+          },
+          {
+            "name": "range to text",
+            "value": 2
+          }
+        ],
+        "maxDataPoints": 100,
+        "nullPointMode": "connected",
+        "nullText": null,
+        "postfix": "",
+        "postfixFontSize": "200%",
+        "prefix": "",
+        "prefixFontSize": "50%",
+        "rangeMaps": [
+          {
+            "from": "0",
+            "text": "Failing",
+            "to": "0.99"
+          },
+          {
+            "from": "1",
+            "text": "Running",
+            "to": "1"
+          }
+        ],
+        "sparkline": {
+          "fillColor": "rgba(31, 118, 189, 0.18)",
+          "full": false,
+          "lineColor": "rgb(31, 120, 193)",
+          "show": false
+        },
+        "tableColumn": "",
+        "targets": [
+          {
+            "expr": "min(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\"})",
+            "interval": "1m",
+            "intervalFactor": 2,
+            "refId": "A",
+            "step": 120
+          }
+        ],
+        "thresholds": "0.5,0.9",
+        "timeFrom": "1m",
+        "timeShift": null,
+        "title": "Jobs Health",
+        "transparent": true,
+        "type": "singlestat",
+        "valueFontSize": "200%",
+        "valueMaps": [
+          {
+            "op": "=",
+            "text": "OK",
+            "value": "1"
+          },
+          {
+            "op": "=",
+            "text": "NOK",
+            "value": "0"
+          }
+        ],
+        "valueName": "current"
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 8,
+          "y": 0
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 5,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_mem_percent{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Memory Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": "",
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 16,
+          "y": 0
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 6,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_swap_percent{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Swap Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 0,
+          "y": 5
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 7,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_cpu_sys{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "CPU (sys) Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 8,
+          "y": 5
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 8,
+        "interval": "",
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_cpu_user{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "format": "time_series",
+            "instant": false,
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "CPU (user) Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transformations": [],
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 16,
+          "y": 5
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 9,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_cpu_wait{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "CPU (wait) Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 0,
+          "y": 10
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 10,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_load_avg01{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Load (avg01)",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "none",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 8,
+          "y": 10
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 11,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_load_avg05{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Load (avg05)",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "short",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 16,
+          "y": 10
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 12,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_load_avg15{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Load (avg15)",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "short",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 0,
+          "y": 15
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 2,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_system_disk_percent{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "System Disk Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 8,
+          "y": 15
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 3,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_ephemeral_disk_percent{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Ephemeral Disk Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateViridis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": "prometheus",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 5,
+          "w": 8,
+          "x": 16,
+          "y": 15
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 4,
+        "legend": {
+          "show": false
+        },
+        "links": [],
+        "pluginVersion": "7.3.3",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "avg(bosh_job_persistent_disk_percent{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\",bosh_job_index=~\"$bosh_job_index\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}) by(bosh_deployment,bosh_job_name,bosh_job_index)",
+            "interval": "",
+            "intervalFactor": 2,
+            "legendFormat": "",
+            "refId": "A",
+            "step": 20
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Persistent Disk Usage",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "transparent": true,
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percent",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": null
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 27,
+    "style": "dark",
+    "tags": [
+      "bosh"
+    ],
+    "templating": {
+      "list": [
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "prod-lon",
+            "value": "prod-lon"
+          },
+          "datasource": "prometheus",
+          "definition": "",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Environment",
+          "multi": false,
+          "name": "environment",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy, environment)",
+            "refId": "prometheus-environment-Variable-Query"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "prod-lon",
+            "value": "prod-lon"
+          },
+          "datasource": "prometheus",
+          "definition": "",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Director",
+          "multi": false,
+          "name": "bosh_director",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\"}, bosh_name)",
+            "refId": "prometheus-bosh_director-Variable-Query"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "prod-lon",
+            "value": "prod-lon"
+          },
+          "datasource": "prometheus",
+          "definition": "",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Deployment",
+          "multi": false,
+          "name": "bosh_deployment",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment!=\"bosh-health-check\"}, bosh_deployment)",
+            "refId": "prometheus-bosh_deployment-Variable-Query"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": null,
+          "tags": [],
+          "tagsQuery": null,
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "log-cache",
+            "value": "log-cache"
+          },
+          "datasource": "prometheus",
+          "definition": "",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "Job",
+          "multi": false,
+          "name": "bosh_job_name",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name!~\"^compilation.*\"}, bosh_job_name)",
+            "refId": "prometheus-bosh_job_name-Variable-Query"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": null,
+          "tags": [],
+          "tagsQuery": null,
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": "prometheus",
+          "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_index)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "Index",
+          "multi": false,
+          "name": "bosh_job_index",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_index)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": "prometheus",
+          "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_id)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "bosh_job_id",
+          "multi": false,
+          "name": "bosh_job_id",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_id)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": "prometheus",
+          "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_ip)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "bosh_job_ip",
+          "multi": false,
+          "name": "bosh_job_ip",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_ip)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "timepicker": {
+      "refresh_intervals": [
+        "5s",
+        "10s",
+        "30s",
+        "1m",
+        "5m",
+        "15m",
+        "30m",
+        "1h",
+        "2h",
+        "1d"
+      ],
+      "time_options": [
+        "5m",
+        "15m",
+        "1h",
+        "6h",
+        "12h",
+        "24h",
+        "2d",
+        "7d",
+        "30d"
+      ]
+    },
+    "timezone": "browser",
+    "title": "BOSH: Jobs Heatmaps",
+    "uid": "bosh-jobs-heatmaps",
+    "version": 4
+  },
+  "folderId": 0,
+  "overwrite": true
+}
