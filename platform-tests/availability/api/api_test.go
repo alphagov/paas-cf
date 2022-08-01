@@ -12,7 +12,7 @@ import (
 	"github.com/alphagov/paas-cf/platform-tests/availability/monitor"
 
 	"github.com/cloudfoundry-community/go-cfclient"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 

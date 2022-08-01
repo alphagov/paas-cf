@@ -9,7 +9,7 @@ import (
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit/logitfakes"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 

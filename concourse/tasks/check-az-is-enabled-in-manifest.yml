@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/bosh-cli-v2
-    tag: 7191ee87b98642e5d03a80f24585fddc02fc8d88
+    tag: 36ed580ea6b5062feb10b1c45395696d75941020
 params:
   DEPLOY_ENV:
   BOSH_ENVIRONMENT:

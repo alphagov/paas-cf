@@ -8,7 +8,7 @@ import (
 	. "github.com/alphagov/paas-cf/tools/metrics"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront"
 	"github.com/aws/aws-sdk-go/aws"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
 	cloudfrontfakes "github.com/alphagov/paas-cf/tools/metrics/pkg/cloudfront/fakes"

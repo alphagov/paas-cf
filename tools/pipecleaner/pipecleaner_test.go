@@ -4,13 +4,13 @@ import (
 	"os/exec"
 	"time"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 	"github.com/onsi/gomega/gexec"
 )
 
-var _ = Describe("pipecleaner", func() {
+var _ = Describe("pipecleaner", Ordered, func() {
 	const runTimeout = 5 * time.Second
 
 	var (
@@ -19,7 +19,7 @@ var _ = Describe("pipecleaner", func() {
 		session  *gexec.Session
 	)
 
-	BeforeSuite(func() {
+	BeforeAll(func() {
 		var err error
 		toolpath, err = gexec.Build("github.com/alphagov/paas-cf/tools/pipecleaner")
 		Expect(err).NotTo(HaveOccurred())

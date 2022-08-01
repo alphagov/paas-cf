@@ -2,10 +2,9 @@ package health_test
 
 import (
 	"errors"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/health/fakes"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/health"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/health/fakes"
 	"github.com/aws/aws-sdk-go/aws"
-	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 
 	awshealth "github.com/aws/aws-sdk-go/service/health"
@@ -15,7 +14,7 @@ var _ = Describe("Service", func() {
 	Describe("CountOpenEventsForServiceInRegion", func() {
 
 		var (
-			healthAPI fakes.FakeHealthAPI
+			healthAPI     fakes.FakeHealthAPI
 			healthService health.HealthService
 		)
 
@@ -26,10 +25,10 @@ var _ = Describe("Service", func() {
 
 		It("finds events that are open", func() {
 			healthAPI.DescribeEventsReturns(&awshealth.DescribeEventsOutput{
-				Events:    []*awshealth.Event{},
+				Events: []*awshealth.Event{},
 			}, nil)
 
-			_ , err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
+			_, err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(healthAPI.DescribeEventsCallCount()).To(Equal(1))
@@ -40,10 +39,10 @@ var _ = Describe("Service", func() {
 
 		It("finds events relating to the given service", func() {
 			healthAPI.DescribeEventsReturns(&awshealth.DescribeEventsOutput{
-				Events:    []*awshealth.Event{},
+				Events: []*awshealth.Event{},
 			}, nil)
 
-			_ , err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
+			_, err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(healthAPI.DescribeEventsCallCount()).To(Equal(1))
@@ -54,10 +53,10 @@ var _ = Describe("Service", func() {
 
 		It("finds events relating to the given region", func() {
 			healthAPI.DescribeEventsReturns(&awshealth.DescribeEventsOutput{
-				Events:    []*awshealth.Event{},
+				Events: []*awshealth.Event{},
 			}, nil)
 
-			_ , err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
+			_, err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(healthAPI.DescribeEventsCallCount()).To(Equal(1))
@@ -69,7 +68,7 @@ var _ = Describe("Service", func() {
 		It("returns a count of -1 when an error occurs", func() {
 			healthAPI.DescribeEventsReturns(&awshealth.DescribeEventsOutput{}, errors.New("whoops"))
 
-			count , err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
+			count, err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
 
 			Expect(err).To(HaveOccurred())
 			Expect(count).To(Equal(-1))
@@ -77,10 +76,10 @@ var _ = Describe("Service", func() {
 
 		It("excludes account events", func() {
 			healthAPI.DescribeEventsReturns(&awshealth.DescribeEventsOutput{
-				Events:    []*awshealth.Event{},
+				Events: []*awshealth.Event{},
 			}, nil)
 
-			_ , err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
+			_, err := healthService.CountOpenEventsForServiceInRegion("EC2", "eu-west-1")
 
 			Expect(err).ToNot(HaveOccurred())
 			Expect(healthAPI.DescribeEventsCallCount()).To(Equal(1))

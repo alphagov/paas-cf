@@ -3,7 +3,7 @@ package emails_test
 import (
 	"github.com/alphagov/paas-cf/tools/user_emails/emails"
 	"github.com/alphagov/paas-cf/tools/user_emails/emails/stubs"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 

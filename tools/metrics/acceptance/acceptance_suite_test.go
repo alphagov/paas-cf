@@ -11,7 +11,7 @@ import (
 	dto "github.com/prometheus/client_model/go"
 	"github.com/prometheus/common/expfmt"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 )
 
@@ -85,7 +85,7 @@ func getMetricNames() ([]string, error) {
 }
 
 var _ = BeforeSuite(func() {
-	SetDefaultEventuallyTimeout(10 * time.Minute)          // Fail after 10m
+	SetDefaultEventuallyTimeout(10 * time.Minute)         // Fail after 10m
 	SetDefaultEventuallyPollingInterval(10 * time.Second) // Try every 10s
 
 	SetDefaultConsistentlyDuration(10 * time.Second)       // Test for 10s

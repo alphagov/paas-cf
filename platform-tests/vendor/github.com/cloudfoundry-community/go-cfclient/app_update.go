@@ -6,12 +6,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 type UpdateResponse struct {
 	Metadata Meta                 `json:"metadata"`
 	Entity   UpdateResponseEntity `json:"entity"`
 }
+
 type AppUpdateResource struct {
 	Name                     string                 `json:"name,omitempty"`
 	Memory                   int                    `json:"memory,omitempty"`
@@ -19,7 +22,7 @@ type AppUpdateResource struct {
 	DiskQuota                int                    `json:"disk_quota,omitempty"`
 	SpaceGuid                string                 `json:"space_guid,omitempty"`
 	StackGuid                string                 `json:"stack_guid,omitempty"`
-	State                    string                 `json:"state,omitempty"`
+	State                    AppState               `json:"state,omitempty"`
 	Command                  string                 `json:"command,omitempty"`
 	Buildpack                string                 `json:"buildpack,omitempty"`
 	HealthCheckHttpEndpoint  string                 `json:"health_check_http_endpoint,omitempty"`
@@ -90,6 +93,7 @@ func (c *Client) UpdateApp(guid string, aur AppUpdateResource) (UpdateResponse, 
 	if err != nil {
 		return UpdateResponse{}, err
 	}
+	defer resp.Body.Close()
 	if resp.StatusCode != http.StatusCreated {
 		return UpdateResponse{}, fmt.Errorf("CF API returned with status code %d", resp.StatusCode)
 	}
@@ -104,4 +108,21 @@ func (c *Client) UpdateApp(guid string, aur AppUpdateResource) (UpdateResponse, 
 		return UpdateResponse{}, err
 	}
 	return updateResponse, nil
+}
+
+func (c *Client) RestageApp(guid string) (UpdateResponse, error) {
+	var result UpdateResponse
+
+	req := c.NewRequest("POST", "/v2/apps/"+guid+"/restage")
+	resp, err := c.DoRequest(req)
+	if err != nil {
+		return result, errors.Wrap(err, "Error restaging app:")
+	}
+
+	defer resp.Body.Close()
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return result, err
+	}
+
+	return result, nil
 }

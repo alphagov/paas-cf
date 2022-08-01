@@ -11,7 +11,7 @@ import (
 	awsec "github.com/aws/aws-sdk-go/service/elasticache"
 	cf "github.com/cloudfoundry-community/go-cfclient"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"github.com/onsi/gomega/gbytes"
 
@@ -79,13 +79,13 @@ var _ = Describe("Elasticache Gauges", func() {
 		cacheClusters = []*awsec.CacheCluster{
 			{
 				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
-				CacheClusterId: aws.String("cf-hash1-0001-001"),
-				NumCacheNodes:  aws.Int64(2),
+				CacheClusterId:     aws.String("cf-hash1-0001-001"),
+				NumCacheNodes:      aws.Int64(2),
 			},
 			{
 				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-2-guid")),
-				CacheClusterId: aws.String("cf-2hsah-001"),
-				NumCacheNodes:  aws.Int64(1),
+				CacheClusterId:     aws.String("cf-2hsah-001"),
+				NumCacheNodes:      aws.Int64(1),
 			},
 		}
 
@@ -173,13 +173,13 @@ var _ = Describe("Elasticache Gauges", func() {
 		cacheClusters = []*awsec.CacheCluster{
 			{
 				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
-				CacheClusterId: aws.String("cf-hash1-0001-001"),
-				NumCacheNodes:  aws.Int64(2),
+				CacheClusterId:     aws.String("cf-hash1-0001-001"),
+				NumCacheNodes:      aws.Int64(2),
 			},
 			{
 				ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-2-guid")),
-				CacheClusterId: aws.String("cf-2hsah-001"),
-				NumCacheNodes:  aws.Int64(1),
+				CacheClusterId:     aws.String("cf-2hsah-001"),
+				NumCacheNodes:      aws.Int64(1),
 			},
 		}
 
@@ -326,23 +326,23 @@ var _ = Describe("Elasticache Gauges", func() {
 			}
 		)
 
-		BeforeEach(func(){
+		BeforeEach(func() {
 			cacheClusters = []*awsec.CacheCluster{
 				// The first two cache clusters belong to the same replication group
 				{
 					ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
-					CacheClusterId: aws.String(generateReplicationGroupId("svc-instance-1-guid")+"001-0001"),
-					NumCacheNodes:  aws.Int64(2),
+					CacheClusterId:     aws.String(generateReplicationGroupId("svc-instance-1-guid") + "001-0001"),
+					NumCacheNodes:      aws.Int64(2),
 				},
 				{
 					ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-1-guid")),
-					CacheClusterId: aws.String(generateReplicationGroupId("svc-instance-1-guid")+"001-0002"),
-					NumCacheNodes:  aws.Int64(1),
+					CacheClusterId:     aws.String(generateReplicationGroupId("svc-instance-1-guid") + "001-0002"),
+					NumCacheNodes:      aws.Int64(1),
 				},
 				{
 					ReplicationGroupId: aws.String(generateReplicationGroupId("svc-instance-2-guid")),
-					CacheClusterId: aws.String(generateReplicationGroupId("svc-instance-2-guid")+"001"),
-					NumCacheNodes:  aws.Int64(1),
+					CacheClusterId:     aws.String(generateReplicationGroupId("svc-instance-2-guid") + "001"),
+					NumCacheNodes:      aws.Int64(1),
 				},
 			}
 		})

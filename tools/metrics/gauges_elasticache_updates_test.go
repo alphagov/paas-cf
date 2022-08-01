@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	awsec "github.com/aws/aws-sdk-go/service/elasticache"
 	cf "github.com/cloudfoundry-community/go-cfclient"
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 	"time"
 )
@@ -139,21 +139,21 @@ var _ = Describe("Elasticache Updates", func() {
 						ServicePlanGuid: "svc-plan-1",
 						Guid:            "instance-guid-1",
 						SpaceGuid:       "space-1",
-						Name:			 "instance-1",
+						Name:            "instance-1",
 					},
 					{
 						ServiceGuid:     "redis-svc",
 						ServicePlanGuid: "svc-plan-1",
 						Guid:            "instance-guid-2",
 						SpaceGuid:       "space-2",
-						Name:			 "instance-2",
+						Name:            "instance-2",
 					},
 					{
 						ServiceGuid:     "redis-svc",
 						ServicePlanGuid: "svc-plan-1",
 						Guid:            "instance-guid-3",
 						SpaceGuid:       "space-3",
-						Name:			 "instance-3",
+						Name:            "instance-3",
 					},
 				},
 			}

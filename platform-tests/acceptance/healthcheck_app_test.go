@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"compress/gzip"
 
-	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/cloudfoundry-incubator/cf-test-helpers/helpers"
+	"github.com/cloudfoundry/cf-test-helpers/helpers"
 )
 
 var _ = Describe("healthcheck app deployed by pipeline", func() {

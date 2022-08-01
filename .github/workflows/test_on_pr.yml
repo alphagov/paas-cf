@@ -6,7 +6,7 @@ env:
   PROMETHEUS_VERSION: "2.33.3"
   DEPLOY_ENV: "github"
   SHELLCHECK_VERSION: "0.7.1"
-  GO_VERSION: "1.17"
+  GO_VERSION: "1.18"
   RUBY_VERSION: "2.7"
 
 jobs:

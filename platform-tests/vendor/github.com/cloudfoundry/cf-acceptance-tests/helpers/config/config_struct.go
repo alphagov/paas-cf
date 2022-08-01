@@ -66,29 +66,32 @@ type config struct {
 	VolumeServicePlanName     *string `json:"volume_service_plan_name"`
 	VolumeServiceCreateConfig *string `json:"volume_service_create_config"`
 
+	IncludeAppSyslogTcp             *bool `json:"include_app_syslog_tcp"`
 	IncludeApps                     *bool `json:"include_apps"`
 	IncludeContainerNetworking      *bool `json:"include_container_networking"`
+	IncludeDeployments              *bool `json:"include_deployments"`
 	IncludeDetect                   *bool `json:"include_detect"`
 	IncludeDocker                   *bool `json:"include_docker"`
 	IncludeInternetDependent        *bool `json:"include_internet_dependent"`
-	IncludeInternetless             *bool `json:"include_internetless"`
+	IncludeIsolationSegments        *bool `json:"include_isolation_segments"`
 	IncludePrivateDockerRegistry    *bool `json:"include_private_docker_registry"`
 	IncludeRouteServices            *bool `json:"include_route_services"`
 	IncludeRouting                  *bool `json:"include_routing"`
+	IncludeRoutingIsolationSegments *bool `json:"include_routing_isolation_segments"`
 	IncludeSSO                      *bool `json:"include_sso"`
 	IncludeSecurityGroups           *bool `json:"include_security_groups"`
-	IncludeServices                 *bool `json:"include_services"`
 	IncludeServiceDiscovery         *bool `json:"include_service_discovery"`
 	IncludeServiceInstanceSharing   *bool `json:"include_service_instance_sharing"`
+	IncludeServices                 *bool `json:"include_services"`
+	IncludeUserProvidedServices     *bool `json:"include_user_provided_services"`
 	IncludeSsh                      *bool `json:"include_ssh"`
-	IncludeTasks                    *bool `json:"include_tasks"`
+	IncludeTCPIsolationSegments     *bool `json:"include_tcp_isolation_segments"`
+	IncludeHTTP2Routing             *bool `json:"include_http2_routing"`
 	IncludeTCPRouting               *bool `json:"include_tcp_routing"`
+	IncludeTasks                    *bool `json:"include_tasks"`
 	IncludeV3                       *bool `json:"include_v3"`
-	IncludeDeployments              *bool `json:"include_deployments"`
-	IncludeZipkin                   *bool `json:"include_zipkin"`
-	IncludeIsolationSegments        *bool `json:"include_isolation_segments"`
-	IncludeRoutingIsolationSegments *bool `json:"include_routing_isolation_segments"`
 	IncludeVolumeServices           *bool `json:"include_volume_services"`
+	IncludeZipkin                   *bool `json:"include_zipkin"`
 
 	CredhubMode         *string `json:"credhub_mode"`
 	CredhubLocation     *string `json:"credhub_location"`
@@ -154,6 +157,7 @@ func getDefaults() config {
 	defaults.RubyBuildpackName = ptrToString("ruby_buildpack")
 	defaults.StaticFileBuildpackName = ptrToString("staticfile_buildpack")
 
+	defaults.IncludeAppSyslogTcp = ptrToBool(true)
 	defaults.IncludeApps = ptrToBool(true)
 	defaults.IncludeDetect = ptrToBool(true)
 	defaults.IncludeRouting = ptrToBool(true)
@@ -167,8 +171,8 @@ func getDefaults() config {
 	defaults.CredhubClientSecret = ptrToString("")
 	defaults.IncludeDocker = ptrToBool(false)
 	defaults.IncludeInternetDependent = ptrToBool(false)
-	defaults.IncludeInternetless = ptrToBool(false)
 	defaults.IncludeIsolationSegments = ptrToBool(false)
+	defaults.IncludeTCPIsolationSegments = ptrToBool(false)
 	defaults.IncludeRoutingIsolationSegments = ptrToBool(false)
 	defaults.IncludePrivateDockerRegistry = ptrToBool(false)
 	defaults.IncludeRouteServices = ptrToBool(false)
@@ -176,10 +180,12 @@ func getDefaults() config {
 	defaults.IncludeSecurityGroups = ptrToBool(false)
 	defaults.IncludeServiceDiscovery = ptrToBool(false)
 	defaults.IncludeServices = ptrToBool(false)
+	defaults.IncludeUserProvidedServices = ptrToBool(false)
 	defaults.IncludeSsh = ptrToBool(false)
 	defaults.IncludeTasks = ptrToBool(false)
 	defaults.IncludeZipkin = ptrToBool(false)
 	defaults.IncludeServiceInstanceSharing = ptrToBool(false)
+	defaults.IncludeHTTP2Routing = ptrToBool(false)
 	defaults.IncludeTCPRouting = ptrToBool(false)
 	defaults.IncludeVolumeServices = ptrToBool(false)
 
@@ -202,7 +208,7 @@ func getDefaults() config {
 
 	defaults.AsyncServiceOperationTimeout = ptrToInt(120)
 	defaults.BrokerStartTimeout = ptrToInt(300)
-	defaults.CfPushTimeout = ptrToInt(120)
+	defaults.CfPushTimeout = ptrToInt(240)
 	defaults.DefaultTimeout = ptrToInt(30)
 	defaults.DetectTimeout = ptrToInt(300)
 	defaults.LongCurlTimeout = ptrToInt(120)
@@ -280,6 +286,11 @@ func validateConfig(config *config) Errors {
 	}
 
 	err = validateRoutingIsolationSegments(config)
+	if err != nil {
+		errs.Add(err)
+	}
+
+	err = validateTCPIsolationSegments(config)
 	if err != nil {
 		errs.Add(err)
 	}
@@ -379,6 +390,9 @@ func validateConfig(config *config) Errors {
 	if config.StaticFileBuildpackName == nil {
 		errs.Add(fmt.Errorf("* 'staticfile_buildpack_name' must not be null"))
 	}
+	if config.IncludeAppSyslogTcp == nil {
+		errs.Add(fmt.Errorf("* 'include_app_syslog_tcp' must not be null"))
+	}
 	if config.IncludeApps == nil {
 		errs.Add(fmt.Errorf("* 'include_apps' must not be null"))
 	}
@@ -393,9 +407,6 @@ func validateConfig(config *config) Errors {
 	}
 	if config.IncludeInternetDependent == nil {
 		errs.Add(fmt.Errorf("* 'include_internet_dependent' must not be null"))
-	}
-	if config.IncludeInternetless == nil {
-		errs.Add(fmt.Errorf("* 'include_internetless' must not be null"))
 	}
 	if config.IncludePrivateDockerRegistry == nil {
 		errs.Add(fmt.Errorf("* 'include_private_docker_registry' must not be null"))
@@ -418,6 +429,9 @@ func validateConfig(config *config) Errors {
 	if config.IncludeServices == nil {
 		errs.Add(fmt.Errorf("* 'include_services' must not be null"))
 	}
+	if config.IncludeUserProvidedServices == nil {
+		errs.Add(fmt.Errorf("* 'include_user_provided_services' must not be null"))
+	}
 	if config.IncludeServiceInstanceSharing == nil {
 		errs.Add(fmt.Errorf("* 'include_service_instance_sharing' must not be null"))
 	}
@@ -426,6 +440,9 @@ func validateConfig(config *config) Errors {
 	}
 	if config.IncludeTasks == nil {
 		errs.Add(fmt.Errorf("* 'include_tasks' must not be null"))
+	}
+	if config.IncludeHTTP2Routing == nil {
+		errs.Add(fmt.Errorf("* 'include_http2_routing' must not be null"))
 	}
 	if config.IncludeTCPRouting == nil {
 		errs.Add(fmt.Errorf("* 'include_tcp_routing' must not be null"))
@@ -437,6 +454,9 @@ func validateConfig(config *config) Errors {
 		errs.Add(fmt.Errorf("* 'include_zipkin' must not be null"))
 	}
 	if config.IncludeIsolationSegments == nil {
+		errs.Add(fmt.Errorf("* 'include_isolation_segments' must not be null"))
+	}
+	if config.IncludeTCPIsolationSegments == nil {
 		errs.Add(fmt.Errorf("* 'include_isolation_segments' must not be null"))
 	}
 	if config.PrivateDockerRegistryImage == nil {
@@ -467,9 +487,13 @@ func validateApiEndpoint(config *config) error {
 		return fmt.Errorf("* Invalid configuration: 'api' must be a valid Cloud Controller endpoint but was blank")
 	}
 
+	// Use URL parse to check endpoint, but we do not want users to provide a scheme/protocol
 	u, err := url.Parse(config.GetApiEndpoint())
 	if err != nil {
-		return fmt.Errorf("* Invalid configuration: 'api' must be a valid URL but was set to '%s'", config.GetApiEndpoint())
+		return fmt.Errorf("* Invalid configuration: 'api' must be a valid domain but was set to '%s'", config.GetApiEndpoint())
+	}
+	if u.Scheme != "" {
+		return fmt.Errorf("* Invalid configuration: 'api' must not contain a scheme/protocol but was set to '%s' in '%s'", u.Scheme, config.GetApiEndpoint())
 	}
 
 	host := u.Host
@@ -616,13 +640,34 @@ func validateRoutingIsolationSegments(config *config) error {
 	return nil
 }
 
+func validateTCPIsolationSegments(config *config) error {
+	if config.IncludeTCPIsolationSegments == nil {
+		return fmt.Errorf("* 'include_tcp_isolation_segments' must not be null")
+	}
+	if config.IsolationSegmentName == nil {
+		return fmt.Errorf("* 'isolation_segment_name' must not be null")
+	}
+
+	if !config.GetIncludeTCPIsolationSegments() {
+		return nil
+	}
+
+	if !config.GetIncludeIsolationSegments() {
+		return fmt.Errorf("* Invalid configuration: 'include_isolation_segments' must be set if 'include_tcp_isolation_segments' is true")
+	}
+	if config.GetIsolationSegmentName() == "" {
+		return fmt.Errorf("* Invalid configuration: 'isolation_segment_name' must be provided if 'include_tcp_isolation_segments' is true")
+	}
+	return nil
+}
+
 func validateCredHubSettings(config *config) error {
 	if config.CredhubMode == nil {
 		return fmt.Errorf("* 'credhub_mode' must not be null")
 	}
 
 	if config.GetIncludeCredhubAssisted() || config.GetIncludeCredhubNonAssisted() {
-		if config.GetCredHubBrokerClientSecret() == "" || config.GetCredHubBrokerClientSecret() == "" {
+		if config.GetCredHubBrokerClientCredential() == "" || config.GetCredHubBrokerClientSecret() == "" {
 			return fmt.Errorf("* 'credhub_client' and 'credhub_secret' must not be null")
 		}
 	}
@@ -822,6 +867,10 @@ func (c *config) GetIncludeSsh() bool {
 	return *c.IncludeSsh
 }
 
+func (c *config) GetIncludeAppSyslogTcp() bool {
+	return *c.IncludeAppSyslogTcp
+}
+
 func (c *config) GetIncludeApps() bool {
 	return *c.IncludeApps
 }
@@ -840,10 +889,6 @@ func (c *config) GetIncludeDocker() bool {
 
 func (c *config) GetIncludeInternetDependent() bool {
 	return *c.IncludeInternetDependent
-}
-
-func (c *config) GetIncludeInternetless() bool {
-	return *c.IncludeInternetless
 }
 
 func (c *config) GetIncludeRouteServices() bool {
@@ -874,8 +919,16 @@ func (c *config) GetIncludeServices() bool {
 	return *c.IncludeServices
 }
 
+func (c *config) GetIncludeUserProvidedServices() bool {
+	return *c.IncludeUserProvidedServices
+}
+
 func (c *config) GetIncludeSSO() bool {
 	return *c.IncludeSSO
+}
+
+func (c *config) GetIncludeHTTP2Routing() bool {
+	return *c.IncludeHTTP2Routing
 }
 
 func (c *config) GetIncludeTCPRouting() bool {
@@ -892,6 +945,10 @@ func (c *config) GetIncludeDeployments() bool {
 
 func (c *config) GetIncludeIsolationSegments() bool {
 	return *c.IncludeIsolationSegments
+}
+
+func (c *config) GetIncludeTCPIsolationSegments() bool {
+	return *c.IncludeTCPIsolationSegments
 }
 
 func (c *config) GetIncludeRoutingIsolationSegments() bool {

@@ -9,7 +9,7 @@ fi
 
 SLEEPTIME=90
 NODES=12
-SLOW_SPEC_THRESHOLD=120
+SLOW_SPEC_THRESHOLD=120s
 
 # Build Skip regex to ignore tests
 SKIP_REGEX="${SKIP_REGEX:+${SKIP_REGEX}|}routing.API"
@@ -26,14 +26,14 @@ for i in $(seq $SLEEPTIME 1); do echo -ne "$i"'\r'; sleep 1; done; echo
 GOPATH="${GOPATH}:$(pwd)"
 export GOPATH
 
-echo "Starting acceptace tests"
+echo "Starting acceptance tests"
 cd src/github.com/cloudfoundry/cf-acceptance-tests
 ./bin/test \
-  -keepGoing \
-  -timeout=1h \
-  -flakeAttempts=3 \
-  -randomizeAllSpecs \
-  -skipPackage=helpers \
-  -skip="${SKIP_REGEX}" \
-  -slowSpecThreshold=${SLOW_SPEC_THRESHOLD} \
-  -nodes="${NODES}"
+  --keep-going \
+  --timeout=1h \
+  --flake-attempts=3 \
+  --randomize-all \
+  --skip-package=helpers \
+  --skip="${SKIP_REGEX}" \
+  --slow-spec-threshold=${SLOW_SPEC_THRESHOLD} \
+  --nodes="${NODES}"
