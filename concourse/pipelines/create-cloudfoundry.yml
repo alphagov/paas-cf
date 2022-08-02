@@ -5576,7 +5576,6 @@ jobs:
                 cp "paas-cf/config/billing/output/${AWS_REGION}.json" ./src/github.com/alphagov/paas-billing/config.json
                 cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
 
-                export GOPATH="${PWD}"
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 go install github.com/cucumber/godog/cmd/godog@v0.12.5
                 cd src/github.com/alphagov/paas-billing
