@@ -17,7 +17,7 @@
     "gnetId": null,
     "graphTooltip": 1,
     "id": null,
-    "iteration": 1659101589968,
+    "iteration": 1659444525227,
     "links": [],
     "panels": [
       {
@@ -237,7 +237,7 @@
             "$$hashKey": "object:516",
             "format": "cps",
             "label": null,
-            "logBase": 2,
+            "logBase": 1,
             "max": null,
             "min": null,
             "show": true
@@ -490,7 +490,7 @@
         "yAxis": {
           "decimals": null,
           "format": "short",
-          "logBase": 2,
+          "logBase": 1,
           "max": null,
           "min": null,
           "show": true,
@@ -879,7 +879,7 @@
     "timezone": "",
     "title": "Syslog agents",
     "uid": "syslog-agents",
-    "version": 16
+    "version": 17
   },
   "overwrite": true,
   "folderId": 0

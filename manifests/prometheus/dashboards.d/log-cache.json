@@ -17,7 +17,7 @@
     "gnetId": null,
     "graphTooltip": 1,
     "id": null,
-    "iteration": 1659101827387,
+    "iteration": 1659443414628,
     "links": [],
     "panels": [
       {
@@ -233,7 +233,7 @@
             "$$hashKey": "object:516",
             "format": "cps",
             "label": null,
-            "logBase": 2,
+            "logBase": 1,
             "max": null,
             "min": null,
             "show": true
@@ -710,7 +710,7 @@
     "timezone": "",
     "title": "Log cache",
     "uid": "log-cache",
-    "version": 8
+    "version": 9
   },
   "overwrite": true,
   "folderId": 0

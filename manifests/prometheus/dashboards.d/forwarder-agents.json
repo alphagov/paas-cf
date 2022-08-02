@@ -234,7 +234,7 @@
             "$$hashKey": "object:516",
             "format": "cps",
             "label": null,
-            "logBase": 2,
+            "logBase": 1,
             "max": null,
             "min": null,
             "show": true
@@ -543,7 +543,7 @@
     "timezone": "",
     "title": "Forwarder agents",
     "uid": "fw-agents",
-    "version": 11
+    "version": 12
   },
   "overwrite": true,
   "folderId": 0
