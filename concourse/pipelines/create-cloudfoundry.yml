@@ -644,14 +644,14 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-accounts.git
       branch: main
-      tag_filter: v0.23.0
+      tag_filter: v0.24.0
 
   - name: paas-auditor
     type: git
     source:
       uri: https://github.com/alphagov/paas-auditor.git
       branch: main
-      tag_filter: v0.73.0
+      tag_filter: v0.74.0
 
   - name: paas-admin
     type: git
