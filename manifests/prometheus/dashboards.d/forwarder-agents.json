@@ -17,7 +17,7 @@
     "gnetId": null,
     "graphTooltip": 1,
     "id": null,
-    "iteration": 1659101972559,
+    "iteration": 1659444687763,
     "links": [],
     "panels": [
       {
@@ -122,7 +122,7 @@
         "targets": [
           {
             "exemplar": true,
-            "expr": "rate(firehose_counter_event_loggregator_forwarder_agent_origin_mappings_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[10m])",
+            "expr": "rate(firehose_counter_event_loggregator_forwarder_agent_origin_mappings_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[10m])*60",
             "interval": "",
             "legendFormat": "",
             "refId": "A"
@@ -133,6 +133,7 @@
           "show": true,
           "showHistogram": true
         },
+        "tooltipDecimals": 0,
         "type": "heatmap",
         "xAxis": {
           "show": true
@@ -141,7 +142,7 @@
         "xBucketSize": null,
         "yAxis": {
           "decimals": null,
-          "format": "cps",
+          "format": "cpm",
           "logBase": 2,
           "max": null,
           "min": null,
@@ -166,7 +167,7 @@
         "fillGradient": 0,
         "gridPos": {
           "h": 9,
-          "w": 8,
+          "w": 12,
           "x": 0,
           "y": 9
         },
@@ -357,8 +358,8 @@
         },
         "gridPos": {
           "h": 9,
-          "w": 7,
-          "x": 8,
+          "w": 12,
+          "x": 12,
           "y": 9
         },
         "id": 9,
@@ -428,72 +429,6 @@
           }
         ],
         "type": "table"
-      },
-      {
-        "cards": {
-          "cardPadding": null,
-          "cardRound": null
-        },
-        "color": {
-          "cardColor": "#b4ff00",
-          "colorScale": "sqrt",
-          "colorScheme": "interpolateCividis",
-          "exponent": 0.5,
-          "mode": "spectrum"
-        },
-        "dataFormat": "timeseries",
-        "datasource": null,
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 9,
-          "w": 9,
-          "x": 15,
-          "y": 9
-        },
-        "heatmap": {},
-        "hideZeroBuckets": false,
-        "highlightCards": true,
-        "id": 7,
-        "legend": {
-          "show": false
-        },
-        "pluginVersion": "7.5.15",
-        "reverseYBuckets": false,
-        "targets": [
-          {
-            "exemplar": true,
-            "expr": "rate(firehose_counter_event_loggregator_forwarder_agent_promhttp_metric_handler_errors_total_total{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}[10m])",
-            "interval": "",
-            "legendFormat": "",
-            "refId": "A"
-          }
-        ],
-        "title": "PromHTTP metric handler errors",
-        "tooltip": {
-          "show": true,
-          "showHistogram": true
-        },
-        "type": "heatmap",
-        "xAxis": {
-          "show": true
-        },
-        "xBucketNumber": null,
-        "xBucketSize": null,
-        "yAxis": {
-          "decimals": null,
-          "format": "cps",
-          "logBase": 2,
-          "max": null,
-          "min": null,
-          "show": true,
-          "splitFactor": null
-        },
-        "yBucketBound": "auto",
-        "yBucketNumber": null,
-        "yBucketSize": null
       }
     ],
     "refresh": false,
@@ -608,7 +543,7 @@
     "timezone": "",
     "title": "Forwarder agents",
     "uid": "fw-agents",
-    "version": 10
+    "version": 11
   },
   "overwrite": true,
   "folderId": 0
