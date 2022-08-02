@@ -568,7 +568,7 @@
         "yAxis": {
           "decimals": null,
           "format": "none",
-          "logBase": 1,
+          "logBase": 2,
           "max": null,
           "min": null,
           "show": true,
@@ -640,7 +640,7 @@
         "yAxis": {
           "decimals": null,
           "format": "short",
-          "logBase": 1,
+          "logBase": 2,
           "max": null,
           "min": null,
           "show": true,
@@ -712,7 +712,7 @@
         "yAxis": {
           "decimals": null,
           "format": "short",
-          "logBase": 1,
+          "logBase": 2,
           "max": null,
           "min": null,
           "show": true,
@@ -1198,7 +1198,7 @@
     "timezone": "browser",
     "title": "BOSH: Jobs Heatmaps",
     "uid": "bosh-jobs-heatmaps",
-    "version": 4
+    "version": 5
   },
   "folderId": 0,
   "overwrite": true
