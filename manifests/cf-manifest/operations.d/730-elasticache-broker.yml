@@ -17,6 +17,7 @@
     ha_plan: &elasticache_ha_plan
       replicas_per_node_group: 1
       automatic_failover_enabled: true
+      multi_az_enabled: true
 
     micro_plan: &elasticache_micro_plan
       instance_type: cache.t3.micro
