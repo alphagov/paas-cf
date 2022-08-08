@@ -4,6 +4,10 @@
 # instances of some types.
 #
 
+#
+# Spot bid prices tend to be chosen as something around the 1y 100% upfront RI price
+#
+
 compilation_vm_instance_type: c5.large
 
 nano_vm_instance_type: t3.nano
@@ -20,6 +24,12 @@ large_vm_spot_bid_price: 0.05
 
 xlarge_vm_instance_type: m5.xlarge
 xlarge_vm_spot_bid_price: 0.1
+
+high_cpu_large_vm_instance_type: c5.large
+high_cpu_large_vm_spot_bid_price: 0.05
+
+high_mem_large_vm_instance_type: r5.large
+high_mem_large_vm_spot_bid_price: 0.08
 
 high_cpu_xlarge_vm_instance_type: c5.xlarge
 high_cpu_xlarge_vm_spot_bid_price: 0.1
