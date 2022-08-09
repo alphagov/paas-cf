@@ -23,9 +23,6 @@ CONFIG="$(pwd)/test-config/config.json"
 echo "Sleeping for ${SLEEPTIME} seconds..."
 for i in $(seq $SLEEPTIME 1); do echo -ne "$i"'\r'; sleep 1; done; echo
 
-GOPATH="${GOPATH}:$(pwd)"
-export GOPATH
-
 echo "Starting acceptance tests"
 cd src/github.com/cloudfoundry/cf-acceptance-tests
 ./bin/test \

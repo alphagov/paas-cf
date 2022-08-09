@@ -26,7 +26,7 @@ test:
 .PHONY: scripts_spec
 scripts_spec:
 	cd scripts &&\
-		go get -d -t . &&\
+		go get -t . &&\
 		go test
 
 .PHONY: tools_spec
@@ -47,7 +47,7 @@ concourse_spec:
 	cd concourse &&\
 		bundle exec rspec
 	cd concourse/scripts &&\
-		go get -d -t . &&\
+		go get -t . &&\
 		go test
 	cd concourse/scripts &&\
 		bundle exec rspec
@@ -98,7 +98,7 @@ terraform_spec:
 	cd terraform &&\
 		terraform init
 	cd terraform/scripts &&\
-		go get -d -t . &&\
+		go get -t . &&\
 		go test
 	-wget "https://github.com/tmccombs/hcl2json/releases/download/v0.3.2/hcl2json_$$(go env GOOS)_$$(go env GOARCH)" \
 		-q \
