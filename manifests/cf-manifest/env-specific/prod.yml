@@ -5,9 +5,9 @@ diego_api_instances: 3
 cell_instances: 24
 router_instances: 39
 api_instances: 9
-doppler_instances: 24
-log_cache_instances: 18
-log_api_instances: 15
+doppler_instances: 21
+log_cache_instances: 15
+log_api_instances: 12
 scheduler_instances: 12
 cc_worker_instances: 12
 cc_hourly_rate_limit: 60000
