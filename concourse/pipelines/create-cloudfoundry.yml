@@ -6879,7 +6879,6 @@ jobs:
 
                   cf target -o admin -s billing
 
-                  export GOPATH="${PWD}"
                   export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                   cd src/github.com/alphagov/paas-billing
                   make smoke
