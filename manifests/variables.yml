@@ -5,49 +5,49 @@
 #
 
 #
-# Spot bid prices tend to be chosen as something around the 1y 100% upfront RI price
+# Spot bid prices tend to be chosen as the ireland ondemand price
 #
 
 compilation_vm_instance_type: c5.large
 
 nano_vm_instance_type: t3.nano
-nano_vm_spot_bid_price: 0.004
+nano_vm_spot_bid_price: 0.0057
 
 small_vm_instance_type: t3.small
-small_vm_spot_bid_price: 0.01
+small_vm_spot_bid_price: 0.0208
 
 medium_vm_instance_type: t3.medium
-medium_vm_spot_bid_price: 0.02
+medium_vm_spot_bid_price: 0.0416
 
 large_vm_instance_type: m5.large
-large_vm_spot_bid_price: 0.05
+large_vm_spot_bid_price: 0.096
 
 xlarge_vm_instance_type: m5.xlarge
-xlarge_vm_spot_bid_price: 0.1
+xlarge_vm_spot_bid_price: 0.192
 
 high_cpu_large_vm_instance_type: c5.large
-high_cpu_large_vm_spot_bid_price: 0.05
+high_cpu_large_vm_spot_bid_price: 0.101
 
 high_mem_large_vm_instance_type: r5.large
-high_mem_large_vm_spot_bid_price: 0.08
+high_mem_large_vm_spot_bid_price: 0.126
 
 high_cpu_xlarge_vm_instance_type: c5.xlarge
-high_cpu_xlarge_vm_spot_bid_price: 0.1
+high_cpu_xlarge_vm_spot_bid_price: 0.17
 
 cell_instance_type: r5.xlarge
-cell_vm_spot_bid_price: 0.15
+cell_vm_spot_bid_price: 0.252
 
 high_cpu_cell_instance_type: m5.2xlarge
-high_cpu_cell_vm_spot_bid_price: 0.15
+high_cpu_cell_vm_spot_bid_price: 0.384
 
 small_cell_instance_type: r5.large
-small_cell_vm_spot_bid_price: 0.06
+small_cell_vm_spot_bid_price: 0.126
 
 router_instance_type: c5.large
-router_vm_spot_bid_price: 0.042
+router_vm_spot_bid_price: 0.101
 
 slim_router_instance_type: t3.medium
-slim_router_vm_spot_bid_price: 0.02
+slim_router_vm_spot_bid_price: 0.0416
 
 # Advertised memory capacity of the cells.
 #
