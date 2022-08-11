@@ -9,7 +9,6 @@ image_resource:
 inputs:
   - name: paas-cf
   - name: test-config
-  - name: cf-acceptance-tests
 outputs:
   - name: artifacts
 run:

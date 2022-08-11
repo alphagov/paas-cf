@@ -4652,7 +4652,6 @@ jobs:
             passed: *smoke-tests-resource-passed
           - get: cf-manifest
             passed: ['post-deploy']
-          - get: cf-acceptance-tests
 
       - do:
         - task: create-temp-user
