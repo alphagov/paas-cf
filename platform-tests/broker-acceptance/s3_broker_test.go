@@ -152,7 +152,7 @@ var _ = Describe("S3 broker", func() {
 			})
 		})
 
-		It("do not run in to race conditions", func(done Done) {
+		It("do not run in to race conditions", func() {
 			By("binding the two apps simultaneously, we should see no errors", func() {
 				bindAppOneChan := make(chan int)
 				bindAppTwoChan := make(chan int)
@@ -178,8 +178,6 @@ var _ = Describe("S3 broker", func() {
 				Eventually(<-unbindAppOneChan, 60*time.Second).Should(Equal(0))
 				Eventually(<-unbindAppTwoChan, 60*time.Second).Should(Equal(0))
 			})
-
-			close(done)
 		}) // Override default timeout of 1 second for async to be one minute
 	})
 })
