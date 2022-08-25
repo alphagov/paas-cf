@@ -194,10 +194,10 @@ buildpacks:
 - name: python_buildpack
   repo_name: python-buildpack
   stack: cflinuxfs3
-  version: v1.7.56
-  sha: 1ef96e8dc5939cace0f7188390dae87b6287aa4524967376d34a1e3f22dcaff8
-  filename: python-buildpack-cflinuxfs3-v1.7.56.zip
-  url: https://github.com/cloudfoundry/python-buildpack/releases/download/v1.7.56/python-buildpack-cflinuxfs3-v1.7.56.zip
+  version: v1.7.58
+  sha: 9c1c0f03cebbd1a5607a3d5af2c19c73a8d064813a17301b4956eacd0a71f824
+  filename: python-buildpack-cflinuxfs3-v1.7.58.zip
+  url: https://github.com/cloudfoundry/python-buildpack/releases/download/v1.7.58/python-buildpack-cflinuxfs3-v1.7.58.zip
   dependencies:
   - name: libffi
     version: 3.2.1
@@ -212,11 +212,11 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: pip
-    version: 22.1.2
+    version: 22.2.2
     cf_stacks:
     - cflinuxfs3
   - name: pipenv
-    version: 2022.7.4
+    version: 2022.8.19
     cf_stacks:
     - cflinuxfs3
   - name: python
@@ -244,15 +244,15 @@ buildpacks:
     cf_stacks:
     - cflinuxfs3
   - name: python
-    version: 3.10.4
-    cf_stacks:
-    - cflinuxfs3
-  - name: python
     version: 3.10.5
     cf_stacks:
     - cflinuxfs3
+  - name: python
+    version: 3.10.6
+    cf_stacks:
+    - cflinuxfs3
   - name: setuptools
-    version: 63.1.0
+    version: 65.3.0
     cf_stacks:
     - cflinuxfs3
 - name: ruby_buildpack
