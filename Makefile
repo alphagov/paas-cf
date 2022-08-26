@@ -230,7 +230,7 @@ dev: ## Set Environment to DEV
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(eval export ENABLE_MORNING_DEPLOYMENT=true)
 	$(eval export SLIM_DEV_DEPLOYMENT ?= true)
-	$(eval export CA_ROTATION_EXPIRY_DAYS ?= 360)
+	$(eval export CA_ROTATION_EXPIRY_DAYS ?= 345)
 	$(eval export ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY ?= true)
 	$(eval export DISABLED_AZS)
 	@true
