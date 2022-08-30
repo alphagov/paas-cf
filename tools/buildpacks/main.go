@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/hex"
+	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -88,7 +89,7 @@ func getAssetSha(assetDetails AssetDetails) (sha string) {
 }
 
 func readManifest(ctx context.Context, githubClient *github.Client, buildpack Buildpack, latestRelease *github.RepositoryRelease) (manifest Manifest) {
-  fileContent, _, _, err := githubClient.Repositories.GetContents(
+	fileContent, _, _, err := githubClient.Repositories.GetContents(
 		ctx,
 		"cloudfoundry",
 		buildpack.RepoName,
@@ -162,8 +163,31 @@ func main() {
 		tc := oauth2.NewClient(ctx, ts)
 		githubClient = github.NewClient(tc)
 	}
+
+	flag.Parse()
+	buildpacks_to_update := map[string]bool{}
+	args := flag.Args()
+	if len(args) == 0 {
+		log.Printf("Will update all buildpacks in the configuration file")
+		for _, buildpack := range result.Buildpacks {
+			buildpacks_to_update[buildpack.Name] = true
+		}
+	} else {
+		log.Printf("Will update the following buildpacks if they existin the configuration file: %v", args)
+		for _, arg := range args {
+			buildpacks_to_update[arg] = true
+		}
+	}
+
 	buildpackConfig := Buildpacks{}
 	for _, buildpack := range result.Buildpacks {
+		log.Printf("Checking %s", buildpack.Name)
+		if _, found := buildpacks_to_update[buildpack.Name]; !found {
+			log.Printf("Skipping updating %s (%s) because it was not given as an argumetn\n", buildpack.Name, buildpack.Stack)
+			buildpackConfig.Buildpacks = append(buildpackConfig.Buildpacks, buildpack)
+			continue
+		}
+
 		log.Printf("Processing %s (%s)\n", buildpack.Name, buildpack.Stack)
 		latestRelease, _, err := githubClient.Repositories.GetLatestRelease(ctx, "cloudfoundry", buildpack.RepoName)
 		if err != nil {

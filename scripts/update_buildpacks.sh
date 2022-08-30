@@ -20,6 +20,6 @@ temp_file="$(mktemp)"
 trap '{ rm -f ${temp_file}; }' EXIT
 
 cd "$root_dir/tools/buildpacks"
-go run main.go structs.go < "$root_dir/config/buildpacks.yml" > "$temp_file"
+go run main.go structs.go -- "$@" < "$root_dir/config/buildpacks.yml" > "$temp_file"
 
 cp "$temp_file" "$root_dir/config/buildpacks.yml"
