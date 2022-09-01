@@ -232,6 +232,7 @@ dev: ## Set Environment to DEV
 	$(eval export SLIM_DEV_DEPLOYMENT ?= true)
 	$(eval export CA_ROTATION_EXPIRY_DAYS ?= 345)
 	$(eval export ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY ?= true)
+	$(eval export PAAS_ADMIN_INSTANCE_COUNT ?= 3)
 	$(eval export DISABLED_AZS)
 	@true
 

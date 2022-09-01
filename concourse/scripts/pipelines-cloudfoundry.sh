@@ -112,6 +112,7 @@ deploy_env_tag_prefix: "${deploy_env_tag_prefix}"
 skip_autodelete_await: "${SKIP_AUTODELETE_AWAIT:-false}"
 ca_rotation_expiry_days: "${CA_ROTATION_EXPIRY_DAYS}"
 enable_paas_admin_continuous_deploy: ${ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY:-true}
+paas_admin_instance_count: ${PAAS_ADMIN_INSTANCE_COUNT:-6}
 disabled_azs: ${DISABLED_AZS:-}
 enable_az_healthcheck: ${ENABLE_AZ_HEALTHCHECK:-}
 EOF

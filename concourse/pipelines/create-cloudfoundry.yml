@@ -5156,6 +5156,7 @@ jobs:
             NOTIFY_WELCOME_TEMPLATE_ID: 1859ce68-f133-4218-ac6e-a8ef32a41292
             AWS_REGION: ((aws_region))
             UAA_CLIENTS_PAAS_ADMIN_SECRET: ((uaa_clients_paas_admin_secret))
+            INSTANCE_COUNT: ((paas_admin_instance_count))
           run:
             path: sh
             args:
@@ -5167,7 +5168,7 @@ jobs:
                 - name: paas-admin
                   routes:
                   - route: "admin.${SYSTEM_DNS_ZONE_NAME}"
-                  instances: 6
+                  instances: ${INSTANCE_COUNT}
                   services:
                    - logit-syslog-drain
                   env:
