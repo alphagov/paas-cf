@@ -1,7 +1,7 @@
 on: pull_request
 
 env:
-  TF_VERSION: "1.2.0"
+  TF_VERSION: "1.2.8"
   BOSH_CLI_VERSION: "2.0.48"
   PROMETHEUS_VERSION: "2.33.3"
   DEPLOY_ENV: "github"
