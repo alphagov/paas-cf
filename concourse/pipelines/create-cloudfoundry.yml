@@ -3769,6 +3769,8 @@ jobs:
                 medium-ha-10
                 large-10
                 large-ha-10
+                large-10-old
+                large-ha-10-old
                 xlarge-10
                 xlarge-ha-10
                 EOF
@@ -3873,8 +3875,6 @@ jobs:
                 xlarge-unencrypted-5.7
                 EOF
                 cat <<EOF | xargs -n1 cf disable-service-access postgres -p
-                large-10-old
-                large-ha-10-old
                 large-11-old
                 large-ha-11-old
                 large-12-old
