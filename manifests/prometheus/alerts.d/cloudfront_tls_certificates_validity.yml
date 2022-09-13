@@ -13,7 +13,7 @@
         annotations:
           summary: "At least 3 tenant/CloudFront TLS certificates are invalid"
           description: "At least 3 tenant/CloudFront TLS certificates are invalid"
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#invalid-certificates"
         labels:
           severity: warning
           service: cloudfront

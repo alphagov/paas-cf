@@ -13,4 +13,4 @@
         annotations:
           summary: "RDS free storage space is low on {{ $labels.tag_Name }}"
           description: "RDS Instance {{ $labels.tag_Name }} has only {{ $value | humanize1024 }}B free storage."
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#rds-disk-utilisation"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#rds-disk-utilisation"

@@ -26,4 +26,4 @@ tests:
             exp_annotations:
               description: "All Gorouter latencies are too high (min 800ms)"
               summary: "Gorouter latency"
-              url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#gorouter-high-latency-alerts
+              url: https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#gorouter-high-latency-alerts
