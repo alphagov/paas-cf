@@ -21,4 +21,4 @@
           notify: pagerduty-in-hours
         annotations:
           summary: Concourse continuous-billing-smoke-tests failures
-          description: The continuous-billing-smoke-tests Concourse job has failed at least three times in the last 30 minutes.
+          description: The continuous-billing-smoke-tests Concourse job has failed at least three times in the last 30 minutes. You might need to restart the billing API.
