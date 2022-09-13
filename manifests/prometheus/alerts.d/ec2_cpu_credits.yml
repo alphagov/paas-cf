@@ -13,5 +13,5 @@
           severity: warning
         annotations:
           summary: "EC2 CPU credits are low or they have not been accruing on {{ $labels.tag_Name }}"
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#cpu-credits"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#cpu-credits"
           description: "Instance {{ $labels.tag_Name }} has only {{ $value | printf \"%.0f\" }} CPU credits left and may perform badly.  T3 instances do not have launch credits, therefore they have 0 credits at launch. If they have not earned any credits after 2 hours (i.e. 6 or fewer credits) then there may be a problem."

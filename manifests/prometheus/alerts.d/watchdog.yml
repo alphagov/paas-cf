@@ -13,4 +13,4 @@
           summary: "An alert that should always be firing to certify that Alertmanager is working properly"
           description: This is an alert meant to ensure that the entire alerting pipeline is functional.
 
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#alerting-watchdog"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#alerting-watchdog"

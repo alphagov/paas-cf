@@ -17,4 +17,4 @@
         annotations:
           summary: Concourse check-certificates failures
           description: Some of the Cloud Foundry certificates might be expiring soon. Check the health/check-certificates job on Concourse.
-          url: https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#cloud-foundry-internal-certificates
+          url: https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#cloud-foundry-internal-certificates

@@ -13,4 +13,4 @@
         annotations:
           summary: "UAA - Failed login: user not found"
           description: "Anomalous levels of authentication attempts with a user name that does not exist. Number of failed login attempts per hour: {{ $value | printf \"%.0f\" }}"
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#failed-logins"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#failed-logins"

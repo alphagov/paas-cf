@@ -13,4 +13,4 @@
         annotations:
           summary: "RDS CPU credits are low on {{ $labels.tag_Name }}"
           description: "RDS instance {{ $labels.tag_Name }} has only {{ $value | printf \"%.0f\" }} CPU credits left and may perform badly."
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#cpu-credits"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#cpu-credits"

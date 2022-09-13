@@ -13,7 +13,7 @@
         annotations:
           summary: "A platform TLS certificate is close to expiry"
           description: "The TLS certificate for the platform domain {{ $labels.hostname }} expires in {{ $value }} days"
-          url: "https://team-manual.cloud.service.gov.uk/incident_management/responding_to_alerts/#invalid-certificates"
+          url: "https://team-manual.cloud.service.gov.uk/support/responding_to_alerts/#invalid-certificates"
         labels:
           severity: warning
           service: elb
