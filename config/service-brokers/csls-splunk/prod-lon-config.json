@@ -1,7 +1,6 @@
 {
   "allowed_orgs": [
     "cabinet-office-papt",
-    "cabinet-office-tu-facility-time",
     "ccs-conclave-cii",
     "ccs-conclave-sssos",
     "ccs-digital-services-team",
@@ -10,7 +9,6 @@
     "ccs-report-management-info",
     "gds-digital-identity-authentication",
     "gds-document-checking-service",
-    "govuk-accounts",
     "x-co-authentication"
   ]
 }
