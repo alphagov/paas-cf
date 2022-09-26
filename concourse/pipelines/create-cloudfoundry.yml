@@ -3537,6 +3537,10 @@ jobs:
                 cf push --strategy=rolling app-autoscaler-cpu-usage
                 cf aasp app-autoscaler-cpu-usage policy.json
 
+                cf cancel-deployment app-autoscaler-cpu-usage-multiproc || true
+                cf push --strategy=rolling app-autoscaler-cpu-usage-multiproc
+                cf aasp app-autoscaler-cpu-usage-multiproc policy.json
+
       - *end-grafana-job-annotation
 
   - name: post-deploy
