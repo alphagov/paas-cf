@@ -1,6 +1,6 @@
 ---
 applications:
-  - name: app-autoscaler-cpu-usage
+  - name: app-autoscaler-cpu-usage-singleproc
 
     memory: 64M
     disk_quota: 128M

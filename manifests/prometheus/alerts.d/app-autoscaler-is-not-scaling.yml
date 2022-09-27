@@ -3,13 +3,27 @@
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
   value:
-    name: AppAutoscalingIsNotScaling
+    name: AppAutoscalingIsNotScalingSingleProc
     rules:
-      - alert: AppAutoscalingIsNotScaling
-        expr: changes(cf_application_instances{organization_name="admin", space_name="healthchecks", application_name="app-autoscaler-cpu-usage"}[1h]) < 1
+      - alert: AppAutoscalingIsNotScalingSingleProc
+        expr: changes(cf_application_instances{organization_name="admin", space_name="healthchecks", application_name="app-autoscaler-cpu-usage-singleproc"}[1h]) < 1
         for: 30m
         labels:
           severity: critical
         annotations:
-          summary: "App autoscaler is not scaling our healthcheck app"
+          summary: "App autoscaler is not scaling our single-process healthcheck app"
+          description: "The app autoscaler cpu scaling healthcheck app has scaled {{ $value | printf \"%.0f\" }} times over the last 30 minutes, it should have autoscaled more"
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: AppAutoscalingIsNotScalingMultiProc
+    rules:
+      - alert: AppAutoscalingIsNotScalingMultiProc
+        expr: changes(cf_application_instances{organization_name="admin", space_name="healthchecks", application_name="app-autoscaler-cpu-usage-multiproc"}[1h]) < 1
+        for: 30m
+        labels:
+          severity: critical
+        annotations:
+          summary: "App autoscaler is not scaling our multi-process healthcheck app"
           description: "The app autoscaler cpu scaling healthcheck app has scaled {{ $value | printf \"%.0f\" }} times over the last 30 minutes, it should have autoscaled more"
