@@ -20,7 +20,7 @@ secrets["csls_splunk_broker_username"] = "__STUB_csls_splunk_broker_username__"
 secrets["csls_splunk_broker_password"] = "__STUB_csls_splunk_broker_password__"
 
 if ENV["MAKEFILE_ENV_TARGET"].start_with?("prod")
-  csls_splunk_broker_url = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_broker_url'")
+  csls_splunk_broker_url = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_broker_url")
   csls_splunk_broker_username = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_broker_username")
   csls_splunk_broker_password = get_secret("cyber/#{ENV['MAKEFILE_ENV_TARGET']}/csls_broker_password")
 
