@@ -127,6 +127,10 @@ var _ = Describe("Postgres backing service", func() {
 
 			fmt.Fprintf(GinkgoWriter, "Created database instance: %s\n", dbInstanceName)
 
+			cf_service_params := cf.Cf("service", dbInstanceName, "--params").Wait(testConfig.DefaultTimeoutDuration())
+			Expect(cf_service_params).To(Exit(0))
+			Expect(cf_service_params.Out.Contents()).To(ContainSubstring("skip_final_snapshot"))
+
 			Expect(cf.Cf(
 				"push", appName,
 				"--no-start",
