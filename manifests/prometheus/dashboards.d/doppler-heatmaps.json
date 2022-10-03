@@ -792,7 +792,7 @@
             "value": "$__all"
           },
           "datasource": null,
-          "definition": "label_values(firehose_value_metric__log_cache_uptime, bosh_job_id)",
+          "definition": "label_values(firehose_value_metric_loggregator_doppler_subscriptions, bosh_job_id)",
           "description": null,
           "error": null,
           "hide": 0,
@@ -802,7 +802,7 @@
           "name": "bosh_job_id",
           "options": [],
           "query": {
-            "query": "label_values(firehose_value_metric__log_cache_uptime, bosh_job_id)",
+            "query": "label_values(firehose_value_metric_loggregator_doppler_subscriptions, bosh_job_id)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,
@@ -823,7 +823,7 @@
             "value": "$__all"
           },
           "datasource": null,
-          "definition": "label_values(firehose_value_metric__log_cache_uptime, bosh_job_ip)",
+          "definition": "label_values(firehose_value_metric_loggregator_doppler_subscriptions, bosh_job_ip)",
           "description": null,
           "error": null,
           "hide": 0,
@@ -833,7 +833,7 @@
           "name": "bosh_job_ip",
           "options": [],
           "query": {
-            "query": "label_values(firehose_value_metric__log_cache_uptime, bosh_job_ip)",
+            "query": "label_values(firehose_value_metric_loggregator_doppler_subscriptions, bosh_job_ip)",
             "refId": "StandardVariableQuery"
           },
           "refresh": 1,
