@@ -3533,9 +3533,13 @@ jobs:
                   cf create-service autoscaler autoscaler-free-plan scale-app-autoscaler-cpu-usage
                 fi
 
-                cf cancel-deployment app-autoscaler-cpu-usage || true
-                cf push --strategy=rolling app-autoscaler-cpu-usage
-                cf aasp app-autoscaler-cpu-usage policy.json
+                cf cancel-deployment app-autoscaler-cpu-usage-singleproc || true
+                cf push --strategy=rolling app-autoscaler-cpu-usage-singleproc
+                cf aasp app-autoscaler-cpu-usage-singleproc policy.json
+
+                cf cancel-deployment app-autoscaler-cpu-usage-multiproc || true
+                cf push --strategy=rolling app-autoscaler-cpu-usage-multiproc
+                cf aasp app-autoscaler-cpu-usage-multiproc policy.json
 
       - *end-grafana-job-annotation
 

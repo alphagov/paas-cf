@@ -8,25 +8,50 @@ evaluation_interval: 1m
 tests:
   - interval: 20m
     input_series:
-      - series: 'cf_application_instances{organization_name="admin", space_name="healthchecks", application_name="app-autoscaler-cpu-usage"}'
+      - series: 'cf_application_instances{organization_name="admin", space_name="healthchecks", application_name="app-autoscaler-cpu-usage-singleproc"}'
         values: 1 1 1 1 1 2 3 4 5
 
     alert_rule_test:
       # Does not fire without enough data
       - eval_time: 0m
-        alertname: AppAutoscalingIsNotScaling
+        alertname: AppAutoscalingIsNotScalingSingleProc
       # Does not fire until consistently not scaling
       - eval_time: 90m
-        alertname: AppAutoscalingIsNotScaling
+        alertname: AppAutoscalingIsNotScalingSingleProc
         exp_alerts:
           - exp_labels:
               severity: critical
               organization_name: admin
               space_name: healthchecks
-              application_name: app-autoscaler-cpu-usage
+              application_name: app-autoscaler-cpu-usage-singleproc
             exp_annotations:
-              summary: "App autoscaler is not scaling our healthcheck app"
+              summary: "App autoscaler is not scaling our single-process healthcheck app"
               description: "The app autoscaler cpu scaling healthcheck app has scaled 0 times over the last 30 minutes, it should have autoscaled more"
       # Does not fire after scaling
       - eval_time: 120m
-        alertname: AppAutoscalingIsNotScaling
+        alertname: AppAutoscalingIsNotScalingSingleProc
+
+  - interval: 20m
+    input_series:
+      - series: 'cf_application_instances{organization_name="admin", space_name="healthchecks", application_name="app-autoscaler-cpu-usage-multiproc"}'
+        values: 1 1 1 1 1 2 3 4 5
+
+    alert_rule_test:
+      # Does not fire without enough data
+      - eval_time: 0m
+        alertname: AppAutoscalingIsNotScalingMultiProc
+      # Does not fire until consistently not scaling
+      - eval_time: 90m
+        alertname: AppAutoscalingIsNotScalingMultiProc
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+              organization_name: admin
+              space_name: healthchecks
+              application_name: app-autoscaler-cpu-usage-multiproc
+            exp_annotations:
+              summary: "App autoscaler is not scaling our multi-process healthcheck app"
+              description: "The app autoscaler cpu scaling healthcheck app has scaled 0 times over the last 30 minutes, it should have autoscaled more"
+      # Does not fire after scaling
+      - eval_time: 120m
+        alertname: AppAutoscalingIsNotScalingMultiProc

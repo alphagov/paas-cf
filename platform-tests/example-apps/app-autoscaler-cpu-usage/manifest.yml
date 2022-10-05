@@ -1,9 +1,9 @@
 ---
 applications:
-  - name: app-autoscaler-cpu-usage
+  - name: app-autoscaler-cpu-usage-singleproc
 
-    memory: 128M
-    disk_quota: 256M
+    memory: 64M
+    disk_quota: 128M
 
     services: [scale-app-autoscaler-cpu-usage]
     buildpacks: [go_buildpack]
@@ -19,3 +19,30 @@ applications:
       GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
 
       DURATION: 11m
+
+  - name: app-autoscaler-cpu-usage-multiproc
+
+    services: [scale-app-autoscaler-cpu-usage]
+    buildpacks: [go_buildpack]
+    stack: cflinuxfs3
+
+    no-route: true
+
+    env:
+      GOVERSION: go1.18
+      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
+
+      DURATION: 13m
+
+    processes:
+      - type: web
+        health-check-type: process
+        command: "./bin/app-autoscaler-cpu-usage"
+        memory: 64M
+        disk_quota: 128M
+      - type: no-op
+        instances: 1
+        health-check-type: process
+        command: "cat"
+        memory: 32M
+        disk_quota: 128M
