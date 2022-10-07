@@ -5,25 +5,25 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: 2be6cfc9a387a6b818b522304858b54273c28138
+        tag: 681f645f9f918ce287b8449d7d455d6d1d73f32d
 
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: 2be6cfc9a387a6b818b522304858b54273c28138
+        tag: 681f645f9f918ce287b8449d7d455d6d1d73f32d
 
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 2be6cfc9a387a6b818b522304858b54273c28138
+        tag: 681f645f9f918ce287b8449d7d455d6d1d73f32d
 
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: 2be6cfc9a387a6b818b522304858b54273c28138
+        tag: 681f645f9f918ce287b8449d7d455d6d1d73f32d
 
 
 resource_types:
@@ -40,7 +40,7 @@ resource_types:
     type: docker-image
     source:
       repository: ghcr.io/alphagov/paas/olhtbr-metadata-resource
-      tag: 2be6cfc9a387a6b818b522304858b54273c28138
+      tag: 681f645f9f918ce287b8449d7d455d6d1d73f32d
 
   - name: s3-iam
     type: docker-image
