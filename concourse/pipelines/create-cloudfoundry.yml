@@ -5615,7 +5615,7 @@ jobs:
               - -e
               - -c
               - |
-                go install github.com/onsi/ginkgo/v2/ginkgo@latest
+                go install github.com/onsi/ginkgo/v2/ginkgo@v2.1.4
 
                 cd paas-cf/tools/metrics
                 echo 'Waiting 2 minutes before running the acceptance tests'
