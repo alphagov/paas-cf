@@ -5611,12 +5611,10 @@ jobs:
               - -e
               - -c
               - |
-                go install github.com/onsi/ginkgo/v2/ginkgo@v2.1.4
-
                 cd paas-cf/tools/metrics
                 echo 'Waiting 2 minutes before running the acceptance tests'
                 sleep 120
-                ginkgo acceptance
+                make acceptance-tests
       - *end-grafana-job-annotation
 
   - name: deploy-paas-prometheus-endpoints
