@@ -5461,7 +5461,6 @@ jobs:
                 cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
 
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                go install github.com/cucumber/godog/cmd/godog@v0.12.5
                 cd src/github.com/alphagov/paas-billing
 
 
@@ -5480,9 +5479,6 @@ jobs:
 
                 export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
                 make acceptance
-
-                cd gherkin
-                godog run
 
       - task: tag-repo
         tags: [colocated-with-web]
@@ -5615,12 +5611,10 @@ jobs:
               - -e
               - -c
               - |
-                go install github.com/onsi/ginkgo/v2/ginkgo@v2.1.4
-
                 cd paas-cf/tools/metrics
                 echo 'Waiting 2 minutes before running the acceptance tests'
                 sleep 120
-                ginkgo acceptance
+                make acceptance-tests
       - *end-grafana-job-annotation
 
   - name: deploy-paas-prometheus-endpoints

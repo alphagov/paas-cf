@@ -10,15 +10,17 @@ endif
 
 .PHONY: acceptance-tests
 acceptance-tests:
-	ginkgo acceptance
+	go run github.com/onsi/ginkgo/v2/ginkgo acceptance
 
 .PHONY: pkg-tests
+# This looks broken. i can't see how this ever ran. should we remove it?
+# (`. "github.com/onsi/ginkgo/v2"` is missing???)
 pkg-tests:
-	ginkgo -r pkg
+	go run github.com/onsi/ginkgo/v2/ginkgo -r pkg
 
 .PHONY: main-tests
 main-tests:
-	ginkgo
+	go run github.com/onsi/ginkgo/v2/ginkgo
 
 .PHONY: test
 test: main-tests pkg-tests
