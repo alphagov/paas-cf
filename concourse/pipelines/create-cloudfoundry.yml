@@ -1017,7 +1017,7 @@ jobs:
 
                 echo "Running app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
-                ginkgo -timeout=12h
+                go run github.com/onsi/ginkgo/v2/ginkgo -timeout=12h
 
   - name: internal-app-availability-tests
     serial: true
@@ -1075,7 +1075,7 @@ jobs:
 
                 echo "Running internal-app-availability-tests"
                 cd paas-cf/platform-tests/availability/app
-                ginkgo -timeout=12h
+                go run github.com/onsi/ginkgo/v2/ginkgo -timeout=12h
 
   - name: api-availability-tests
     serial: true
@@ -1168,7 +1168,7 @@ jobs:
 
                 echo "Running api-availability-tests"
                 cd paas-cf/platform-tests/availability/api
-                ginkgo -timeout=12h
+                go run github.com/onsi/ginkgo/v2/ginkgo -timeout=12h
 
         ensure:
           task: delete-job-file
