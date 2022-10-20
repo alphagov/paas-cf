@@ -12,7 +12,18 @@
           severity: critical
         annotations:
           summary: Few candidate cells for a 4GiB app
-          description: Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 4GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+          description: |
+            Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 4GiB app instance. The threshold is 3 (1 per AZ).
+
+            The likely impact is some tenants are unable to schedule some apps, but failures may be sporadic.
+
+            It means we don't have enough capacity to run all tenant workloads. This is probably caused by natural growth, but it is also possible
+            that one or more tenant applications are scaling out beyond their intended limtis (e.g. because of a fault
+            in the tenant's autoscaling policy, or a tenant starting many tasks with `cf run-task`).
+
+            First check for something consuming a lot of excess resources, then scale the number of cells if you can't find anything. Scaling while
+            something is actively consuming more and more resources likely won't fix the problem.
+
           url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
 
       - alert: DiegoCellMemoryFewCandidates16G
@@ -22,5 +33,14 @@
           severity: warning
         annotations:
           summary: Few candidate cells for a 16GiB app
-          description: Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 16GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+          description: Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 16GiB app instance. The threshold is 3 (1 per AZ).
+
+            The likely impact is some tenants are unable to schedule some apps, but failures may be sporadic.
+
+            It means we don't have enough capacity to run all tenant workloads. This is probably caused by natural growth, but it is also possible
+            that one or more tenant applications are scaling out beyond their intended limtis (e.g. because of a fault
+            in the tenant's autoscaling policy, or a tenant starting many tasks with `cf run-task`).
+
+            First check for something consuming a lot of excess resources, then scale the number of cells if you can't find anything. Scaling while
+            something is actively consuming more and more resources likely won't fix the problem.
           url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision

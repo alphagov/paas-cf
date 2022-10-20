@@ -3,7 +3,7 @@
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
   value:
-    name: DiegoCellRepMemoryCapacity
+    name: DiegoCellRepsMemoryCapacity
     rules:
       # Average amount of free memory across all cells over the last 5 minutes
       - record: rep_memory_capacity_pct:avg5m
@@ -38,16 +38,21 @@
       - record: diego_cells_required
         expr: ceil(1.5 * diego_cell_capacity_used_pct:avg5m)
 
-      - alert: DiegoCellRepMemoryCapacity
+      - alert: DiegoCellRepsReachingTotalMemoryCapacity
         expr:  rep_memory_capacity_pct:avg5m < 35
         for: 2h
         labels:
           severity: warning
         annotations:
-          summary: Rep low free memory capacity
+          summary: Reps low free memory capacity
           bosh_job_name: "{{ $labels.bosh_job_name }}"
           description: >
-            Low free memory {{ $value | printf "%.0f" }}% for the advertised rep memory capacity
-            in the last 2 hours on average.
-            Review if we need to scale...
+            Rep is reporting that the average uncommitted memory across all cells has reached {{ $value | printf "%.0f"}}% over the last 5 minutes.
+
+            The threshold for this alert is under 35%
+
+            We aim to have at least 33% of memory available on average so that we can we can suffer the loss of an AZ by rescheduling the workloads
+            in the lost zone across the other two.
+
+            Review whether we need to scale up the number of cells.
           url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
