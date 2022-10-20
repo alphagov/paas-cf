@@ -1,0 +1,26 @@
+# Source: bosh-exporter
+---
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: DiegoCellMemoryFewCandidates
+    rules:
+      - alert: DiegoCellMemoryFewCandidates4G
+        expr: (count(firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell"} > 4096) or vector(0)) < 3
+        for: 10m
+        labels:
+          severity: critical
+        annotations:
+          summary: Few candidate cells for a 4GiB app
+          description: Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 4GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+          url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+
+      - alert: DiegoCellMemoryFewCandidates16G
+        expr: (count(firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell"} > 16384) or vector(0)) < 3
+        for: 15m
+        labels:
+          severity: warning
+        annotations:
+          summary: Few candidate cells for a 16GiB app
+          description: Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 16GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+          url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision

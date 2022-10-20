@@ -1,0 +1,141 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - fixtures/rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 10m
+    input_series:
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell", bosh_job_id="1"}'
+        values: 22e3 15e3 15e3 3e3  3e3  19e3 3e3  20e3 2e3  5e3
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell", bosh_job_id="2"}'
+        values: 22e3 22e3 1e3  12e3 3e3  3e3  9e3  20e3 5e3  2e3
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell", bosh_job_id="3"}'
+        values: 1e3  1e3  1e3  1e3  1e3  1e3  1e3  20e3 2e3  2e3
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell", bosh_job_id="4"}'
+        values: 1e3  1e3  1e3  1e3  1e3  1e3  1e3  20e3 2e3  20e3
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell", bosh_job_id="5"}'
+        values: 11e3 11e3 11e3 1e3  1e3  11e3 19e3 20e3 20e3 2e3
+      - series: 'firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name="diego-cell", bosh_job_id="6"}'
+        values: 17e3 16e3 15e3 14e3 13e3 12e3 11e3 20e3 2e3  2e3
+
+    alert_rule_test:
+      - eval_time: 0
+        alertname: DiegoCellMemoryFewCandidates4G
+      - eval_time: 0
+        alertname: DiegoCellMemoryFewCandidates16G
+
+      - eval_time: 10m
+        alertname: DiegoCellMemoryFewCandidates4G
+        # hasn't met condition for long enough
+      - eval_time: 10m
+        alertname: DiegoCellMemoryFewCandidates16G
+
+      - eval_time: 20m
+        alertname: DiegoCellMemoryFewCandidates4G
+        # hasn't met condition for long enough
+      - eval_time: 20m
+        alertname: DiegoCellMemoryFewCandidates16G
+
+      - eval_time: 26m
+        alertname: DiegoCellMemoryFewCandidates4G
+      - eval_time: 26m
+        alertname: DiegoCellMemoryFewCandidates16G
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: Few candidate cells for a 16GiB app
+              description: Only 0 cell(s) are advertising enough free memory to run a 16GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+
+        # hasn't met condition for long enough
+      - eval_time: 30m
+        alertname: DiegoCellMemoryFewCandidates4G
+      - eval_time: 30m
+        alertname: DiegoCellMemoryFewCandidates16G
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: Few candidate cells for a 16GiB app
+              description: Only 0 cell(s) are advertising enough free memory to run a 16GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+
+      - eval_time: 40m
+        alertname: DiegoCellMemoryFewCandidates4G
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: Few candidate cells for a 4GiB app
+              description: Only 1 cell(s) are advertising enough free memory to run a 4GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+      - eval_time: 40m
+        alertname: DiegoCellMemoryFewCandidates16G
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: Few candidate cells for a 16GiB app
+              description: Only 0 cell(s) are advertising enough free memory to run a 16GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+
+      - eval_time: 50m
+        alertname: DiegoCellMemoryFewCandidates4G
+      - eval_time: 50m
+        alertname: DiegoCellMemoryFewCandidates16G
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: Few candidate cells for a 16GiB app
+              description: Only 1 cell(s) are advertising enough free memory to run a 16GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+
+      - eval_time: 70m
+        alertname: DiegoCellMemoryFewCandidates4G
+      - eval_time: 70m
+        alertname: DiegoCellMemoryFewCandidates16G
+
+        # hasn't met condition for long enough
+      - eval_time: 80m
+        alertname: DiegoCellMemoryFewCandidates4G
+        # hasn't met condition for long enough
+      - eval_time: 80m
+        alertname: DiegoCellMemoryFewCandidates16G
+
+        # alerts before DiegoCellMemoryFewCandidates16G because shorter `for`
+      - eval_time: 90m
+        alertname: DiegoCellMemoryFewCandidates4G
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: Few candidate cells for a 4GiB app
+              description: Only 2 cell(s) are advertising enough free memory to run a 4GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+        # hasn't met condition for long enough
+      - eval_time: 90m
+        alertname: DiegoCellMemoryFewCandidates16G
+
+      - eval_time: 96m
+        alertname: DiegoCellMemoryFewCandidates4G
+        exp_alerts:
+          - exp_labels:
+              severity: critical
+            exp_annotations:
+              summary: Few candidate cells for a 4GiB app
+              description: Only 0 cell(s) are advertising enough free memory to run a 4GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
+      - eval_time: 96m
+        alertname: DiegoCellMemoryFewCandidates16G
+        exp_alerts:
+          - exp_labels:
+              severity: warning
+            exp_annotations:
+              summary: Few candidate cells for a 16GiB app
+              description: Only 0 cell(s) are advertising enough free memory to run a 16GiB app instance. Some tenant app(s) may be scaling out of control or we may have depleted cell capacity.
+              url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
