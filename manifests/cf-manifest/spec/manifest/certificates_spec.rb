@@ -48,14 +48,6 @@ RSpec.describe "certificates" do
         common_name = c.dig("options", "common_name")
         alt_names = c.dig("options", "alternative_names") || []
 
-        if cert_name == "policy_server_asg_syncer_cc_client"
-          # This is a special case, see https://github.com/cloudfoundry/cf-deployment/pull/985
-
-          expect(alt_names.length).to eq(0),
-            "policy_server_asg_syncer_cc_client does not have an alternative_name set in cloudfoundry/cf-deployment. When this test starts failing, remove this if statement."
-          next
-        end
-
         expect(alt_names.length).to be > 0,
           "Certificate #{cert_name} (common_name '#{common_name}') must have at least one alternative_name"
       end

@@ -3,6 +3,6 @@
   path: /releases/name=cflinuxfs3
   value:
     name: "cflinuxfs3"
-    version: "0.318.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs3-release?v=0.318.0"
-    sha1: "abaf2f80223f9b476f168c6a10761d6317f58f9c"
+    version: "0.326.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs3-release?v=0.326.0"
+    sha1: "5f690d12b34e86137c41966e4dc4825beaed2b1a"

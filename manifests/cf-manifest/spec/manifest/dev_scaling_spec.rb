@@ -10,7 +10,7 @@ RSpec.describe "dev environment scaling" do
     # It scales back CF components to two instances
     expect(dev_manifest.fetch("instance_groups.api.instances")).to eq(2)
     expect(dev_manifest.fetch("instance_groups.doppler.instances")).to eq(2)
-    expect(dev_manifest.fetch("instance_groups.diego-cell.instances")).to eq(2)
+    expect(dev_manifest.fetch("instance_groups.diego-cell.instances")).to eq(3)
 
     # It scales back brokers to 1
     expect(dev_manifest.fetch("instance_groups.rds_broker.instances")).to eq(1)
