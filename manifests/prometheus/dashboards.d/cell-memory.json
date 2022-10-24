@@ -1,0 +1,701 @@
+{
+  "dashboard": {
+    "annotations": {
+      "list": [
+        {
+          "builtIn": 1,
+          "datasource": "-- Grafana --",
+          "enable": true,
+          "hide": true,
+          "iconColor": "rgba(0, 211, 255, 1)",
+          "name": "Annotations & Alerts",
+          "type": "dashboard"
+        }
+      ]
+    },
+    "editable": true,
+    "gnetId": null,
+    "graphTooltip": 1,
+    "id": null,
+    "iteration": 1666363845398,
+    "links": [],
+    "panels": [
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolatePlasma",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "description": "Available memory advertised by a Rep divided by the actual available memory on its cell.\n\nA value much greater than 100% suggests a cell that might be in danger of running out of actual memory, resulting in app memory going into swap or apps unexpectedly crashing due to machine OOM.\n\nA value much lower than 100% suggests a cell that will probably stop accepting new app instances when it still has plenty of actual memory left, which is suboptimal but safe.",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 0
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 4,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "1e6 * firehose_value_metric_rep_capacity_remaining_memory{bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\", zone=~\"$zone\"} / on(bosh_job_ip) avg(label_replace(node_memory_MemAvailable_bytes, \"bosh_job_ip\", \"$1\", \"instance\", \"(.*):.*\")) by (bosh_job_ip)",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Cell available memory ratio (advertised/actual)",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "percentunit",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": 4
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": null,
+        "description": "Number of cells claiming to have capacity for different memory-sizes of app",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fill": 1,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 16,
+          "w": 12,
+          "x": 12,
+          "y": 0
+        },
+        "hiddenSeries": false,
+        "id": 2,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 1,
+        "nullPointMode": "null",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.16",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [
+          {
+            "$$hashKey": "object:296",
+            "alias": "BBS present cells (all)",
+            "fill": 0
+          }
+        ],
+        "spaceLength": 10,
+        "stack": false,
+        "steppedLine": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "count(firehose_value_metric_rep_capacity_remaining_memory{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\", zone=~\"$zone\"} > 2048)",
+            "hide": false,
+            "interval": "",
+            "legendFormat": "2G",
+            "refId": "E"
+          },
+          {
+            "exemplar": true,
+            "expr": "count(firehose_value_metric_rep_capacity_remaining_memory{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\", zone=~\"$zone\"} > 4096)",
+            "interval": "",
+            "legendFormat": "4G",
+            "refId": "A"
+          },
+          {
+            "exemplar": true,
+            "expr": "count(firehose_value_metric_rep_capacity_remaining_memory{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\", zone=~\"$zone\"} > 8192)",
+            "hide": false,
+            "interval": "",
+            "legendFormat": "8G",
+            "refId": "B"
+          },
+          {
+            "exemplar": true,
+            "expr": "count(firehose_value_metric_rep_capacity_remaining_memory{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\", zone=~\"$zone\"} > 16384)",
+            "hide": false,
+            "interval": "",
+            "legendFormat": "16G",
+            "refId": "C"
+          },
+          {
+            "exemplar": true,
+            "expr": "count(firehose_value_metric_rep_capacity_remaining_memory{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\", zone=~\"$zone\"} > 24576)",
+            "hide": false,
+            "interval": "",
+            "legendFormat": "24G",
+            "refId": "D"
+          },
+          {
+            "exemplar": true,
+            "expr": "firehose_value_metric_bbs_present_cells{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\"}",
+            "hide": false,
+            "interval": "",
+            "legendFormat": "BBS present cells (all)",
+            "refId": "F"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Candidate cells per app size",
+        "tooltip": {
+          "shared": true,
+          "sort": 0,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "$$hashKey": "object:111",
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "$$hashKey": "object:112",
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "cards": {
+          "cardPadding": null,
+          "cardRound": null
+        },
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateCividis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": null,
+        "description": "Amount of memory a cell has promised to apps but doesn't actually have. If all containers on the cell decided to use all their memory at the same time, this is the amount that would either get pushed into swap or start to cause unexpected OOM crashes for tenants.",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "gridPos": {
+          "h": 8,
+          "w": 12,
+          "x": 0,
+          "y": 8
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 5,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "(1e6 * firehose_value_metric_rep_capacity_allocated_memory{bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\", zone=~\"$zone\"}) - on(bosh_job_ip) avg(label_replace(node_memory_MemTotal_bytes, \"bosh_job_ip\", \"$1\", \"instance\", \"(.*):.*\")) by (bosh_job_ip)",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "timeFrom": null,
+        "timeShift": null,
+        "title": "Cell memory-debt",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "xBucketNumber": null,
+        "xBucketSize": null,
+        "yAxis": {
+          "decimals": null,
+          "format": "bytes",
+          "logBase": 1,
+          "max": null,
+          "min": null,
+          "show": true,
+          "splitFactor": 4
+        },
+        "yBucketBound": "auto",
+        "yBucketNumber": null,
+        "yBucketSize": null
+      },
+      {
+        "collapsed": true,
+        "datasource": null,
+        "gridPos": {
+          "h": 1,
+          "w": 24,
+          "x": 0,
+          "y": 16
+        },
+        "id": 9,
+        "panels": [
+          {
+            "cards": {
+              "cardPadding": null,
+              "cardRound": null
+            },
+            "color": {
+              "cardColor": "#b4ff00",
+              "colorScale": "sqrt",
+              "colorScheme": "interpolateMagma",
+              "exponent": 0.5,
+              "mode": "spectrum"
+            },
+            "dataFormat": "timeseries",
+            "datasource": null,
+            "description": "Underlying metric appears quite spotty at short timescales, with some containers disappearing and then reappearing later in seemingly impossible ways",
+            "fieldConfig": {
+              "defaults": {},
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 0,
+              "y": 17
+            },
+            "heatmap": {},
+            "hideZeroBuckets": false,
+            "highlightCards": true,
+            "id": 7,
+            "legend": {
+              "show": false
+            },
+            "pluginVersion": "7.5.16",
+            "reverseYBuckets": false,
+            "targets": [
+              {
+                "exemplar": true,
+                "expr": "avg(firehose_value_metric_rep_container_age{bosh_job_name=~\"$bosh_job_name\", bosh_job_ip=~\"$bosh_job_ip\", bosh_job_id=~\"$bosh_job_id\"} and on(bosh_job_id) firehose_value_metric_rep_capacity_remaining_memory{zone=~\"$zone\"}) by (process_instance_id)",
+                "interval": "",
+                "intervalFactor": 2,
+                "legendFormat": "",
+                "refId": "A"
+              }
+            ],
+            "title": "Container ages",
+            "tooltip": {
+              "show": true,
+              "showHistogram": true
+            },
+            "type": "heatmap",
+            "xAxis": {
+              "show": true
+            },
+            "xBucketNumber": null,
+            "xBucketSize": null,
+            "yAxis": {
+              "decimals": null,
+              "format": "ns",
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true,
+              "splitFactor": null
+            },
+            "yBucketBound": "auto",
+            "yBucketNumber": null,
+            "yBucketSize": null
+          },
+          {
+            "cards": {
+              "cardPadding": null,
+              "cardRound": null
+            },
+            "color": {
+              "cardColor": "#b4ff00",
+              "colorScale": "sqrt",
+              "colorScheme": "interpolateViridis",
+              "exponent": 0.5,
+              "mode": "spectrum"
+            },
+            "dataFormat": "timeseries",
+            "datasource": null,
+            "fieldConfig": {
+              "defaults": {},
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 8,
+              "w": 12,
+              "x": 12,
+              "y": 17
+            },
+            "heatmap": {},
+            "hideZeroBuckets": false,
+            "highlightCards": true,
+            "id": 11,
+            "legend": {
+              "show": false
+            },
+            "pluginVersion": "7.5.16",
+            "reverseYBuckets": false,
+            "targets": [
+              {
+                "exemplar": true,
+                "expr": "avg(firehose_container_metric_memory_bytes_quota{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$bosh_job_name\", bosh_job_id=~\"$bosh_job_id\", bosh_job_ip=~\"$bosh_job_ip\"} and on(bosh_job_id) firehose_value_metric_rep_capacity_remaining_memory{zone=~\"$zone\"}) by (application_id, instance_index, bosh_job_id)",
+                "format": "time_series",
+                "interval": "",
+                "intervalFactor": 2,
+                "legendFormat": "",
+                "refId": "A"
+              }
+            ],
+            "title": "Container sizes",
+            "tooltip": {
+              "show": true,
+              "showHistogram": true
+            },
+            "transformations": [],
+            "type": "heatmap",
+            "xAxis": {
+              "show": true
+            },
+            "xBucketNumber": null,
+            "xBucketSize": null,
+            "yAxis": {
+              "decimals": null,
+              "format": "bytes",
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true,
+              "splitFactor": null
+            },
+            "yBucketBound": "auto",
+            "yBucketNumber": null,
+            "yBucketSize": null
+          }
+        ],
+        "title": "Detailed (expensive)",
+        "type": "row"
+      }
+    ],
+    "refresh": false,
+    "schemaVersion": 27,
+    "style": "dark",
+    "tags": [
+      "cf",
+      "diego"
+    ],
+    "templating": {
+      "list": [
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "prod-lon",
+            "value": "prod-lon"
+          },
+          "datasource": "prometheus",
+          "definition": "",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Environment",
+          "multi": false,
+          "name": "environment",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy, environment)",
+            "refId": "prometheus-environment-Variable-Query"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "prod-lon",
+            "value": "prod-lon"
+          },
+          "datasource": "prometheus",
+          "definition": "",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Director",
+          "multi": false,
+          "name": "bosh_director",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\"}, bosh_name)",
+            "refId": "prometheus-bosh_director-Variable-Query"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "prod-lon",
+            "value": "prod-lon"
+          },
+          "datasource": "prometheus",
+          "definition": "",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Deployment",
+          "multi": false,
+          "name": "bosh_deployment",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment!=\"bosh-health-check\"}, bosh_deployment)",
+            "refId": "prometheus-bosh_deployment-Variable-Query"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": null,
+          "tags": [],
+          "tagsQuery": null,
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": null,
+          "current": {
+            "selected": false,
+            "text": "diego-cell",
+            "value": "diego-cell"
+          },
+          "datasource": "prometheus",
+          "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\".*diego-cell.*\"}, bosh_job_name)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": false,
+          "label": "Job",
+          "multi": false,
+          "name": "bosh_job_name",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\".*diego-cell.*\"}, bosh_job_name)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 1,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": null,
+          "tags": [],
+          "tagsQuery": null,
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": "prometheus",
+          "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_id)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "bosh_job_id",
+          "multi": false,
+          "name": "bosh_job_id",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_id)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": "All",
+            "value": "$__all"
+          },
+          "datasource": "prometheus",
+          "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_ip)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "bosh_job_ip",
+          "multi": false,
+          "name": "bosh_job_ip",
+          "options": [],
+          "query": {
+            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, bosh_job_ip)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        },
+        {
+          "allValue": ".*",
+          "current": {
+            "selected": false,
+            "text": [
+              "All"
+            ],
+            "value": [
+              "$__all"
+            ]
+          },
+          "datasource": "prometheus",
+          "definition": "label_values(firehose_value_metric_rep_capacity_remaining_memory{environment=~\"$environment\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, zone)",
+          "description": null,
+          "error": null,
+          "hide": 0,
+          "includeAll": true,
+          "label": "zone",
+          "multi": true,
+          "name": "zone",
+          "options": [],
+          "query": {
+            "query": "label_values(firehose_value_metric_rep_capacity_remaining_memory{environment=~\"$environment\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\"$bosh_job_name\"}, zone)",
+            "refId": "StandardVariableQuery"
+          },
+          "refresh": 2,
+          "regex": "",
+          "skipUrlSync": false,
+          "sort": 1,
+          "tagValuesQuery": "",
+          "tags": [],
+          "tagsQuery": "",
+          "type": "query",
+          "useTags": false
+        }
+      ]
+    },
+    "time": {
+      "from": "now-2h",
+      "to": "now"
+    },
+    "timepicker": {},
+    "timezone": "",
+    "title": "Cell memory",
+    "uid": "cell-memory",
+    "version": 21
+  },
+  "folderId": 0,
+  "overwrite": true
+}
