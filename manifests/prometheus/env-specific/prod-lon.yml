@@ -1,8 +1,8 @@
 ---
 
 # AWS Limits not accesible via API
-aws_limits_elasticache_cache_parameter_groups: 800
-aws_limits_elasticache_nodes: 1000
+aws_limits_elasticache_cache_parameter_groups: 1500
+aws_limits_elasticache_nodes: 1500
 # Change limit for prod as well - S3 is global
 aws_limits_s3_buckets: 750
 prometheus_disk_size: 1TB
