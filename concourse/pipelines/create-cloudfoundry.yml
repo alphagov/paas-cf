@@ -5910,10 +5910,10 @@ jobs:
     plan:
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests', 'app-autoscaler-acceptance-tests']
             trigger: true
           - <<: *get-paas-cf
-            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests']
+            passed: ['smoke-tests', 'acceptance-tests', 'custom-acceptance-tests', 'custom-broker-acceptance-tests', 'bosh-tests', 'app-autoscaler-acceptance-tests']
       - task: remove-transitional-flag-for-ca
         tags: [colocated-with-web]
         config:
