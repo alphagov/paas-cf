@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/cf-uaac
-    tag: 637488d94d9391c3a3439b8d63f084fa28ff9668
+    tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
 
 inputs:
   - name: paas-cf

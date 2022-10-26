@@ -41,7 +41,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/alpine
-              tag: 637488d94d9391c3a3439b8d63f084fa28ff9668
+              tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
           inputs:
             - name: paas-cf
             - name: deployment-timer
@@ -71,7 +71,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/awscli
-              tag: 637488d94d9391c3a3439b8d63f084fa28ff9668
+              tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
 
           run:
             path: ./paas-cf/concourse/scripts/rds_instances.sh
@@ -86,7 +86,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 637488d94d9391c3a3439b8d63f084fa28ff9668
+              tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
 
           inputs:
             - name: paas-cf
@@ -119,7 +119,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 637488d94d9391c3a3439b8d63f084fa28ff9668
+              tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
 
           inputs:
             - name: paas-cf
