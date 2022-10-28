@@ -5423,7 +5423,7 @@ jobs:
                 cf cancel-deployment paas-billing-collector || true
                 cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
 
-                while ! cf service billing-logit-ssl-drain | grep -c 'create succeeded' | grep 2 > /dev/null; do
+                while ! ../paas-cf/concourse/scripts/check-billing-logit-ssl-drain-service-app-bindings.sh; do
                   echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
                   sleep 10
                 done
