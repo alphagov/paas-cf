@@ -1,5 +1,7 @@
 resource "aws_s3_bucket" "droplets-s3" {
   bucket = "${var.env}-cf-droplets"
+
+  force_destroy = var.bucket_force_destroy
 }
 
 resource "aws_s3_bucket_acl" "droplets-s3" {
@@ -43,6 +45,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "droplets-s3" {
 
 resource "aws_s3_bucket" "buildpacks-s3" {
   bucket = "${var.env}-cf-buildpacks"
+
+  force_destroy = var.bucket_force_destroy
 }
 
 resource "aws_s3_bucket_acl" "buildpacks-s3" {
@@ -86,6 +90,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "buildpacks-s3" {
 }
 resource "aws_s3_bucket" "packages-s3" {
   bucket = "${var.env}-cf-packages"
+
+  force_destroy = var.bucket_force_destroy
 }
 
 resource "aws_s3_bucket_acl" "packages-s3" {
@@ -128,6 +134,8 @@ resource "aws_s3_bucket_lifecycle_configuration" "packages-s3" {
 }
 resource "aws_s3_bucket" "resources-s3" {
   bucket = "${var.env}-cf-resources"
+
+  force_destroy = var.bucket_force_destroy
 }
 
 resource "aws_s3_bucket_acl" "resources-s3" {
