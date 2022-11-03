@@ -22,12 +22,6 @@ check-env:
 .PHONY: test
 test: manifests_spec terraform_spec platform_tests_spec config_spec lint
 
-.PHONY: scripts_spec
-scripts_spec:
-	cd scripts &&\
-		go get -t . &&\
-		go test
-
 .PHONY: tools_spec
 tools_spec:
 	cd tools/metrics &&\
