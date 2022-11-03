@@ -4194,6 +4194,55 @@ jobs:
                 ./paas-cf/concourse/scripts/uaa_set_email_domains.sh '["*.*", "*.*.*", "*.*.*.*", "*.*.*.*.*", "*.*.*.*.*.*"]'
 
     - in_parallel:
+      - task: ensure-buildpacks-exist
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          inputs:
+            - name: paas-cf
+            - name: cf-manifest
+          params:
+            CF_ADMIN: admin
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            CF_PASS: ((cf_pass))
+          run:
+            path: bash
+            args:
+              - -c
+              - |
+                set -ueo pipefail
+
+                API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
+
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                echo Expected buildpacks
+                expected="$(
+                  < paas-cf/config/buildpacks.yml \
+                  ruby -ryaml -e 'puts YAML.load(STDIN.read).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
+                )"
+                echo "$expected"
+
+                echo Actual buildpacks
+                actual="$(
+                  cf curl /v3/buildpacks?per_page=100 \
+                  | jq -r '.resources | map([.name, .stack, .filename] | join(" ")) | join("\n")' \
+                  | sort
+                )"
+                echo "$actual"
+
+                echo Diff
+                diff <(echo "$actual") <(echo "$expected")
+                same=$?
+
+                if [ $same == 0 ]; then
+                  echo Actual is the same as Expected
+                else
+                  echo Actual differs from Expected
+                  exit 1
+                fi
       - task: deploy-simulated-load-application
         tags: [colocated-with-web]
         config:
@@ -4686,56 +4735,6 @@ jobs:
               file: paas-cf/concourse/tasks/upload-test-artifacts.yml
               params:
                 TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
-
-          - task: ensure-buildpacks-exist
-            tags: [colocated-with-web]
-            config:
-              platform: linux
-              image_resource: *cf-cli-image-resource
-              inputs:
-                - name: paas-cf
-                - name: cf-manifest
-              params:
-                CF_ADMIN: admin
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                CF_PASS: ((cf_pass))
-              run:
-                path: bash
-                args:
-                  - -c
-                  - |
-                    set -ueo pipefail
-
-                    API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
-
-                    cf api "${API_ENDPOINT}"
-                    cf auth "${CF_ADMIN}" "${CF_PASS}"
-
-                    echo Expected buildpacks
-                    expected="$(
-                      < paas-cf/config/buildpacks.yml \
-                      ruby -ryaml -e 'puts YAML.load(STDIN.read).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
-                    )"
-                    echo "$expected"
-
-                    echo Actual buildpacks
-                    actual="$(
-                      cf curl /v3/buildpacks?per_page=100 \
-                      | jq -r '.resources | map([.name, .stack, .filename] | join(" ")) | join("\n")' \
-                      | sort
-                    )"
-                    echo "$actual"
-
-                    echo Diff
-                    diff <(echo "$actual") <(echo "$expected")
-                    same=$?
-
-                    if [ $same == 0 ]; then
-                      echo Actual is the same as Expected
-                    else
-                      echo Actual differs from Expected
-                      exit 1
-                    fi
 
         ensure:
           task: remove-temp-user
