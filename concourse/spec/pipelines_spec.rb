@@ -8,7 +8,7 @@ RSpec.describe "concourse pipelines" do
 
   concourse_pipelines.each do |filename, contents|
     it "is safe, valid yaml (#{filename})" do
-      expect { YAML.load(contents) }.not_to raise_error
+      expect { YAML.load(contents, aliases: true) }.not_to raise_error
     end
 
     it "adds matching grafana-job-annotations (#{filename})" do
@@ -45,7 +45,7 @@ RSpec.describe "concourse pipelines" do
     end
 
     describe "#{filename} git resources" do
-      let(:pipeline) { YAML.load(contents) }
+      let(:pipeline) { YAML.load(contents, aliases: true) }
       let(:resources) { pipeline["resources"] || [] }
       let(:git_resources) { resources.select { |r| r["type"] == "git" } }
 

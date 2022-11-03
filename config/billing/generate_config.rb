@@ -29,7 +29,7 @@ class Generator
   end
 end
 
-pricing_data = YAML.load_file("#{__dir__}/pricing_data.yml")
+pricing_data = YAML.load_file("#{__dir__}/pricing_data.yml", aliases: true)
 template = File.read("#{__dir__}/config.json.erb")
 
 REGIONS.each do |region|

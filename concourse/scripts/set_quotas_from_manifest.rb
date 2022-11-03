@@ -71,6 +71,6 @@ end
 
 if $PROGRAM_NAME == __FILE__
   abort "Usage: #{$PROGRAM_NAME} /path/to/manifest.yml" unless ARGV.size == 1
-  manifest = YAML.load_file(ARGV[0])
+  manifest = YAML.safe_load_file(ARGV[0], aliases: true)
   QuotasSetter.new(manifest).apply!
 end

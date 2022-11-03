@@ -124,8 +124,8 @@ end
 
 if $PROGRAM_NAME == __FILE__
   options = parse_args
-  manifest = YAML.load_file(options.delete(:manifest))
-  vars_store = YAML.load_file(options.delete(:vars_store))
+  manifest = YAML.load_file(options.delete(:manifest), aliases: true)
+  vars_store = YAML.load_file(options.delete(:vars_store), aliases: true)
 
   certs = rotate(manifest, vars_store, **options)
   puts certs.to_yaml

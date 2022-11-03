@@ -6,7 +6,7 @@ require "yaml"
 RSpec.describe "image resources" do
   concourse_fragments = concourse_tasks
     .concat(concourse_pipelines)
-    .map { |_, contents| YAML.load(contents) }
+    .map { |_, contents| YAML.load(contents, aliases: true) }
 
   image_tags_by_repo = concourse_fragments
     .flat_map { |f| all_image_resources(f) }

@@ -77,7 +77,7 @@ run:
       grafana_roles = %w[viewer editor admin'].map { |r| "grafana-#{r}" }
 
       users = YAML
-        .load_file("#{Dir.pwd}/paas-trusted-people/users.yml")
+        .safe_load_file("#{Dir.pwd}/paas-trusted-people/users.yml", aliases: true)
         .fetch('users')
 
       # a user might be an admin user and an auditor for different uaa origins

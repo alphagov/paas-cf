@@ -45,15 +45,15 @@ module ManifestHelpers
   end
 
   def cf_deployment_manifest
-    Cache.instance[:cf_deployment_manifest] ||= YAML.load_file(root.join("manifests/cf-deployment/cf-deployment.yml"))
+    Cache.instance[:cf_deployment_manifest] ||= YAML.load_file(root.join("manifests/cf-deployment/cf-deployment.yml"), aliases: true)
   end
 
   def cf_pipeline
-    Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/create-cloudfoundry.yml"))
+    Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/create-cloudfoundry.yml"), aliases: true)
   end
 
   def monitor_remote_pipeline
-    Cache.instance[:monitor_remote_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/monitor-remote.yml"))
+    Cache.instance[:monitor_remote_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/monitor-remote.yml"), aliases: true)
   end
 
   def property_tree(tree)

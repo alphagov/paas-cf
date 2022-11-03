@@ -4332,7 +4332,7 @@ jobs:
                 echo Expected buildpacks
                 expected="$(
                   < paas-cf/config/buildpacks.yml \
-                  ruby -ryaml -e 'puts YAML.load(STDIN.read).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
+                  ruby -ryaml -e 'puts YAML.load(STDIN.read, aliases: true).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
                 )"
                 echo "$expected"
 
@@ -4498,14 +4498,14 @@ jobs:
                   fi
 
                   ruby -ryaml -e '
-                    manifest = YAML.load_file("manifest.yml")
+                    manifest = YAML.load_file("manifest.yml", aliases: true)
                     manifest["applications"].each { |app| app["services"] = ["healthcheck-db"] }
                     File.write("manifest.yml", manifest.to_yaml)
                   '
                 fi
 
                 ruby -ryaml -e "
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each do |app|
                     app['routes'] = [
                       { 'route' => 'healthcheck.${APPS_DNS_ZONE_NAME}' }
@@ -5139,7 +5139,7 @@ jobs:
                     'BASIC_AUTH_USERNAME' => 'admin',
                     'BASIC_AUTH_PASSWORD' => '${BASIC_AUTH_PASSWORD}',
                   }
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'].merge!(env)
@@ -5546,7 +5546,7 @@ jobs:
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
                   }
 
-                  api = YAML.load_file('manifest-api.yml')
+                  api = YAML.load_file('manifest-api.yml', aliases: true)
                   api['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
@@ -5561,7 +5561,7 @@ jobs:
                   }
                   File.write('manifest-api.yml', api.to_yaml)
 
-                  collector = YAML.load_file('manifest-collector.yml')
+                  collector = YAML.load_file('manifest-collector.yml', aliases: true)
                   collector['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
@@ -5923,7 +5923,7 @@ jobs:
                     'LOGIT_ELASTICSEARCH_URL' => '${LOGIT_ELASTICSEARCH_URL}',
                     'LOGIT_ELASTICSEARCH_API_KEY' => '${LOGIT_ELASTICSEARCH_API_KEY}'
                   }
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'].merge!(env)
@@ -6159,7 +6159,7 @@ jobs:
                     'AIVEN_CLOUD' => '$AIVEN_CLOUD',
                     'IP_WHITELIST' => '$BROKER_IP_WHITELIST',
                   }
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|
                     app['env'] ||= {}
                     app['env'].merge!(env)

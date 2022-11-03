@@ -10,7 +10,7 @@ RSpec.describe "concourse tasks" do
 
   concourse_tasks.each do |filename, contents|
     it "is safe, valid yaml (#{filename})" do
-      expect { YAML.load(contents) }.not_to raise_error
+      expect { YAML.load(contents, aliases: true) }.not_to raise_error
     end
   end
 end

@@ -22,7 +22,7 @@ pipelines = ARGV[0].split(",")
 if ENV["FLY_TARGET"].nil? || ENV["FLY_TARGET"].empty?
   abort "FLY_TARGET not set"
 end
-flyrc = YAML.load_file("#{ENV['HOME']}/.flyrc")
+flyrc = YAML.load_file("#{ENV['HOME']}/.flyrc", aliases: true)
 if flyrc.fetch("targets")[ENV["FLY_TARGET"]].nil?
   abort "Target '#{ENV['FLY_TARGET']}' not found in .flyrc. Use the fly command to set this target up before using this script"
 end
