@@ -163,6 +163,15 @@ jobs:
           DB_NAME: accounts-db
           BOUND_APPS: paas-accounts
 
+      - task: remove-auditor-db
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/remove-db.yml
+        params:
+          ORG: admin
+          SPACE: billing
+          DB_NAME: auditor-db
+          BOUND_APPS: paas-auditor
+
       - task: delete-deployments
         tags: [colocated-with-web]
         config:

@@ -161,3 +161,8 @@ variable "system_dns_zone_id" {
 variable "system_dns_zone_name" {
   description = "Amazon Route53 DNS zone name for the provisioned environment."
 }
+
+variable "bucket_force_destroy" {
+  description = "Force destroy aws s3 buckets"
+  default = false
+}
