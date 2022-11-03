@@ -1,5 +1,4 @@
 # Disable this cop because we are testing YAML anchors
-# rubocop:disable Security/YAMLLoad
 
 RSpec.describe "concourse pipelines" do
   it "finds the pipeline files" do
@@ -12,7 +11,7 @@ RSpec.describe "concourse pipelines" do
     end
 
     it "adds matching grafana-job-annotations (#{filename})" do
-      grafana_add_annotations = contents.scan(/[&]add-[-a-z]*grafana[-a-z]+/)
+      grafana_add_annotations = contents.scan(/&add-[-a-z]*grafana[-a-z]+/)
 
       grafana_add_annotations
         .map { |a| [a, contents.scan(a.sub("&add", "*add")).count] }
@@ -62,7 +61,7 @@ RSpec.describe "concourse pipelines" do
           valid_branches << "experimental" # FIXME: Remove after billing experiments
 
           alphagov_git_resources.each do |r|
-            name = r.dig("name")
+            name = r["name"]
             branch = r.dig("source", "branch")
             expect(valid_branches).to include(branch),
               "resource #{name} should be in #{valid_branches} got #{branch}"
@@ -72,4 +71,3 @@ RSpec.describe "concourse pipelines" do
     end
   end
 end
-# rubocop:enable Security/YAMLLoad

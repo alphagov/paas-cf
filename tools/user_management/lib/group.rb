@@ -8,6 +8,7 @@ class Group < UAAResource
   attr_reader :name, :users
 
   def initialize(name, users)
+    super()
     @name = name
     @users = users
   end

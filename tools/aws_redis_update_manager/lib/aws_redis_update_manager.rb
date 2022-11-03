@@ -33,10 +33,8 @@ class AwsRedisUpdateManager
       .values
       .flatten
 
-    service_instances_to_update = service_instances
+    service_instances
       .select { |s| replication_groups.include? s.replication_group_id }
-
-    service_instances_to_update
   end
 
   def print_updateable_service_instances
@@ -92,9 +90,9 @@ class AwsRedisUpdateManager
       tenant_email_address: preview_email,
       org_name: "example-org",
       service_instances: [example_service_instance],
-      maintenance_window_date: maintenance_window_date,
-      maintenance_window_time_range: maintenance_window_time_range,
-      region: region,
+      maintenance_window_date:,
+      maintenance_window_time_range:,
+      region:,
     )
 
     puts "  Sent email to #{preview_email}"
@@ -129,9 +127,9 @@ class AwsRedisUpdateManager
               tenant_email_address: org_manager.email,
               org_name: org.org_name,
               service_instances: org_service_instances,
-              maintenance_window_date: maintenance_window_date,
-              maintenance_window_time_range: maintenance_window_time_range,
-              region: region,
+              maintenance_window_date:,
+              maintenance_window_time_range:,
+              region:,
             )
           rescue Notifications::Client::BadRequestError => e
             puts "  Failed sending email to #{org_manager.email}: #{e}"

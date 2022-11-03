@@ -16,8 +16,7 @@ def fnv_base32_encode(inp)
     end
   end
 
-  first_12_chars = inp[0..12]
-  first_12_chars
+  inp[0..12]
 end
 
 def fnv(input)

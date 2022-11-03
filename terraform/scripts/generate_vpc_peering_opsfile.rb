@@ -14,7 +14,7 @@ if File.file?(ARGV[0])
       "type" => "replace",
       "path" => "/instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions?/-",
       "value" => {
-        "name" => "vpc_peer_" + peer["peer_name"],
+        "name" => "vpc_peer_#{peer['peer_name']}",
         "rules" => [{
           "protocol" => "all",
             "destination" => peer["subnet_cidr"],

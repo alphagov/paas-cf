@@ -45,7 +45,7 @@ RSpec.describe "prometheus" do
 
   describe "instance_group" do
     it "has a small persistent disk" do
-      disk_type = prometheus_instance_group.dig("persistent_disk_type")
+      disk_type = prometheus_instance_group["persistent_disk_type"]
       expect(disk_type).to eq("100GB")
 
       retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
@@ -56,7 +56,7 @@ RSpec.describe "prometheus" do
       let(:manifest) { manifest_for_env("prod-lon") }
 
       it "has a larger persistent disk" do
-        disk_type = prometheus_instance_group.dig("persistent_disk_type")
+        disk_type = prometheus_instance_group["persistent_disk_type"]
         expect(disk_type).to eq("750GB")
 
         retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
@@ -69,7 +69,7 @@ RSpec.describe "prometheus" do
         let(:manifest) { manifest_for_env(deploy_env) }
 
         it "has a persistent disk" do
-          disk_type = prometheus_instance_group.dig("persistent_disk_type")
+          disk_type = prometheus_instance_group["persistent_disk_type"]
           expect(disk_type).to eq("500GB")
 
           retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
@@ -79,13 +79,12 @@ RSpec.describe "prometheus" do
     end
 
     it "is highly available" do
-      disk_type = prometheus_instance_group.dig("instances")
+      disk_type = prometheus_instance_group["instances"]
       expect(disk_type).to be > 1
     end
 
     it "has access to the CF network" do
-      network_names = prometheus_instance_group
-        .dig("networks")
+      network_names = prometheus_instance_group["networks"]
         .map { |n| n["name"] }
       expect(network_names).to include("cf")
     end
@@ -126,7 +125,7 @@ RSpec.describe "prometheus" do
       targets = aiven_scrape_config["file_sd_configs"].first["files"].first
 
       expect(targets).to eq(
-        aiven_sd_config["target_path"] + "/" + aiven_sd_config["target_filename"],
+        "#{aiven_sd_config['target_path']}/#{aiven_sd_config['target_filename']}",
       )
 
       relabel_configs = aiven_scrape_config["relabel_configs"]
@@ -149,10 +148,8 @@ RSpec.describe "prometheus" do
 
     describe "dropping metrics" do
       let(:dropped_metrics_regexps) do
-        prometheus_config
-          .dig("scrape_configs")
-          .find { |sc| sc["job_name"] == "aiven" }
-          .dig("metric_relabel_configs")
+        prometheus_config["scrape_configs"]
+          .find { |sc| sc["job_name"] == "aiven" }["metric_relabel_configs"]
           .select { |rlc| rlc["action"] == "drop" }
           .select { |rlc| rlc["source_labels"].include? "__name__" }
           .map { |rlc| rlc["regex"] }
@@ -199,7 +196,7 @@ RSpec.describe "prometheus" do
     end
 
     it "has retention size less than the disk size" do
-      disk_size_gb = prometheus_instance_group.dig("persistent_disk_type").gsub(/GB/, "").to_i
+      disk_size_gb = prometheus_instance_group["persistent_disk_type"].gsub(/GB/, "").to_i
       retention_size = prometheus_config.dig("storage", "tsdb", "retention", "size")
 
       expect(retention_size.match?(/GB/)).to eq(true)

@@ -21,7 +21,8 @@ DEFAULT_ORDER = 0
 PAAS_ORDER_KEY = "__paas_order".freeze
 
 def processed(value)
-  if value.is_a?(Array)
+  case value
+  when Array
     # sort it
     sorted_array = value.sort_by.with_index do |v, i|
       [
@@ -32,7 +33,7 @@ def processed(value)
 
     # recurse into children
     return sorted_array.map { |v| processed(v) }
-  elsif value.is_a?(Hash)
+  when Hash
     # strip instructional keys
     stripped_hash = value.clone
     stripped_hash.delete(PAAS_ORDER_KEY)
@@ -45,6 +46,6 @@ def processed(value)
 end
 
 if $PROGRAM_NAME == __FILE__
-  root = YAML.safe_load(STDIN.read)
+  root = YAML.safe_load($stdin.read)
   puts processed(root).to_yaml
 end

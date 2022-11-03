@@ -124,7 +124,7 @@ def stub_searching_for_user(status, origin, username, id = nil)
   url = "http://fake-uaa.internal/Users?filter=origin%20eq%20%22#{origin}%22%20and%20userName%20eq%20%22#{username}%22"
   stub_body_if_status_is_200 url, status,
     "totalResults" => 1,
-    "resources" => [{ id: id }]
+    "resources" => [{ id: }]
 end
 
 def stub_getting_user_by_id(status, id, origin = nil, username = nil, created = nil)
@@ -142,16 +142,16 @@ def stub_adding_user_to_group(status, group_id, user_id)
   url = "http://fake-uaa.internal/Groups/#{group_id}/members"
   stub_request(:post, url)
     .with(body: { 'type': "USER", 'origin': "uaa", 'value': user_id })
-    .to_return(status: status)
+    .to_return(status:)
 end
 
 def stub_removing_user_from_group(status, group_id, user_id)
   url = "http://fake-uaa.internal/Groups/#{group_id}/members/#{user_id}"
-  stub_request(:delete, url).to_return(status: status)
+  stub_request(:delete, url).to_return(status:)
 end
 
 def stub_body_if_status_is_200(url, status, body)
-  stub = { status: status }
+  stub = { status: }
   stub[:body] = JSON.generate(body) if (200..299).cover?(status)
   stub_request(:get, url).to_return(stub)
 end

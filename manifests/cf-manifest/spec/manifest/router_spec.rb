@@ -4,7 +4,7 @@ RSpec.describe "router" do
     let(:gorouter_props) { manifest.fetch("instance_groups.router.jobs.gorouter.properties.router") }
 
     it "has max_idle_connections set to disable keepalives" do
-      expect(gorouter_props.dig("max_idle_connections")).to eq(0)
+      expect(gorouter_props["max_idle_connections"]).to eq(0)
     end
   end
 end

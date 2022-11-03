@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 require "yaml"
-pipe = YAML.safe_load(STDIN)
+pipe = YAML.safe_load($stdin)
 
 def remove_passed(obj)
   case obj
@@ -20,7 +20,7 @@ abort "Can't find job definitions in the input"  if pipe["jobs"].nil?
 abort "Jobs definition not an array"             if pipe["jobs"].class != Array
 
 my_job = pipe["jobs"].find { |j| j["name"] == ARGV[0] }
-abort "Job " + ARGV[0] + " not found in the pipeline" if my_job.nil?
+abort "Job #{ARGV[0]} not found in the pipeline" if my_job.nil?
 
 remove_passed(my_job["plan"])
 puts YAML.dump(pipe)

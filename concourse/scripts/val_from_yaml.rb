@@ -47,7 +47,7 @@ if $PROGRAM_NAME == __FILE__ # Only execute if called directly as command
   property_tree = if ARGV[1]
                     PropertyTree.load_yaml(File.open(ARGV[1]).read)
                   else
-                    PropertyTree.load_yaml(STDIN.load)
+                    PropertyTree.load_yaml($stdin.load)
                   end
 
   val = property_tree[key]

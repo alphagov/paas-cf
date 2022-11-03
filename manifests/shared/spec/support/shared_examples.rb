@@ -1,5 +1,5 @@
 RSpec.shared_examples "a highly available instance group" do |opts|
-  let(:instances) { subject.dig("instances") }
+  let(:instances) { subject["instances"] }
 
   it "has instances defined" do
     expect(instances).not_to be_nil

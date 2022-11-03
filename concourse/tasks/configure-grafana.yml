@@ -131,10 +131,10 @@ run:
             url: "#{base_url}/api/admin/users",
             password: grafana_pass,
             body: {
-              name:     email.split('@').first,
-              login:    email,
-              email:    email,
-              password: SecureRandom.hex(32)
+              "name":     email.split('@').first,
+              "login":    email,
+              "email":    email,
+              "password": SecureRandom.hex(32)
             }
           )
           puts "Created user #{email}".green
@@ -194,7 +194,7 @@ run:
             method: 'patch',
             url: "#{base_url}/api/orgs/1/users/#{user_id}",
             password: grafana_pass,
-            body: { role: role }
+            body: { "role": role }
           )
           puts "Promoted #{user_id} / #{email} to #{role} in main org".green
 

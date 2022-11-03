@@ -31,8 +31,7 @@ RSpec.describe "isolation_segments" do
         expect(instance_group["vm_type"]).to eq("small_cell")
 
         expect(
-          instance_group
-            .dig("jobs")
+          instance_group["jobs"]
             .find { |j| j["name"] == "rep" }
             .dig("properties", "diego", "executor", "memory_capacity_mb"),
         ).to eq(27_197)
@@ -40,8 +39,7 @@ RSpec.describe "isolation_segments" do
 
       it "has the correct placement tag" do
         expect(
-          instance_group
-            .dig("jobs")
+          instance_group["jobs"]
             .find { |j| j["name"] == "rep" }
             .dig("properties", "diego", "rep", "placement_tags"),
         ).to eq(%w[egress-restricted-1])
@@ -49,37 +47,29 @@ RSpec.describe "isolation_segments" do
 
       it "has an override for vxlan-policy-agent provider" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "vxlan-policy-agent" }
-            .dig("provides"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "vxlan-policy-agent" }["provides"],
         ).to eq("vpa" => { "as" => "vpa-egress-restricted-1" })
       end
 
       it "has an override for garden provider" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "garden" }
-            .dig("provides"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "garden" }["provides"],
         ).to eq("iptables" => { "as" => "iptables-egress-restricted-1" })
       end
 
       it "has an override for silk-cni consumer" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "silk-cni" }
-            .dig("consumes"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "silk-cni" }["consumes"],
         ).to eq("vpa" => { "from" => "vpa-egress-restricted-1" })
       end
 
       it "has an override for silk-daemon consumer" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "silk-daemon" }
-            .dig("consumes"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "silk-daemon" }["consumes"],
         ).to eq("iptables" => { "from" => "iptables-egress-restricted-1" }, "vpa" => { "from" => "vpa-egress-restricted-1" })
       end
 
@@ -94,8 +84,7 @@ RSpec.describe "isolation_segments" do
       end
 
       it "includes the coredns job" do
-        coredns_job = instance_group
-          .dig("jobs")
+        coredns_job = instance_group["jobs"]
           .find { |j| j["name"] == "coredns" }
 
         expected_corefile = <<~COREFILE
@@ -127,8 +116,7 @@ RSpec.describe "isolation_segments" do
 
       it "sets silk-cni dns_servers to be the local coredns resolver" do
         expect(
-          instance_group
-            .dig("jobs")
+          instance_group["jobs"]
             .find { |j| j["name"] == "silk-cni" }
             .dig("properties", "dns_servers"),
         ).to eq(["169.254.0.3"])
@@ -144,8 +132,7 @@ RSpec.describe "isolation_segments" do
           10.255.0.255
         ]
 
-        denied_ranges = instance_group
-          .dig("jobs")
+        denied_ranges = instance_group["jobs"]
           .find { |j| j["name"] == "silk-cni" }
           .dig("properties", "deny_networks", "running")
           .map(&IPAddr.method(:new))
@@ -169,8 +156,7 @@ RSpec.describe "isolation_segments" do
           }
           .concat(%w[9.255.255.255 11.0.0.0])
 
-        denied_ranges = instance_group
-          .dig("jobs")
+        denied_ranges = instance_group["jobs"]
           .find { |j| j["name"] == "silk-cni" }
           .dig("properties", "deny_networks", "running")
           .map(&IPAddr.method(:new))
@@ -182,8 +168,7 @@ RSpec.describe "isolation_segments" do
 
       it "does not set silk-cni deny_networks for staging or always" do
         %w[always staging].each do |workload|
-          denied_ranges = instance_group
-            .dig("jobs")
+          denied_ranges = instance_group["jobs"]
             .find { |j| j["name"] == "silk-cni" }
             .dig("properties", "deny_networks", workload)
 
@@ -209,8 +194,7 @@ RSpec.describe "isolation_segments" do
 
       it "has the correct placement tag" do
         expect(
-          instance_group
-            .dig("jobs")
+          instance_group["jobs"]
             .find { |j| j["name"] == "rep" }
             .dig("properties", "diego", "rep", "placement_tags"),
         ).to eq(%w[not-egress-restricted-1])
@@ -218,34 +202,28 @@ RSpec.describe "isolation_segments" do
 
       it "has an override for vxlan-policy-agent provider" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "vxlan-policy-agent" }
-            .dig("provides"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "vxlan-policy-agent" }["provides"],
         ).to eq("vpa" => { "as" => "vpa-not-egress-restricted-1" })
       end
 
       it "has an override for garden provider" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "garden" }
-            .dig("provides"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "garden" }["provides"],
         ).to eq("iptables" => { "as" => "iptables-not-egress-restricted-1" })
       end
 
       it "does not include the coredns job" do
         expect(
-          instance_group
-            .dig("jobs")
+          instance_group["jobs"]
             .find { |j| j["name"] == "coredns" },
         ).to be_nil
       end
 
       it "does not override the default bosh-dns silk-cni dns_servers" do
         expect(
-          instance_group
-            .dig("jobs")
+          instance_group["jobs"]
             .find { |j| j["name"] == "silk-cni" }
             .dig("properties", "dns_servers"),
         ).to eq(["169.254.0.2"])
@@ -253,19 +231,15 @@ RSpec.describe "isolation_segments" do
 
       it "has an override for silk-cni consumer" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "silk-cni" }
-            .dig("consumes"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "silk-cni" }["consumes"],
         ).to eq("vpa" => { "from" => "vpa-not-egress-restricted-1" })
       end
 
       it "has an override for silk-daemon consumer" do
         expect(
-          instance_group
-            .dig("jobs")
-            .find { |j| j["name"] == "silk-daemon" }
-            .dig("consumes"),
+          instance_group["jobs"]
+            .find { |j| j["name"] == "silk-daemon" }["consumes"],
         ).to eq("iptables" => { "from" => "iptables-not-egress-restricted-1" }, "vpa" => { "from" => "vpa-not-egress-restricted-1" })
       end
 

@@ -1,5 +1,4 @@
 # Disable this cop because we are testing YAML anchors
-# rubocop:disable Security/YAMLLoad
 
 require "yaml"
 
@@ -14,5 +13,3 @@ RSpec.describe "concourse tasks" do
     end
   end
 end
-
-# rubocop:enable Security/YAMLLoad

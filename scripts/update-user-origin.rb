@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require "English"
 
-script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
+script_path = File.absolute_path(__FILE__).sub!("#{Dir.pwd}/", "")
 File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
 
 require "json"
@@ -42,7 +42,7 @@ puts "Current user:"
 pp user
 
 user = user.keep_if { |k, _| %w[userName name emails].include?(k) }
-user = user.update('origin': desired_origin)
+user.update('origin': desired_origin)
 
 command = <<~COMMAND.lines.map(&:chomp).join(" ")
   uaac curl '/Users/#{user_guid}'

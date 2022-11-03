@@ -4,7 +4,7 @@ require "English"
 require "tempfile"
 require "json"
 require "yaml"
-require_relative "./val_from_yaml.rb"
+require_relative "./val_from_yaml"
 
 class SecurityGroupsSetter
   def initialize(manifest)

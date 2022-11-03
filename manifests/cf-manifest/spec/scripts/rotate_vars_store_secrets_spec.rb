@@ -1,4 +1,4 @@
-require_relative "../../scripts/rotate-vars-store-secrets.rb"
+require_relative "../../scripts/rotate-vars-store-secrets"
 
 RSpec.describe "rotate-cf-certs" do
   let(:manifest) do
@@ -207,7 +207,7 @@ RSpec.describe "rotate-cf-certs" do
         # Build a call like: rotate(manifest , ca: true, vars_to_preserve: vars_to_preserve)
         args = {
           type.to_sym => true,
-          vars_to_preserve: vars_to_preserve,
+          vars_to_preserve:,
         }
         rotated_vars_store = rotate(manifest, vars_store, **args)
 
@@ -225,8 +225,8 @@ RSpec.describe "rotate-cf-certs" do
 
         args = {
           type.to_sym => true,
-          vars_to_preserve: vars_to_preserve,
-          vars_to_rotate: vars_to_rotate,
+          vars_to_preserve:,
+          vars_to_rotate:,
         }
         rotated_vars_store = rotate(manifest, vars_store, **args)
 
@@ -269,7 +269,7 @@ RSpec.describe "rotate-cf-certs" do
     it "onlies delete _old secrets for secrets set to rotate" do
       vars_to_rotate = vars_store.keys.select { |k| k.end_with? "_one" }
 
-      rotated_vars_store = rotate(manifest, vars_store, vars_to_rotate: vars_to_rotate, delete: true)
+      rotated_vars_store = rotate(manifest, vars_store, vars_to_rotate:, delete: true)
 
       vars_to_rotate.each do |k|
         if k.start_with? "ca_", "leaf_"
@@ -288,7 +288,7 @@ RSpec.describe "rotate-cf-certs" do
       vars_to_rotate = vars_store.keys.select { |k| k.end_with? "_two" }
       expected_vars_to_keep = vars_store.keys.select { |k| k.end_with? "_one" }
 
-      rotated_vars_store = rotate(manifest, vars_store, vars_to_rotate: vars_to_rotate, delete: true)
+      rotated_vars_store = rotate(manifest, vars_store, vars_to_rotate:, delete: true)
 
       expected_vars_to_keep.each do |k|
         expect(rotated_vars_store).to include("#{k}_old" => vars_store["#{k}_old"])

@@ -156,10 +156,10 @@ private
       vars_store_tempfile.close
 
       output = render_manifest(
-        environment: environment,
+        environment:,
         vars_store_file: vars_store_tempfile.path,
-        env_specific_bosh_vars_file: env_specific_bosh_vars_file,
-        env_specific_isolation_segments_dir: env_specific_isolation_segments_dir,
+        env_specific_bosh_vars_file:,
+        env_specific_isolation_segments_dir:,
       )
 
       Cache.instance[:vars_store] = File.read(vars_store_tempfile) if custom_vars_store_content.nil?

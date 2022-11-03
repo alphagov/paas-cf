@@ -3,7 +3,7 @@
 require "English"
 require "json"
 require "yaml"
-require_relative "./val_from_yaml.rb"
+require_relative "./val_from_yaml"
 
 class QuotasSetter
   def initialize(manifest)

@@ -13,7 +13,7 @@ RSpec.describe "grafana dashboards" do
     it "is overwritable" do
       dashboard = JSON.parse(dashboard_contents)
 
-      overwrite = dashboard.dig("overwrite")
+      overwrite = dashboard["overwrite"]
 
       expect(overwrite).to eq(true)
     end
@@ -21,7 +21,7 @@ RSpec.describe "grafana dashboards" do
     it "has folderId 0" do
       dashboard = JSON.parse(dashboard_contents)
 
-      folder_id = dashboard.dig("folderId")
+      folder_id = dashboard["folderId"]
 
       expect(folder_id).to eq(0)
     end
@@ -46,7 +46,7 @@ RSpec.describe "grafana dashboards" do
       expect(dashboard).not_to(be(nil), "does not include a dashboard object")
 
       id_exists = dashboard.key?("id")
-      id = dashboard.dig("id")
+      id = dashboard["id"]
       expect(id_exists).to(be(true), "must include an 'id' key")
       expect(id).to(be(nil), "must specify id: null")
     end

@@ -1,4 +1,4 @@
-require_relative "../../scripts/reorder-yaml.rb"
+require_relative "../../scripts/reorder-yaml"
 
 RSpec.describe "reorder-yaml" do
   let(:torture_test_input) do

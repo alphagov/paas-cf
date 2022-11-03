@@ -14,7 +14,7 @@ RSpec.describe "bosh dns addon" do
   it "sets the log level correctly" do
     # We do not want to log every single DNS request because that generates
     # many logs and is not particularly useful
-    expect(bosh_dns_properties.dig("log_level")).to eq("WARN")
+    expect(bosh_dns_properties["log_level"]).to eq("WARN")
   end
 
   it "uses the PKI from the cf manifest" do

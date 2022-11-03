@@ -4,7 +4,7 @@ RSpec.describe "diego" do
     let(:properties) { manifest.fetch("instance_groups.diego-cell.jobs.rep.properties") }
 
     it "has containers configured" do
-      expect(properties.dig("containers")).not_to be_nil
+      expect(properties["containers"]).not_to be_nil
     end
 
     it "has containers/proxy enabled" do

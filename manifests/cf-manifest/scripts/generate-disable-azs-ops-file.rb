@@ -1,10 +1,10 @@
 require "yaml"
 
-manifest = YAML.safe_load(STDIN.read)
+manifest = YAML.safe_load($stdin.read)
 
 zones = ARGV
 puts YAML.dump(
-  manifest.dig("instance_groups")
+  manifest["instance_groups"]
    .map do |g|
      {
        "type" => "replace",

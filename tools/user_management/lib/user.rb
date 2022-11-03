@@ -6,6 +6,7 @@ class User < UAAResource
   attr_reader :email, :username, :origin
 
   def initialize(obj)
+    super()
     @email = obj.fetch("email")
     @username = obj.fetch("username")
     @roles_by_env = obj.fetch("roles", {})
