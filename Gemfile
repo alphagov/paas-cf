@@ -15,7 +15,7 @@ gem "rake", "~> 12"
 gem "rest-client", "~> 2.1.0"
 gem "rexml", ">= 3.2.5"
 gem "rspec", "~> 3"
-gem "rubocop-govuk", "~> 3.15"
+gem "rubocop-govuk", "~> 4.8"
 gem "simplecov", require: false, group: :test
 gem "tty-prompt"
 gem "webmock", "~> 2"
