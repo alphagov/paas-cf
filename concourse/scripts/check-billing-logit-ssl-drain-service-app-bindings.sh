@@ -4,13 +4,21 @@
 
 set -e -u -o pipefail
 
+SERVICE_INSTANCE_NAME='billing-logit-ssl-drain'
+
 APP1_NAME='paas-billing-api'
 APP2_NAME='paas-billing-collector'
 
-APP1_GUID=$(cf curl "/v3/apps?names=${APP1_NAME}" | jq -r '.resources[].guid')
-APP2_GUID=$(cf curl "/v3/apps?names=${APP2_NAME}" | jq -r '.resources[].guid')
+SPACE_NAME='billing'
+ORG_NAME='admin'
 
-SERVICE_INSTANCE_GUID=$(cf curl /v3/service_instances | jq -r '.resources[]|select(.name=="billing-logit-ssl-drain").guid')
+SPACE_GUID=$(cf curl "/v3/spaces?names=${SPACE_NAME}" | jq -r '.resources[].guid')
+ORG_GUID=$(cf curl "/v3/organizations?names=${ORG_NAME}" | jq -r '.resources[].guid')
+
+APP1_GUID=$(cf curl "/v3/apps?names=${APP1_NAME}&space_guids=${SPACE_GUID}&organization_guids=${ORG_GUID}" | jq -r '.resources[].guid')
+APP2_GUID=$(cf curl "/v3/apps?names=${APP2_NAME}&space_guids=${SPACE_GUID}&organization_guids=${ORG_GUID}" | jq -r '.resources[].guid')
+
+SERVICE_INSTANCE_GUID=$(cf curl "/v3/service_instances?space_guids=${SPACE_GUID}&organization_guids=${ORG_GUID}" | jq -r ".resources[]|select(.name==\"${SERVICE_INSTANCE_NAME}\").guid")
 
 SERVICE_CREDENTIAL_BINDINGS=$(cf curl "/v3/service_credential_bindings?service_instance_guids=${SERVICE_INSTANCE_GUID}")
 
