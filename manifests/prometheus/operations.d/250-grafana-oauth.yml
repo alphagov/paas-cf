@@ -21,3 +21,10 @@
 - type: replace
   path: /instance_groups/name=grafana/jobs/name=grafana/properties/grafana/auth?/google/allowed_domains
   value: digital.cabinet-office.gov.uk
+
+- type: replace
+  path: /instance_groups/name=grafana/jobs/name=grafana/properties/env?/no_proxy?
+  value: |
+    "
+        export ZONE=`cat /var/vcap/instance/az | sed 's/^.//'`
+        sed 's/grafana-\d/grafana-$ZONE/g' -i /var/vcap/jobs/grafana/config/grafana.ini
