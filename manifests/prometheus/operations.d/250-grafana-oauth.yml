@@ -28,3 +28,4 @@
     "
         export ZONE=`cat /var/vcap/instance/az | sed 's/^.//'`
         sed 's/grafana-\d/grafana-$ZONE/g' -i /var/vcap/jobs/grafana/config/grafana.ini
+        echo "
