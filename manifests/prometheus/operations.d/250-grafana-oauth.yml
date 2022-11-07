@@ -27,5 +27,5 @@
   value: |
     "
         export ZONE=`cat /var/vcap/instance/az | sed 's/^.//'`
-        sed 's/grafana-\d/grafana-$ZONE/g' -i /var/vcap/jobs/grafana/config/grafana.ini
-        echo "
+        sed -i -E "s/https:\/\/grafana-1/https:\/\/grafana-$ZONE/g" /var/vcap/jobs/grafana/config/grafana.ini
+        FAKE="
