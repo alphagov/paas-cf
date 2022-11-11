@@ -33,7 +33,8 @@
           severity: warning
         annotations:
           summary: Few candidate cells for a 16GiB app
-          description: Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 16GiB app instance. The threshold is 3 (1 per AZ).
+          description: |
+            Only {{ $value | printf "%.0f" }} cell(s) are advertising enough free memory to run a 16GiB app instance. The threshold is 3 (1 per AZ).
 
             The likely impact is some tenants are unable to schedule some apps, but failures may be sporadic.
 
