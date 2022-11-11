@@ -5321,6 +5321,53 @@ jobs:
           trigger: true
           passed: ['post-deploy']
 
+      # this tests the "integration" of this paas-billing revision with the
+      # configuration in this paas-cf revision, performed before deployment
+      # to give us a chance to avoid deploying a broken combination.
+      - task: paas-billing-integration-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          params:
+            AWS_REGION: ((aws_region))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing
+              path: src/github.com/alphagov/paas-billing
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                mkdir ./src/github.com/alphagov/paas-billing/gherkin/features/
+
+                cp "paas-cf/config/billing/output/${AWS_REGION}.json" ./src/github.com/alphagov/paas-billing/config.json
+                cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
+
+                export APP_ROOT="$PWD"
+
+                wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+                echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
+
+                apt-get -q update
+                apt-get -q -y install postgresql-12 postgresql-client-12
+
+                cat > /etc/postgresql/12/main/pg_hba.conf <<-EOF
+                local   all   postgres   trust
+                host    all   postgres   127.0.0.1/32   trust
+                EOF
+
+                pg_ctlcluster 12 main start
+
+                export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
+                cd src/github.com/alphagov/paas-billing
+
+                make integration
+
       - task: deploy-paas-billing
         tags: [colocated-with-web]
         config:
@@ -5433,7 +5480,6 @@ jobs:
           platform: linux
           image_resource: *cf-acceptance-tests-image-resource
           params:
-            AWS_REGION: ((aws_region))
             SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
             DEPLOY_ENV: ((deploy_env))
             API_ENDPOINT: ((api_endpoint))
@@ -5454,29 +5500,10 @@ jobs:
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 cf target -o admin -s billing
-                mkdir ./src/github.com/alphagov/paas-billing/gherkin/features/
-
-                cp "paas-cf/config/billing/output/${AWS_REGION}.json" ./src/github.com/alphagov/paas-billing/config.json
-                cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
 
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
-                export APP_ROOT="$PWD"
 
-                wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-                echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
-
-                apt-get -q update
-                apt-get -q -y install postgresql-12 postgresql-client-12
-
-                cat > /etc/postgresql/12/main/pg_hba.conf <<-EOF
-                local   all   postgres   trust
-                host    all   postgres   127.0.0.1/32   trust
-                EOF
-
-                pg_ctlcluster 12 main start
-
-                export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
                 make acceptance
 
       - task: tag-repo
