@@ -5461,7 +5461,7 @@ jobs:
 
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
-
+                export APP_ROOT="$PWD"
 
                 wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
                 echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
