@@ -33,28 +33,26 @@ tests:
       # Does not fire when the percentage of free memory
       # is above the threshold
       - eval_time: 2h
-        alertname: DiegoCellRepMemoryCapacity
+        alertname: DiegoCellRepsReachingTotalMemoryCapacity
 
       # Does not fire when the percentage of free memory
       # has not been below the threshold for long enough
       - eval_time: 4h
-        alertname: DiegoCellRepMemoryCapacity
+        alertname: DiegoCellRepsReachingTotalMemoryCapacity
 
       # Fires when the percentage of free memory
       # has been below the threshold for 2 hours
       - eval_time: 5h
-        alertname: DiegoCellRepMemoryCapacity
+        alertname: DiegoCellRepsReachingTotalMemoryCapacity
         exp_alerts:
           - exp_labels:
               severity: warning
               environment: test
             exp_annotations:
-              summary: Rep low free memory capacity
+              summary: Reps low free memory capacity
               bosh_job_name: diego-cells
               description: >
-                Low free memory 75% for the advertised rep memory capacity
-                in the last 2 hours on average.
-                Review if we need to scale...
+                Low free memory 75% for the total advertised rep memory capacity in the last 2 hours on average - if we lost an AZ we may not be able to find space for all the app instances we're currently running. Review if we need to scale.
               url: https://team-manual.cloud.service.gov.uk/architecture_decision_records/ADR021-cell-capacity-assignment-2/#decision
 
     promql_expr_test:
