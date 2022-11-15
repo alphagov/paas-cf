@@ -5459,6 +5459,10 @@ jobs:
                       'billing-db',
                       'billing-logit-ssl-drain'
                     ]
+                    app['health-check-http-endpoint'] = '/'
+                    app['routes'] = [
+                      { 'route' => 'billing-collector.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
                   }
                   File.write('manifest-collector.yml', collector.to_yaml)
                 "
