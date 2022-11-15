@@ -1,0 +1,17 @@
+# Source: paas-metrics
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: RDSDBManualSnapshotCountCloseToQuota
+    rules:
+      - alert: RDSDBManualSnapshotCountCloseToQuota
+        expr: ((paas_aws_rds_manual_snapshot_count / paas_aws_rds_manual_snapshot_quota_count) * 100) > 80
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Number of AWS RDS Manual Snapshots is close to the quota"
+          description: "We are using {{ $value | printf \"%.0f\" }}% of the RDS manual snapshot quota. We might have to increase the quota."
+          url: "https://console.aws.amazon.com/servicequotas/home?region=((aws_region))#!/services/rds/quotas/L-9B510759"

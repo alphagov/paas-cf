@@ -3,15 +3,16 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/health"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/shield"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/health"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit"
+	"github.com/alphagov/paas-cf/tools/metrics/pkg/shield"
 
 	"github.com/aws/aws-sdk-go/aws"
 
@@ -184,6 +185,7 @@ func Main() error {
 		BillingCollectorPerformanceGauge(logger, 15*time.Minute, logitClient),
 		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
 		RDSDBInstancesGauge(logger, rdsService, serviceQuotas, 15*time.Minute),
+		RDSDBManualSnapshotsGauge(logger, rdsService, serviceQuotas, 15*time.Minute),
 		AWSHealthEventsGauge(logger, awsRegion, healthService, 15*time.Minute),
 		ShieldOngoingAttacksGauge(logger, shieldService, 5*time.Minute),
 		CloudfrontDistributionInstancesGauge(logger, cfs, 15*time.Minute),
