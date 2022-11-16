@@ -13,5 +13,5 @@
           severity: warning
         annotations:
           summary: "Number of AWS RDS Manual Snapshots is close to the quota"
-          description: "We are using {{ $value | printf \"%.0f\" }}% of the RDS manual snapshot quota. We might have to increase the quota."
+          description: "We are using {{ $value | printf \"%.0f\" }}% of the RDS manual snapshot quota. We might have to request a quota increase from AWS. You can request an increase via Service Quotas on the AWS console"
           url: "https://console.aws.amazon.com/servicequotas/home?region=((aws_region))#!/services/rds/quotas/L-9B510759"
