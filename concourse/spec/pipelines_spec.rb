@@ -59,6 +59,8 @@ RSpec.describe "concourse pipelines" do
 
           valid_branches << "cf13.2" # FIXME: cf-upgrade
 
+          valid_branches << "experimental" # FIXME: Remove after billing experiments
+
           alphagov_git_resources.each do |r|
             name = r.dig("name")
             branch = r.dig("source", "branch")

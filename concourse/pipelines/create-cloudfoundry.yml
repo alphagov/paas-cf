@@ -150,6 +150,7 @@ groups:
       - deploy-paas-admin
       - deploy-paas-auditor
       - deploy-paas-billing
+      - deploy-paas-billing-experimental
       - deploy-paas-metrics
       - deploy-paas-aiven-broker
       - deploy-paas-prometheus-endpoints
@@ -193,6 +194,7 @@ groups:
       - deploy-paas-admin
       - deploy-paas-auditor
       - deploy-paas-billing
+      - deploy-paas-billing-experimental
       - deploy-paas-metrics
       - deploy-paas-aiven-broker
   - name: operator
@@ -231,6 +233,7 @@ groups:
     jobs:
       - continuous-smoke-tests
       - continuous-billing-smoke-tests
+      - continuous-billing-experimental-smoke-tests
       - continuous-leaked-aws-key-check
       - check-certificates
       - resurrector-is-enabled
@@ -629,6 +632,13 @@ resources:
       uri: https://github.com/alphagov/paas-billing.git
       branch: main
       tag_filter: ((deploy_env_tag_prefix))
+      commit_verification_keys: ((gpg_public_keys))
+
+  - name: paas-billing-experimental
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-billing.git
+      branch: experimental
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-accounts
@@ -3652,6 +3662,7 @@ jobs:
                 cf create-space service-brokers -o admin
                 cf create-space healthchecks -o admin
                 cf create-space billing -o admin
+                cf create-space billing-experimental -o admin
                 cf create-space public -o admin
                 cf create-space assets -o admin
 
@@ -5524,6 +5535,209 @@ jobs:
 
       - *end-grafana-job-annotation
 
+  - name: deploy-paas-billing-experimental
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+      - get: paas-billing-experimental
+        trigger: true
+
+      - in_parallel:
+        - <<: *get-paas-cf
+          trigger: true
+          passed: ['post-deploy']
+
+      # this tests the "integration" of this paas-billing revision with the
+      # configuration in this paas-cf revision, performed before deployment
+      # to give us a chance to avoid deploying a broken combination.
+      - task: paas-billing-experimental-integration-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          params:
+            AWS_REGION: ((aws_region))
+            DEPLOY_ENV: ((deploy_env))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing-experimental
+              path: src/github.com/alphagov/paas-billing
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                mkdir ./src/github.com/alphagov/paas-billing/gherkin/features/
+
+                cp "paas-cf/config/billing/output/${AWS_REGION}.json" ./src/github.com/alphagov/paas-billing/config.json
+                cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
+
+                wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
+                echo "deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
+
+                apt-get -q update
+                apt-get -q -y install postgresql-12 postgresql-client-12
+
+                cat > /etc/postgresql/12/main/pg_hba.conf <<-EOF
+                local   all   postgres   trust
+                host    all   postgres   127.0.0.1/32   trust
+                EOF
+
+                pg_ctlcluster 12 main start
+
+                export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
+                cd src/github.com/alphagov/paas-billing
+                export APP_ROOT="$PWD"
+
+                make integration
+
+      - task: deploy-paas-billing-experimental
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            AWS_REGION: ((aws_region))
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+            CF_CLIENT_SECRET: ((cf_client_secret))
+            LOGIT_ADDRESS: ((logit_syslog_address))
+            LOGIT_PORT: ((logit_syslog_port))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing-experimental
+              path: paas-billing
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                BILLING_DB_PLAN="tiny-unencrypted-12"
+                if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
+                  BILLING_DB_PLAN="small-12"
+                elif [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ]; then
+                  BILLING_DB_PLAN="large-12"
+                fi
+
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing-experimental
+
+                if ! cf service billing-db > /dev/null; then
+                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
+                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
+                    echo "Waiting for creation of billing-db service to complete..."
+                    sleep 30
+                  done
+                fi
+
+                if ! cf service billing-logit-ssl-drain > /dev/null; then
+                  cf create-user-provided-service \
+                    billing-logit-ssl-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                else
+                  cf update-user-provided-service \
+                    billing-logit-ssl-drain \
+                    -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
+                fi
+
+                cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
+
+                cd paas-billing
+
+                ruby -ryaml -e "
+                  env = {
+                    'CF_CLIENT_ID' => 'paas-billing',
+                    'CF_CLIENT_SECRET' => '${CF_CLIENT_SECRET}',
+                    'CF_CLIENT_REDIRECT_URL' => 'https://billing.${SYSTEM_DNS_ZONE_NAME}/oauth/callback',
+                    'CF_API_ADDRESS' => '${API_ENDPOINT}',
+                    'DEPLOY_ENV' => '${DEPLOY_ENV}',
+                  }
+
+                  api = YAML.load_file('manifest-api.yml')
+                  api['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = [
+                      'billing-db',
+                      'billing-logit-ssl-drain'
+                    ]
+                    app['routes'] = [
+                      { 'route' => 'billing-experimental.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                    app['health-check-http-endpoint'] = '/'
+                  }
+                  File.write('manifest-api.yml', api.to_yaml)
+
+                  collector = YAML.load_file('manifest-collector.yml')
+                  collector['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['services'] = [
+                      'billing-db',
+                      'billing-logit-ssl-drain'
+                    ]
+                    app['health-check-http-endpoint'] = '/'
+                    app['routes'] = [
+                      { 'route' => 'billing-experimental-collector.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                  }
+                  File.write('manifest-collector.yml', collector.to_yaml)
+                "
+
+                cf cancel-deployment paas-billing-api || true
+                cf push --strategy=rolling paas-billing-api -f manifest-api.yml
+
+                cf cancel-deployment paas-billing-collector || true
+                cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
+
+                while ! ../paas-cf/concourse/scripts/check-billing-logit-ssl-drain-service-app-bindings.sh; do
+                  echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
+                  sleep 10
+                done
+
+      - task: paas-billing-experimental-acceptance-tests
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-acceptance-tests-image-resource
+          params:
+            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+            DEPLOY_ENV: ((deploy_env))
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          inputs:
+            - name: paas-cf
+            - name: paas-billing-experimental
+              path: src/github.com/alphagov/paas-billing
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                cf target -o admin -s billing-experimental
+
+                export BILLING_API_URL="https://billing-experimental.${SYSTEM_DNS_ZONE_NAME}"
+                cd src/github.com/alphagov/paas-billing
+
+                make acceptance
+
+      - *end-grafana-job-annotation
+
   - name: deploy-paas-metrics
     serial: true
     plan:
@@ -6848,6 +7062,69 @@ jobs:
           DEPLOY_ENV: ((deploy_env))
           CCI_BUILD_NUMBER: $BUILD_NAME
           CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+finished+with+errors"
+
+  - name: continuous-billing-experimental-smoke-tests
+    serial_groups: [smoke-tests]
+    build_logs_to_retain: 10000
+    plan:
+      - in_parallel:
+        - get: billing-smoke-tests-timer
+          trigger: true
+        - get: paas-billing-experimental
+          passed: ['deploy-paas-billing-experimental']
+        - <<: *get-paas-cf
+          passed: ['pipeline-lock']
+        - get: cf-manifest
+          passed: ['post-deploy']
+
+      - do:
+        - task: create-temp-user
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/create_admin.yml
+          params:
+            PREFIX: cont-billing-experimental-smoketest-user
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
+
+        - task: run-billing-experimental-smoke-tests
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-acceptance-tests-image-resource
+            params:
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+            inputs:
+              - name: paas-cf
+              - name: paas-billing-experimental
+                path: src/github.com/alphagov/paas-billing
+              - name: admin-creds
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  cf api "https://api.${SYSTEM_DNS_ZONE_NAME}"
+                  cf auth  "$(cat admin-creds/username)" "$(cat admin-creds/password)"
+
+                  cf target -o admin -s billing-experimental
+
+                  export BILLING_API_URL="https://billing-experimental.${SYSTEM_DNS_ZONE_NAME}"
+                  cd src/github.com/alphagov/paas-billing
+                  make smoke
+
+        ensure:
+          in_parallel:
+            - task: remove-temp-user
+              tags: [colocated-with-web]
+              file: paas-cf/concourse/tasks/delete_admin.yml
+              timeout: 5m
+              params:
+                API_ENDPOINT: ((api_endpoint))
+                CF_ADMIN: ((cf_admin))
+                CF_PASS: ((cf_pass))
 
   - name: continuous-leaked-aws-key-check
     serial_groups: [security-checks]
