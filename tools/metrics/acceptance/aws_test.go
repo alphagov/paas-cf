@@ -42,6 +42,8 @@ var _ = Describe("AWS", func() {
 		Eventually(getMetricNames).Should(SatisfyAll(
 			ContainElement("paas_aws_rds_dbinstances_count"),
 			ContainElement("paas_aws_rds_dbinstances_quota_count"),
+			ContainElement("paas_aws_rds_manual_snapshot_count"),
+			ContainElement("paas_aws_rds_manual_snapshot_quota_count"),
 		))
 	})
 })
