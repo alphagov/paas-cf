@@ -5631,10 +5631,10 @@ jobs:
 
                 cf target -o admin -s billing-experimental
 
-                if ! cf service billing-db > /dev/null; then
-                  cf create-service postgres "${BILLING_DB_PLAN}" billing-db
-                  while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
-                    echo "Waiting for creation of billing-db service to complete..."
+                if ! cf service billing-experimental-db > /dev/null; then
+                  cf create-service postgres "${BILLING_DB_PLAN}" billing-experimental-db
+                  while ! cf service billing-experimental-db | grep -iqE 'status:\s+create succeeded'; do
+                    echo "Waiting for creation of billing-experimental-db service to complete..."
                     sleep 30
                   done
                 fi
@@ -5667,7 +5667,7 @@ jobs:
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
                     app['services'] = [
-                      'billing-db',
+                      'billing-experimental-db',
                       'billing-logit-ssl-drain'
                     ]
                     app['routes'] = [
@@ -5682,7 +5682,7 @@ jobs:
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
                     app['services'] = [
-                      'billing-db',
+                      'billing-experimental-db',
                       'billing-logit-ssl-drain'
                     ]
                     app['health-check-http-endpoint'] = '/'
