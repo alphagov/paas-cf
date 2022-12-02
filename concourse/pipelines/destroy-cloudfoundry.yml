@@ -136,41 +136,50 @@ jobs:
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/get-cf-cli-config.yml
 
-      - task: remove-healthcheck-db
+      - task: unbind-and-delete-all-services
         tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/remove-db.yml
-        params:
-          ORG: admin
-          SPACE: healthchecks
-          DB_NAME: healthcheck-db
-          BOUND_APPS: healthcheck
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ghcr.io/alphagov/paas/cf-cli
+              tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
+          inputs:
+            - name: paas-cf
+            - name: config
+          run:
+            path: sh
+            args:    
+                - -e
+                - -u
+                - -c
+                - |
+                  . ./config/config.sh
+                  if ! curl -I -f "${API_ENDPOINT}/info"; then
+                    echo "CF API unavailable. Skipping..."
+                    exit 0
+                  fi
 
-      - task: remove-billing-db
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/remove-db.yml
-        params:
-          ORG: admin
-          SPACE: billing
-          DB_NAME: billing-db
-          BOUND_APPS: paas-billing-api paas-billing-collector
+                  cf api "${API_ENDPOINT}"
 
-      - task: remove-accounts-db
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/remove-db.yml
-        params:
-          ORG: admin
-          SPACE: billing
-          DB_NAME: accounts-db
-          BOUND_APPS: paas-accounts
+                  if ! cf auth "${CF_ADMIN}" "${CF_PASS}"; then
+                    echo "Login failed.  Skipping..."
+                    exit 0
+                  fi
 
-      - task: remove-auditor-db
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/remove-db.yml
-        params:
-          ORG: admin
-          SPACE: billing
-          DB_NAME: auditor-db
-          BOUND_APPS: paas-auditor
+                  #TODO: move timeout/retry logic into the script, per command
+                  retries=3
+                  timeout=3600
+                  tries="${retries}"
+                  while ! timeout "${timeout}" ./paas-cf/scripts/unbind-and-delete-all-services.sh execute; do
+                    tries=$(( tries - 1 ))
+                    echo "Retrying..."
+                    if [ "${tries}" -le 0 ]; then
+                      echo "Failed after ${retries} tries. Exiting."
+                      exit 1
+                    fi  
+                  done
 
       - task: delete-deployments
         tags: [colocated-with-web]
