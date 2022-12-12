@@ -14,6 +14,11 @@
   value: 8443
 
 - type: replace
+  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/route_services_timeout?
+  # match value set on AWS load balancer
+  value: 900
+
+- type: replace
   path: /instance_groups/name=router/jobs/name=gorouter/properties/router/status/user
   value: router_user
 
