@@ -141,6 +141,7 @@ groups:
       - psn-terraform
       - az-healthcheck-terraform
       - vpc-peering-terraform
+      - dms-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -175,6 +176,7 @@ groups:
       - cf-terraform
       - psn-terraform
       - vpc-peering-terraform
+      - dms-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -473,6 +475,22 @@ resources:
               "healthcheck_address_b": { "value": "", "type": "string" },
               "healthcheck_address_c": { "value": "", "type": "string" }
             },
+            "resources": []
+        }
+
+  - name: dms-tfstate
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      versioned_file: dms.tfstate
+      region_name: ((aws_region))
+      initial_version: "-"
+      initial_content_text: |
+        {
+            "version": 4,
+            "terraform_version": "1.2.0",
+            "serial": 0,
+            "outputs": {},
             "resources": []
         }
 
@@ -1605,6 +1623,88 @@ jobs:
           put: az-healthcheck-tfstate
           params:
             file: updated-tfstate/azhc.tfstate
+
+      - *end-grafana-job-annotation
+
+  - name: dms-terraform
+    serial_groups: [cf-deploy]
+    serial: true
+    plan:
+      - in_parallel:
+        - *add-grafana-job-annotation
+        - <<: *get-paas-cf
+          passed: ['pre-deploy']
+        - get: pipeline-trigger
+          passed: ['pre-deploy']
+          trigger: true
+        - get: dms-tfstate
+        - get: vpc-tfstate
+
+      - task: extract-vpc-tfvars
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: vpc-tfstate
+          outputs:
+            - name: terraform-variables
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
+                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
+
+      - task: terraform-apply-dms
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: paas-cf
+            - name: dms-tfstate
+            - name: terraform-variables
+          outputs:
+            - name: updated-tfstate
+          params:
+            TF_VAR_env: ((deploy_env))
+            TF_VAR_region: ((aws_region))
+            AWS_DEFAULT_REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                cp dms-tfstate/dms.tfstate updated-tfstate/dms.tfstate
+
+                if [ ! -f "paas-cf/terraform/((deploy_env)).dms.json" ]; then
+                  echo "DMS is not available on this environment."
+                  exit 0
+                fi
+
+                . terraform-variables/vpc.tfvars.sh
+                TF_VAR_dms_data="$(cat "paas-cf/terraform/((deploy_env)).dms.json")"
+                export TF_VAR_dms_data
+
+                sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/dms.tfstate
+                cd paas-cf/terraform/dms ||exit
+
+                terraform init
+
+                terraform apply \
+                  -auto-approve=true \
+                  -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
+                  -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \
+                  -state=../../../updated-tfstate/dms.tfstate
+        ensure:
+          put: dms-tfstate
+          params:
+            file: updated-tfstate/dms.tfstate
 
       - *end-grafana-job-annotation
 
