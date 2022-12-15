@@ -60,4 +60,4 @@ run:
       cd paas-cf/manifests/app-autoscaler/upstream
       source .envrc
       cd src/acceptance
-      ./bin/test_default -p -nodes=8
+      ./bin/test_default -procs 4 --compilers 4 --poll-progress-after=120s --poll-progress-interval=30s
