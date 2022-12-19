@@ -100,6 +100,7 @@ bosh_az: ${bosh_az}
 bosh_manifest_state: bosh-manifest-state-${bosh_az}.json
 bosh_fqdn: bosh.${SYSTEM_DNS_ZONE_NAME}
 disable_cf_acceptance_tests: ${DISABLE_CF_ACCEPTANCE_TESTS:-}
+disable_app_autoscaler_acceptance_tests: ${DISABLE_APP_AUTOSCALER_ACCEPTANCE_TESTS:-${DISABLE_CF_ACCEPTANCE_TESTS:-}}
 disable_custom_acceptance_tests: ${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}
 disable_pipeline_locking: ${DISABLE_PIPELINE_LOCKING:-}
 auto_deploy: $([ "${ENABLE_AUTO_DEPLOY:-}" ] && echo "true" || echo "false")
