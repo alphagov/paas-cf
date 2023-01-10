@@ -76,7 +76,7 @@ RSpec.describe "release versions" do
     # - attempted login using an unknown/unrelated Google account
     #
     # these are tricky to automate due to their reliance on SSO and/or email.
-    tested_uaa_version = "76.0.0"
+    tested_uaa_version = "76.5.0"
     manifest_releases = get_manifest_releases
 
     expect(manifest_releases).to have_key("uaa"), "expected release for uaa to be found in manifest"
@@ -118,7 +118,7 @@ RSpec.describe "release versions" do
     expect(monitor_remote_smoke_tests_resource_version).to eq(cf_smoke_tests_resource_version)
   end
 
-  pinned_cf_acceptance_tests_version = "21.11"
+  pinned_cf_acceptance_tests_version = "24.6"
   specify "cf-acceptance-tests version should be the same as the CF manifest version" do
     cf_manifest_version = cf_deployment_manifest
       .fetch("manifest_version")

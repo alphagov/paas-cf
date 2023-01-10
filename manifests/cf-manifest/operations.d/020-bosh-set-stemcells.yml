@@ -3,5 +3,5 @@
   path: /stemcells
   value:
     - alias: default
-      os: ubuntu-bionic
-      version: "1.107"
+      os: ubuntu-jammy
+      version: "1.75"
