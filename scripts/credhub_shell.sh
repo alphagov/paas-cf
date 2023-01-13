@@ -28,9 +28,9 @@ ssh -qfNC -4 -D 25555 \
 # Setup Credhub variables
 CREDHUB_CA_CERT="$(cat <<EOCERTS
 $(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-vars-store.yml" - | \
-  ruby -ryaml -e 'print YAML.load(STDIN).dig("credhub_tls", "ca")')
+  ruby -ryaml -e 'print YAML.load(STDIN, aliases: true).dig("credhub_tls", "ca")')
 $(aws s3 cp "s3://gds-paas-${DEPLOY_ENV}-state/bosh-vars-store.yml" - | \
-  ruby -ryaml -e 'print YAML.load(STDIN).dig("uaa_ssl", "ca")')
+  ruby -ryaml -e 'print YAML.load(STDIN, aliases: true).dig("uaa_ssl", "ca")')
 EOCERTS
 )"
 export CREDHUB_CA_CERT

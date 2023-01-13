@@ -4,7 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/ruby
-    tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
+    tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
 inputs:
   - name: paas-trusted-people
 run:
@@ -77,7 +77,7 @@ run:
       grafana_roles = %w[viewer editor admin'].map { |r| "grafana-#{r}" }
 
       users = YAML
-        .load_file("#{Dir.pwd}/paas-trusted-people/users.yml")
+        .safe_load_file("#{Dir.pwd}/paas-trusted-people/users.yml", aliases: true)
         .fetch('users')
 
       # a user might be an admin user and an auditor for different uaa origins
@@ -131,10 +131,10 @@ run:
             url: "#{base_url}/api/admin/users",
             password: grafana_pass,
             body: {
-              name:     email.split('@').first,
-              login:    email,
-              email:    email,
-              password: SecureRandom.hex(32)
+              "name":     email.split('@').first,
+              "login":    email,
+              "email":    email,
+              "password": SecureRandom.hex(32)
             }
           )
           puts "Created user #{email}".green
@@ -194,7 +194,7 @@ run:
             method: 'patch',
             url: "#{base_url}/api/orgs/1/users/#{user_id}",
             password: grafana_pass,
-            body: { role: role }
+            body: { "role": role }
           )
           puts "Promoted #{user_id} / #{email} to #{role} in main org".green
 

@@ -4,8 +4,7 @@ image_resource:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-    tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
-
+    tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
 inputs:
   - name: paas-cf
   - name: test-config

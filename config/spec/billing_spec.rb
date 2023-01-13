@@ -13,8 +13,8 @@ describe "billing" do
   let :pricing_plans_by_region do
     BILLING_FILES
       .map { |r| [File.basename(r), JSON.parse(File.read(r))] }
-      .map { |region, config| [region, config.dig("pricing_plans")] }
       .to_h
+      .transform_values { |config| config["pricing_plans"] }
   end
 
   it "is valid json" do
@@ -28,8 +28,8 @@ describe "billing" do
     it "is valid from the start of the month" do
       pricing_plans_by_region.each do |region, plans|
         plans.each do |plan|
-          plan_name = plan.dig("name")
-          valid_from = plan.dig("valid_from")
+          plan_name = plan["name"]
+          valid_from = plan["valid_from"]
 
           expect(valid_from).to match(/\d{4}-\d{2}-01/),
             "#{region}/#{plan_name} is not valid from the start of the month"

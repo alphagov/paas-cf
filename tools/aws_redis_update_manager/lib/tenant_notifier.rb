@@ -73,11 +73,11 @@ class TenantNotifier
     region:
   )
     ERB.new(TEMPLATE).result_with_hash(
-      org_name: org_name,
-      service_instances: service_instances,
-      maintenance_window_date: maintenance_window_date,
-      maintenance_window_time_range: maintenance_window_time_range,
-      region: region,
+      org_name:,
+      service_instances:,
+      maintenance_window_date:,
+      maintenance_window_time_range:,
+      region:,
     )
   end
 
@@ -89,11 +89,11 @@ class TenantNotifier
     region:
   )
     contents = generate_email_contents(
-      org_name: org_name,
-      service_instances: service_instances,
-      maintenance_window_date: maintenance_window_date,
-      maintenance_window_time_range: maintenance_window_time_range,
-      region: region,
+      org_name:,
+      service_instances:,
+      maintenance_window_date:,
+      maintenance_window_time_range:,
+      region:,
     )
 
     client.send_email(
@@ -102,9 +102,9 @@ class TenantNotifier
       email_reply_to_id: PAAS_SUPPORT_REPLY_TO_ID,
       personalisation: {
         # Template the whole body because we have a list
-        contents: contents,
+        contents:,
         # Required for templating subject line
-        maintenance_window_date: maintenance_window_date,
+        maintenance_window_date:,
       },
     )
   end

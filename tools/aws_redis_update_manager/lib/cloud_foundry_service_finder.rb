@@ -21,9 +21,9 @@ class CloudFoundryServiceFinder
       service_instance = OpenStruct.new(
         instance_guid: service_instance_guid,
         instance_name: service_instance.dig("entity", "name"),
-        org_guid: org_guid,
+        org_guid:,
         org_name: org.fetch("name"),
-        space_guid: space_guid,
+        space_guid:,
         space_name: space.fetch("name"),
       )
 
@@ -72,9 +72,9 @@ private
       resp = JSON.parse(body)
       resources += resp.fetch("resources")
 
-      break if resp.dig("next_url").nil?
+      break if resp["next_url"].nil?
 
-      path = cf_curl_path(resp.dig("next_url"))
+      path = cf_curl_path(resp["next_url"])
     end
 
     resources.uniq { |r| r.dig("metadata", "guid") }

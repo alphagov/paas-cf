@@ -29,7 +29,7 @@ class Generator
   end
 end
 
-pricing_data = YAML.load_file("#{__dir__}/pricing_data.yml")
+pricing_data = YAML.load_file("#{__dir__}/pricing_data.yml", aliases: true)
 template = File.read("#{__dir__}/config.json.erb")
 
 REGIONS.each do |region|
@@ -37,7 +37,7 @@ REGIONS.each do |region|
   json_content = g.generate(template)
 
   content = JSON.parse json_content
-  pretty_json_content = JSON.pretty_generate(content, indent: "\t") + "\n"
+  pretty_json_content = "#{JSON.pretty_generate(content, indent: "\t")}\n"
 
   File.open("#{__dir__}/output/#{region}.json", "w") do |f|
     f.write pretty_json_content

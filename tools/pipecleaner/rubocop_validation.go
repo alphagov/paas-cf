@@ -103,6 +103,8 @@ func rubocopTask(task atc.TaskConfig, params atc.TaskEnv) []error {
 		)
 	}
 
+    scriptLines := strings.Split(script, "\n")
+
 	for _, offense := range result.Files[0].Offenses {
 		// adjust for things we prepended to make shellcheck work
 		errors = append(errors, fmt.Errorf(
@@ -111,6 +113,7 @@ func rubocopTask(task atc.TaskConfig, params atc.TaskEnv) []error {
 			offense.Location.Line, offense.Location.Column,
 			offense.Message,
 		))
+        errors = append(errors, fmt.Errorf("%s", scriptLines[offense.Location.Line - 1]))
 	}
 
 	return errors

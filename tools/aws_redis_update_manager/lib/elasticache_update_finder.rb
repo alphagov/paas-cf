@@ -10,7 +10,7 @@ class ElastiCacheUpdateFinder
     loop do
       response = @elasticache_client.describe_update_actions(
         service_update_status: %w[available],
-        marker: marker,
+        marker:,
       )
 
       marker = response.marker

@@ -21,9 +21,9 @@ class CloudFoundryOrgFinder
     end
 
     @orgs[org_guid] ||= OpenStruct.new(
-      org_guid: org_guid,
+      org_guid:,
       org_name: org["name"],
-      org_manager_guids: org_manager_guids,
+      org_manager_guids:,
     )
   end
 

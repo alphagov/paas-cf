@@ -10,12 +10,12 @@ RSpec.describe TenantNotifier do
   let(:service_instances) do
     [
       OpenStruct.new(
-        org_name: org_name,
+        org_name:,
         space_name: "a-space",
         instance_name: "an-instance",
       ),
       OpenStruct.new(
-        org_name: org_name,
+        org_name:,
         space_name: "another-space",
         instance_name: "another-instance",
       ),
@@ -28,10 +28,10 @@ RSpec.describe TenantNotifier do
   context "when generating an email" do
     let(:contents) do
       TenantNotifier.new(notify_api_key).generate_email_contents(
-        org_name: org_name,
-        service_instances: service_instances,
-        maintenance_window_date: maintenance_window_date,
-        maintenance_window_time_range: maintenance_window_time_range,
+        org_name:,
+        service_instances:,
+        maintenance_window_date:,
+        maintenance_window_time_range:,
         region: "London",
       )
     end
@@ -69,11 +69,11 @@ RSpec.describe TenantNotifier do
     let(:notifier) { TenantNotifier.new(notify_api_key) }
     let(:send_email) do
       notifier.notify_tenant(
-        tenant_email_address: tenant_email_address,
-        org_name: org_name,
-        service_instances: service_instances,
-        maintenance_window_date: maintenance_window_date,
-        maintenance_window_time_range: maintenance_window_time_range,
+        tenant_email_address:,
+        org_name:,
+        service_instances:,
+        maintenance_window_date:,
+        maintenance_window_time_range:,
         region: "London",
       )
     end
@@ -87,10 +87,10 @@ RSpec.describe TenantNotifier do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(personalisation: hash_including(
           contents: TenantNotifier.new(notify_api_key).generate_email_contents(
-            org_name: org_name,
-            service_instances: service_instances,
-            maintenance_window_date: maintenance_window_date,
-            maintenance_window_time_range: maintenance_window_time_range,
+            org_name:,
+            service_instances:,
+            maintenance_window_date:,
+            maintenance_window_time_range:,
             region: "London",
           ),
         )),
@@ -102,7 +102,7 @@ RSpec.describe TenantNotifier do
     it 'personalises the Notify "maintenance_window_date" field' do
       expect(notifier.client).to receive(:send_email).with(
         hash_including(personalisation: hash_including(
-          maintenance_window_date: maintenance_window_date,
+          maintenance_window_date:,
         )),
       )
 

@@ -6,7 +6,7 @@ config_file = ARGV[0]
 deploy_env = ARGV[1]
 
 if File.file?(config_file)
-  config = YAML.load_file(config_file)
+  config = YAML.load_file(config_file, aliases: true)
   if config.nil?
     warn "could not parse config file at #{config_file}"
     exit(1)

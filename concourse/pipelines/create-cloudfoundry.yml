@@ -11,72 +11,72 @@ meta:
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     psql: &psql-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     node: &node-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     node-chromium: &node-chromium-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     awscli: &awscli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     cf-cli: &cf-cli-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     cf-uaac: &cf-uaac-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     git-ssh: &git-ssh-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     ruby-slim: &ruby-slim-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     golang: &golang-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     terraform: &terraform-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
     curl-ssl: &curl-ssl-image-resource
       type: docker-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+        tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
 
 
   tasks:
@@ -273,7 +273,7 @@ resource_types:
   type: docker-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+    tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
 
 - name: s3-iam
   type: docker-image
@@ -827,7 +827,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+              tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
 
           inputs:
             - name: paas-cf
@@ -4332,7 +4332,7 @@ jobs:
                 echo Expected buildpacks
                 expected="$(
                   < paas-cf/config/buildpacks.yml \
-                  ruby -ryaml -e 'puts YAML.load(STDIN.read).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
+                  ruby -ryaml -e 'puts YAML.load(STDIN.read, aliases: true).fetch("buildpacks").map { |p| p["name"] + " " + p["stack"] + " " + p["filename"] }.sort'
                 )"
                 echo "$expected"
 
@@ -4498,14 +4498,14 @@ jobs:
                   fi
 
                   ruby -ryaml -e '
-                    manifest = YAML.load_file("manifest.yml")
+                    manifest = YAML.load_file("manifest.yml", aliases: true)
                     manifest["applications"].each { |app| app["services"] = ["healthcheck-db"] }
                     File.write("manifest.yml", manifest.to_yaml)
                   '
                 fi
 
                 ruby -ryaml -e "
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each do |app|
                     app['routes'] = [
                       { 'route' => 'healthcheck.${APPS_DNS_ZONE_NAME}' }
@@ -5139,7 +5139,7 @@ jobs:
                     'BASIC_AUTH_USERNAME' => 'admin',
                     'BASIC_AUTH_PASSWORD' => '${BASIC_AUTH_PASSWORD}',
                   }
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'].merge!(env)
@@ -5255,7 +5255,7 @@ jobs:
             type: docker-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+              tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
 
           inputs:
             - name: paas-cf
@@ -5546,7 +5546,7 @@ jobs:
                     'DEPLOY_ENV' => '${DEPLOY_ENV}',
                   }
 
-                  api = YAML.load_file('manifest-api.yml')
+                  api = YAML.load_file('manifest-api.yml', aliases: true)
                   api['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
@@ -5561,7 +5561,7 @@ jobs:
                   }
                   File.write('manifest-api.yml', api.to_yaml)
 
-                  collector = YAML.load_file('manifest-collector.yml')
+                  collector = YAML.load_file('manifest-collector.yml', aliases: true)
                   collector['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'] = app['env'].merge(env)
@@ -5923,7 +5923,7 @@ jobs:
                     'LOGIT_ELASTICSEARCH_URL' => '${LOGIT_ELASTICSEARCH_URL}',
                     'LOGIT_ELASTICSEARCH_API_KEY' => '${LOGIT_ELASTICSEARCH_API_KEY}'
                   }
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|
                     app['env'] = {} unless app['env']
                     app['env'].merge!(env)
@@ -6159,7 +6159,7 @@ jobs:
                     'AIVEN_CLOUD' => '$AIVEN_CLOUD',
                     'IP_WHITELIST' => '$BROKER_IP_WHITELIST',
                   }
-                  manifest = YAML.load_file('manifest.yml')
+                  manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|
                     app['env'] ||= {}
                     app['env'].merge!(env)
@@ -6529,7 +6529,7 @@ jobs:
           type: docker-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: 364e267f048a07d8b41f25369a99ab0991a1fecc
+            tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
 
         inputs:
           - name: passwords

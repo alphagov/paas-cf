@@ -4,7 +4,7 @@ require "English"
 require "optparse"
 require "yaml"
 
-isolation_segment = YAML.safe_load(STDIN.read)
+isolation_segment = YAML.safe_load($stdin.read)
 
 options = {}
 OptionParser.new { |opts|
@@ -20,12 +20,11 @@ abort "--isolation-segment-definition missing" if options[:definition_path].nil?
 
 seg_def = YAML.safe_load(File.read(options[:definition_path]))
 
-%w[
-  isolation_segment_name
-  number_of_cells
-]
+# rubocop:disable Lint/UnreachableLoop
+%w[isolation_segment_name number_of_cells]
   .select { |var_name| seg_def[var_name].nil? }
   .each { |var_name| abort "Could not find #{var_name}" }
+# rubocop:enable Lint/UnreachableLoop
 
 name = "diego-cell-iso-seg-#{seg_def['isolation_segment_name']}"
 isolation_segment["name"] = name

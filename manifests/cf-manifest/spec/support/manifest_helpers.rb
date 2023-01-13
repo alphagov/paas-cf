@@ -45,15 +45,15 @@ module ManifestHelpers
   end
 
   def cf_deployment_manifest
-    Cache.instance[:cf_deployment_manifest] ||= YAML.load_file(root.join("manifests/cf-deployment/cf-deployment.yml"))
+    Cache.instance[:cf_deployment_manifest] ||= YAML.load_file(root.join("manifests/cf-deployment/cf-deployment.yml"), aliases: true)
   end
 
   def cf_pipeline
-    Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/create-cloudfoundry.yml"))
+    Cache.instance[:cf_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/create-cloudfoundry.yml"), aliases: true)
   end
 
   def monitor_remote_pipeline
-    Cache.instance[:monitor_remote_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/monitor-remote.yml"))
+    Cache.instance[:monitor_remote_pipeline] ||= YAML.load_file(root.join("concourse/pipelines/monitor-remote.yml"), aliases: true)
   end
 
   def property_tree(tree)
@@ -156,10 +156,10 @@ private
       vars_store_tempfile.close
 
       output = render_manifest(
-        environment: environment,
+        environment:,
         vars_store_file: vars_store_tempfile.path,
-        env_specific_bosh_vars_file: env_specific_bosh_vars_file,
-        env_specific_isolation_segments_dir: env_specific_isolation_segments_dir,
+        env_specific_bosh_vars_file:,
+        env_specific_isolation_segments_dir:,
       )
 
       Cache.instance[:vars_store] = File.read(vars_store_tempfile) if custom_vars_store_content.nil?

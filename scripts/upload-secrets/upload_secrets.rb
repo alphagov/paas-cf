@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-script_path = File.absolute_path(__FILE__).sub!(Dir.pwd + "/", "")
+script_path = File.absolute_path(__FILE__).sub!("#{Dir.pwd}/", "")
 File.open(File.expand_path("~/.paas-script-usage"), "a") { |f| f.puts script_path }
 
 require "English"
@@ -42,7 +42,7 @@ def import_to_credhub(credhub_secrets)
 
     pid = spawn(
       "credhub import -f '#{f.path}'",
-      in: STDIN, out: STDOUT, err: STDERR,
+      in: $stdin, out: $stdout, err: $stderr,
     )
 
     Process.wait pid

@@ -1,12 +1,11 @@
 # Disable this cop because we are testing YAML anchors
-# rubocop:disable Security/YAMLLoad
 
 require "yaml"
 
 RSpec.describe "image resources" do
   concourse_fragments = concourse_tasks
     .concat(concourse_pipelines)
-    .map { |_, contents| YAML.load(contents) }
+    .map { |_, contents| YAML.load(contents, aliases: true) }
 
   image_tags_by_repo = concourse_fragments
     .flat_map { |f| all_image_resources(f) }
@@ -31,12 +30,10 @@ RSpec.describe "image resources" do
     # DockerHub images are those where there's no hostname at the start of the
     # image name. Detecting that by the absence of a full stop.
     # The regex is complicated by not all image names having a slash in.
-    dockerhub_images = image_tags_by_repo.select { |repo, _| repo.match?(%r{^[^\.]+(/.+)?$}) }
+    dockerhub_images = image_tags_by_repo.select { |repo, _| repo.match?(%r{^[^.]+(/.+)?$}) }
 
     it "are not being used" do
       expect(dockerhub_images).to be_empty
     end
   end
 end
-
-# rubocop:enable Security/YAMLLoad

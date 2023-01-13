@@ -5,7 +5,7 @@ end
 RSpec.shared_examples "evenly distributable" do |group_name|
   it "by ensuring instance count is a multiple of AZ count" do
     expect(group_name).not_to be_nil
-    ig = subject.fetch("instance_groups." + group_name)
+    ig = subject.fetch("instance_groups.#{group_name}")
     az_count = ig.fetch("azs").size
     instance_count = ig.fetch("instances")
     expect(instance_count % az_count).to eq(0),
@@ -37,8 +37,8 @@ RSpec.describe "Instance counts in different environments" do
 
         it "instance count should be at least half of the API instance count" do
           cc_worker_ig = env_manifest.fetch("instance_groups.cc-worker")
-          api_instance_count = env_manifest.fetch("instance_groups.api").dig("instances").to_f
-          cc_worker_instances_count = cc_worker_ig.dig("instances").to_f
+          api_instance_count = env_manifest.fetch("instance_groups.api")["instances"].to_f
+          cc_worker_instances_count = cc_worker_ig["instances"].to_f
           # Comment out check for overreaching instance count for now:
           # This check does not consider cells in isolation segments
           # cc_worker_az_count = cc_worker_ig.fetch("azs").size
@@ -54,8 +54,8 @@ RSpec.describe "Instance counts in different environments" do
       describe "scheduler" do
         it "instance count should be at least half of the API instance count" do
           scheduler_ig = env_manifest.fetch("instance_groups.scheduler")
-          api_instance_count = env_manifest.fetch("instance_groups.api").dig("instances").to_f
-          scheduler_instances_count = scheduler_ig.dig("instances").to_f
+          api_instance_count = env_manifest.fetch("instance_groups.api")["instances"].to_f
+          scheduler_instances_count = scheduler_ig["instances"].to_f
           # Comment out check for overreaching instance count for now:
           # This check does not consider cells in isolation segments
           # scheduler_az_count = scheduler_ig.fetch("azs").size
