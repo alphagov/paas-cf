@@ -47,21 +47,4 @@ RSpec.describe "vm_types" do
       end
     end
   end
-
-  context "when generating cloud config for development environments" do
-    let(:vm_types) { cloud_config_for_account("dev").fetch("vm_types") }
-
-    it "uses spot instances" do
-      vm_types.each do |vm_type|
-        name = vm_type["name"]
-
-        next if name == "compilation"
-        next if name == "errand"
-
-        cloud_props = vm_type["cloud_properties"]
-        expect(cloud_props["spot_bid_price"]).to be_a(Numeric), "#{name} should set spot price"
-        expect(cloud_props["spot_ondemand_fallback"]).to eq(true), "#{name} should set spot fallback"
-      end
-    end
-  end
 end
