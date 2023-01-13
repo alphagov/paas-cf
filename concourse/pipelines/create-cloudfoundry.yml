@@ -4979,14 +4979,14 @@ jobs:
           file: paas-cf/concourse/tasks/create_admin.yml
           params:
             PREFIX: app-autoscaler-acceptance-test-user
-            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            DISABLE_ADMIN_USER_CREATION: ((disable_app_autoscaler_acceptance_tests))
             UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
 
         - task: app-autoscaler-acceptance-tests
           tags: [colocated-with-web]
           file: paas-cf/concourse/tasks/app-autoscaler-acceptance-tests-run.yml
           params:
-            DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
+            DISABLE_APP_AUTOSCALER_ACCEPTANCE_TESTS: ((disable_app_autoscaler_acceptance_tests))
             SYSTEM_DOMAIN: ((system_dns_zone_name))
             APPS_DOMAIN: ((apps_dns_zone_name))
             SKIP_SSL_VALIDATION: false
@@ -5003,7 +5003,7 @@ jobs:
           file: paas-cf/concourse/tasks/delete_admin.yml
           timeout: 5m
           params:
-            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
+            DISABLE_ADMIN_USER_CREATION: ((disable_app_autoscaler_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))

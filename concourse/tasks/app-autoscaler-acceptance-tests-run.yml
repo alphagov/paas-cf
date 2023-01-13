@@ -11,7 +11,7 @@ inputs:
 outputs:
   - name: artifacts
 params:
-  DISABLE_CUSTOM_ACCEPTANCE_TESTS:
+  DISABLE_APP_AUTOSCALER_ACCEPTANCE_TESTS:
   SYSTEM_DOMAIN:
   APPS_DOMAIN:
   SKIP_SSL_VALIDATION:
@@ -49,8 +49,8 @@ run:
       }
       EOF
 
-      if [ "${DISABLE_CUSTOM_ACCEPTANCE_TESTS:-}" = "true" ]; then
-        echo "WARNING: The custom acceptance tests have been disabled. Unset DISABLE_CUSTOM_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
+      if [ "${DISABLE_APP_AUTOSCALER_ACCEPTANCE_TESTS:-}" = "true" ]; then
+        echo "WARNING: The app-autoscaler acceptance tests have been disabled. Unset DISABLE_APP_AUTOSCALER_ACCEPTANCE_TESTS when uploading the pipelines to enable them. You can still hijack this container to run them manually, but you must update the admin user in ./test-config/config.json."
         exit 0
       fi
 
@@ -58,4 +58,4 @@ run:
       cd paas-cf/manifests/app-autoscaler/upstream
       source .envrc
       cd src/acceptance
-      ./bin/test_default -p -nodes=8
+      ./bin/test_default -procs 4 --compilers 4 --poll-progress-after=120s --poll-progress-interval=30s
