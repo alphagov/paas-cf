@@ -1,0 +1,26 @@
+    [
+        {
+            "name": "GOV.UK Notify test migration",
+            "source_secret_name": "dms/notify-test/source",
+            "target_secret_name": "dms/notify-test/destination",
+            "instance": {
+                "allocated_storage": "1258291",
+                "allow_major_version_upgrade": false,
+                "apply_immediately": true,
+                "auto_minor_version_upgrade": true,
+                "availability_zone": "eu-west-1b",
+                "engine_version": "3.4.7",
+                "multi_az": false,
+                "preferred_maintenance_window": "mon:22:40-mon:23:20",
+                "publicly_accessible": false,
+                "replication_instance_class": "dms.c6i.large"
+            },
+            "task": {
+                "migration_type": "full-load-and-cdc"
+            },
+            "vpc_peering": {
+                "cidr_block": "10.202.0.0/16",
+                "vpc_peering_connection_id": "pcx-05d45161c45033d27"
+            }
+        }
+    ]
