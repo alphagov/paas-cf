@@ -1,6 +1,6 @@
     [
         {
-            "name": "GOV.UK Notify test migration",
+            "name": "govuk-notify-test-migration",
             "source_secret_name": "dms/notify-test/source",
             "target_secret_name": "dms/notify-test/destination",
             "instance": {
