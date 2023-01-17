@@ -156,7 +156,7 @@ resource "aws_lb_listener" "cf_router_app_domain_https" {
   port              = "443"
   protocol          = "HTTPS"
   ssl_policy        = var.default_load_balancer_security_policy
-  certificate_arn   = aws_acm_certificate.apps.arn
+  certificate_arn   = aws_acm_certificate_validation.apps.certificate_arn
 
   default_action {
     type             = "forward"
@@ -241,7 +241,7 @@ resource "aws_lb_listener" "cf_router_system_domain_https" {
 
 resource "aws_lb_listener_certificate" "cf_router_metrics_domain_https" {
   listener_arn    = aws_lb_listener.cf_router_system_domain_https.arn
-  certificate_arn = aws_acm_certificate.metrics.arn
+  certificate_arn = aws_acm_certificate_validation.metrics.certificate_arn
 }
 
 resource "aws_lb_target_group" "cf_router_system_domain_https" {
