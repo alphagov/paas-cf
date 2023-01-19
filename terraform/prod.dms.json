@@ -4,7 +4,7 @@
             "source_secret_name": "dms/notify-test/source",
             "target_secret_name": "dms/notify-test/destination",
             "instance": {
-                "allocated_storage": "1258291",
+                "allocated_storage": "6144",
                 "allow_major_version_upgrade": false,
                 "apply_immediately": true,
                 "auto_minor_version_upgrade": true,

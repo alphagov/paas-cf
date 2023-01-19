@@ -9,6 +9,12 @@ describe "dms" do
 
         expect(names).to all(match(/^[\-A-Za-z0-9._\/]+$/))
       end
+
+        it "must have a storage size between 5 and 6144" do
+            cfg = JSON.read_file(f, aliases: true)
+            allocated_storages = cfg.map { |e| e["instance"]["allocated_storage"].to_int }
+            expect(allocated_storages).to all(be_between(5, 6144))
+        end
     end
   end
 end
