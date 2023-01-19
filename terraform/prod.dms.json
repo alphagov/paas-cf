@@ -1,8 +1,8 @@
     [
         {
             "name": "govuk-notify-test-migration",
-            "source_secret_name": "dms/notify-test/source",
-            "target_secret_name": "dms/notify-test/destination",
+            "source_secret_name": "dms-secrets/notify-test/source",
+            "target_secret_name": "dms-secrets/notify-test/destination",
             "instance": {
                 "allocated_storage": "6144",
                 "allow_major_version_upgrade": false,
