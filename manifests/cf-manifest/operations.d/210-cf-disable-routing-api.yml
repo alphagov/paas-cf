@@ -16,3 +16,12 @@
   path: /variables/name=routing_api_tls
 - type: remove
   path: /variables/name=routing_api_tls_client
+- type: replace
+  path: /instance_groups/name=router/jobs/name=gorouter/properties/router/ca_certs
+  value:
+    - ((diego_instance_identity_ca.ca))
+    - ((cc_tls.ca))
+    - ((uaa_ssl.ca))
+    - ((network_policy_server_external.ca))
+- type: remove
+  path: /instance_groups/name=api/jobs/name=route_registrar/properties/route_registrar/routes/name=routing-api

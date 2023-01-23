@@ -3,6 +3,6 @@
   path: /releases/name=capi
   value:
     name: "capi"
-    version: "1.139.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.139.0"
-    sha1: "bf904f6f360508a66ffd67d1f66c061be3e2ee8f"
+    version: "1.143.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/capi-release?v=1.143.0"
+    sha1: "ee1208d40968bb125601038fcf83b2ef12214d30"

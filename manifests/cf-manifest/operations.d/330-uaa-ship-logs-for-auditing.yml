@@ -2,10 +2,10 @@
 - type: replace
   path: /instance_groups/name=uaa/jobs?/-
   value:
-    name: awslogs-bionic
+    name: awslogs-jammy
     release: awslogs
     properties:
-      awslogs-bionic:
+      awslogs-jammy:
         region: ((terraform_outputs_region))
         awslogs_files_config:
           - name: /var/vcap/sys/log/uaa/uaa_events.log
