@@ -486,7 +486,7 @@
         "yaxes": [
           {
             "$$hashKey": "object:80",
-            "format": "cps",
+            "format": "binBps",
             "label": null,
             "logBase": 1,
             "max": null,
