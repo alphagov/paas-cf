@@ -3,6 +3,7 @@
 require "English"
 require "json"
 require "yaml"
+require_relative "./set_process_log_rate_limits"
 require_relative "./val_from_yaml"
 
 class QuotasSetter
@@ -19,6 +20,7 @@ class QuotasSetter
 private
 
   def create_update_quota(name, definition)
+    new_log_rate_limit = nil
     args = []
     definition.each do |param, value|
       case param
@@ -30,9 +32,13 @@ private
         args << "-r" << value.to_s
       when "non_basic_services_allowed"
         args << (value ? "--allow-paid-service-plans" : "--disallow-paid-service-plans")
+      when "log_rate_limit"
+        new_log_rate_limit = value
+        args << "-l" << (value.nil? ? "-1" : value.to_s)
       end
     end
     if existing_quotas.include?(name)
+      ProcessLogRateLimitSetter.new(existing_quotas[name], new_log_rate_limit).apply!
       cf("update-quota", name, *args)
     else
       cf("create-quota", name, *args)
@@ -44,22 +50,11 @@ private
   end
 
   def fetch_quotas
-    quotas = []
-    headers_done = false
+    quotas_json = `cf curl -f '/v3/organization_quotas'`
+    raise quotas_json unless $CHILD_STATUS.success?
 
-    quotas = `cf quotas`
-    abort quotas unless $CHILD_STATUS.success?
-
-    quotas.each_line do |line|
-      unless headers_done
-        headers_done = true if line =~ /\Aname\s+/
-        next
-      end
-      if line =~ /\A(\S+)\s+/
-        quotas << Regexp.last_match(1)
-      end
-    end
-    quotas
+    quotas = JSON.parse(quotas_json)
+    Hash[quotas["resources"].map { |v| [v["name"], v] }]
   end
 
   def cf(*args)
