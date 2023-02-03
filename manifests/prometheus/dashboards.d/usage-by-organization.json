@@ -34,7 +34,7 @@
         "fill": 10,
         "fillGradient": 0,
         "gridPos": {
-          "h": 20,
+          "h": 10,
           "w": 8,
           "x": 0,
           "y": 0
@@ -124,6 +124,7 @@
         "dashLength": 10,
         "dashes": false,
         "datasource": null,
+        "description": "Lacking a real (and sufficiently-labeled) metric for containers being started, this actually measures the number of very young containers attributable to an organization.\n\nA surge of apparent container starts *could* indicate a lot of crashes and attempted restarts.\n\nAttempted container starts that don't even manage to live for a minute will probably get missed from this plot.",
         "fieldConfig": {
           "defaults": {},
           "overrides": []
@@ -137,7 +138,7 @@
           "y": 0
         },
         "hiddenSeries": false,
-        "id": 3,
+        "id": 8,
         "legend": {
           "avg": false,
           "current": false,
@@ -164,11 +165,11 @@
         "steppedLine": false,
         "targets": [
           {
-            "exemplar": true,
-            "expr": "sum(count(firehose_container_metric_memory_bytes_quota{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name!~\"[A-Z]+-.*\"}) by (application_id, organization_name)) by (organization_name)",
+            "exemplar": false,
+            "expr": "(count(min_over_time(firehose_value_metric_rep_container_age{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\", organization_name!~\"[A-Z]+-.*\"}[8m]) < (2 * 60 * 1e9)) by (organization_name)) / 10",
             "interval": "",
-            "intervalFactor": 3,
-            "legendFormat": "{{ organization_name }}",
+            "intervalFactor": 2,
+            "legendFormat": "{{organization_name}}",
             "refId": "A"
           }
         ],
@@ -176,7 +177,7 @@
         "timeFrom": null,
         "timeRegions": [],
         "timeShift": null,
-        "title": "Total container instances",
+        "title": "Total container start rate (approx)",
         "tooltip": {
           "shared": true,
           "sort": 2,
@@ -192,16 +193,16 @@
         },
         "yaxes": [
           {
-            "$$hashKey": "object:80",
-            "format": "short",
+            "$$hashKey": "object:65",
+            "format": "cpm",
             "label": null,
             "logBase": 1,
             "max": null,
-            "min": "0",
+            "min": null,
             "show": true
           },
           {
-            "$$hashKey": "object:81",
+            "$$hashKey": "object:66",
             "format": "short",
             "label": null,
             "logBase": 1,
@@ -327,6 +328,103 @@
         "gridPos": {
           "h": 10,
           "w": 8,
+          "x": 0,
+          "y": 10
+        },
+        "hiddenSeries": false,
+        "id": 3,
+        "legend": {
+          "avg": false,
+          "current": false,
+          "max": false,
+          "min": false,
+          "show": true,
+          "total": false,
+          "values": false
+        },
+        "lines": true,
+        "linewidth": 0,
+        "nullPointMode": "null as zero",
+        "options": {
+          "alertThreshold": true
+        },
+        "percentage": false,
+        "pluginVersion": "7.5.16",
+        "pointradius": 2,
+        "points": false,
+        "renderer": "flot",
+        "seriesOverrides": [],
+        "spaceLength": 10,
+        "stack": true,
+        "steppedLine": false,
+        "targets": [
+          {
+            "exemplar": true,
+            "expr": "sum(count(firehose_container_metric_memory_bytes_quota{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name!~\"[A-Z]+-.*\"}) by (application_id, organization_name)) by (organization_name)",
+            "interval": "",
+            "intervalFactor": 3,
+            "legendFormat": "{{ organization_name }}",
+            "refId": "A"
+          }
+        ],
+        "thresholds": [],
+        "timeFrom": null,
+        "timeRegions": [],
+        "timeShift": null,
+        "title": "Total container instances",
+        "tooltip": {
+          "shared": true,
+          "sort": 2,
+          "value_type": "individual"
+        },
+        "type": "graph",
+        "xaxis": {
+          "buckets": null,
+          "mode": "time",
+          "name": null,
+          "show": true,
+          "values": []
+        },
+        "yaxes": [
+          {
+            "$$hashKey": "object:80",
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": "0",
+            "show": true
+          },
+          {
+            "$$hashKey": "object:81",
+            "format": "short",
+            "label": null,
+            "logBase": 1,
+            "max": null,
+            "min": null,
+            "show": true
+          }
+        ],
+        "yaxis": {
+          "align": false,
+          "alignLevel": null
+        }
+      },
+      {
+        "aliasColors": {},
+        "bars": false,
+        "dashLength": 10,
+        "dashes": false,
+        "datasource": null,
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
+        "fill": 10,
+        "fillGradient": 0,
+        "gridPos": {
+          "h": 10,
+          "w": 8,
           "x": 8,
           "y": 10
         },
@@ -387,7 +485,7 @@
         "yaxes": [
           {
             "$$hashKey": "object:80",
-            "format": "cps",
+            "format": "binBps",
             "label": null,
             "logBase": 1,
             "max": null,
