@@ -1,0 +1,14 @@
+[
+  {
+    "name": "bjss-pre-prod-vpn",
+    "aws_customer_gateway": {
+      "bgp_asn": 65000,
+      "ip_address": "20.108.191.198"
+    },
+    "aws_vpn_connection": {
+      "destination_cidr_blocks": [
+        "172.28.8.0/21"
+      ]
+    }
+  }
+]
