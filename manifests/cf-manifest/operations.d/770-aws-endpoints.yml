@@ -1,22 +1,22 @@
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions/-
   value:
-    name: secret_manager_endpoint
+    name: aws_endpoints
     rules:
       - protocol: tcp
-        destination: 10.0.79.0-10.0.79.15
+        destination: ((terraform_outputs_vpc_endpoints_ip_range_zone0))
         ports: '443'
       - protocol: tcp
-        destination: 10.0.79.16-10.0.79.31
+        destination: ((terraform_outputs_vpc_endpoints_ip_range_zone1))
         ports: '443'
       - protocol: tcp
-        destination: 10.0.79.32-10.0.79.47
+        destination: ((terraform_outputs_vpc_endpoints_ip_range_zone2))
         ports: '443'
 
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_running_security_groups/-
-  value: secret_manager_endpoint
+  value: aws_endpoints
 
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/default_staging_security_groups/-
-  value: secret_manager_endpoint
+  value: aws_endpoints

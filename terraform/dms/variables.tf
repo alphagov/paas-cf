@@ -31,16 +31,6 @@ variable "dms_cidrs" {
   default     = ["10.0.80.0/22", "10.0.84.0/22", "10.0.88.0/22"]
 }
 
-variable "aws_vpc_endpoint_cidrs_per_zone" {
-  description = "CIDR for AWS VPC endpoint subnets indexed by AZ"
-
-  default = {
-    zone0 = "10.0.79.0/28"
-    zone1 = "10.0.79.16/28"
-    zone2 = "10.0.79.32/28"
-  }
-}
-
 variable "dms_secrets_manager_role_name" {
   description = "The name of the IAM role used by dms"
 

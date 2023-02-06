@@ -5,23 +5,6 @@ data "aws_subnets" "aws_backing_service" {
   }
 }
 
-resource "aws_subnet" "secrets_manager_vpc_endpoint" {
-  count = length(local.migrations) > 0 ? length(var.aws_vpc_endpoint_cidrs_per_zone) : 0
-
-  vpc_id            = var.vpc_id
-  cidr_block        = var.aws_vpc_endpoint_cidrs_per_zone[format("zone%d", count.index)]
-  availability_zone = var.zones[format("zone%d", count.index)]
-
-  map_public_ip_on_launch = false
-
-  tags = {
-    Build       = "terraform"
-    Resource    = "aws_subnet"
-    Environment = var.env
-    Name        = "${var.env}-secrets-manager-vpc-endpoint-${count.index}"
-  }
-}
-
 resource "aws_subnet" "aws_dms_replication_zone_0" {
   for_each = local.migrations
 

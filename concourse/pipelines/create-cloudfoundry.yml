@@ -4291,6 +4291,9 @@ jobs:
 
                 ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
 
+                # TODO Remove below after 09/03/2023. This is not needed after it has been run once in each environment.
+                cf delete-security-group secret_manager_endpoint -f || true
+
       - task: set-quotas-from-manifest
         tags: [colocated-with-web]
         config:
