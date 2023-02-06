@@ -36,8 +36,9 @@ resource "aws_security_group" "vpn_to_rds_broker_dbs" {
 data "aws_network_acls" "default" {
   vpc_id = var.vpc_id
 
-  tags = {
-    Name = "${var.env}-acl"
+  filter {
+    name   = "default"
+    values = [true]
   }
 }
 
