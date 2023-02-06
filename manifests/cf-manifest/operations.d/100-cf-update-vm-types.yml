@@ -16,7 +16,7 @@
   value: high_cpu_xlarge
 - type: replace
   path: /instance_groups/name=log-cache/vm_type
-  value: high_mem_large
+  value: high_mem_xlarge
 - type: replace
   path: /instance_groups/name=nats/vm_type
   value: medium

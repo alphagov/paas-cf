@@ -20,6 +20,8 @@ high_cpu_large_vm_instance_type: c5.large
 
 high_mem_large_vm_instance_type: r5.large
 
+high_mem_xlarge_vm_instance_type: r5.xlarge
+
 high_cpu_xlarge_vm_instance_type: c5.xlarge
 
 cell_instance_type: r5.xlarge
