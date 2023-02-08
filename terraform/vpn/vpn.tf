@@ -36,13 +36,13 @@ resource "aws_vpn_connection" "default" {
   tunnel_inside_ip_version = each.value.aws_vpn_connection.tunnel_inside_ip_version
   tunnel1_preshared_key    = var.vpn_key_data[each.key].tunnel1_preshared_key
   tunnel2_preshared_key    = var.vpn_key_data[each.key].tunnel2_preshared_key
-
+  
   tunnel1_dpd_timeout_action           = "clear"
   tunnel1_ike_versions                 = ["ikev2"]
-  tunnel1_phase1_dh_group_numbers      = [19]
-  tunnel1_phase2_dh_group_numbers      = [19]
-  tunnel1_phase1_encryption_algorithms = ["AES128-GCM-16"]
-  tunnel1_phase2_encryption_algorithms = ["AES128-GCM-16"]
+  tunnel1_phase1_dh_group_numbers      = [14]
+  tunnel1_phase2_dh_group_numbers      = [2]
+  tunnel1_phase1_encryption_algorithms = ["AES128"]
+  tunnel1_phase2_encryption_algorithms = ["AES128"]
   tunnel1_phase1_lifetime_seconds      = 28800
   tunnel1_phase2_lifetime_seconds      = 3600
   tunnel1_phase1_integrity_algorithms  = ["SHA2-256"]
@@ -51,10 +51,10 @@ resource "aws_vpn_connection" "default" {
 
   tunnel2_dpd_timeout_action           = "clear"
   tunnel2_ike_versions                 = ["ikev2"]
-  tunnel2_phase1_dh_group_numbers      = [19]
-  tunnel2_phase2_dh_group_numbers      = [19]
-  tunnel2_phase1_encryption_algorithms = ["AES128-GCM-16"]
-  tunnel2_phase2_encryption_algorithms = ["AES128-GCM-16"]
+  tunnel2_phase1_dh_group_numbers      = [14]
+  tunnel2_phase2_dh_group_numbers      = [2]
+  tunnel2_phase1_encryption_algorithms = ["AES128"]
+  tunnel2_phase2_encryption_algorithms = ["AES128"]
   tunnel2_phase1_lifetime_seconds      = 28800
   tunnel2_phase2_lifetime_seconds      = 3600
   tunnel2_phase1_integrity_algorithms  = ["SHA2-256"]
