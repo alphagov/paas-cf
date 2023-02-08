@@ -16,9 +16,11 @@ credhub_namespaces = [
 
 alertmanager_pagerduty_24_7_service_key = ENV["ALERTMANAGER_PAGERDUTY_24_7_SERVICE_KEY"] || get_secret("pagerduty/#{ENV['MAKEFILE_ENV_TARGET']}/alertmanager_pagerduty_24_7_service_key")
 alertmanager_pagerduty_in_hours_service_key = ENV["ALERTMANAGER_PAGERDUTY_IN_HOURS_SERVICE_KEY"] || get_secret("pagerduty/#{ENV['MAKEFILE_ENV_TARGET']}/alertmanager_pagerduty_in_hours_service_key")
+missing_alerts_service_key = ENV["MISSING_ALERTS_SERVICE_KEY"] || get_secret("pagerduty/#{ENV['MAKEFILE_ENV_TARGET']}/missing_alerts_service_key")
 
 upload_secrets(
   credhub_namespaces,
   "alertmanager_pagerduty_24_7_service_key" => alertmanager_pagerduty_24_7_service_key,
   "alertmanager_pagerduty_in_hours_service_key" => alertmanager_pagerduty_in_hours_service_key,
+  "missing_alerts_service_key" => missing_alerts_service_key,
 )
