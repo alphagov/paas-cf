@@ -12,7 +12,6 @@ resource "aws_dms_endpoint" "source" {
   ssl_mode                        = "require"
   secrets_manager_arn             = try(data.aws_secretsmanager_secret.source[each.key].arn, null)
   secrets_manager_access_role_arn = data.aws_iam_role.secrets_manager.arn
-  extra_connection_attributes     = try("secretsManagerEndpointOverride=${aws_vpc_endpoint.secrets_manager[0].dns_entry[0].dns_name}", null)
 
   tags = {
     Build       = "terraform"
@@ -32,7 +31,6 @@ resource "aws_dms_endpoint" "target" {
   ssl_mode                        = "require"
   secrets_manager_arn             = try(data.aws_secretsmanager_secret.target[each.key].arn, null)
   secrets_manager_access_role_arn = data.aws_iam_role.secrets_manager.arn
-  extra_connection_attributes     = try("secretsManagerEndpointOverride=${aws_vpc_endpoint.secrets_manager[0].dns_entry[0].dns_name}", null)
 
   tags = {
     Build       = "terraform"
@@ -73,7 +71,7 @@ resource "aws_dms_replication_instance" "default" {
   replication_instance_id      = "${var.env}-${each.key}"
 
   replication_subnet_group_id = aws_dms_replication_subnet_group.default[each.key].id
-  vpc_security_group_ids      = setunion(data.aws_security_groups.rds_broker_db_clients.ids, [aws_security_group.secrets_manager_dms_access.id])
+  vpc_security_group_ids      = setunion(data.aws_security_groups.rds_broker_db_clients.ids, [aws_security_group.dms.id])
 
   tags = {
     Build       = "terraform"
