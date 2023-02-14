@@ -88,8 +88,8 @@ github.com/fatih/color
 # github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0
 ## explicit; go 1.13
 github.com/go-task/slim-sprig
-# github.com/gogo/protobuf v1.2.1
-## explicit
+# github.com/gogo/protobuf v1.3.2
+## explicit; go 1.15
 # github.com/golang/protobuf v1.5.2
 ## explicit; go 1.9
 github.com/golang/protobuf/proto
