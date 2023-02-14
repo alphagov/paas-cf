@@ -3,13 +3,9 @@ package scripts_test
 import (
 	"bufio"
 	"fmt"
-	"os"
-	"strings"
-
-	"golang.org/x/crypto/openpgp"
-	"golang.org/x/crypto/openpgp/armor"
-	"golang.org/x/crypto/openpgp/packet"
+	"github.com/ProtonMail/gopenpgp/v2/crypto"
 	yaml "gopkg.in/yaml.v2"
+	"os"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -40,11 +36,12 @@ var _ = Describe("Concourse gpg vars files", func() {
 })
 
 func extractKeyId(keyASC string) string {
-	block, err := armor.Decode(strings.NewReader(keyASC))
+
+	key, err := crypto.NewKeyFromArmored(keyASC)
 	ExpectWithOffset(1, err).NotTo(HaveOccurred())
 
-	e, err := openpgp.ReadEntity(packet.NewReader(block.Body))
-	ExpectWithOffset(1, err).NotTo(HaveOccurred())
+	e := key.GetEntity()
+	ExpectWithOffset(1, e).NotTo(BeNil())
 	ExpectWithOffset(1, e.PrimaryKey).NotTo(BeNil())
 	return fmt.Sprintf("%X", e.PrimaryKey.Fingerprint)
 }
