@@ -19,6 +19,17 @@ RSpec.describe "cloud controller" do
     end
   end
 
+  describe "defaults" do
+    let(:cc_ng_value) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc.default_app_log_rate_limit_in_bytes_per_second") }
+    let(:cc_worker_value) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc.default_app_log_rate_limit_in_bytes_per_second") }
+    let(:cc_scheduler_value) { manifest.fetch("instance_groups.scheduler.jobs.cloud_controller_clock.properties.cc.default_app_log_rate_limit_in_bytes_per_second") }
+
+    it "has the same default_app_log_rate_limit_in_bytes_per_second value set for all three cc components" do
+      expect(cc_ng_value).to be == cc_worker_value
+      expect(cc_ng_value).to be == cc_scheduler_value
+    end
+  end
+
   describe "broker" do
     let(:cc_ng_props) { manifest.fetch("instance_groups.api.jobs.cloud_controller_ng.properties.cc") }
     let(:cc_worker_props) { manifest.fetch("instance_groups.cc-worker.jobs.cloud_controller_worker.properties.cc") }
