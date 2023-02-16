@@ -1,0 +1,22 @@
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=smtp_alert?/properties/smtp_alert?
+  value:
+    auth_username: ((terraform_outputs_ses_smtp_aws_access_key_id))
+    auth_password: ((terraform_outputs_ses_smtp_password))
+    smarthost:  ((terraform_outputs_ses_smtp_host))
+    from: "govpaas-alerting-((aws_account))@digital.cabinet-office.gov.uk"
+    pager_duty_service_key: ((missing_alerts_service_key))
+    metrics_environment: ((metrics_environment))
+    crontab_schedule:
+
+- type: replace
+  path: /instance_groups/name=alertmanager/jobs/name=smtp_alert?/release
+  value: generic
+
+- type: replace
+  path: /releases/name=generic?
+  value:
+    name: generic
+    version: 0.1.3
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/generic-0.1.3.tgz
+    sha1: 3f91158bd9be224cbbc9f356e6bd95aefbf2c0c4
