@@ -4028,6 +4028,32 @@ jobs:
                 EOF
 
                 cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-10
+                small-10
+                small-ha-10
+                medium-10
+                medium-ha-10
+                large-10
+                large-ha-10
+                large-10-old
+                large-ha-10-old
+                xlarge-10
+                xlarge-ha-10
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-10-high-iops
+                small-10-high-iops
+                small-ha-10-high-iops
+                medium-10-high-iops
+                medium-ha-10-high-iops
+                large-10-high-iops
+                large-ha-10-high-iops
+                xlarge-10-high-iops
+                xlarge-ha-10-high-iops
+                EOF
+
+                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
                 tiny-unencrypted-11
                 small-11
                 small-ha-11
