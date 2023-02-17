@@ -16,7 +16,12 @@
             "replication_instance_class": "dms.c6i.large"
         },
         "task": {
-            "migration_type": "full-load-and-cdc"
+            "migration_type": "full-load-and-cdc",
+            "settings_overrides": {
+                "FullLoadSettings": {
+                    "TargetTablePrepMode": "DO_NOTHING"
+                }
+            }
         },
         "vpc_peering": {
             "cidr_block": "10.202.0.0/16",
