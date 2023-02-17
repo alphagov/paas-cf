@@ -1,6 +1,6 @@
 locals {
 
-  task_settings  = file("task_settings.json")
+  default_task_settings  = file("default_task_settings.json")
   table_mappings = file("table_mappings.json")
 
   migrations = {

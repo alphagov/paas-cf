@@ -81,12 +81,22 @@ resource "aws_dms_replication_instance" "default" {
   }
 }
 
+data "utils_deep_merge_json" "replication_task" {
+  for_each = local.migrations
+
+  input = [
+    local.default_task_settings,
+    jsonencode(coalesce(each.value.task.settings_overrides, {}))
+  ]
+}
+
 resource "aws_dms_replication_task" "default" {
   for_each = local.migrations
 
   migration_type = each.value.task.migration_type
 
-  replication_task_settings = local.task_settings
+  replication_task_settings = data.utils_deep_merge_json.replication_task[each.key].output
+
   table_mappings            = local.table_mappings
 
   replication_task_id      = "${var.env}-${each.key}"

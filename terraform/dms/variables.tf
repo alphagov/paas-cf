@@ -17,6 +17,7 @@ variable "dms_data" {
     })
     task = optional(object({
       migration_type = optional(string)
+      settings_overrides = optional(map(any))
     }))
     vpc_peering = optional(object({
       cidr_block                = optional(string)
