@@ -21,7 +21,8 @@
                 "FullLoadSettings": {
                     "TargetTablePrepMode": "DO_NOTHING"
                 }
-            }
+            },
+            "table_mappings": null
         },
         "vpc_peering": {
             "cidr_block": "10.202.0.0/16",

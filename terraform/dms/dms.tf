@@ -97,7 +97,7 @@ resource "aws_dms_replication_task" "default" {
 
   replication_task_settings = data.utils_deep_merge_json.replication_task[each.key].output
 
-  table_mappings            = local.table_mappings
+  table_mappings = jsonencode(coalesce(each.value.task.table_mappings, jsondecode(local.default_table_mappings)))
 
   replication_task_id      = "${var.env}-${each.key}"
   replication_instance_arn = aws_dms_replication_instance.default[each.key].replication_instance_arn

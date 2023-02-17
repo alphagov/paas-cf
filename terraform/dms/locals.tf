@@ -1,7 +1,7 @@
 locals {
 
   default_task_settings  = file("default_task_settings.json")
-  table_mappings = file("table_mappings.json")
+  default_table_mappings = file("default_table_mappings.json")
 
   migrations = {
     for i, migration in var.dms_data : migration.name => {
