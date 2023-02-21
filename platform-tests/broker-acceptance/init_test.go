@@ -139,10 +139,14 @@ func pollForServiceUpdateCompletion(dbInstanceName string) {
 }
 
 func pollForServiceDeletionCompletion(dbInstanceName string) {
+	pollForServiceDeletionCompletionTimeout(dbInstanceName, testConfig.DefaultTimeoutDuration())
+}
+
+func pollForServiceDeletionCompletionTimeout(dbInstanceName string, timeout time.Duration) {
 	fmt.Fprint(GinkgoWriter, "Polling for service destruction to complete")
 	Eventually(func() *Buffer {
 		fmt.Fprint(GinkgoWriter, ".")
-		command := quietCf("cf", "services").Wait(testConfig.DefaultTimeoutDuration())
+		command := quietCf("cf", "services").Wait(timeout)
 		Expect(command).To(Exit(0), fmt.Sprint("Error calling cf services: ", string(command.Out.Contents())))
 		return command.Out
 	}, DB_CREATE_TIMEOUT, 15*time.Second).ShouldNot(Say(dbInstanceName))

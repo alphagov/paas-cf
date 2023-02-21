@@ -2,6 +2,8 @@ package broker_acceptance_test
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/cloudfoundry/cf-test-helpers/cf"
 	"github.com/cloudfoundry/cf-test-helpers/generator"
 	. "github.com/onsi/ginkgo/v2"
@@ -54,7 +56,7 @@ var _ = Describe("CDN broker", func() {
 			By("deleting a standard CDN service", func() {
 				Expect(cf.Cf("delete-service", serviceInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
 				Expect(cf.Cf("delete-domain", domainName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceDeletionCompletion(serviceInstanceName)
+				pollForServiceDeletionCompletionTimeout(serviceInstanceName, 45*time.Minute)
 			})
 		})
 
