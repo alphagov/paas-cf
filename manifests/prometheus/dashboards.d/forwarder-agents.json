@@ -158,16 +158,15 @@
         "bars": true,
         "dashLength": 10,
         "dashes": false,
-        "datasource": null,
-        "fieldConfig": {
-          "defaults": {},
-          "overrides": []
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
         },
         "fill": 1,
         "fillGradient": 0,
         "gridPos": {
           "h": 9,
-          "w": 12,
+          "w": 6,
           "x": 0,
           "y": 9
         },
@@ -194,7 +193,7 @@
           "alertThreshold": true
         },
         "percentage": false,
-        "pluginVersion": "7.5.15",
+        "pluginVersion": "8.5.15",
         "pointradius": 2,
         "points": false,
         "renderer": "flot",
@@ -212,9 +211,7 @@
           }
         ],
         "thresholds": [],
-        "timeFrom": null,
         "timeRegions": [],
-        "timeShift": null,
         "title": "Dropped",
         "tooltip": {
           "shared": true,
@@ -223,9 +220,7 @@
         },
         "type": "graph",
         "xaxis": {
-          "buckets": null,
           "mode": "time",
-          "name": null,
           "show": true,
           "values": []
         },
@@ -233,37 +228,35 @@
           {
             "$$hashKey": "object:516",
             "format": "cps",
-            "label": null,
             "logBase": 1,
-            "max": null,
-            "min": null,
             "show": true
           },
           {
             "$$hashKey": "object:517",
             "format": "short",
-            "label": null,
             "logBase": 1,
-            "max": null,
-            "min": null,
             "show": true
           }
         ],
         "yaxis": {
-          "align": false,
-          "alignLevel": null
+          "align": false
         }
       },
       {
-        "datasource": null,
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
             "custom": {
-              "align": null,
-              "filterable": false
+              "align": "auto",
+              "displayMode": "auto",
+              "filterable": false,
+              "inspect": false
             },
             "mappings": [],
             "thresholds": {
@@ -358,12 +351,19 @@
         },
         "gridPos": {
           "h": 9,
-          "w": 12,
-          "x": 12,
+          "w": 6,
+          "x": 6,
           "y": 9
         },
         "id": 9,
         "options": {
+          "footer": {
+            "fields": "",
+            "reducer": [
+              "sum"
+            ],
+            "show": false
+          },
           "showHeader": true,
           "sortBy": [
             {
@@ -372,7 +372,7 @@
             }
           ]
         },
-        "pluginVersion": "7.5.15",
+        "pluginVersion": "8.5.15",
         "targets": [
           {
             "exemplar": true,
@@ -384,8 +384,6 @@
             "refId": "A"
           }
         ],
-        "timeFrom": null,
-        "timeShift": null,
         "title": "Dropped over period",
         "transformations": [
           {
@@ -429,6 +427,65 @@
           }
         ],
         "type": "table"
+      },
+      {
+        "cards": {},
+        "color": {
+          "cardColor": "#b4ff00",
+          "colorScale": "sqrt",
+          "colorScheme": "interpolateCividis",
+          "exponent": 0.5,
+          "mode": "spectrum"
+        },
+        "dataFormat": "timeseries",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "description": "Actually a metric of the \"loggregator agent\", downstream from the \"forwarder agent\", but figure should be similar.",
+        "gridPos": {
+          "h": 9,
+          "w": 12,
+          "x": 12,
+          "y": 9
+        },
+        "heatmap": {},
+        "hideZeroBuckets": false,
+        "highlightCards": true,
+        "id": 12,
+        "legend": {
+          "show": false
+        },
+        "pluginVersion": "7.5.15",
+        "reverseYBuckets": false,
+        "targets": [
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "P1809F7CD0C75ACF3"
+            },
+            "exemplar": true,
+            "expr": "firehose_value_metric_loggregator_metron_average_envelopes{bosh_job_name=~\"$bosh_job_name\",bosh_job_id=~\"$bosh_job_id\",bosh_job_ip=~\"$bosh_job_ip\"}",
+            "interval": "",
+            "legendFormat": "",
+            "refId": "A"
+          }
+        ],
+        "title": "Avg envelope size",
+        "tooltip": {
+          "show": true,
+          "showHistogram": true
+        },
+        "type": "heatmap",
+        "xAxis": {
+          "show": true
+        },
+        "yAxis": {
+          "format": "bytes",
+          "logBase": 2,
+          "show": true
+        },
+        "yBucketBound": "auto"
       }
     ],
     "refresh": false,
