@@ -1,0 +1,22 @@
+# REMOVE file if https://github.com/bosh-prometheus/prometheus-boshrelease/pull/454 gets merged
+# This is a temporary fix to the issue.
+
+- type: replace
+  path: /releases/-
+  value:
+    name: paas-nginx-hosts-reload
+    version: 1.1.0
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/paas-nginx-hosts-reload-1.1.0.tgz
+    sha1: 6f242a8bb1cb48d96bfa1cb66b17cbd4618a0e9c
+
+- type: replace
+  path: /instance_groups/name=nginx_z1/jobs/-
+  value:
+    name: nginx-hosts-reload
+    release: paas-nginx-hosts-reload
+
+- type: replace
+  path: /instance_groups/name=nginx_z2/jobs/-
+  value:
+    name: nginx-hosts-reload
+    release: paas-nginx-hosts-reload
