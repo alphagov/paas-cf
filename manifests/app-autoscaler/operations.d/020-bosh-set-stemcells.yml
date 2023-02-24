@@ -4,4 +4,4 @@
   value:
     - alias: default
       os: ubuntu-jammy
-      version: "1.80"
+      version: "1.83"
