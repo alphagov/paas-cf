@@ -26,6 +26,8 @@ run:
       echo "Generating configuration"
       CONFIG="$(pwd)/config.json"
       export CONFIG
+      # TODO: setting node_memory_limit to 256MB is a workaround for https://github.com/cloudfoundry/app-autoscaler-release/issues/1059
+      #       remove once this is fixed.
       cat <<EOF > "$CONFIG"
       {
         "service_name": "autoscaler",
@@ -36,7 +38,7 @@ run:
 
         "default_timeout": 60,
         "sleep_timeout": 60,
-
+        "node_memory_limit": 256,
         "api": "api.$SYSTEM_DOMAIN",
         "autoscaler_api": "autoscaler.$SYSTEM_DOMAIN",
         "apps_domain": "$APPS_DOMAIN",
@@ -56,6 +58,7 @@ run:
 
       echo "Running tests"
       cd paas-cf/manifests/app-autoscaler/upstream
-      source .envrc
+      PATH=$(go env GOPATH)/bin:${PATH}
+      export PATH
       cd src/acceptance
       ./bin/test_default -procs 4 --compilers 4 --poll-progress-after=120s --poll-progress-interval=30s
