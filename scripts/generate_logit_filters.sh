@@ -46,14 +46,14 @@ wget -q -O /tmp/syslog_standard.conf "https://raw.githubusercontent.com/cloudfou
 
 echo "filter {" > /output/generated_logit_filters.conf
 {
-    sed 's/^/  /' < /mnt/config/logit/10_base.conf
+    sed 's/^/  /' < /mnt/config/logit/filters.d/10_base.conf
     sed 's/^/  /' < /tmp/redact_passwords.conf
     sed 's/^/  /' < /tmp/syslog_standard.conf
-    sed 's/^/  /' < /mnt/config/logit/11_app_syslog_drain.conf
+    sed 's/^/  /' < /mnt/config/logit/filters.d/11_app_syslog_drain.conf
     sed 's/^/  /' < /tmp/logsearch-for-cloudfoundry/src/logsearch-config/target/logstash-filters-default.conf
-    sed 's/^/  /' < /mnt/config/logit/20_custom_cf_filters.conf
-    sed 's/^/  /' < /mnt/config/logit/21_paas_billing_filters.conf
-    sed 's/^/  /' < /mnt/config/logit/30_various_timestamps.conf
+    sed 's/^/  /' < /mnt/config/logit/filters.d/20_custom_cf_filters.conf
+    sed 's/^/  /' < /mnt/config/logit/filters.d/21_paas_billing_filters.conf
+    sed 's/^/  /' < /mnt/config/logit/filters.d/30_various_timestamps.conf
     echo "}"
 } >> /output/generated_logit_filters.conf
 
