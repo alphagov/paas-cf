@@ -4,19 +4,19 @@ resource_types:
   # version of the resource_type `git`. As a temporary fix we have docker image
   # of the resource. This resource_type can be deleted when the issue is resolved
 - name: git
-  type: docker-image
+  type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/git-resource
     tag: 1f84d4a76b4a2491283e0107ae7ed4bc83c84d1b
 
 - name: s3-iam
-  type: docker-image
+  type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/s3-resource
     tag: 96b47010a10ca13b40bc604b49b4ab9158cfe2c7
 
 - name: semver-iam
-  type: docker-image
+  type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/semver-resource
     tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
@@ -96,7 +96,7 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
+            type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
               tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
@@ -141,7 +141,7 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
+            type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/cf-cli
               tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
@@ -186,7 +186,7 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
+            type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/bosh-cli-v2
               tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
@@ -240,7 +240,7 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
+            type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/ruby
               tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
@@ -283,7 +283,7 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
+            type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/terraform
               tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59

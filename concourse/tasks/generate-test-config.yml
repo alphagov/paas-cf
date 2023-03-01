@@ -1,7 +1,7 @@
 ---
 platform: linux
 image_resource:
-  type: docker-image
+  type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/bosh-cli-v2
     tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59

@@ -4,13 +4,13 @@ resource_types:
   # version of the resource_type `git`. As a temporary fix we have docker image
   # of the resource. This resource_type can be deleted when the issue is resolved
 - name: git
-  type: docker-image
+  type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/git-resource
     tag: 1f84d4a76b4a2491283e0107ae7ed4bc83c84d1b
 
 - name: s3-iam
-  type: docker-image
+  type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/s3-resource
     tag: 96b47010a10ca13b40bc604b49b4ab9158cfe2c7
@@ -54,7 +54,7 @@ jobs:
     config:
       platform: linux
       image_resource:
-        type: docker-image
+        type: registry-image
         source:
           repository: ghcr.io/alphagov/paas/self-update-pipelines
           tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
