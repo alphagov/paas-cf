@@ -4,7 +4,7 @@ image_resource:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/cf-uaac
-    tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
+    tag: b25554b10d0efb9da2aef192f9a890199863f59e
 inputs:
   - name: paas-cf
   - name: cf-manifest
