@@ -11,6 +11,8 @@ DEPLOY_ENV_VALID_CHARS=$(shell if echo $(DEPLOY_ENV) | grep -q '^[a-zA-Z0-9-]*$$
 LOGSEARCH_BOSHRELEASE_TAG=v211.1.0
 LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=8be9abc6c8e50b0e83f80cbd8610baff7a9ee1e3
 
+GPG_KEYSERVER := hkps://keys.openpgp.org
+
 .PHONY: check-env
 check-env:
 	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
@@ -512,3 +514,44 @@ credhub:
 buildpack-upgrade:
 	@scripts/update_buildpacks.sh
 	@scripts/create_buildpacks_email.sh
+
+.PHONY: .download-gpg-key
+.download-gpg-key:
+	$(if $(GPG_KEY_ID),,$(error GPG_KEY_ID is not set))
+	$(info Downloading key $(GPG_KEY_ID) from $(GPG_KEYSERVER))
+	$(if $(shell $(GPG) --keyserver $(GPG_KEYSERVER) --quiet --recv-key $(GPG_KEY_ID) && echo 'OK'),@true, \
+		$(error Failed to download key $(GPG_KEY_ID) from $(GPG_KEYSERVER)))
+
+.PHONY: .download-gpg-keys
+.download-gpg-keys: check-gpg-keys
+
+
+.PHONY: check-gpg-keys
+check-gpg-keys: ## Check all GPG keys specified in .gpg-id are present on the keyserver
+	@for key in $$(cat .gpg-id); do \
+		$(MAKE) .download-gpg-key GPG_KEY_ID=$$key; \
+	done
+
+.PHONY: .upload-gpg-key
+.upload-gpg-key:
+	$(if $(GPG_KEY_ID),,$(error GPG_KEY_ID is not set))
+	$(info Uploading key $(GPG_KEY_ID) to $(GPG_KEYSERVER))
+	$(if $(shell $(GPG) --keyserver $(GPG_KEYSERVER) --quiet --send-keys $(GPG_KEY_ID) && echo 'OK'),@true, \
+		$(error Failed to upload key $(GPG_KEY_ID) to $(GPG_KEYSERVER)))
+
+.PHONY: upload-gpg-keys
+upload-gpg-keys: ## Upload all GPG keys specified in .gpg-id to the keyserver
+	@for key in $$(cat .gpg-id); do \
+		$(MAKE) .upload-gpg-key GPG_KEY_ID=$$key; \
+	done
+
+.PHONY: list-gpg-keys
+list-gpg-keys: ## List all the keys in .gpg-id with their names
+	@for key in $$(cat .gpg-id); do \
+		printf "$${key}: "; \
+		$(GPG) --list-keys --with-colons $$key 2> /dev/null | awk -F: '/^uid/ {found = 1; print $$10; exit} END {if (found != 1) {print "*** not found in local keychain ***"}}'; \
+	done
+
+.PHONY: update-concourse-gpg-keys
+update-concourse-gpg-keys: .download-gpg-keys ## Update vars file for concourse with the latest GPG keys
+	@ruby concourse/scripts/generate-public-key-vars.rb

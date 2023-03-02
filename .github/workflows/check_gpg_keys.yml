@@ -1,18 +1,30 @@
----
 on:
   pull_request:
     paths:
-      - ".gpg-id"
+      - .gpg-id
+  workflow_dispatch:
 
 jobs:
-  check_gpg_keys:
-    runs-on: ubuntu-latest
-
+  setup-job:
+    runs-on: ubuntu-22.04
+    outputs:
+      key_ids: ${{ steps.extract-key-ids.outputs.key_ids }}
     steps:
-      ## Setup
-      - name: Checkout repo
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Extract key ids from .gpg-id and output as a json list
+        id: extract-key-ids
+        run: echo "key_ids=$(jq -c --raw-input --slurp 'split("\n") | map(select(. != ""))' .gpg-id)" >> $GITHUB_OUTPUT
 
-      - name: Check GPG keys
-        run: |
-          ./scripts/check_gpg_keys.sh
+  check-keys:
+    runs-on: ubuntu-22.04
+    needs: setup-job
+    strategy:
+      fail-fast: false
+      matrix:
+        key_id: ${{ fromJSON(needs.setup-job.outputs.key_ids) }}
+    env:
+      GPG_KEY_ID: ${{ matrix.key_id }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Import key from keyserver
+        run: make .download-gpg-key
