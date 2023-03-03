@@ -6,7 +6,7 @@ import (
 	"github.com/onsi/gomega/gbytes"
 	"strings"
 
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit/logitfakes"
+	"github.com/alphagov/paas-cf/common-go/basic_logit_client/logitfakes"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 
 	. "github.com/onsi/ginkgo/v2"

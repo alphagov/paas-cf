@@ -10,8 +10,9 @@ import (
 	"strings"
 	"time"
 
+	logit "github.com/alphagov/paas-cf/common-go/basic_logit_client"
+
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/health"
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/shield"
 
 	"github.com/aws/aws-sdk-go/aws"

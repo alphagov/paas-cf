@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit"
+	logit "github.com/alphagov/paas-cf/common-go/basic_logit_client"
 	m "github.com/alphagov/paas-cf/tools/metrics/pkg/metrics"
 )
 
