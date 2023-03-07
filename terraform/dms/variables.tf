@@ -38,3 +38,8 @@ variable "dms_secrets_manager_role_name" {
 
   default = "dms-secrets-access"
 }
+
+variable "cloudwatch_log_retention_period" {
+  description = "how long cloudwatch logs should be retained for (in days). Default 18 months"
+  default     = 545
+}

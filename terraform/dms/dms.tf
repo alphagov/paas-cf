@@ -110,4 +110,14 @@ resource "aws_dms_replication_task" "default" {
     Environment = var.env
     Name        = "${var.env}-${each.key}"
   }
+
+  depends_on = [
+    aws_cloudwatch_log_group.default
+  ]
+}
+
+resource "aws_cloudwatch_log_group" "default" {
+  for_each          = local.migrations
+  name              = "dms-tasks-${var.env}-${each.key}"
+  retention_in_days = var.cloudwatch_log_retention_period
 }
