@@ -8,6 +8,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"regexp"
 	"strings"
 	"text/template"
 	"time"
@@ -135,7 +136,7 @@ func getUserInputFromEditor(promptString string) (string, error) {
 		return "", err
 	}
 
-	tempFile, err := ioutil.TempFile(pwd, "tmp.buildpack-highlight-*")
+	tempFile, err := ioutil.TempFile(pwd, ".tmp-buildpack-highlight-*.md")
 	if err != nil {
 		return "", err
 	}
@@ -150,8 +151,15 @@ func getUserInputFromEditor(promptString string) (string, error) {
 	if !editorIsSet {
 		editorName = "vim"
 	}
+	editorArgs := []string{}
+	if regexp.MustCompile(`\s`).MatchString(editorName) {
+		editorArgs = strings.Split(editorName, " ")
+		editorName = editorArgs[0]
+		editorArgs = editorArgs[1:]
+	}
+	editorArgs = append(editorArgs, tempFile.Name())
 
-	editor := exec.Command(editorName, tempFile.Name())
+	editor := exec.Command(editorName, editorArgs...)
 	editor.Stdin = os.Stdin
 	editor.Stdout = os.Stdout
 	editor.Stderr = os.Stderr
@@ -199,9 +207,19 @@ func main() {
 	}
 	ctx := context.Background()
 	var githubClient *github.Client
-	githubToken, ok := os.LookupEnv("GITHUB_API_TOKEN")
+	githubTokenPossibleEnvars := []string{"GITHUB_TOKEN", "GITHUB_API_TOKEN"}
+	var githubToken string
+	var ok bool
+	// set githubToken to the first environment variable that is set
+	for _, envvar := range githubTokenPossibleEnvars {
+		githubToken, ok = os.LookupEnv(envvar)
+		if ok {
+			break
+		}
+	}
 	if !ok {
-		log.Printf("environment variable GITHUB_API_TOKEN not set. If GitHub communication errors are seen, you may need to export a token with 'public_repo' access")
+		log.Printf("GitHub token not found in environment. If GitHub communication errors are seen, you may need to export a token with 'public_repo' access")
+		log.Printf("Checked environment variables: %s", strings.Join(githubTokenPossibleEnvars, ", "))
 		githubClient = github.NewClient(nil)
 	} else {
 		ts := oauth2.StaticTokenSource(&oauth2.Token{AccessToken: githubToken})
