@@ -4,6 +4,7 @@ variable "vpc_peers" {
     account_id  = string
     vpc_id      = string
     subnet_cidr = string
+    backing_service_routing = optional(bool)
   }))
   default = []
   validation {

@@ -8,6 +8,11 @@ locals {
   peer_name_to_details = {
     for peer in var.vpc_peers : peer.peer_name => peer
   }
+  // filter peers so that we only include peers with the
+  // backing_service_routing variable set to "true"
+  backing_service_routing_peers = {
+    for peer in var.vpc_peers : peer.peer_name => peer if peer.backing_service_routing == true
+  }
 }
 
 data "aws_route_tables" "internet" {
@@ -15,6 +20,15 @@ data "aws_route_tables" "internet" {
   filter {
     name   = "tag:Name"
     values = ["${var.env}-cf"]
+  }
+}
+
+data "aws_route_tables" "aws_backing_services" {
+  vpc_id = var.vpc_id
+
+  filter {
+    name   = "tag:Name"
+    values = ["${var.env}-aws-backing-services"]
   }
 }
 
@@ -53,4 +67,12 @@ resource "aws_route" "vpc_peer_route_2" {
   timeouts {
     create = "5m"
   }
+}
+
+resource "aws_route" "backing_service_to_vpc_peer" {
+  for_each = local.backing_service_routing_peers
+
+  route_table_id         = data.aws_route_tables.aws_backing_services.ids[0]
+  destination_cidr_block = each.value.subnet_cidr
+  gateway_id             = local.vpc_to_peer_id[each.value.vpc_id][0]
 }
