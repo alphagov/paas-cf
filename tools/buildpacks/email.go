@@ -325,8 +325,8 @@ func main() {
 			log.Fatalf("could not get compiled release notes for buildpack '%s': %s", newBuildpack.Name, err)
 			return
 		}
-		prefilledHighlights := getPrefilledHighlights(newBuildpack.Name, dependenciesToHighlight, additionsByName, removalsByName)
-		editorInput := commentifyCompiledReleaseNotes(newBuildpack.Name, compiledReleaseNotes, prefilledHighlights)
+
+		editorInput := commentifyCompiledReleaseNotes(newBuildpack.Name, compiledReleaseNotes)
 		highlights, err := getUserInputFromEditor(editorInput)
 		if err != nil {
 			log.Fatalf("couldn't get highlights for buildpack: %s", err)
@@ -400,10 +400,10 @@ func getPrefilledHighlights(buildpackName string, dependenciesToHighlight Buildp
 
 // Takes the compiled release notes for a buildpack and prepares them to be
 // presented to the user in a way that's similar to the way notes are in "git commit"
-func commentifyCompiledReleaseNotes(buildpackName string, releaseNotes []ReleaseNotes, prefilledHighlights string) string {
+func commentifyCompiledReleaseNotes(buildpackName string, releaseNotes []ReleaseNotes) string {
 	builder := strings.Builder{}
 
-	builder.WriteString(prefilledHighlights + "\n\n") // Space for the user to write in
+	builder.WriteString("\n\n") // Space for the user to write in
 	builder.WriteString(`<!-- ------------------------ >8 ------------------------ -->
 > ***Do not modify or remove the line above.***
 > Everything below it will be ignored.
