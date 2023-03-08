@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/google/go-github/v24/github"
+	"golang.org/x/mod/semver"
 	"golang.org/x/oauth2"
 	yaml "gopkg.in/yaml.v2"
 )
@@ -78,6 +79,11 @@ func dependencyVersionsByName(dependencies []Dependency) (dependencyVersionsByNa
 	for _, dependency := range dependencies {
 		dependencyVersionsByName[dependency.Name] = append(dependencyVersionsByName[dependency.Name], dependency.Version)
 	}
+	// sort the versions of each dependency newest to oldest
+	for dependency, _ := range dependencyVersionsByName {
+		semver.Sort(dependencyVersionsByName[dependency])
+	}
+
 	return dependencyVersionsByName
 }
 
@@ -260,7 +266,7 @@ func main() {
 		log.Fatalf("newBuildpacks cannot be unmarshalled: %v", err)
 	}
 
-	dependenciesToHighlight := DependenciesToHighlight{}
+	dependenciesToHighlight := Buildpacks{}
 	err = yaml.Unmarshal(dependenciesToHighlightFileData, &dependenciesToHighlight)
 	if err != nil {
 		log.Fatalf("dependencyToHighlightFileData cannot be unmarshalled: %v", err)
@@ -348,7 +354,7 @@ func main() {
 	}
 }
 
-func getPrefilledHighlights(buildpackName string, dependenciesToHighlight DependenciesToHighlight, additionsByName map[string][]string, removalsByName map[string][]string) string {
+func getPrefilledHighlights(buildpackName string, dependenciesToHighlight Buildpacks, additionsByName map[string][]string, removalsByName map[string][]string) string {
 	var toHighlight = []string{}
 	for _, buildpack := range dependenciesToHighlight.Buildpacks {
 		if buildpack.Name == buildpackName {

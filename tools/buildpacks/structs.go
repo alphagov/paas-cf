@@ -12,10 +12,6 @@ type Buildpack struct {
 	DependenciesToHighlight []string     `yaml:"dependencies_to_highlight"`
 }
 
-type DependenciesToHighlight struct {
-	Buildpacks []Buildpack `yaml:"buildpacks"`
-}
-
 type Buildpacks struct {
 	Buildpacks []Buildpack `yaml:"buildpacks"`
 }
