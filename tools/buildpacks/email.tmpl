@@ -22,17 +22,17 @@ The GOV.UK PaaS team
 {{- end }}
 
 # Planned Releases:
-{{ range $index := .Data }}
-{{ $buildpack := .Buildpack }}
+{{- range $index := .Data }}
+{{- $buildpack := .Buildpack }}
 ## {{ .Buildpack.Name }}: {{ .Buildpack.Version}}
 {{ range $key, $value := .Changes }} {{ if or $value.Additions $value.Removals }}
-* {{ $key }}:
-    * Removed: {{ if $value.Removals }}{{ range $index, $version := $value.Removals }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }}
-    * Added: {{ if $value.Additions }}{{ range $index, $version := $value.Additions }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }}{{ end }}{{ end }}
+- {{ $key }}:
+  - Removed: {{ if $value.Removals }}{{ range $index, $version := $value.Removals }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }}
+  - Added: {{ if $value.Additions }}{{ range $index, $version := $value.Additions }}{{if $index}}, {{end}}{{ $version }}{{ end }}{{ else }}None{{ end }}{{ end }}{{ end }}
 
 Release notes:
 {{ range $version := .ReleaseNoteVersions }}
-* https://github.com/cloudfoundry/{{ $buildpack.RepoName }}/releases/tag/{{ $version }}{{ end }}
+- https://github.com/cloudfoundry/{{ $buildpack.RepoName }}/releases/tag/{{ $version }}{{ end }}
 
 --------{{ if $index }}
 {{ end }}{{ end }}
