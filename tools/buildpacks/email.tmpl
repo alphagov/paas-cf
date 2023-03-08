@@ -10,6 +10,8 @@ Regards,
 
 The GOV.UK PaaS team
 
+--------
+
 {{ if .HasAnyHighlights }}
 # Highlights
 {{- range $index := .Data }}
@@ -17,6 +19,9 @@ The GOV.UK PaaS team
 {{ $buildpack := .Buildpack }}
 ## {{ .Buildpack.Name }}: {{ .Buildpack.Version}}
 {{.Highlights}}
+
+--------{{ if $index }}
+{{- end }}
 {{- end }}
 {{- end }}
 {{- end }}

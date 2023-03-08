@@ -1,3 +1,4 @@
 .tmp-*
 email-*.md
+email-*.html
 vendor

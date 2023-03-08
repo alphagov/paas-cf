@@ -14,6 +14,7 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/gomarkdown/markdown"
 	"github.com/google/go-github/v24/github"
 	"golang.org/x/mod/semver"
 	"golang.org/x/oauth2"
@@ -206,9 +207,10 @@ func getUserInputFromEditor(promptString string) (string, error) {
 
 func main() {
 	var (
-		oldFilePath = flag.String("old", "", "Old file")
-		newFilePath = flag.String("new", "", "New file")
-		outputFile  = flag.String("out", "", "Output file")
+		oldFilePath    = flag.String("old", "", "Old file")
+		newFilePath    = flag.String("new", "", "New file")
+		outputFile     = flag.String("out", "", "Output file")
+		outputHtmlFile = flag.String("htmlout", "", "Output html file")
 	)
 	flag.Parse()
 
@@ -284,6 +286,9 @@ func main() {
 		oldBuildpack := oldBuildpacks.Buildpacks[idx]
 
 		releaseNoteVersions := releasesSinceLastRelease(ctx, githubClient, newBuildpack.RepoName, oldBuildpack.Version)
+		if len(releaseNoteVersions) == 0 {
+			continue
+		}
 		buildpackEmailData := EmailData{
 			Buildpack:           newBuildpack,
 			ReleaseNoteVersions: releaseNoteVersions,
@@ -352,6 +357,13 @@ func main() {
 	if err != nil {
 		log.Fatalf("Email template could not be written to file '%s' %v", *outputFile, err)
 	}
+
+	if *outputHtmlFile != "" {
+		ioutil.WriteFile(*outputHtmlFile, markdown.ToHTML(emailText.Bytes(), nil, nil), 0750)
+		if err != nil {
+			log.Fatalf("Email template could not be written to file '%s' %v", *outputHtmlFile, err)
+		}
+	}
 }
 
 func getPrefilledHighlights(buildpackName string, dependenciesToHighlight Buildpacks, additionsByName map[string][]string, removalsByName map[string][]string) string {
@@ -371,6 +383,7 @@ func getPrefilledHighlights(buildpackName string, dependenciesToHighlight Buildp
 			continue
 		}
 		if len(additionsByName[dependency]) > 0 || len(removalsByName[dependency]) > 0 {
+			highlights += fmt.Sprint("### Versions\n")
 			highlights += fmt.Sprintf("- %s\n", dependency)
 		} else {
 			continue
