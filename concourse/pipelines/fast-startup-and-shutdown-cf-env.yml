@@ -1,0 +1,194 @@
+---
+resource_types:
+  # FIX ME: The server certificate verification fails when using the concourse
+  # version of the resource_type `git`. As a temporary fix we have docker image
+  # of the resource. This resource_type can be deleted when the issue is resolved
+- name: git
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/git-resource
+    tag: 1f84d4a76b4a2491283e0107ae7ed4bc83c84d1b
+
+- name: s3-iam
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/s3-resource
+    tag: 96b47010a10ca13b40bc604b49b4ab9158cfe2c7
+
+- name: semver-iam
+  type: docker-image
+  source:
+    repository: ghcr.io/alphagov/paas/semver-resource
+    tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
+
+groups:
+  - name: fast-startup-cf-env
+    jobs:
+      - kick-off-startup
+      - fast-startup-cf-env
+  - name: fast-shutdown-cf-env
+    jobs:
+      - kick-off-shutdown
+      - fast-shutdown-cf-env
+
+resources:
+  - name: startup-trigger
+    type: semver-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      key: fast-startup-trigger-file
+
+  - name: shutdown-trigger
+    type: semver-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      key: fast-shutdown-trigger-file
+
+  - name: bosh-vars-store
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: bosh-vars-store.yml
+
+  - name: paas-cf
+    type: git
+    source:
+      uri: https://github.com/alphagov/paas-cf.git
+      branch: ((branch_name))
+      tag_filter: ((paas_cf_tag_filter))
+      commit_verification_keys: ((gpg_public_keys))
+
+  - name: bosh-ca-crt
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: bosh-CA.crt
+
+  - name: shutdown-timer
+    type: time
+    source:
+      start: 19:00 -0000
+      stop: 19:10 -0000
+
+jobs:
+  - name: kick-off-startup
+    serial: true
+    plan:
+      - get: paas-cf
+      - task: self-update-pipeline-and-trigger
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource:
+            type: docker-image
+            source:
+              repository: ghcr.io/alphagov/paas/self-update-pipelines
+              tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
+          inputs:
+            - name: paas-cf
+          params:
+            DEPLOY_ENV: ((deploy_env))
+            BRANCH: ((branch_name))
+            MAKEFILE_ENV_TARGET: ((makefile_env_target))
+            AWS_DEFAULT_REGION: ((aws_region))
+            ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+            SELF_UPDATE_PIPELINE: ((self_update_pipeline))
+            PIPELINES_TO_UPDATE: ((pipeline_name))
+            ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
+            BOSH_AZ: ((bosh_az))
+            SKIP_AWS_CREDENTIAL_VALIDATION: true
+            NEW_ACCOUNT_EMAIL_ADDRESS: ((NEW_ACCOUNT_EMAIL_ADDRESS))
+            SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
+            CONCOURSE_WEB_PASSWORD: ((concourse_web_password))
+            DISABLED_AZS: ((disabled_azs))
+          run:
+            path: ./paas-cf/concourse/scripts/self-update-pipeline.sh
+      - put: startup-trigger
+        params: {bump: patch}
+
+  - name: kick-off-shutdown
+    serial: true
+    plan:
+      - put: shutdown-trigger
+        params: {bump: patch}
+
+  - name: fast-startup-cf-env
+    serial: true
+    plan:
+      - get: startup-trigger
+        passed: ['kick-off-startup']
+        trigger: true
+      - get: bosh-vars-store
+      - get: paas-cf
+        passed: ['kick-off-startup']
+      - get: bosh-ca-crt
+      - task: fast-startup-cf-env
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          inputs:
+            - name: bosh-vars-store
+            - name: paas-cf
+            - name: bosh-ca-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_CLIENT: admin
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            AWS_DEFAULT_REGION: ((aws_region))
+          image_resource:
+            type: registry-image
+            source:
+              repository: ghcr.io/alphagov/paas/fast-startup-and-shutdown
+              tag: 6e1f473dd3902fddd6f74bbcd788fb1ec5390ce3
+          run:
+            path: bash
+            args:
+              - -e
+              - -c
+              - |
+                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" wake
+
+  - name: fast-shutdown-cf-env
+    serial: true
+    plan:
+      - get: bosh-vars-store
+      - get: paas-cf
+      - get: bosh-ca-crt
+      - get: shutdown-timer
+        trigger: true
+      - get: shutdown-trigger
+        passed: ['kick-off-shutdown']
+        trigger: true
+      - task: fast-shutdown-cf-env
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          inputs:
+            - name: bosh-vars-store
+            - name: paas-cf
+            - name: bosh-ca-crt
+          params:
+            BOSH_ENVIRONMENT: ((bosh_fqdn))
+            BOSH_CA_CERT: ((bosh-ca-cert))
+            BOSH_CLIENT: admin
+            BOSH_CLIENT_SECRET: ((bosh-client-secret))
+            BOSH_DEPLOYMENT: ((deploy_env))
+            AWS_DEFAULT_REGION: ((aws_region))
+          image_resource:
+            type: registry-image
+            source:
+              repository: ghcr.io/alphagov/paas/fast-startup-and-shutdown
+              tag: 6e1f473dd3902fddd6f74bbcd788fb1ec5390ce3
+          run:
+            path: bash
+            args:
+              - -e
+              - -c
+              - |
+                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" sleep

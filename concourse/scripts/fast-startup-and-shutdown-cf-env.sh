@@ -177,6 +177,9 @@ parse_args() {
   if [[ "${env_arg}" = '' ]]; then
     print_error 'expecting valid env in arg1 ( eg: dev01 )'
   fi
+  if [[ "${env_arg}" = 'prod' ]] || [[ "${env_arg}" = 'prod-lon' ]]; then
+    print_error 'exiting due to production saftey check!'
+  fi
   action_arg="${2:-}"
   if ! [[ "${action_arg}" = 'sleep' || "${action_arg}" = 'wake' ]]; then
     print_error 'expecting valid action in arg2 ( sleep | wake )'
@@ -200,10 +203,9 @@ parse_args() {
 
 print_header() {
   echo '
-  ┌──────────────────────────────────┐
+  ┌─────────────────────────────┐
   │ Fast Startup and Shutdown CF Env │
-  └──────────────────────────────────┘
-
+  └─────────────────────────────┘
   '
   echo "  env: ${env_arg}"
   echo "  action: ${action_arg}"

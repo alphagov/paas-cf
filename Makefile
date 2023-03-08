@@ -230,6 +230,7 @@ dev: ## Set Environment to DEV
 	$(eval export PAAS_ADMIN_INSTANCE_COUNT ?= 3)
 	$(eval export DISABLED_AZS)
 	$(eval export DISABLE_APP_AUTOSCALER_ACCEPTANCE_TESTS ?= ${SLIM_DEV_DEPLOYMENT})
+	$(eval export ENABLE_FAST_STARTUP_AND_SHUTDOWN_CF_ENV ?= true)
 	@true
 
 .PHONY: $(filter-out dev%,$(MAKECMDGOALS))
