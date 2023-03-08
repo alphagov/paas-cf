@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
@@ -17,6 +18,8 @@ import (
 	"golang.org/x/oauth2"
 	yaml "gopkg.in/yaml.v2"
 )
+
+var endOfHighlightMarker = "<!-- ------------------------ >8 ------------------------ -->"
 
 type EmailDatas struct {
 	ReleaseDate string
@@ -152,6 +155,7 @@ func getUserInputFromEditor(promptString string) (string, error) {
 		editorName = "vim"
 	}
 	editorArgs := []string{}
+	// sometimes, EDITOR is set to a command with arguments
 	if regexp.MustCompile(`\s`).MatchString(editorName) {
 		editorArgs = strings.Split(editorName, " ")
 		editorName = editorArgs[0]
@@ -159,24 +163,38 @@ func getUserInputFromEditor(promptString string) (string, error) {
 	}
 	editorArgs = append(editorArgs, tempFile.Name())
 
-	editor := exec.Command(editorName, editorArgs...)
-	editor.Stdin = os.Stdin
-	editor.Stdout = os.Stdout
-	editor.Stderr = os.Stderr
-	editor.Env = os.Environ()
-	editor.Dir = pwd
+	var content []byte
+	for {
+		editor := exec.Command(editorName, editorArgs...)
+		editor.Stdin = os.Stdin
+		editor.Stdout = os.Stdout
+		editor.Stderr = os.Stderr
+		editor.Env = os.Environ()
+		editor.Dir = pwd
 
-	err = editor.Start()
-	if err != nil {
-		return "", err
+		err = editor.Start()
+		if err != nil {
+			return "", err
+		}
+
+		err = editor.Wait()
+		if err != nil {
+			return "", err
+		}
+
+		content, err = ioutil.ReadFile(tempFile.Name())
+		if err != nil {
+			return "", err
+		}
+
+		if checkInputHasMarkerLine(string(content)) {
+			break
+		}
+		log.Printf("Please add the following marker to the end of your highlights:\n%s", endOfHighlightMarker)
+		log.Printf("Press enter to continue")
+		fmt.Scanln()
+
 	}
-
-	err = editor.Wait()
-	if err != nil {
-		return "", err
-	}
-
-	content, err := ioutil.ReadFile(tempFile.Name())
 	return string(content), err
 }
 
@@ -205,6 +223,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("newFileData cannot be read from %s: %v", *newFilePath, err)
 	}
+	dependenciesToHighlightFileData, err := ioutil.ReadFile("dependencies_to_highlight.yaml")
+	if err != nil {
+		log.Fatalf("dependencyToHighlightFileData cannot be read from dependencies_to_highlight.yaml: %v", err)
+	}
 	ctx := context.Background()
 	var githubClient *github.Client
 	githubTokenPossibleEnvars := []string{"GITHUB_TOKEN", "GITHUB_API_TOKEN"}
@@ -228,9 +250,21 @@ func main() {
 	}
 	oldBuildpacks := Buildpacks{}
 	err = yaml.Unmarshal(oldFileData, &oldBuildpacks)
+	if err != nil {
+		log.Fatalf("oldBuildpacks cannot be unmarshalled: %v", err)
+	}
 
 	newBuildpacks := Buildpacks{}
 	err = yaml.Unmarshal(newFileData, &newBuildpacks)
+	if err != nil {
+		log.Fatalf("newBuildpacks cannot be unmarshalled: %v", err)
+	}
+
+	dependenciesToHighlight := DependenciesToHighlight{}
+	err = yaml.Unmarshal(dependenciesToHighlightFileData, &dependenciesToHighlight)
+	if err != nil {
+		log.Fatalf("dependencyToHighlightFileData cannot be unmarshalled: %v", err)
+	}
 
 	emailData := EmailDatas{
 		Data:        []EmailData{},
@@ -280,8 +314,8 @@ func main() {
 			log.Fatalf("could not get compiled release notes for buildpack '%s': %s", newBuildpack.Name, err)
 			return
 		}
-
-		editorInput := commentifyCompiledReleaseNotes(newBuildpack.Name, compiledReleaseNotes)
+		prefilledHighlights := getPrefilledHighlights(newBuildpack.Name, dependenciesToHighlight, additionsByName, removalsByName)
+		editorInput := commentifyCompiledReleaseNotes(newBuildpack.Name, compiledReleaseNotes, prefilledHighlights)
 		highlights, err := getUserInputFromEditor(editorInput)
 		if err != nil {
 			log.Fatalf("couldn't get highlights for buildpack: %s", err)
@@ -314,50 +348,80 @@ func main() {
 	}
 }
 
+func getPrefilledHighlights(buildpackName string, dependenciesToHighlight DependenciesToHighlight, additionsByName map[string][]string, removalsByName map[string][]string) string {
+	var toHighlight = []string{}
+	for _, buildpack := range dependenciesToHighlight.Buildpacks {
+		if buildpack.Name == buildpackName {
+			toHighlight = buildpack.DependenciesToHighlight
+			break
+		}
+	}
+	if len(toHighlight) == 0 {
+		return ""
+	}
+	var highlights = ""
+	for _, dependency := range toHighlight {
+		if additionsByName[dependency] == nil && removalsByName[dependency] == nil {
+			continue
+		}
+		if len(additionsByName[dependency]) > 0 || len(removalsByName[dependency]) > 0 {
+			highlights += fmt.Sprintf("- %s\n", dependency)
+		} else {
+			continue
+		}
+		if len(additionsByName[dependency]) > 0 {
+			highlights += "  - Added: " + strings.Join(additionsByName[dependency], ", ") + "\n"
+		}
+		if len(removalsByName[dependency]) > 0 {
+			highlights += "  - Removed: " + strings.Join(removalsByName[dependency], ", ") + "\n"
+		}
+	}
+	return highlights
+}
+
 // Takes the compiled release notes for a buildpack and prepares them to be
 // presented to the user in a way that's similar to the way notes are in "git commit"
-func commentifyCompiledReleaseNotes(buildpackName string, releaseNotes []ReleaseNotes) string {
+func commentifyCompiledReleaseNotes(buildpackName string, releaseNotes []ReleaseNotes, prefilledHighlights string) string {
 	builder := strings.Builder{}
 
-	builder.WriteString("\n\n") // Space for the user to write in
-	builder.WriteString(`#
-# Read the release notes below and write up any highlights above.
-# Lines prefixed with a hash (#) will be ignored in the output.
-# Don't include a title line. This will be added when the email is compiled.
-#
-# Empty highlights will not be included in the email.
-# --------
-#
+	builder.WriteString(prefilledHighlights + "\n\n") // Space for the user to write in
+	builder.WriteString(`<!-- ------------------------ >8 ------------------------ -->
+> ***Do not modify or remove the line above.***
+> Everything below it will be ignored.
+>
+> Read the release notes below and write up any highlights above.
+> Don't include a title line. This will be added when the email is compiled.
+>
+> Empty highlights will not be included in the email.
 `)
 
-	builder.WriteString("# " + buildpackName + "\n#\n")
+	builder.WriteString("## " + buildpackName + "\n\n")
 	for _, notes := range releaseNotes {
-		builder.WriteString("# --------\n")
-		builder.WriteString("# " + notes.Version + "\n")
-
-		// Break notes on new line, prefix with hash, and
-		// re-join with new lines to preserve the formatting
-		noteLines := strings.Split(notes.Body, "\n")
-		prefixedLines := []string{}
-		for _, line := range noteLines {
-			prefixedLines = append(prefixedLines, "# "+line)
-		}
-		rejoinedLines := strings.Join(prefixedLines, "\n")
-		builder.WriteString(rejoinedLines)
-		builder.WriteString("#\n")
+		builder.WriteString("---\n\n")
+		builder.WriteString("### " + notes.Version + "\n")
+		builder.WriteString(notes.Body + "\n")
 	}
 
 	return builder.String()
 }
 
-// Removes line prefixed with a hash
+// Returns the contents of the file, with everything after endOfHighlightMarker removed
 func stripCommentedLines(input string) string {
 	var out []string
 	for _, str := range strings.Split(input, "\n") {
-		if strings.Index(str, "#") != 0 {
-			out = append(out, str)
+		if str == endOfHighlightMarker {
+			break
+		}
+		out = append(out, str)
+	}
+	return strings.TrimSpace(strings.Join(out, "\n"))
+}
+
+func checkInputHasMarkerLine(input string) bool {
+	for _, str := range strings.Split(input, "\n") {
+		if str == endOfHighlightMarker {
+			return true
 		}
 	}
-
-	return strings.TrimSpace(strings.Join(out, "\n"))
+	return false
 }

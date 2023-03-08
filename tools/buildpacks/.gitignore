@@ -1,5 +1,3 @@
-tmp*
-email-*.txt
+.tmp-*
 email-*.md
-emdail-*.html
 vendor

@@ -1,14 +1,19 @@
 package main
 
 type Buildpack struct {
-	Name         string       `yaml:"name"`
-	RepoName     string       `yaml:"repo_name"`
-	Stack        string       `yaml:"stack"`
-	Version      string       `yaml:"version"`
-	Sha          string       `yaml:"sha"`
-	Filename     string       `yaml:"filename"`
-	Url          string       `yaml:"url"`
-	Dependencies []Dependency `yaml:"dependencies"`
+	Name                    string       `yaml:"name"`
+	RepoName                string       `yaml:"repo_name"`
+	Stack                   string       `yaml:"stack"`
+	Version                 string       `yaml:"version"`
+	Sha                     string       `yaml:"sha"`
+	Filename                string       `yaml:"filename"`
+	Url                     string       `yaml:"url"`
+	Dependencies            []Dependency `yaml:"dependencies"`
+	DependenciesToHighlight []string     `yaml:"dependencies_to_highlight"`
+}
+
+type DependenciesToHighlight struct {
+	Buildpacks []Buildpack `yaml:"buildpacks"`
 }
 
 type Buildpacks struct {
