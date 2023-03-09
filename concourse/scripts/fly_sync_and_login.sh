@@ -7,13 +7,8 @@ set -euo pipefail
   $FLY_CMD \
   $FLY_TARGET
 
-if [ "$USER" == "root" ] ; then
-  # We are running in Concourse
-  # Required env vars
-  # shellcheck disable=SC2086
-  : $CONCOURSE_WEB_USER \
-    $CONCOURSE_WEB_PASSWORD
-fi
+CONCOURSE_WEB_USER=${CONCOURSE_WEB_USER:-}
+CONCOURSE_WEB_PASSWORD=${CONCOURSE_WEB_PASSWORD:-}
 
 fetch_fly() {
   echo "Downloading fly .."
@@ -34,11 +29,11 @@ fly_sync() {
 
 fly_login() {
   echo "Doing fly login .."
-  if [ "$USER" == "root" ] ; then
-    # We are running in Concourse
+  if [ -n "$CONCOURSE_WEB_USER" ] && [ -n "$CONCOURSE_WEB_PASSWORD" ] ; then
     $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}" -u "${CONCOURSE_WEB_USER}" -p "${CONCOURSE_WEB_PASSWORD}"
   else
-    # We are running from our computer
+    # shellcheck disable=SC2016
+    echo '$CONCOURSE_WEB_USER and/or $CONCOURSE_WEB_PASSWORD not set - not attempting basic auth...'
     # Check if we are logged in, if we aren't then use the browser
     $FLY_CMD -t "${FLY_TARGET}" status || \
       $FLY_CMD -t "${FLY_TARGET}" login --concourse-url "${CONCOURSE_URL}"
