@@ -484,8 +484,16 @@ logit-filters:
 		-v $(CURDIR):/mnt:ro \
 		-v $(CURDIR)/config/logit/output:/output:rw \
 		-w /mnt \
+		--platform linux/amd64 \
 		jruby:9.2-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
 	@echo "updated $(CURDIR)/config/logit/output/generated_logit_filters.conf"
+
+.PHONY: logit-alerts
+logit-alerts:
+	$(if ${DEPLOY_ENV},,$(error Must pass DEPLOY_ENV=<name>))
+	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
+	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
+	@ruby ./scripts/generate_logit_alerts.rb
 
 .PHONY: show-tenant-comms-addresses
 show-tenant-comms-addresses:

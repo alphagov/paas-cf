@@ -36,6 +36,17 @@ RSpec.describe RuboCop::Cop::CustomCops::MustCaptureXStr do
 
         expect(cop.offenses).to be_empty
       end
+
+      context "but is worked on first" do
+        it "detects no offenses" do
+          inspect_source <<~RUBY
+            my_var = `echo hello world`.strip
+            my_other_var = `echo hello world`.strip.upcase.strip
+          RUBY
+
+          expect(cop.offenses).to be_empty
+        end
+      end
     end
   end
 

@@ -1,0 +1,24 @@
+---
+name: "Flatline alert: source.deployment:<%= deploy_env %>"
+type: flatline
+index: "logstash-*"
+
+threshold: 1200
+
+timeframe:
+  minutes: 10
+
+filter:
+- query:
+    query_string:
+      query: "@source.deployment:<%= deploy_env %>"
+
+use_count_query: true
+
+doc_type: logs
+
+alert:
+  - "pagerduty"
+
+pagerduty_service_key: "<%= pagerduty_service_key %>"
+pagerduty_client_name: "<%= pagerduty_client_name %>"

@@ -9,7 +9,22 @@ module RuboCop
         def on_xstr(node)
           return if node.heredoc?
 
-          add_offense(node) unless node&.parent&.type == :lvasgn
+          current_node = node
+          has_lvasgn_ancestor = false
+          loop do
+            break if current_node.nil?
+            break if current_node.type == :begin
+
+            if current_node.type == :lvasgn
+              has_lvasgn_ancestor = true
+              break
+            end
+            current_node = current_node.parent
+          end
+
+          unless has_lvasgn_ancestor
+            add_offense(node)
+          end
         end
       end
 
