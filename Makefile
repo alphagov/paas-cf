@@ -521,6 +521,8 @@ buildpack-upgrade:
 	$(info Downloading key $(GPG_KEY_ID) from $(GPG_KEYSERVER))
 	$(if $(shell $(GPG) --keyserver $(GPG_KEYSERVER) --quiet --recv-key $(GPG_KEY_ID) && echo 'OK'),@true, \
 		$(error Failed to download key $(GPG_KEY_ID) from $(GPG_KEYSERVER)))
+	$(if $(shell $(GPG) --list-keys | grep $(GPG_KEY_ID) && echo 'OK'),@true, \
+		$(error Failed to verify key $(GPG_KEY_ID) was downloaded successfully. Ensure any email verification has been completed.))
 
 .PHONY: .download-gpg-keys
 .download-gpg-keys: check-gpg-keys
