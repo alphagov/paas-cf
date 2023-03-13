@@ -21,6 +21,7 @@ require (
 	code.cloudfoundry.org/lager v2.0.0+incompatible // indirect
 	github.com/Masterminds/semver v1.4.2 // indirect
 	github.com/Masterminds/squirrel v1.4.0 // indirect
+	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000 // indirect
 	github.com/bmizerany/pat v0.0.0-20160217103242-c068ca2f0aac // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-ini/ini v1.30.0 // indirect
@@ -52,3 +53,5 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/alphagov/paas-cf/common-go/basic_logit_client => ../common-go/basic_logit_client

@@ -4,7 +4,7 @@ package logitfakes
 import (
 	"sync"
 
-	"github.com/alphagov/paas-cf/tools/metrics/pkg/logit"
+	"github.com/alphagov/paas-cf/common-go/basic_logit_client"
 )
 
 type FakeLogitElasticsearchClient struct {

@@ -44,6 +44,9 @@ func (c *Client) Search(elasticsearchQuery string, result interface{}) error {
 		c.logger.Error("build-elasticsearch-request", err)
 		return err
 	}
+	request.Header["Content-Type"] = []string{"application/json;charset=UTF-8"}
+	request.Header["Accept"] = []string{"application/json"}
+	request.Header["Accept-Encoding"] = []string{"UTF-8"}
 	client := &http.Client{}
 	response, err := client.Do(request)
 	if err != nil {
@@ -53,7 +56,9 @@ func (c *Client) Search(elasticsearchQuery string, result interface{}) error {
 	defer response.Body.Close()
 	if !(response.StatusCode >= 200 && response.StatusCode < 300) {
 		err := fmt.Errorf("status code was %d", response.StatusCode)
-		c.logger.Error("non-success-elasticsearch-response", err)
+		body, _ := ioutil.ReadAll(response.Body)
+		c.logger.Info("non-success-elasticsearch-response", lager.Data{"body": body})
+		c.logger.Error("non-success-elasticsearch-status", err)
 		return err
 	}
 	body, err := ioutil.ReadAll(response.Body)
@@ -63,7 +68,8 @@ func (c *Client) Search(elasticsearchQuery string, result interface{}) error {
 	}
 	err = json.Unmarshal(body, &result)
 	if err != nil {
-		c.logger.Error("parse-elasticsearch-response", err)
+		c.logger.Info("parse-elasticsearch-response", lager.Data{"body": string(body)})
+		c.logger.Error("parse-elasticsearch-response-err", err)
 		return err
 	}
 	return nil

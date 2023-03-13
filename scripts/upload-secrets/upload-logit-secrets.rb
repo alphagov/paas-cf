@@ -30,6 +30,11 @@ logit_ca_cert = ENV["LOGIT_CA_CERT"] || get_secret("logit/#{stack_target}/ca_cer
 logit_elasticsearch_url = ENV["LOGIT_ELASTICSEARCH_URL"] || get_secret("logit/#{stack_target}/elasticsearch_url")
 logit_elasticsearch_api_key = ENV["LOGIT_ELASTICSEARCH_API_KEY"] || get_secret("logit/#{stack_target}/elasticsearch_api_key")
 
+logit_dummy_tenant_config_endpoint = ENV["LOGIT_DUMMY_TENANT_CONFIG_ENDPOINT"] || get_secret("logit/common/dummy_tenant_config_endpoint")
+logit_dummy_tenant_config_tcp_ssl_port = ENV["LOGIT_DUMMY_TENANT_CONFIG_TCP_SSL_PORT"] || get_secret("logit/common/dummy_tenant_config_tcp_ssl_port")
+logit_dummy_tenant_config_opensearch_url = ENV["LOGIT_DUMMY_TENANT_CONFIG_OPENSEARCH_URL"] || get_secret("logit/common/dummy_tenant_config_opensearch_url")
+logit_dummy_tenant_config_opensearch_api_key = ENV["LOGIT_DUMMY_TENANT_CONFIG_OPENSEARCH_API_KEY"] || get_secret("logit/common/dummy_tenant_config_opensearch_api_key")
+
 upload_secrets(
   credhub_namespaces,
   "logit_syslog_address" => logit_syslog_address,
@@ -37,4 +42,9 @@ upload_secrets(
   "logit_ca_cert" => logit_ca_cert,
   "logit_elasticsearch_url" => logit_elasticsearch_url,
   "logit_elasticsearch_api_key" => logit_elasticsearch_api_key,
+
+  "logit_dummy_tenant_config_endpoint" => logit_dummy_tenant_config_endpoint,
+  "logit_dummy_tenant_config_tcp_ssl_port" => logit_dummy_tenant_config_tcp_ssl_port,
+  "logit_dummy_tenant_config_opensearch_url" => logit_dummy_tenant_config_opensearch_url,
+  "logit_dummy_tenant_config_opensearch_api_key" => logit_dummy_tenant_config_opensearch_api_key,
 )

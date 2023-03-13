@@ -4995,6 +4995,10 @@ jobs:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
               APPS_HOSTED_ZONE_NAME: ((apps_hosted_zone_name))
+              LOGIT_DUMMY_TENANT_CONFIG_ENDPOINT: ((logit_dummy_tenant_config_endpoint))
+              LOGIT_DUMMY_TENANT_CONFIG_TCP_SSL_PORT: ((logit_dummy_tenant_config_tcp_ssl_port))
+              LOGIT_DUMMY_TENANT_CONFIG_OPENSEARCH_URL: ((logit_dummy_tenant_config_opensearch_url))
+              LOGIT_DUMMY_TENANT_CONFIG_OPENSEARCH_API_KEY: ((logit_dummy_tenant_config_opensearch_api_key))
             ensure:
               task: upload-test-artifacts
               tags: [colocated-with-web]
