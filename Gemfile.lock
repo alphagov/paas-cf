@@ -1338,7 +1338,7 @@ GEM
     parser (3.1.2.1)
       ast (~> 2.4.1)
     public_suffix (5.0.0)
-    rack (3.0.0)
+    rack (3.0.6.1)
     rainbow (3.1.1)
     rake (12.3.3)
     regexp_parser (2.6.0)
@@ -1408,6 +1408,7 @@ GEM
 PLATFORMS
   arm64-darwin-21
   x86_64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   aws-sdk (~> 3)
