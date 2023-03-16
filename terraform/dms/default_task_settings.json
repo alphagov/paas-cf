@@ -28,6 +28,7 @@
   },
   "Logging": {
     "EnableLogging": true,
+    "EnableLogContext": false,
     "LogComponents": [
       {
         "Id": "TRANSFORMATION",
