@@ -5,8 +5,8 @@ RSpec.describe "autoscaler" do
 
   let(:manifest) { manifest_with_defaults }
 
-  describe "actors" do
-    subject(:actors) { manifest["instance_groups.asactors"] }
+  describe "scalingengine" do
+    subject(:scalingengine) { manifest["instance_groups.scalingengine"] }
 
     let(:jobs) { subject["jobs"] }
 
@@ -22,6 +22,20 @@ RSpec.describe "autoscaler" do
         expect(cf["secret"]).to eq("((/test/test/uaa_clients_app_autoscaler_secret))")
       end
     end
+  end
+
+  describe "scheduler" do
+    subject(:scheduler) { manifest["instance_groups.scheduler"] }
+
+    it_behaves_like "a cf rds client"
+  end
+
+  describe "operator" do
+    subject(:operator) { manifest["instance_groups.operator"] }
+
+    let(:jobs) { subject["jobs"] }
+
+    it_behaves_like "a cf rds client"
 
     describe "operator" do
       let(:operator) { jobs.find { |j| j["name"] == "operator" } }
@@ -35,8 +49,8 @@ RSpec.describe "autoscaler" do
     end
   end
 
-  describe "api" do
-    subject(:api) { manifest["instance_groups.asapi"] }
+  describe "apiserver" do
+    subject(:apiserver) { manifest["instance_groups.apiserver"] }
 
     let(:jobs) { subject["jobs"] }
 
@@ -81,14 +95,26 @@ RSpec.describe "autoscaler" do
     end
   end
 
-  describe "metrics" do
-    subject(:metrics) { manifest["instance_groups.asmetrics"] }
+  describe "eventgenerator" do
+    subject(:eventgenerator) { manifest["instance_groups.eventgenerator"] }
 
     it_behaves_like "a cf rds client"
   end
 
-  describe "nozzle" do
-    subject(:nozzle) { manifest["instance_groups.asnozzle"] }
+  describe "metricsforwarder" do
+    subject(:metricsforwarder) { manifest["instance_groups.metricsforwarder"] }
+
+    it_behaves_like "a cf rds client"
+  end
+
+  describe "metricsserver" do
+    subject(:metricsserver) { manifest["instance_groups.metricsserver"] }
+
+    it_behaves_like "a cf rds client"
+  end
+
+  describe "metricsgateway" do
+    subject(:metricsgateway) { manifest["instance_groups.metricsgateway"] }
 
     it_behaves_like "a cf rds client"
   end
