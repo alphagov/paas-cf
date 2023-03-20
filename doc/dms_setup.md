@@ -38,7 +38,9 @@ There are a few parts to the setting up of DMS. The account running the DMS terr
                 "replication_instance_class": "string, dms instances classes look like this: `dms.t3.small`"
             },
             "task": {
-                "migration_type": "string, most of the cases are covered with `full-load-and-cdc` for full copy and contineous migration. Otherwise `full-load` to just move the db across."
+                "migration_type": "string, most of the cases are covered with `full-load-and-cdc` for full copy and contineous migration. Otherwise `full-load` to just move the db across.",
+                "settings_overrides": "json object, will get merged with terraform/dms/default_task_settings.json to form a settings object",
+                "table_mappings": "json object, will be used instead of terraform/dms/default_table_mappings.json if present and non-null",
             },
             "vpc_peering": {
                 "cidr_block": "string, a cird block like `172.1.0.0/16`",

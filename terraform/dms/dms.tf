@@ -81,13 +81,23 @@ resource "aws_dms_replication_instance" "default" {
   }
 }
 
+data "utils_deep_merge_json" "replication_task" {
+  for_each = local.migrations
+
+  input = [
+    local.default_task_settings,
+    jsonencode(coalesce(each.value.task.settings_overrides, {}))
+  ]
+}
+
 resource "aws_dms_replication_task" "default" {
   for_each = local.migrations
 
   migration_type = each.value.task.migration_type
 
-  replication_task_settings = local.task_settings
-  table_mappings            = local.table_mappings
+  replication_task_settings = data.utils_deep_merge_json.replication_task[each.key].output
+
+  table_mappings = jsonencode(coalesce(each.value.task.table_mappings, jsondecode(local.default_table_mappings)))
 
   replication_task_id      = "${var.env}-${each.key}"
   replication_instance_arn = aws_dms_replication_instance.default[each.key].replication_instance_arn
@@ -100,4 +110,14 @@ resource "aws_dms_replication_task" "default" {
     Environment = var.env
     Name        = "${var.env}-${each.key}"
   }
+
+  depends_on = [
+    aws_cloudwatch_log_group.default
+  ]
+}
+
+resource "aws_cloudwatch_log_group" "default" {
+  for_each          = local.migrations
+  name              = "dms-tasks-${var.env}-${each.key}"
+  retention_in_days = var.cloudwatch_log_retention_period
 }

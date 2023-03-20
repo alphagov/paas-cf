@@ -17,6 +17,8 @@ variable "dms_data" {
     })
     task = optional(object({
       migration_type = optional(string)
+      settings_overrides = optional(map(any))
+      table_mappings = optional(map(any))
     }))
     vpc_peering = optional(object({
       cidr_block                = optional(string)
@@ -35,4 +37,9 @@ variable "dms_secrets_manager_role_name" {
   description = "The name of the IAM role used by dms"
 
   default = "dms-secrets-access"
+}
+
+variable "cloudwatch_log_retention_period" {
+  description = "how long cloudwatch logs should be retained for (in days). Default 18 months"
+  default     = 545
 }
