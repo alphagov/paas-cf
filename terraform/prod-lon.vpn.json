@@ -10,7 +10,7 @@
         "172.28.32.0/21"
       ]
     }
-  }
+  },
   {
     "name": "bjss-pre-prod-vpn",
     "aws_customer_gateway": {
