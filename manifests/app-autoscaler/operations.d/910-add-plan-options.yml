@@ -1,7 +1,7 @@
 - type: replace
-  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/instances_retrievable?
+  path: /instance_groups/name=apiserver/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/instances_retrievable?
   value: true
 
 - type: replace
-  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/bindings_retrievable?
+  path: /instance_groups/name=apiserver/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler/bindings_retrievable?
   value: true
