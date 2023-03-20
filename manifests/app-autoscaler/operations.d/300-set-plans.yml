@@ -1,7 +1,7 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler
+  path: /instance_groups/name=apiserver/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=((deployment_name))
   value:
     id: 656a9276-a1f6-4646-aade-08f0a51b29ed
     name: autoscaler
