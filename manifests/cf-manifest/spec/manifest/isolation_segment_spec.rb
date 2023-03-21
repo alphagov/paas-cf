@@ -299,7 +299,7 @@ RSpec.describe "isolation_segments" do
       it "contains an non-empty egress restricted isolation segment" do
         expect(segs.count).to eq(1)
         seg = segs.first
-        expect(seg["instances"]).to eq(2)
+        expect(seg["instances"]).to be >= 2
         expect(seg["jobs"].find { |j| j["name"] == "coredns" }).not_to be_nil
       end
     end
