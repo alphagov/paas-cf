@@ -41,7 +41,7 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: b25554b10d0efb9da2aef192f9a890199863f59e
+        tag: ecdcea170f3b23f277b61041c2f870df5f71c7fd
     cf-cli: &cf-cli-image-resource
       type: registry-image
       source:
@@ -4114,7 +4114,7 @@ jobs:
                 xlarge-ha-unencrypted-5.7
                 xlarge-unencrypted-5.7
                 EOF
-                
+
                 cat <<EOF | xargs -n1 cf disable-service-access postgres -p
                 large-11-old
                 large-ha-11-old
