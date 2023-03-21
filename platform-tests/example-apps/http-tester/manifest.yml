@@ -7,4 +7,4 @@ applications:
     buildpacks: [go_buildpack]
     command: ./bin/http-tester; sleep 1; echo 'done'
     env:
-      GOVERSION: 1.18
+      GOVERSION: go1.20
