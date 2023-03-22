@@ -28,9 +28,7 @@ case $TARGET_CONCOURSE in
     ;;
 esac
 
-if [ "$USER" == "root" ] ; then
-  # We are running in Concourse
-  : "${CONCOURSE_WEB_PASSWORD:?CONCOURSE_WEB_PASSWORD must be set}"
+if [[ -n "$CONCOURSE_WEB_PASSWORD" ]] ;then
   cat <<EOF
 export CONCOURSE_WEB_USER=${CONCOURSE_WEB_USER:-admin}
 export CONCOURSE_WEB_PASSWORD=${CONCOURSE_WEB_PASSWORD}
