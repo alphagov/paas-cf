@@ -4633,7 +4633,7 @@ jobs:
                   timeout_per_iteration_in_seconds=30
 
                   if ! cf service healthcheck-db > /dev/null; then
-                    cf create-service postgres tiny-unencrypted-12 healthcheck-db
+                    cf create-service postgres tiny-unencrypted-12 healthcheck-db -c '{"preferred_backup_window":"03:00-03:30","preferred_maintenance_window":"wed:11:00-wed:11:30"}'
                     loop_iterations=1
                     while ! cf service healthcheck-db | grep -q 'create succeeded'; do
                       if  [ $loop_iterations -gt $max_iterations ] ; then
