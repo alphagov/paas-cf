@@ -44,7 +44,7 @@ prepare_environment() {
 
   export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION:-eu-west-1}
 
-  pipelines_to_update="${PIPELINES_TO_UPDATE:-create-cloudfoundry deployment-kick-off destroy-cloudfoundry autodelete-cloudfoundry test-certificate-rotation}"
+  pipelines_to_update="${PIPELINES_TO_UPDATE:-create-cloudfoundry deployment-kick-off destroy-cloudfoundry autodelete-cloudfoundry test-certificate-rotation fast-startup-and-shutdown-cf-env}"
   bosh_az=${BOSH_AZ:-${AWS_DEFAULT_REGION}a}
 
   state_bucket=gds-paas-${DEPLOY_ENV}-state
@@ -178,6 +178,13 @@ update_pipeline() {
     ;;
     monitor-*)
       upload_pipeline
+    ;;
+    fast-startup-and-shutdown-cf-env)
+      if [ "${ENABLE_FAST_STARTUP_AND_SHUTDOWN_CF_ENV:-}" = "true" ]; then
+        upload_pipeline
+      else
+        remove_pipeline
+      fi
     ;;
     *)
       echo "ERROR: Unknown pipeline definition: $pipeline_name"
