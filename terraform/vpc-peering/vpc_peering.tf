@@ -8,6 +8,10 @@ locals {
   peer_name_to_details = {
     for peer in var.vpc_peers : peer.peer_name => peer
   }
+  // filter peers so that we only include peers with the db_routing variable set to "true"
+  db_routing_peers = {
+    for peer in var.vpc_peers : peer.peer_name => peer if peer.db_routing == true
+  }
 }
 
 data "aws_route_tables" "internet" {
@@ -74,33 +78,40 @@ resource "aws_route" "vpc_peer_route_2" {
 }
 
 resource "aws_route" "default" {
-  for_each = local.peer_name_to_details
+  for_each = local.db_routing_peers
 
   route_table_id         = data.aws_route_tables.main.ids[0]
   destination_cidr_block = each.value.subnet_cidr
   gateway_id             = local.vpc_to_peer_id[each.value.vpc_id][0]
 }
 
-resource "aws_network_acl_rule" "destination_postgres_rule" {
-  for_each = local.peer_name_to_details
+resource "aws_security_group" "vpc_peer_to_rds_broker_dbs" {
+  for_each = local.db_routing_peers
 
-  network_acl_id = data.aws_network_acls.default.ids[0]
-  rule_number    = 10 + index(local.peer_name_to_details, each.value)
-  egress         = false
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = each.value.subnet_cidr
-  from_port      = 5432
-  to_port        = 5432
-}
+  name        = "${var.env}-${each.value.peer_name}-vpc-peer-to-rds-broker-dbs"
+  description = "Allow VPN connection inbound Postgresql traffic"
+  vpc_id      = var.vpc_id
 
-resource "aws_network_acl_rule" "deny_rule" {
-  for_each = local.peer_name_to_details
+  ingress {
+    cidr_blocks = [each.value.subnet_cidr]
+    description = "from VPC Peer to Postgresql"
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+  }
 
-  network_acl_id = data.aws_network_acls.default.ids[0]
-  rule_number    = 20 + index(local.peer_name_to_details, each.value)
-  egress         = false
-  protocol       = "-1"
-  rule_action    = "deny"
-  cidr_block     = each.value.subnet_cidr
+  egress {
+    cidr_blocks = ["0.0.0.0/0"]
+    description = "from Postgresql to VPN"
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+  }
+
+  tags = {
+    Build       = "terraform"
+    Resource    = "aws_security_group"
+    Environment = var.env
+    Name        = "${var.env}-${each.value.peer_name}-vpc-peer-to-rds-broker-dbs"
+  }
 }
