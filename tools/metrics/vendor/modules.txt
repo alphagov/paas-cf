@@ -8,7 +8,7 @@ code.cloudfoundry.org/lager
 ## explicit
 github.com/Masterminds/semver
 # github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000 => ../../common-go/basic_logit_client
-## explicit; go 1.18
+## explicit; go 1.20
 github.com/alphagov/paas-cf/common-go/basic_logit_client
 github.com/alphagov/paas-cf/common-go/basic_logit_client/logitfakes
 # github.com/alphagov/paas-elasticache-broker v0.18.0
@@ -221,7 +221,7 @@ golang.org/x/net/ipv6
 golang.org/x/oauth2
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.0.0-20220319134239-a9b59b0215f8
+# golang.org/x/sys v0.1.0
 ## explicit; go 1.17
 golang.org/x/sys/execabs
 golang.org/x/sys/internal/unsafeheader
