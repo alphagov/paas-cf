@@ -3,7 +3,9 @@ module github.com/alphagov/paas-cf/platform-tests
 go 1.18
 
 require (
-	github.com/aws/aws-sdk-go v1.4.22
+	code.cloudfoundry.org/lager v2.0.0+incompatible
+	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000
+	github.com/aws/aws-sdk-go v1.34.0
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20220701174305-34d8f2860a20
 	github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20220701223313-91917ba99b8e
 	github.com/cloudfoundry/cf-test-helpers v1.0.1-0.20220603211108-d498b915ef74
@@ -18,13 +20,10 @@ require (
 
 require (
 	code.cloudfoundry.org/gofileutils v0.0.0-20170111115228-4d0c80011a0f // indirect
-	code.cloudfoundry.org/lager v2.0.0+incompatible // indirect
 	github.com/Masterminds/semver v1.4.2 // indirect
 	github.com/Masterminds/squirrel v1.4.0 // indirect
-	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000 // indirect
 	github.com/bmizerany/pat v0.0.0-20160217103242-c068ca2f0aac // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
-	github.com/go-ini/ini v1.30.0 // indirect
 	github.com/go-logr/logr v1.2.3 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
@@ -34,12 +33,12 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.0 // indirect
 	github.com/hashicorp/go-multierror v0.0.0-20160811015721-8c5f0ad93604 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible // indirect
-	github.com/jmespath/go-jmespath v0.0.0-20151117175822-3433f3ea46d9 // indirect
+	github.com/jmespath/go-jmespath v0.3.0 // indirect
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/mitchellh/mapstructure v0.0.0-20150717051158-281073eb9eb0 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/peterhellberg/link v1.0.0 // indirect
-	github.com/pkg/errors v0.8.1 // indirect
+	github.com/pkg/errors v0.9.1 // indirect
 	github.com/streadway/quantile v0.0.0-20220407130108-4246515d968d // indirect
 	github.com/tedsuo/rata v0.0.0-20150202174335-b15ebd8bd97a // indirect
 	github.com/vito/go-sse v0.0.0-20160212001227-fd69d275caac // indirect
