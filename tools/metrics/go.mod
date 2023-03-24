@@ -1,9 +1,10 @@
 module github.com/alphagov/paas-cf/tools/metrics
 
-go 1.18
+go 1.20
 
 require (
 	code.cloudfoundry.org/lager v2.0.0+incompatible
+	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000
 	github.com/alphagov/paas-elasticache-broker v0.18.0
 	github.com/aws/aws-sdk-go v1.29.1
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20190808214049-35bcce23fc5f
@@ -23,7 +24,6 @@ require (
 require (
 	code.cloudfoundry.org/gofileutils v0.0.0-20170111115228-4d0c80011a0f // indirect
 	github.com/Masterminds/semver v1.4.2 // indirect
-	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000 // indirect
 	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973 // indirect
 	github.com/fatih/color v1.7.0 // indirect
 	github.com/go-task/slim-sprig v0.0.0-20210107165309-348f09dbbbc0 // indirect
