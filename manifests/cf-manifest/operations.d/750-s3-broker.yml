@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: s3-broker
-    version: 0.1.17
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.17.tgz
-    sha1: e7afa91c671385f886cdf1fb2fc26a484dae29c9
+    version: 0.1.18
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.18.tgz
+    sha1: cabcaf5772e7114dae055046d08dd102170026f5
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -53,8 +53,8 @@
                   metadata:
                     displayName: AWS S3 Object Store
                     longDescription: |
-                      Amazon Simple Storage Service (AWS S3) is a service offered by Amazon Web Services (AWS) that 
-                      provides object storage through a web service interface.
+                      Amazon Simple Storage Service (AWS S3) is a service offered by Amazon Web Services (AWS) that
+                       provides object storage through a web service interface.
                     providerDisplayName: Amazon Web Services
                     documentationUrl: https://docs.cloud.service.gov.uk/deploying_services/s3/
                     supportUrl: https://admin.london.cloud.service.gov.uk/support
