@@ -1219,6 +1219,28 @@ jobs:
           - get: vpc-tfstate
           - get: concourse-tfstate
           - get: cf-tfstate
+          - get: paas-trusted-people
+
+      - task: create-static-cdrs
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *ruby-slim-image-resource
+          inputs:
+            - name: paas-cf
+            - name: paas-trusted-people
+          outputs:
+            - name: static-cidrs-tfvars
+          params:
+            AWS_ACCOUNT: ((aws_account))
+          run:
+            path: sh
+            args:
+            - -e
+            - -c
+            - |
+              cd paas-trusted-people
+              ruby ../paas-cf/concourse/scripts/get_static_cidrs.rb > ../static-cidrs-tfvars/user_static_cidrs.tfvars
 
       - task: extract-terraform-variables
         tags: [colocated-with-web]
@@ -1267,6 +1289,7 @@ jobs:
             - name: terraform-variables
             - name: paas-cf
             - name: cf-tfstate
+            - name: static-cidrs-tfvars
           outputs:
             - name: updated-tfstate
           params:
@@ -1292,6 +1315,7 @@ jobs:
 
                 terraform apply \
                   -auto-approve=true \
+                  -var-file="../../../static-cidrs-tfvars/user_static_cidrs.tfvars" \
                   -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
                   -var-file="../../../paas-cf/terraform/cloudfoundry/((aws_account)).tfvars" \
                   -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \

@@ -13,8 +13,12 @@ variable "admin_cidrs" {
     "213.86.153.237/32",
     "51.149.8.0/25",     # New DR VPN
     "51.149.8.128/29",   # New DR BYOD VPN
-    "82.71.58.244/32",   # LP remote
-    "51.148.163.199/32", # TW remote
+    "90.155.48.192/26",  # ITHC 2023
+    "81.2.127.144/28",   # ITHC 2023
+    "81.187.169.170/32", # ITHC 2023
+    "88.97.60.11/32",    # ITHC 2023
+    "3.10.4.97/32",      # ITHC 2023
+    "51.104.217.191/32", # ITHC 2023
   ]
 }
 
@@ -136,4 +140,9 @@ variable "zone_count" {
 variable "zones" {
   description = "AWS availability zones"
   type        = map(string)
+}
+
+variable "user_static_cidrs" {
+  description = "user static_cidrs populated with values from paas-trusted-people"
+  default     = []
 }
