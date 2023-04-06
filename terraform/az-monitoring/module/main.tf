@@ -62,12 +62,35 @@ resource "aws_instance" "healthcheck" {
   user_data = <<-EOF
     #!/bin/bash
     set -ex
-    sudo yum update -y
-    sudo amazon-linux-extras install docker -y
-    sudo service docker start
-    sudo usermod -a -G docker ec2-user
-    su - ec2-user
-    docker run -d -p 3000:3000 ghcr.io/alphagov/paas/simple-healthcheck
+
+    echo '
+[Unit]
+Description=simple-healthcheck-service
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+ExecStartPre=/bin/bash -c '/usr/bin/docker ps -q -f "name=simple-healthcheck" | grep -q . && /usr/bin/docker stop simple-healthcheck || true'
+ExecStartPre=/bin/bash -c '/usr/bin/docker ps -aq -f "name=simple-healthcheck" | grep -q . && /usr/bin/docker rm simple-healthcheck || true'
+ExecStart=/usr/bin/su ec2-user -c "/usr/bin/docker run --name simple-healthcheck -p 3000:3000 ghcr.io/alphagov/paas/simple-healthcheck"
+Restart=on-failure
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
+' >/etc/systemd/system/simple-healthcheck.service
+
+    systemctl daemon-reload
+ 
+    yum update -y --setopt=retries=0
+    amazon-linux-extras install docker -y --setopt=retries=0
+    service docker start
+    usermod -a -G docker ec2-user 
+  
+    sudo systemctl enable simple-healthcheck
+    sudo systemctl start simple-healthcheck
+   
   EOF
 
   tags = {
