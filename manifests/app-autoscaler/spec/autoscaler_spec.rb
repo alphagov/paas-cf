@@ -10,7 +10,7 @@ RSpec.describe "autoscaler" do
 
     let(:jobs) { subject["jobs"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
 
     describe "scalingengine" do
       let(:scalingengine) { jobs.find { |j| j["name"] == "scalingengine" } }
@@ -27,7 +27,7 @@ RSpec.describe "autoscaler" do
   describe "scheduler" do
     subject(:scheduler) { manifest["instance_groups.scheduler"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
   end
 
   describe "operator" do
@@ -35,7 +35,7 @@ RSpec.describe "autoscaler" do
 
     let(:jobs) { subject["jobs"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
 
     describe "operator" do
       let(:operator) { jobs.find { |j| j["name"] == "operator" } }
@@ -54,7 +54,7 @@ RSpec.describe "autoscaler" do
 
     let(:jobs) { subject["jobs"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
 
     describe "golangapiserver" do
       let(:apiserver) { jobs.find { |j| j["name"] == "golangapiserver" } }
@@ -98,24 +98,24 @@ RSpec.describe "autoscaler" do
   describe "eventgenerator" do
     subject(:eventgenerator) { manifest["instance_groups.eventgenerator"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
   end
 
   describe "metricsforwarder" do
     subject(:metricsforwarder) { manifest["instance_groups.metricsforwarder"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
   end
 
   describe "metricsserver" do
     subject(:metricsserver) { manifest["instance_groups.metricsserver"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
   end
 
   describe "metricsgateway" do
     subject(:metricsgateway) { manifest["instance_groups.metricsgateway"] }
 
-    it_behaves_like "a cf rds client"
+    it_behaves_like "an autoscaler rds client"
   end
 end
