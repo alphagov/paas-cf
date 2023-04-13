@@ -1,6 +1,7 @@
 package fakes
 
 import (
+	"net"
 	"net/http"
 	"time"
 )
@@ -18,6 +19,12 @@ func (h *httpHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func ListenAndServeHTTP(listenAddr string) *http.Server {
 	server := &http.Server{Addr: listenAddr, Handler: &httpHandler{}}
-	go server.ListenAndServe()
+
+	ln, err := net.Listen("tcp", listenAddr)
+	if err != nil {
+		return server
+	}
+	go server.Serve(ln)
+
 	return server
 }

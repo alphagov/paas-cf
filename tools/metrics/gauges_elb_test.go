@@ -66,7 +66,7 @@ var _ = Describe("ELB Gauges", Ordered, func() {
 			Resolvers: resolvers,
 			Timeout:   1 * time.Second,
 		}
-		gauge := ELBNodeFailureCountGauge(logger, config, 1*time.Second)
+		gauge := ELBNodeFailureCountGauge(logger, config, 2*time.Second)
 		metric, err := gauge.ReadMetric()
 		Expect(err).NotTo(HaveOccurred())
 		Expect(metric.Name).To(Equal("aws.elb.unhealthy_node_count"))
