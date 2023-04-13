@@ -53,6 +53,13 @@ resources:
       region_name: ((aws_region))
       versioned_file: bosh-vars-store.yml
 
+  - name: dev-env-usage
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: dev-env-usage-file
+
   - name: paas-cf
     type: git
     source:
@@ -152,7 +159,7 @@ jobs:
               - -e
               - -c
               - |
-                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" wake
+                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" wake 
 
   - name: fast-shutdown-cf-env
     serial: true
