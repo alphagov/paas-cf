@@ -1244,7 +1244,6 @@ jobs:
                   aws s3 rm "s3://((state_bucket))/${JOB_FILE}"
 
   - name: cf-terraform
-    serial_groups: [cf-deploy]
     serial: true
     plan:
       - *add-grafana-job-annotation
@@ -1429,7 +1428,6 @@ jobs:
       - *end-grafana-job-annotation
 
   - name: psn-terraform
-    serial_groups: [cf-deploy]
     serial: true
     plan:
       - *add-grafana-job-annotation
@@ -1520,7 +1518,6 @@ jobs:
       - *end-grafana-job-annotation
 
   - name: vpc-peering-terraform
-    serial_groups: [cf-deploy]
     serial: true
     plan:
       - *add-grafana-job-annotation
@@ -1599,7 +1596,6 @@ jobs:
       - *end-grafana-job-annotation
 
   - name: az-healthcheck-terraform
-    serial_groups: [cf-deploy]
     serial: true
     plan:
       - in_parallel:
@@ -1654,7 +1650,6 @@ jobs:
       - *end-grafana-job-annotation
 
   - name: dms-terraform
-    serial_groups: [cf-deploy]
     serial: true
     plan:
       - in_parallel:
@@ -1736,7 +1731,6 @@ jobs:
       - *end-grafana-job-annotation
 
   - name: vpn-terraform
-    serial_groups: [cf-deploy]
     serial: true
     plan:
       - in_parallel:
