@@ -21,6 +21,11 @@ jobs:
         with:
           submodules: true
 
+      - name: Install gettext
+        run: |
+          sudo apt install gettext
+          # for envsubst
+
       - name: "Install Go ${{env.GO_VERSION}}"
         uses: actions/setup-go@v2
         with:
@@ -45,8 +50,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
         run: |
+          FINAL_BODY=$(mktemp)
+          envsubst < ./.github/workflows/automatic_buildpack_bump_pr_body.md > $FINAL_BODY
+
           gh pr create \
             --base main \
             --head "$NEW_BRANCH_NAME" \
             --title "Buildpack upgrades, $(date -u '+%B %Y')" \
-            --body-file "./.github/workflows/automatic_buildpack_bump_pr_body.md"
+            --body-file "$FINAL_BODY"

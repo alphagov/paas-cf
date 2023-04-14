@@ -9,7 +9,7 @@ When this PR is less than a week old, a human should check out this branch and:
 - [ ] Update the title of this PR to include the date on which it should be merged. The format isn't important, only that
 it's clear to others thast it shouldn't be merged until a certain date.
 
-*However* if this PR is more than around a week old it would probably be better to:
+**However** if this PR is more than around a week old it would probably be better to:
 
 - [ ] Close this PR.
 - [ ] Manually re-trigger the `generate_buildpack_bump_pr` github workflow to create a fresh PR.
