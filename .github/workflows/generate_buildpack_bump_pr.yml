@@ -23,8 +23,8 @@ jobs:
 
       - name: Install gettext
         run: |
+          sudo apt install gettext
           # for envsubst
-          apt install gettext
 
       - name: "Install Go ${{env.GO_VERSION}}"
         uses: actions/setup-go@v2
