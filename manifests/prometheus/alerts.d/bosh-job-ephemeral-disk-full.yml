@@ -1,0 +1,33 @@
+# Source: bosh-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: BOSHJobEphemeralDiskFull
+    rules:
+      - alert: BOSHJobEphemeralDiskFull
+        expr: avg(bosh_job_ephemeral_disk_percent{bosh_job_name!~"^(compilation|concourse-worker).*",bosh_deployment!="bosh-health-check"}) by(environment, bosh_name, bosh_deployment, bosh_job_name, bosh_job_index) > 80
+        for: 30m
+        labels:
+          service: bosh-job
+          severity: warning
+        annotations:
+          summary: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` is running out of ephemeral disk"
+          description: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` has used more than 80% of its ephemeral disk for 30m"
+
+      - alert: BOSHJobEphemeralDiskFullConcourseWorker
+        expr: avg(bosh_job_ephemeral_disk_percent{bosh_job_name=~"^concourse-worker.*",bosh_deployment!="bosh-health-check"}) by(environment, bosh_name, bosh_deployment, bosh_job_name, bosh_job_index) > 90
+        for: 30m
+        labels:
+          service: bosh-job
+          severity: warning
+        annotations:
+          summary: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` is running out of ephemeral disk"
+          description: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` has used more than 90% of its ephemeral disk for 30m"
+
+# FIXME: there is no easy way currently to remove upstream alerts
+# This effectively disables the upstream disk-full alert by increasing the threshold to an impossible value
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=bosh_alerts/properties?/bosh_alerts/job_ephemeral_disk_full/threshold
+  value: 10000
