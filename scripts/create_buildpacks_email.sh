@@ -32,6 +32,6 @@ fi
 cd "${root_dir}/tools/buildpacks"
 
 EMAIL_OUT="email-$(date "+%Y-%m-%d").txt"
-go run email.go structs.go -old <(git show "$previous_commit:config/buildpacks.yml") -new <(git show "head:config/buildpacks.yml") -out "${EMAIL_OUT}"
+go run email.go structs.go -old <(git show "$previous_commit:config/buildpacks.yml") -new <(git show "HEAD:config/buildpacks.yml") -out "${EMAIL_OUT}"
 
 echo "Email content writen to: $(pwd)/${EMAIL_OUT}"
