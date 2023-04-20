@@ -2,7 +2,9 @@
     {
         "name": "govuk-notify-test-migration",
         "source_secret_name": "dms-secrets/notify-test/source",
+        "source_extra_connection_attributes": "executeTimeout=600;",
         "target_secret_name": "dms-secrets/notify-test/destination",
+        "target_extra_connection_attributes": "executeTimeout=600;",
         "instance": {
             "allocated_storage": "6144",
             "allow_major_version_upgrade": false,
@@ -32,7 +34,9 @@
     {
         "name": "govuk-notify-preview-migration",
         "source_secret_name": "dms-secrets/notify-preview/source",
+        "source_extra_connection_attributes": "executeTimeout=600;",
         "target_secret_name": "dms-secrets/notify-preview/destination",
+        "target_extra_connection_attributes": "executeTimeout=600;",
         "instance": {
             "allocated_storage": "6144",
             "allow_major_version_upgrade": false,

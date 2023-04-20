@@ -12,6 +12,7 @@ resource "aws_dms_endpoint" "source" {
   ssl_mode                        = "require"
   secrets_manager_arn             = try(data.aws_secretsmanager_secret.source[each.key].arn, null)
   secrets_manager_access_role_arn = data.aws_iam_role.secrets_manager.arn
+  extra_connection_attributes     = try(each.value.source_extra_connection_attributes, "")
 
   tags = {
     Build       = "terraform"
@@ -31,6 +32,7 @@ resource "aws_dms_endpoint" "target" {
   ssl_mode                        = "require"
   secrets_manager_arn             = try(data.aws_secretsmanager_secret.target[each.key].arn, null)
   secrets_manager_access_role_arn = data.aws_iam_role.secrets_manager.arn
+  extra_connection_attributes     = try(each.value.target_extra_connection_attributes, "")
 
   tags = {
     Build       = "terraform"

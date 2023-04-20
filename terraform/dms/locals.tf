@@ -9,6 +9,8 @@ locals {
       name               = migration.name
       source_secret_name = migration.source_secret_name
       target_secret_name = migration.target_secret_name
+      source_extra_connection_attributes = migration.source_extra_connection_attributes
+      target_extra_connection_attributes = migration.target_extra_connection_attributes
       instance           = migration.instance
       task               = migration.task
     }
