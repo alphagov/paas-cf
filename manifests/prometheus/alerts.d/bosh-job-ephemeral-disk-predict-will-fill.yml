@@ -1,0 +1,33 @@
+# Source: bosh-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: BOSHJobEphemeralDiskPredictWillFill
+    rules:
+      - alert: BOSHJobEphemeralDiskPredictWillFill
+        expr: predict_linear(bosh_job_ephemeral_disk_percent{bosh_job_name!~"^(compilation|smoke-tests|concourse-worker).*"}[1h], 14400) > 80
+        for: 30m
+        labels:
+          service: bosh-job
+          severity: warning
+        annotations:
+          summary: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` will run out of ephemeral disk in {{humanizeDuration 14400}}"
+          description: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` ephemeral disk will be used more than 80% in {{humanizeDuration 14400}}"
+
+      - alert: BOSHJobEphemeralDiskPredictWillFillConcourseWorker
+        expr: predict_linear(bosh_job_ephemeral_disk_percent{bosh_job_name=~"^concourse-worker.*"}[1h], 14400) > 90
+        for: 30m
+        labels:
+          service: bosh-job
+          severity: warning
+        annotations:
+          summary: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` will run out of ephemeral disk in {{humanizeDuration 14400}}"
+          description: "BOSH Job `{{$labels.environment}}/{{$labels.bosh_name}}/{{$labels.bosh_deployment}}/{{$labels.bosh_job_name}}/{{$labels.bosh_job_index}}` ephemeral disk will be used more than 90% in {{humanizeDuration 14400}}"
+
+# FIXME: there is no easy way currently to remove upstream alerts
+# This effectively disables the upstream disk-will-fill alert by increasing the threshold to a near-impossible value
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=bosh_alerts/properties?/bosh_alerts/job_predict_ephemeral_disk_full/threshold
+  value: 10000
