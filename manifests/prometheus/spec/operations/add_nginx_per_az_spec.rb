@@ -10,17 +10,13 @@ RSpec.describe "adding VMs to the load balancer" do
   end
 
   it "sets the same jobs and properties for both instance groups" do
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs").length).to eq(2)
+    expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs").length).to eq(1)
     expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.0.name")).to eq("nginx")
     expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.0.release")).to eq("prometheus")
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.1.name")).to eq("nginx-hosts-reload")
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.1.release")).to eq("paas-nginx-hosts-reload")
 
-    expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs").length).to eq(2)
+    expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs").length).to eq(1)
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs.0.name")).to eq("nginx")
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs.0.release")).to eq("prometheus")
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.1.name")).to eq("nginx-hosts-reload")
-    expect(manifest_with_defaults.get("instance_groups.nginx_z1.jobs.1.release")).to eq("paas-nginx-hosts-reload")
 
     z1_nginx_props = manifest_with_defaults.get("instance_groups.nginx_z1.jobs.0.properties")
     expect(manifest_with_defaults.get("instance_groups.nginx_z2.jobs.0.properties")).to eq(z1_nginx_props)
