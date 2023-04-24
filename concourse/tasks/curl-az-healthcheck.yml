@@ -29,5 +29,5 @@ run:
       export HEALTHCHECK_IP
 
       # shellcheck disable=SC2154
-      echo "Getting a response from the healthcheck in ${AVAILABILITY_ZONE} at ${HEALTHCHECK_IP}..."
+      echo "Attempting to get a response from the healthcheck in ${AVAILABILITY_ZONE} at ${HEALTHCHECK_IP}..."
       curl "http://${HEALTHCHECK_IP}:3000"
