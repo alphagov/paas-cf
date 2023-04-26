@@ -2,7 +2,9 @@ variable "dms_data" {
   type = list(object({
     name               = string
     source_secret_name = string
+    source_extra_connection_attributes = optional(string)
     target_secret_name = string
+    target_extra_connection_attributes = optional(string)
     instance = object({
       allocated_storage            = number
       allow_major_version_upgrade  = bool
