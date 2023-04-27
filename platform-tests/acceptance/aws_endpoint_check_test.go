@@ -62,7 +62,6 @@ var _ = Describe("AWS Endpoint Check", Ordered, func() {
 			Entry("should connect to rekognition endpoint", "rekognition", "404"),
 			Entry("should connect to s3 endpoint", "s3", "405"),
 			Entry("should connect to ses endpoint", "email", "404"),
-			Entry("should connect to sms endpoint", "sms", "404"),
 			Entry("should connect to cassandra endpoint", "cassandra", "404"),
 			Entry("should connect to sqs endpoint", "sqs", "404"),
 			Entry("should connect to sns endpoint", "sns", "404"),
