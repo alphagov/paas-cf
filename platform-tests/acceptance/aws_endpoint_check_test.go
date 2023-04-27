@@ -65,6 +65,9 @@ var _ = Describe("AWS Endpoint Check", Ordered, func() {
 			Entry("should connect to cassandra endpoint", "cassandra", "404"),
 			Entry("should connect to sqs endpoint", "sqs", "404"),
 			Entry("should connect to sns endpoint", "sns", "404"),
+			Entry("should connect to cloudwatch monitoring endpoint", "monitoring", "404"),
+			Entry("should connect to cloudwatch events endpoint", "events", "404"),
+			Entry("should connect to cloudwatch logs endpoint", "logs", "404"),
 		)
 
 		It("should connect to cloudfront endpoint", func() {
