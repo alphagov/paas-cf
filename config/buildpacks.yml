@@ -10,10 +10,10 @@ buildpacks:
 - name: dotnet_core_buildpack
   repo_name: dotnet-core-buildpack
   stack: cflinuxfs3
-  version: v2.4.10
-  sha: 2888a608f35c6a42173a13956c6ff12c329d23eab0b6ee4d9830797b44fb0785
-  filename: dotnet-core-buildpack-cflinuxfs3-v2.4.10.zip
-  url: https://github.com/cloudfoundry/dotnet-core-buildpack/releases/download/v2.4.10/dotnet-core-buildpack-cflinuxfs3-v2.4.10.zip
+  version: v2.4.11
+  sha: 534bcdbbcd4fc52baa2538f86a0c1535b7fd8a136f42b0cb6ede50b20c1befd2
+  filename: dotnet-core-buildpack-cflinuxfs3-v2.4.11.zip
+  url: https://github.com/cloudfoundry/dotnet-core-buildpack/releases/download/v2.4.11/dotnet-core-buildpack-cflinuxfs3-v2.4.11.zip
   dependencies:
   - name: bower
     version: 1.8.14
@@ -21,32 +21,32 @@ buildpacks:
     - cflinuxfs4
     - cflinuxfs3
   - name: dotnet-aspnetcore
-    version: 6.0.15
+    version: 6.0.16
     cf_stacks:
     - cflinuxfs4
     - cflinuxfs3
   - name: dotnet-aspnetcore
-    version: 7.0.4
+    version: 7.0.5
     cf_stacks:
     - cflinuxfs4
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 6.0.15
+    version: 6.0.16
     cf_stacks:
     - cflinuxfs4
     - cflinuxfs3
   - name: dotnet-runtime
-    version: 7.0.4
+    version: 7.0.5
     cf_stacks:
     - cflinuxfs4
     - cflinuxfs3
   - name: dotnet-sdk
-    version: 6.0.407
+    version: 6.0.408
     cf_stacks:
     - cflinuxfs4
     - cflinuxfs3
   - name: dotnet-sdk
-    version: 7.0.202
+    version: 7.0.203
     cf_stacks:
     - cflinuxfs4
     - cflinuxfs3
@@ -125,10 +125,10 @@ buildpacks:
 - name: java_buildpack
   repo_name: java-buildpack
   stack: cflinuxfs3
-  version: v4.57
-  sha: 18603b0b87d74b64029020bf1ba904bbd2ec5e3cbade72b2853b0e8e9784eea3
-  filename: java-buildpack-v4.57.zip
-  url: https://github.com/cloudfoundry/java-buildpack/releases/download/v4.57/java-buildpack-v4.57.zip
+  version: v4.58
+  sha: 77a037bacb23895de1cee70c6d9cec41f8b145bcb13094c2f33e46edd306620c
+  filename: java-buildpack-v4.58.zip
+  url: https://github.com/cloudfoundry/java-buildpack/releases/download/v4.58/java-buildpack-v4.58.zip
   dependencies: []
 - name: nodejs_buildpack
   repo_name: nodejs-buildpack
