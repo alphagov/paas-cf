@@ -42,9 +42,31 @@ resource "aws_lb_ssl_negotiation_policy" "cdn_broker" {
 
 resource "aws_s3_bucket" "cdn_broker_bucket" {
   bucket        = "gds-paas-${var.env}-cdn-broker-challenge"
-  acl           = "private"
   force_destroy = "true"
+}
 
+resource "aws_s3_bucket_public_access_block" "cdn_broker_bucket" {
+  bucket = aws_s3_bucket.cdn_broker_bucket.id
+
+  block_public_policy = false
+}
+
+resource "aws_s3_bucket_ownership_controls" "cdn_broker_bucket" {
+  bucket = aws_s3_bucket.cdn_broker_bucket.id
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
+resource "aws_s3_bucket_acl" "cdn_broker_bucket" {
+  bucket = aws_s3_bucket.cdn_broker_bucket.id
+  acl    = "private"
+
+  depends_on = [aws_s3_bucket_ownership_controls.cdn_broker_bucket]
+}
+
+resource "aws_s3_bucket_policy" "cdn_broker_bucket" {
+  bucket = aws_s3_bucket.cdn_broker_bucket.id
   policy = <<POLICY
 {
   "Version": "2012-10-17",
@@ -61,6 +83,7 @@ resource "aws_s3_bucket" "cdn_broker_bucket" {
 }
 POLICY
 
+  depends_on = [aws_s3_bucket_public_access_block.cdn_broker_bucket]
 }
 
 resource "aws_db_subnet_group" "cdn_rds" {
