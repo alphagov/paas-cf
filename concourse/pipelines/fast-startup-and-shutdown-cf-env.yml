@@ -21,6 +21,11 @@ resource_types:
     repository: ghcr.io/alphagov/paas/semver-resource
     tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
+- name: keyval
+  type: registry-image
+  source:
+    repository: ghcr.io/cludden/concourse-keyval-resource
+
 groups:
   - name: fast-startup-cf-env
     jobs:
@@ -32,6 +37,18 @@ groups:
       - fast-shutdown-cf-env
 
 resources:
+  - name: build-created-by-keyval
+    type: keyval
+    icon: table
+    expose_build_created_by: true
+
+  - name: dev-env-usage-state
+    type: s3-iam
+    source:
+      bucket: ((state_bucket))
+      region_name: ((aws_region))
+      versioned_file: dev-env-usage-state
+
   - name: startup-trigger
     type: semver-iam
     source:
@@ -52,13 +69,6 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: bosh-vars-store.yml
-
-  - name: dev-env-usage
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: dev-env-usage-file
 
   - name: paas-cf
     type: git
@@ -85,6 +95,7 @@ jobs:
   - name: kick-off-startup
     serial: true
     plan:
+      - put: build-created-by-keyval
       - get: paas-cf
       - task: self-update-pipeline-and-trigger
         tags: [colocated-with-web]
@@ -126,6 +137,24 @@ jobs:
   - name: fast-startup-cf-env
     serial: true
     plan:
+      - get: build-created-by-keyval
+        trigger: true
+        passed: ['kick-off-startup']
+      - task: print
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source:
+              repository: busybox
+          inputs:
+            - name: build-created-by-keyval
+          run:
+            path: /bin/sh
+            args:
+              - -c
+              - |
+                cat build-created-by-keyval/version.json
       - get: startup-trigger
         passed: ['kick-off-startup']
         trigger: true
