@@ -9,6 +9,16 @@
                 "table-name": "%"
             },
             "rule-action": "include"
+        },
+        {
+            "rule-type": "selection",
+            "rule-id": "2",
+            "rule-name": "2",
+            "object-locator": {
+                "schema-name": "public",
+                "table-name": "spatial_ref_sys"
+            },
+            "rule-action": "exclude"
         }
     ]
 }
