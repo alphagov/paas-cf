@@ -14,8 +14,10 @@ credhub_namespaces = [
 ]
 
 cyber_slack_webhook_url = ENV["SLACK_WEBHOOK_URL"] || get_secret("gds.slack.com/cyber_slack_webhook_url")
+dev_env_usage_slack_webhook_url = ENV["DEV_ENV_USAGE_SLACK_WEBHOOK_URL"] || get_secret("gds.slack.com/dev-env-usage-webhook")
 
 upload_secrets(
   credhub_namespaces,
   "cyber_slack_webhook_url" => cyber_slack_webhook_url,
+  "dev_env_usage_slack_webhook_url" => dev_env_usage_slack_webhook_url,
 )

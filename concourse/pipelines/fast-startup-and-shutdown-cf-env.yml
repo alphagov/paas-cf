@@ -48,6 +48,8 @@ resources:
       bucket: ((state_bucket))
       region_name: ((aws_region))
       versioned_file: dev-env-usage-state
+    initial_version: "-"
+    initial_content: ""
 
   - name: startup-trigger
     type: semver-iam
