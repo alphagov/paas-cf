@@ -42,12 +42,14 @@ resources:
     icon: table
     expose_build_created_by: true
 
-  - name: dev-env-usage-state
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      region_name: ((aws_region))
-      versioned_file: dev-env-usage-state
+#  - name: dev-env-usage-state
+#    type: s3-iam
+#    source:
+#      bucket: ((state_bucket))
+#      region_name: ((aws_region))
+#      versioned_file: dev-env-usage-state
+#      initial_version: "-"
+#      initial_content: ""
 
   - name: startup-trigger
     type: semver-iam
