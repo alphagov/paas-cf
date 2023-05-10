@@ -140,6 +140,9 @@ groups:
       - cf-terraform
       - psn-terraform
       - az-healthcheck-terraform
+      - az-a-healthcheck
+      - az-b-healthcheck
+      - az-c-healthcheck
       - vpc-peering-terraform
       - dms-terraform
       - generate-cf-config
@@ -2425,6 +2428,9 @@ jobs:
             passed: ['az-healthcheck-terraform']
           - get: az-healthcheck-tfstate
             passed: ['az-healthcheck-terraform']
+          - get: pipeline-trigger
+            passed: ['az-healthcheck-terraform']
+            trigger: true
 
       - task: extract-terraform-variables
         tags: [colocated-with-web]
@@ -2479,6 +2485,9 @@ jobs:
             passed: ['az-healthcheck-terraform']
           - get: az-healthcheck-tfstate
             passed: ['az-healthcheck-terraform']
+          - get: pipeline-trigger
+            passed: ['az-healthcheck-terraform']
+            trigger: true
 
       - task: extract-terraform-variables
         tags: [colocated-with-web]
@@ -2533,6 +2542,9 @@ jobs:
             passed: ['az-healthcheck-terraform']
           - get: az-healthcheck-tfstate
             passed: ['az-healthcheck-terraform']
+          - get: pipeline-trigger
+            passed: ['az-healthcheck-terraform']
+            trigger: true
 
       - task: extract-terraform-variables
         tags: [colocated-with-web]
@@ -2584,7 +2596,11 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['cf-terraform']
+            passed:
+              - cf-terraform
+              - az-a-healthcheck
+              - az-b-healthcheck
+              - az-c-healthcheck
             trigger: true
           - <<: *get-paas-cf
             passed: ['cf-terraform']

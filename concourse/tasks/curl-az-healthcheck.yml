@@ -20,7 +20,7 @@ run:
       echo "Checking the ability to perform tests on ${AVAILABILITY_ZONE}..."
 
       if [ "${ENABLE_AZ_HEALTHCHECK:-}" = "false" ]; then
-        echo "Availabilty Zone Healthchecks have been disabled."
+        echo "Availability Zone Healthchecks instances do not exist."
         exit 0
       fi
 
@@ -30,4 +30,26 @@ run:
 
       # shellcheck disable=SC2154
       echo "Attempting to get a response from the healthcheck in ${AVAILABILITY_ZONE} at ${HEALTHCHECK_IP}..."
-      curl "http://${HEALTHCHECK_IP}:3000"
+      # if the DISABLE_AZ_HEALTHCHECK_BLOCK flag is set, we don't care about the response
+      if [ "${DISABLE_AZ_HEALTHCHECK_BLOCK:-}" = "true" ]; then
+        echo "Availability Zone Healthchecks have been disabled."
+        exit 0
+      fi
+
+      for attempt in $(seq 12); do
+        echo "Attempt ${attempt}..."
+        if curl -s -o /dev/null -w "%{http_code}" "http://${HEALTHCHECK_IP}:3000" -m 5 | grep -q 200; then
+          echo "Availability Zone Healthchecks are up. Double checking..."
+          if curl -s -o /dev/null -w "%{http_code}" "http://${HEALTHCHECK_IP}:3000" -m 5 | grep -q 200; then
+            echo "Success!"
+            exit 0
+          else
+            echo "Double check failed!"
+            exit 1
+          fi
+        fi
+        sleep 5
+      done
+
+      echo "Availability Zone Healthchecks are not working in this zone."
+      exit 1

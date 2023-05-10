@@ -238,6 +238,7 @@ dev%: dev
 	$(eval export DEPLOY_ENV=$@)
 	$(eval export ENABLE_AUTODELETE=false)
 	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
+	$(eval export DISABLE_AZ_HEALTHCHECK_BLOCK ?= false)
 	@true
 
 .PHONY: stg-lon
@@ -247,6 +248,7 @@ stg-lon: ## Set Environment to stg-lon
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export ENABLE_AZ_HEALTHCHECK=true)
+	$(eval export DISABLE_AZ_HEALTHCHECK_BLOCK ?= false)
 	$(eval export OUTPUT_TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=london.staging.cloudpipeline.digital)
 	$(eval export APPS_DNS_ZONE_NAME=london.staging.cloudpipelineapps.digital)
@@ -273,6 +275,7 @@ prod: ## Set Environment to Production
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export ENABLE_AZ_HEALTHCHECK=true)
+	$(eval export DISABLE_AZ_HEALTHCHECK_BLOCK ?= false)
 	$(eval export INPUT_TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=cloudapps.digital)
@@ -299,6 +302,7 @@ prod-lon: ## Set Environment to prod-lon
 	$(eval export PERSISTENT_ENVIRONMENT=true)
 	$(eval export ENABLE_AUTO_DEPLOY=true)
 	$(eval export ENABLE_AZ_HEALTHCHECK=true)
+	$(eval export DISABLE_AZ_HEALTHCHECK_BLOCK ?= false)
 	$(eval export INPUT_TAG_PREFIX=prod-)
 	$(eval export SYSTEM_DNS_ZONE_NAME=london.cloud.service.gov.uk)
 	$(eval export APPS_DNS_ZONE_NAME=london.cloudapps.digital)
