@@ -142,7 +142,6 @@ groups:
       - az-healthcheck-terraform
       - vpc-peering-terraform
       - dms-terraform
-      - vpn-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -177,7 +176,6 @@ groups:
       - psn-terraform
       - vpc-peering-terraform
       - dms-terraform
-      - vpn-terraform
       - generate-cf-config
       - cf-deploy
       - app-autoscaler-deploy
@@ -482,22 +480,6 @@ resources:
     source:
       bucket: ((state_bucket))
       versioned_file: dms.tfstate
-      region_name: ((aws_region))
-      initial_version: "-"
-      initial_content_text: |
-        {
-            "version": 4,
-            "terraform_version": "1.2.0",
-            "serial": 0,
-            "outputs": {},
-            "resources": []
-        }
-
-  - name: vpn-tfstate
-    type: s3-iam
-    source:
-      bucket: ((state_bucket))
-      versioned_file: vpn.tfstate
       region_name: ((aws_region))
       initial_version: "-"
       initial_content_text: |
@@ -886,7 +868,6 @@ jobs:
               CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
               CREDHUB_SERVER: "https://((bosh_fqdn)):8844/api"
               DEPLOY_ENV: ((deploy_env))
-              VPN_DEFINITIONS_FILE: "./paas-cf/terraform/((deploy_env)).vpn.json"
             run:
               path: bash
               args:
@@ -934,14 +915,6 @@ jobs:
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/app-autoscaler/$secret_name" --password "$value"
                   done
-
-                  if [ -s "$VPN_DEFINITIONS_FILE" ]; then
-                    VPN_CREDENTIALS_GENERATION_SCRIPT=./vpn_credentials_generation_script.sh
-                    jq -r '.[] | "credhub generate --type password --no-overwrite --length=64 --name \"/((deploy_env))/((deploy_env))/tunnel1_preshared_key_\(.name)\""' "$VPN_DEFINITIONS_FILE" > "$VPN_CREDENTIALS_GENERATION_SCRIPT"
-                    jq -r '.[] | "credhub generate --type password --no-overwrite --length=64 --name \"/((deploy_env))/((deploy_env))/tunnel2_preshared_key_\(.name)\""' "$VPN_DEFINITIONS_FILE" >> "$VPN_CREDENTIALS_GENERATION_SCRIPT"
-                    # shellcheck source=./vpn_credentials_generation_script.sh
-                    . "$VPN_CREDENTIALS_GENERATION_SCRIPT"
-                  fi
 
         - task: generate-cf-admin-password
           tags: [colocated-with-web]
@@ -1717,129 +1690,6 @@ jobs:
           put: dms-tfstate
           params:
             file: updated-tfstate/dms.tfstate
-
-      - *end-grafana-job-annotation
-
-  - name: vpn-terraform
-    serial: true
-    plan:
-      - in_parallel:
-        - *add-grafana-job-annotation
-        - <<: *get-paas-cf
-          passed: ['pre-deploy']
-        - get: pipeline-trigger
-          passed: ['pre-deploy']
-          trigger: true
-        - get: vpn-tfstate
-        - get: vpc-tfstate
-
-      - task: extract-vpc-tfvars
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *ruby-slim-image-resource
-          inputs:
-            - name: paas-cf
-            - name: vpc-tfstate
-          outputs:
-            - name: terraform-variables
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                ruby paas-cf/concourse/scripts/extract_tf_vars_from_terraform_state.rb \
-                < vpc-tfstate/vpc.tfstate > terraform-variables/vpc.tfvars.sh
-
-      - task: generate-preshared-keys
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
-          inputs:
-            - name: paas-cf
-          params:
-            BOSH_ENVIRONMENT: ((bosh_fqdn))
-            CREDHUB_CLIENT_ID: credhub-admin
-            CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
-            CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
-          outputs:
-            - name: preshared_keys
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                echo 'Logging into Credhub'
-                credhub api -s "$BOSH_ENVIRONMENT:8844/api"
-                credhub login --client-name="${CREDHUB_CLIENT_ID}" --client-secret="${CREDHUB_CLIENT_SECRET}"
-
-                VPN_CONFIGURATION_FILE="paas-cf/terraform/((deploy_env)).vpn.json"
-                PRESHARED_KEYS_FILE="preshared_keys/preshared_keys.json"
-
-                echo '{' > "$PRESHARED_KEYS_FILE"
-                for name in $(jq -r '.[].name' "$VPN_CONFIGURATION_FILE"); do
-                cat<<EOF >>"$PRESHARED_KEYS_FILE"
-                    "${name}": {
-                        "tunnel1_preshared_key": "$(credhub get -q -n "/((deploy_env))/((deploy_env))/tunnel1_preshared_key_${name}")",
-                        "tunnel2_preshared_key": "$(credhub get -q -n "/((deploy_env))/((deploy_env))/tunnel2_preshared_key_${name}")"
-                    },
-                EOF
-                done
-                echo '}' >> "$PRESHARED_KEYS_FILE"
-
-
-      - task: terraform-apply-vpn
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *terraform-image-resource
-          inputs:
-            - name: paas-cf
-            - name: vpn-tfstate
-            - name: terraform-variables
-            - name: preshared_keys
-          outputs:
-            - name: updated-tfstate
-          params:
-            TF_VAR_env: ((deploy_env))
-            TF_VAR_region: ((aws_region))
-            AWS_DEFAULT_REGION: ((aws_region))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                cp vpn-tfstate/vpn.tfstate updated-tfstate/vpn.tfstate
-
-                if [ ! -f "paas-cf/terraform/((deploy_env)).vpn.json" ]; then
-                  echo "VPN tunneling is not available on this environment."
-                  exit 0
-                fi
-
-                . terraform-variables/vpc.tfvars.sh
-                TF_VAR_vpn_data="$(cat "paas-cf/terraform/((deploy_env)).vpn.json")"
-                export TF_VAR_vpn_data
-                TF_VAR_vpn_key_data="$(cat "preshared_keys/preshared_keys.json")"
-                export TF_VAR_vpn_key_data
-
-                sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/vpn.tfstate
-                cd paas-cf/terraform/vpn ||exit
-
-                terraform init
-
-                terraform apply \
-                  -auto-approve=true \
-                  -var-file="../../../paas-cf/terraform/((aws_account)).tfvars" \
-                  -var-file="../../../paas-cf/terraform/((aws_region)).tfvars" \
-                  -state=../../../updated-tfstate/vpn.tfstate
-        ensure:
-          put: vpn-tfstate
-          params:
-            file: updated-tfstate/vpn.tfstate
 
       - *end-grafana-job-annotation
 
