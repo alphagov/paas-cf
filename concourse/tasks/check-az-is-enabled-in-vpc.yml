@@ -4,7 +4,7 @@ image_resource:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/awscli
-    tag: b25554b10d0efb9da2aef192f9a890199863f59e
+    tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
 params:
   AWS_DEFAULT_REGION:
   EXPECTED_ACL_NAME:
