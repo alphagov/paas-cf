@@ -21,6 +21,11 @@ resource_types:
     repository: ghcr.io/alphagov/paas/semver-resource
     tag: f2a80c95481056aa57d837e3b14f0012b542fdb3
 
+- name: keyval
+  type: registry-image
+  source:
+    repository: ghcr.io/alphagov/paas/concourse-keyval-resource
+
 groups:
   - name: fast-startup-cf-env
     jobs:
@@ -32,6 +37,11 @@ groups:
       - fast-shutdown-cf-env
 
 resources:
+  - name: build-created-by-keyval
+    type: keyval
+    icon: table
+    expose_build_created_by: true
+
   - name: startup-trigger
     type: semver-iam
     source:
@@ -78,6 +88,7 @@ jobs:
   - name: kick-off-startup
     serial: true
     plan:
+      - put: build-created-by-keyval
       - get: paas-cf
       - task: self-update-pipeline-and-trigger
         tags: [colocated-with-web]
@@ -113,12 +124,16 @@ jobs:
   - name: kick-off-shutdown
     serial: true
     plan:
+      - put: build-created-by-keyval
       - put: shutdown-trigger
         params: {bump: patch}
 
   - name: fast-startup-cf-env
     serial: true
     plan:
+      - get: build-created-by-keyval
+        passed: ['kick-off-startup']
+        trigger: true
       - get: startup-trigger
         passed: ['kick-off-startup']
         trigger: true
@@ -134,6 +149,7 @@ jobs:
             - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
+            - name: build-created-by-keyval
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: ((bosh-ca-cert))
@@ -152,11 +168,14 @@ jobs:
               - -e
               - -c
               - |
-                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" wake
+                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" wake "((dev_env_usage_slack_webhook_url))" 
 
   - name: fast-shutdown-cf-env
     serial: true
     plan:
+      - get: build-created-by-keyval
+        passed: ['kick-off-startup']
+        trigger: true
       - get: bosh-vars-store
       - get: paas-cf
       - get: bosh-ca-crt
@@ -173,6 +192,7 @@ jobs:
             - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
+            - name: build-created-by-keyval
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: ((bosh-ca-cert))
@@ -191,4 +211,4 @@ jobs:
               - -e
               - -c
               - |
-                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" sleep
+                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" sleep "((dev_env_usage_slack_webhook_url))"

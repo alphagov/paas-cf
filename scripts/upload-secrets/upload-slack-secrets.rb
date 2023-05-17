@@ -8,7 +8,7 @@ require_relative "upload_secrets"
 
 deploy_env = ENV.fetch("DEPLOY_ENV")
 
-credhub_namespaces = [
+cyber_credhub_namespaces = [
   "/concourse/main/create-cloudfoundry",
   "/#{deploy_env}/#{deploy_env}",
 ]
@@ -16,6 +16,17 @@ credhub_namespaces = [
 cyber_slack_webhook_url = ENV["SLACK_WEBHOOK_URL"] || get_secret("gds.slack.com/cyber_slack_webhook_url")
 
 upload_secrets(
-  credhub_namespaces,
+  cyber_credhub_namespaces,
   "cyber_slack_webhook_url" => cyber_slack_webhook_url,
+)
+
+dev_env_usage_credhub_namespaces = [
+  "/concourse/main/fast-startup-and-shutdown-cf-env",
+]
+
+dev_env_usage_slack_webhook_url = ENV["DEV_ENV_USAGE_SLACK_WEBHOOK_URL"] || get_secret("gds.slack.com/dev_env_usage_webhook")
+
+upload_secrets(
+  dev_env_usage_credhub_namespaces,
+  "dev_env_usage_slack_webhook_url" => dev_env_usage_slack_webhook_url,
 )

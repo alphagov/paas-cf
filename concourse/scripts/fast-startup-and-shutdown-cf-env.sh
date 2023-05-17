@@ -31,6 +31,7 @@ main() {
     manage_db_instances_state
   fi
   echo "${env_arg} is now ${past_tense}"
+  update_usage_and_slack
   echo "done."
   echo
 }
@@ -199,12 +200,16 @@ parse_args() {
     target_db_state='available'
     past_tense='awake'
   fi
+  webhook_arg="${3:-}"
+  if [[ "${webhook_arg}" = '' ]]; then
+    print_error 'expecting valid slack webhook url in arg3'
+  fi
 }
 
 print_header() {
   echo '
   ┌─────────────────────────────┐
-  │ Fast Startup and Shutdown CF Env │
+    Fast Startup and Shutdown CF Env
   └─────────────────────────────┘
   '
   echo "  env: ${env_arg}"
@@ -370,6 +375,31 @@ toggle_bosh_resurrector() {
     print_error "could not execute: bosh update-resurrection ${action}"
   fi
   echo "bosh resurrector toggled ${action}"
+}
+
+# update dev env usage and send slack update message
+update_usage_and_slack() {
+  local usage_msg=""
+  echo "updating dev-env-usage..."
+  local build_created_by
+  build_created_by=$(jq -r '.build_created_by' < build-created-by-keyval/version.json)
+  local update_usage="${build_created_by} | ${past_tense}"
+  local s3_dev_envs
+  s3_dev_envs=$(aws s3api list-buckets | jq -r '.Buckets[].Name|match("gds-paas-(dev[0-9][0-9])-state").captures[].string')
+  local s3_dev_env
+  for s3_dev_env in ${s3_dev_envs}; do
+    local existing_usage
+    existing_usage=$(aws s3 cp "s3://gds-paas-${s3_dev_env}-state/dev-env-usage-file" -)
+    if [[ "${env_arg}" = "${s3_dev_env}" ]]; then
+      if [[ "${existing_usage}" != "${update_usage}" ]]; then
+        existing_usage="${update_usage}"
+        echo "${existing_usage}" | aws s3 cp - "s3://gds-paas-${s3_dev_env}-state/dev-env-usage-file"
+      fi
+    fi
+    usage_msg="${usage_msg}\n${s3_dev_env} | ${existing_usage}"
+  done
+  echo -e "dev-env-usage summary${usage_msg}" | sed 's/^/  /'
+  curl -s -H 'Content-type: application/json' -d "{\"text\":\"*dev-env-usage summary*\n\`\`\`${usage_msg}\`\`\`\"}" "${webhook_arg}" >/dev/null 2>&1
 }
 
 main "$@"
