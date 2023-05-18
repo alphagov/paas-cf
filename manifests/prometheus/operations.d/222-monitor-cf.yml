@@ -8,7 +8,7 @@
   value: high_cpu_xlarge
 
 - type: replace
-  path: /instance_groups/name=firehose/jobs/name=firehose_exporter/properties/firehose_exporter/doppler/idle_timeout?
+  path: /instance_groups/name=firehose/jobs/name=firehose_exporter-attic/properties/firehose_exporter/doppler/idle_timeout?
   value: 5m
 
 - type: replace
