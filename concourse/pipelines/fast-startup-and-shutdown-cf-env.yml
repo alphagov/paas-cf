@@ -37,7 +37,12 @@ groups:
       - fast-shutdown-cf-env
 
 resources:
-  - name: build-created-by-keyval
+  - name: build-created-by-keyval-startup
+    type: keyval
+    icon: table
+    expose_build_created_by: true
+
+  - name: build-created-by-keyval-shutdown
     type: keyval
     icon: table
     expose_build_created_by: true
@@ -88,7 +93,7 @@ jobs:
   - name: kick-off-startup
     serial: true
     plan:
-      - put: build-created-by-keyval
+      - put: build-created-by-keyval-startup
       - get: paas-cf
       - task: self-update-pipeline-and-trigger
         tags: [colocated-with-web]
@@ -124,16 +129,15 @@ jobs:
   - name: kick-off-shutdown
     serial: true
     plan:
-      - put: build-created-by-keyval
+      - put: build-created-by-keyval-shutdown
       - put: shutdown-trigger
         params: {bump: patch}
 
   - name: fast-startup-cf-env
     serial: true
     plan:
-      - get: build-created-by-keyval
+      - get: build-created-by-keyval-startup
         passed: ['kick-off-startup']
-        trigger: true
       - get: startup-trigger
         passed: ['kick-off-startup']
         trigger: true
@@ -149,7 +153,7 @@ jobs:
             - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
-            - name: build-created-by-keyval
+            - name: build-created-by-keyval-startup
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: ((bosh-ca-cert))
@@ -173,9 +177,8 @@ jobs:
   - name: fast-shutdown-cf-env
     serial: true
     plan:
-      - get: build-created-by-keyval
-        passed: ['kick-off-startup']
-        trigger: true
+      - get: build-created-by-keyval-shutdown
+        passed: ['kick-off-shutdown']
       - get: bosh-vars-store
       - get: paas-cf
       - get: bosh-ca-crt
@@ -192,7 +195,7 @@ jobs:
             - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
-            - name: build-created-by-keyval
+            - name: build-created-by-keyval-shutdown
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: ((bosh-ca-cert))
