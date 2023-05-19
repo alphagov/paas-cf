@@ -41,7 +41,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/alpine
-              tag: b25554b10d0efb9da2aef192f9a890199863f59e
+              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
           inputs:
             - name: paas-cf
             - name: deployment-timer
@@ -71,7 +71,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/awscli
-              tag: b25554b10d0efb9da2aef192f9a890199863f59e
+              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
 
           run:
             path: ./paas-cf/concourse/scripts/rds_instances.sh
@@ -86,7 +86,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: b25554b10d0efb9da2aef192f9a890199863f59e
+              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
 
           inputs:
             - name: paas-cf
@@ -119,7 +119,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: b25554b10d0efb9da2aef192f9a890199863f59e
+              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
 
           inputs:
             - name: paas-cf
