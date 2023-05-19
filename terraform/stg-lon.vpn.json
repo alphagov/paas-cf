@@ -1,14 +1,2 @@
 [
-    {
-        "name": "test-vpn1",
-        "aws_customer_gateway": {
-            "bgp_asn": 65000,
-            "ip_address": "35.177.73.214"
-        },
-        "aws_vpn_connection": {
-            "destination_cidr_blocks": [
-                "172.20.0.0/24"
-            ]
-        }
-    }
 ]
