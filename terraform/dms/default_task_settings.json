@@ -18,7 +18,7 @@
     "ParallelApplyQueuesPerThread": 0
   },
   "FullLoadSettings": {
-    "TargetTablePrepMode": "DROP_AND_CREATE",
+    "TargetTablePrepMode": "DO_NOTHING",
     "CreatePkAfterFullLoad": false,
     "StopTaskCachedChangesApplied": false,
     "StopTaskCachedChangesNotApplied": false,
@@ -109,12 +109,12 @@
     ]
   },
   "ControlTablesSettings": {
-    "ControlSchema": "",
+    "ControlSchema": "public",
     "HistoryTimeslotInMinutes": 5,
-    "HistoryTableEnabled": false,
-    "SuspendedTablesTableEnabled": false,
-    "StatusTableEnabled": false,
-    "FullLoadExceptionTableEnabled": false
+    "HistoryTableEnabled": true,
+    "SuspendedTablesTableEnabled": true,
+    "StatusTableEnabled": true,
+    "FullLoadExceptionTableEnabled": true
   },
   "StreamBufferSettings": {
     "StreamBufferCount": 3,
@@ -171,5 +171,22 @@
     "EnableTT": false,
     "TTRecordSettings": null,
     "TTS3Settings": null
+  },
+  "ValidationSettings": {
+    "ValidationPartialLobSize": 0,
+    "PartitionSize": 10000,
+    "RecordFailureDelayLimitInMinutes": 0,
+    "SkipLobColumns": false,
+    "FailureMaxCount": 10000,
+    "HandleCollationDiff": false,
+    "ValidationQueryCdcDelaySeconds": 0,
+    "ValidationMode": "ROW_LEVEL",
+    "TableFailureMaxCount": 1000,
+    "RecordFailureDelayInMinutes": 5,
+    "MaxKeyColumnSize": 8096,
+    "EnableValidation": true,
+    "ThreadCount": 5,
+    "RecordSuspendDelayInMinutes": 30,
+    "ValidationOnly": false
   }
 }
