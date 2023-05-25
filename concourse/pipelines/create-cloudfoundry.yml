@@ -3380,14 +3380,18 @@ jobs:
 
                   for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
                     for az in $(seq 1 $AZ_COUNT); do
+                      echo "Uploading ${f} to grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
+
                       sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
                       | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
+                      | jq '{"dashboard": ., "overwrite": true, "folderId": 0}' \
                       | curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
                         --user "admin:$GRAFANA_PASS" \
                         --header 'Content-Type: application/json' \
                         --data "@-" \
                         --fail \
                         --include
+                      echo
                     done;
                   done
 

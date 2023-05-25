@@ -1,804 +1,800 @@
 {
-  "dashboard": {
-    "annotations": {
-      "list": [
-        {
-          "builtIn": 1,
-          "datasource": "-- Grafana --",
-          "enable": true,
-          "hide": true,
-          "iconColor": "rgba(0, 211, 255, 1)",
-          "name": "Annotations & Alerts",
-          "type": "dashboard"
-        }
-      ]
-    },
-    "description": "AKA \"who's to blame (precisely)?\".",
-    "editable": true,
-    "gnetId": null,
-    "graphTooltip": 1,
-    "id": null,
-    "iteration": 1672411835977,
-    "links": [],
-    "panels": [
+  "annotations": {
+    "list": [
       {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "drawStyle": "line",
-              "fillOpacity": 100,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineInterpolation": "linear",
-              "lineWidth": 0,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "never",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "normal"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "bytes"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 10,
-          "w": 8,
-          "x": 0,
-          "y": 0
-        },
-        "id": 2,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom"
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "pluginVersion": "8.5.15",
-        "targets": [
-          {
-            "exemplar": true,
-            "expr": "sum(sum(firehose_container_metric_memory_bytes_quota{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
-            "interval": "",
-            "intervalFactor": 3,
-            "legendFormat": "{{ space_name }}",
-            "refId": "A"
-          }
-        ],
-        "title": "Total container memory",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "description": "Lacking a real (and sufficiently-labeled) metric for containers being started, this actually measures the number of very young containers attributable to a space.\n\nA surge of apparent container starts *could* indicate a lot of crashes and attempted restarts.\n\nAttempted container starts that don't even manage to live for a minute will probably get missed from this plot.",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "drawStyle": "line",
-              "fillOpacity": 100,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineInterpolation": "linear",
-              "lineWidth": 0,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "never",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "normal"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "cpm"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 10,
-          "w": 8,
-          "x": 8,
-          "y": 0
-        },
-        "id": 8,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom"
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "pluginVersion": "8.5.15",
-        "targets": [
-          {
-            "exemplar": false,
-            "expr": "(count(min_over_time(firehose_value_metric_rep_container_age{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\", organization_name=\"$organization_name\"}[8m]) < (2 * 60 * 1e9)) by (space_name)) / 10",
-            "interval": "",
-            "intervalFactor": 2,
-            "legendFormat": "{{space_name}}",
-            "refId": "A"
-          }
-        ],
-        "title": "Total container start rate (approx)",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "description": "",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "drawStyle": "line",
-              "fillOpacity": 100,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineInterpolation": "linear",
-              "lineWidth": 0,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "never",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "normal"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "reqps"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 10,
-          "w": 8,
-          "x": 16,
-          "y": 0
-        },
-        "id": 4,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom"
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "pluginVersion": "8.5.15",
-        "targets": [
-          {
-            "exemplar": true,
-            "expr": "sum(sum(rate(firehose_http_start_stop_requests{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", status_code=~\"$status_codes_pattern\", method=~\"$methods_pattern\"}[5m])) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
-            "interval": "",
-            "intervalFactor": 2,
-            "legendFormat": "{{ space_name }}",
-            "refId": "A"
-          }
-        ],
-        "title": "Total request rate ($status_codes_pattern, $methods_pattern)",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "drawStyle": "line",
-              "fillOpacity": 100,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineInterpolation": "linear",
-              "lineWidth": 0,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "never",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "normal"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 10,
-          "w": 8,
-          "x": 0,
-          "y": 10
-        },
-        "id": 3,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom"
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "pluginVersion": "8.5.15",
-        "targets": [
-          {
-            "exemplar": true,
-            "expr": "sum(count(firehose_container_metric_memory_bytes_quota{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
-            "interval": "",
-            "intervalFactor": 3,
-            "legendFormat": "{{ space_name }}",
-            "refId": "A"
-          }
-        ],
-        "title": "Total container instances",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "description": "Doesn't include logs from gorouter, which will be approximately proportional to the request rate.",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "drawStyle": "line",
-              "fillOpacity": 100,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineInterpolation": "linear",
-              "lineWidth": 0,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "never",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "normal"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "binBps"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 10,
-          "w": 8,
-          "x": 8,
-          "y": 10
-        },
-        "id": 6,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom"
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "pluginVersion": "8.5.15",
-        "targets": [
-          {
-            "exemplar": true,
-            "expr": "sum(firehose_value_metric_rep_log_rate{organization_name=\"$organization_name\",environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (space_name)",
-            "interval": "",
-            "intervalFactor": 3,
-            "legendFormat": "{{ organization_name }}",
-            "refId": "A"
-          }
-        ],
-        "title": "Total log rate",
-        "type": "timeseries"
-      },
-      {
-        "datasource": {
-          "type": "prometheus",
-          "uid": "P1809F7CD0C75ACF3"
-        },
-        "description": "Total amount of http connection time used during a time period (i.e. 60 * 1s connections would be 1 minute).\n\nUnit is seconds, but telling grafana that makes it list large values in weeks etc. - not very useful.\n\nSorry, no status-code filtering here.",
-        "fieldConfig": {
-          "defaults": {
-            "color": {
-              "mode": "palette-classic"
-            },
-            "custom": {
-              "axisLabel": "",
-              "axisPlacement": "auto",
-              "barAlignment": 0,
-              "drawStyle": "line",
-              "fillOpacity": 100,
-              "gradientMode": "none",
-              "hideFrom": {
-                "legend": false,
-                "tooltip": false,
-                "viz": false
-              },
-              "lineInterpolation": "linear",
-              "lineWidth": 0,
-              "pointSize": 5,
-              "scaleDistribution": {
-                "type": "linear"
-              },
-              "showPoints": "never",
-              "spanNulls": false,
-              "stacking": {
-                "group": "A",
-                "mode": "normal"
-              },
-              "thresholdsStyle": {
-                "mode": "off"
-              }
-            },
-            "mappings": [],
-            "min": 0,
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
-                {
-                  "color": "green",
-                  "value": null
-                },
-                {
-                  "color": "red",
-                  "value": 80
-                }
-              ]
-            },
-            "unit": "short"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 10,
-          "w": 8,
-          "x": 16,
-          "y": 10
-        },
-        "id": 9,
-        "options": {
-          "legend": {
-            "calcs": [],
-            "displayMode": "list",
-            "placement": "bottom"
-          },
-          "tooltip": {
-            "mode": "multi",
-            "sort": "desc"
-          }
-        },
-        "pluginVersion": "8.5.15",
-        "targets": [
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "P1809F7CD0C75ACF3"
-            },
-            "exemplar": true,
-            "expr": "sum(sum(firehose_http_start_stop_server_request_duration_seconds_sum{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", method=~\"$methods_pattern\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
-            "interval": "",
-            "intervalFactor": 2,
-            "legendFormat": "{{ space_name }}",
-            "refId": "A"
-          }
-        ],
-        "title": "Total request time ($methods_pattern)",
-        "type": "timeseries"
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
       }
-    ],
-    "refresh": false,
-    "schemaVersion": 27,
-    "style": "dark",
-    "tags": [
-      "cf"
-    ],
-    "templating": {
-      "list": [
-        {
-          "current": {
-            "selected": false,
-            "text": "prod-lon",
-            "value": "prod-lon"
+    ]
+  },
+  "description": "AKA \"who's to blame (precisely)?\".",
+  "editable": true,
+  "gnetId": null,
+  "graphTooltip": 1,
+  "id": null,
+  "iteration": 1672411835977,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
           },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(sum(firehose_container_metric_memory_bytes_quota{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
+          "interval": "",
+          "intervalFactor": 3,
+          "legendFormat": "{{ space_name }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total container memory",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "description": "Lacking a real (and sufficiently-labeled) metric for containers being started, this actually measures the number of very young containers attributable to a space.\n\nA surge of apparent container starts *could* indicate a lot of crashes and attempted restarts.\n\nAttempted container starts that don't even manage to live for a minute will probably get missed from this plot.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "cpm"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 8,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
+          "exemplar": false,
+          "expr": "(count(min_over_time(firehose_value_metric_rep_container_age{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\", organization_name=\"$organization_name\"}[8m]) < (2 * 60 * 1e9)) by (space_name)) / 10",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{space_name}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total container start rate (approx)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(sum(rate(firehose_http_start_stop_requests{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", status_code=~\"$status_codes_pattern\", method=~\"$methods_pattern\"}[5m])) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{ space_name }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total request rate ($status_codes_pattern, $methods_pattern)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 0,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(count(firehose_container_metric_memory_bytes_quota{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
+          "interval": "",
+          "intervalFactor": 3,
+          "legendFormat": "{{ space_name }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total container instances",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "description": "Doesn't include logs from gorouter, which will be approximately proportional to the request rate.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "binBps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 8,
+        "y": 10
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "sum(firehose_value_metric_rep_log_rate{organization_name=\"$organization_name\",environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", bosh_job_name=~\"$diego_bosh_job_name\"}) by (space_name)",
+          "interval": "",
+          "intervalFactor": 3,
+          "legendFormat": "{{ organization_name }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total log rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "P1809F7CD0C75ACF3"
+      },
+      "description": "Total amount of http connection time used during a time period (i.e. 60 * 1s connections would be 1 minute).\n\nUnit is seconds, but telling grafana that makes it list large values in weeks etc. - not very useful.\n\nSorry, no status-code filtering here.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 100,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 0,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "normal"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 10,
+        "w": 8,
+        "x": 16,
+        "y": 10
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "pluginVersion": "8.5.15",
+      "targets": [
+        {
           "datasource": {
             "type": "prometheus",
             "uid": "P1809F7CD0C75ACF3"
           },
-          "definition": "",
-          "hide": 0,
-          "includeAll": false,
-          "label": "Environment",
-          "multi": false,
-          "name": "environment",
-          "options": [],
-          "query": {
-            "query": "label_values(bosh_job_healthy, environment)",
-            "refId": "prometheus-environment-Variable-Query"
-          },
-          "refresh": 1,
-          "regex": "",
-          "skipUrlSync": false,
-          "sort": 1,
-          "tagValuesQuery": "",
-          "tagsQuery": "",
-          "type": "query",
-          "useTags": false
+          "exemplar": true,
+          "expr": "sum(sum(firehose_http_start_stop_server_request_duration_seconds_sum{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", method=~\"$methods_pattern\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
+          "interval": "",
+          "intervalFactor": 2,
+          "legendFormat": "{{ space_name }}",
+          "refId": "A"
+        }
+      ],
+      "title": "Total request time ($methods_pattern)",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 27,
+  "style": "dark",
+  "tags": [
+    "cf"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "prod-lon",
+          "value": "prod-lon"
         },
-        {
-          "current": {
-            "selected": false,
-            "text": "prod-lon",
-            "value": "prod-lon"
-          },
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
-          },
-          "definition": "",
-          "hide": 0,
-          "includeAll": false,
-          "label": "Director",
-          "multi": false,
-          "name": "bosh_director",
-          "options": [],
-          "query": {
-            "query": "label_values(bosh_job_healthy{environment=~\"$environment\"}, bosh_name)",
-            "refId": "prometheus-bosh_director-Variable-Query"
-          },
-          "refresh": 1,
-          "regex": "",
-          "skipUrlSync": false,
-          "sort": 1,
-          "tagValuesQuery": "",
-          "tagsQuery": "",
-          "type": "query",
-          "useTags": false
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
         },
-        {
-          "current": {
-            "selected": false,
-            "text": "prod-lon",
-            "value": "prod-lon"
-          },
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
-          },
-          "definition": "",
-          "hide": 0,
-          "includeAll": false,
-          "label": "Deployment",
-          "multi": false,
-          "name": "bosh_deployment",
-          "options": [],
-          "query": {
-            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment!=\"bosh-health-check\"}, bosh_deployment)",
-            "refId": "prometheus-bosh_deployment-Variable-Query"
-          },
-          "refresh": 1,
-          "regex": "",
-          "skipUrlSync": false,
-          "sort": 1,
-          "type": "query",
-          "useTags": false
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Environment",
+        "multi": false,
+        "name": "environment",
+        "options": [],
+        "query": {
+          "query": "label_values(bosh_job_healthy, environment)",
+          "refId": "prometheus-environment-Variable-Query"
         },
-        {
-          "current": {
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "prod-lon",
+          "value": "prod-lon"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Director",
+        "multi": false,
+        "name": "bosh_director",
+        "options": [],
+        "query": {
+          "query": "label_values(bosh_job_healthy{environment=~\"$environment\"}, bosh_name)",
+          "refId": "prometheus-bosh_director-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "tagValuesQuery": "",
+        "tagsQuery": "",
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "prod-lon",
+          "value": "prod-lon"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "definition": "",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Deployment",
+        "multi": false,
+        "name": "bosh_deployment",
+        "options": [],
+        "query": {
+          "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment!=\"bosh-health-check\"}, bosh_deployment)",
+          "refId": "prometheus-bosh_deployment-Variable-Query"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "trade-tariff",
+          "value": "trade-tariff"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "definition": "label_values(cf_organization_info{environment=~\"$environment\",deployment=\"$bosh_deployment\",organization_name!~\"[A-Z]+-.*\"}, organization_name)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Organization",
+        "multi": false,
+        "name": "organization_name",
+        "options": [],
+        "query": {
+          "query": "label_values(cf_organization_info{environment=~\"$environment\",deployment=\"$bosh_deployment\",organization_name!~\"[A-Z]+-.*\"}, organization_name)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "P1809F7CD0C75ACF3"
+        },
+        "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\".*diego-cell.*\"}, bosh_job_name)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Diego Job",
+        "multi": false,
+        "name": "diego_bosh_job_name",
+        "options": [],
+        "query": {
+          "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\".*diego-cell.*\"}, bosh_job_name)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query",
+        "useTags": false
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": ".*"
+        },
+        "description": "Applies to \"request rate\" panel. Accepts regex patterns",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Request status codes (rate)",
+        "multi": false,
+        "name": "status_codes_pattern",
+        "options": [
+          {
             "selected": true,
-            "text": "trade-tariff",
-            "value": "trade-tariff"
-          },
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
-          },
-          "definition": "label_values(cf_organization_info{environment=~\"$environment\",deployment=\"$bosh_deployment\",organization_name!~\"[A-Z]+-.*\"}, organization_name)",
-          "hide": 0,
-          "includeAll": false,
-          "label": "Organization",
-          "multi": false,
-          "name": "organization_name",
-          "options": [],
-          "query": {
-            "query": "label_values(cf_organization_info{environment=~\"$environment\",deployment=\"$bosh_deployment\",organization_name!~\"[A-Z]+-.*\"}, organization_name)",
-            "refId": "StandardVariableQuery"
-          },
-          "refresh": 2,
-          "regex": "",
-          "skipUrlSync": false,
-          "sort": 1,
-          "type": "query",
-          "useTags": false
-        },
-        {
-          "current": {
-            "selected": false,
-            "text": "All",
-            "value": "$__all"
-          },
-          "datasource": {
-            "type": "prometheus",
-            "uid": "P1809F7CD0C75ACF3"
-          },
-          "definition": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\".*diego-cell.*\"}, bosh_job_name)",
-          "hide": 0,
-          "includeAll": true,
-          "label": "Diego Job",
-          "multi": false,
-          "name": "diego_bosh_job_name",
-          "options": [],
-          "query": {
-            "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment=~\"$bosh_deployment\",bosh_job_name=~\".*diego-cell.*\"}, bosh_job_name)",
-            "refId": "StandardVariableQuery"
-          },
-          "refresh": 1,
-          "regex": "",
-          "skipUrlSync": false,
-          "sort": 1,
-          "type": "query",
-          "useTags": false
-        },
-        {
-          "current": {
-            "selected": false,
             "text": "All",
             "value": ".*"
           },
-          "description": "Applies to \"request rate\" panel. Accepts regex patterns",
-          "hide": 0,
-          "includeAll": false,
-          "label": "Request status codes (rate)",
-          "multi": false,
-          "name": "status_codes_pattern",
-          "options": [
-            {
-              "selected": true,
-              "text": "All",
-              "value": ".*"
-            },
-            {
-              "selected": false,
-              "text": "2xx",
-              "value": "2.."
-            },
-            {
-              "selected": false,
-              "text": "3xx",
-              "value": "3.."
-            },
-            {
-              "selected": false,
-              "text": "4xx",
-              "value": "4.."
-            },
-            {
-              "selected": false,
-              "text": "5xx",
-              "value": "5.."
-            }
+          {
+            "selected": false,
+            "text": "2xx",
+            "value": "2.."
+          },
+          {
+            "selected": false,
+            "text": "3xx",
+            "value": "3.."
+          },
+          {
+            "selected": false,
+            "text": "4xx",
+            "value": "4.."
+          },
+          {
+            "selected": false,
+            "text": "5xx",
+            "value": "5.."
+          }
+        ],
+        "query": "All : .*, 2xx : 2.., 3xx : 3.., 4xx : 4.., 5xx : 5..",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": [
+            "All"
           ],
-          "query": "All : .*, 2xx : 2.., 3xx : 3.., 4xx : 4.., 5xx : 5..",
-          "queryValue": "",
-          "skipUrlSync": false,
-          "type": "custom"
+          "value": [
+            "$__all"
+          ]
         },
-        {
-          "current": {
-            "selected": true,
-            "text": [
-              "All"
-            ],
-            "value": [
-              "$__all"
-            ]
-          },
-          "definition": "label_values(firehose_http_start_stop_server_request_duration_seconds_sum, method)",
-          "description": "",
-          "hide": 0,
-          "includeAll": true,
-          "label": "Request methods",
-          "multi": true,
-          "name": "methods_pattern",
-          "options": [],
-          "query": {
-            "query": "label_values(firehose_http_start_stop_server_request_duration_seconds_sum, method)",
-            "refId": "StandardVariableQuery"
-          },
-          "refresh": 2,
-          "regex": "",
-          "skipUrlSync": false,
-          "sort": 0,
-          "type": "query"
-        }
-      ]
-    },
-    "time": {
-      "from": "now-3h",
-      "to": "now"
-    },
-    "timepicker": {},
-    "timezone": "",
-    "title": "Usage by space",
-    "uid": "usage-by-space",
-    "version": 8
+        "definition": "label_values(firehose_http_start_stop_server_request_duration_seconds_sum, method)",
+        "description": "",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Request methods",
+        "multi": true,
+        "name": "methods_pattern",
+        "options": [],
+        "query": {
+          "query": "label_values(firehose_http_start_stop_server_request_duration_seconds_sum, method)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
   },
-  "overwrite": true,
-  "folderId": 0
+  "time": {
+    "from": "now-3h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Usage by space",
+  "uid": "usage-by-space",
+  "version": 8
 }
