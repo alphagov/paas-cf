@@ -31,7 +31,8 @@ resource "aws_security_group" "prometheus-lb" {
 
     cidr_blocks = concat(
       compact(var.admin_cidrs),
-      ["${var.concourse_elastic_ip}/32"]
+      ["${var.concourse_elastic_ip}/32"],
+      var.user_static_cidrs,
     )
   }
 
