@@ -31,11 +31,15 @@ jobs:
         with:
           go-version: "${{env.GO_VERSION}}"
 
-      - name: generate-buildpacks-yml
-        uses: mikefarah/yq@5ef537f3fd1a9437aa3ee44c32c6459a126efdc4  # v4.34.1
-        with:
-          cmd: |
-            ./scripts/update_buildpacks.sh
+      - name: "Install yq"
+        run: |
+          go install github.com/mikefarah/yq/v4@5ef537f3fd1a9437aa3ee44c32c6459a126efdc4  # v4.34.1
+
+      #- name: generate-buildpacks-yml
+        #uses: mikefarah/yq@5ef537f3fd1a9437aa3ee44c32c6459a126efdc4  # v4.34.1
+        #with:
+          #cmd: |
+            #./scripts/update_buildpacks.sh
 
       - name: Commit and push
         run: |
