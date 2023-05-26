@@ -58,5 +58,5 @@ jobs:
           gh pr create \
             --base main \
             --head "$NEW_BRANCH_NAME" \
-            --title "Buildpack upgrades, $(date -u '+%B %Y')" \
+            --title "[TEST] Buildpack upgrades, $(date -u '+%B %Y')" \
             --body-file "$FINAL_BODY"
