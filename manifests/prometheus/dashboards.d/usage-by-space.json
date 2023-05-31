@@ -278,7 +278,7 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "sum(sum(rate(firehose_http_start_stop_requests{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", status_code=~\"$status_codes_pattern\", method=~\"$methods_pattern\"}[5m])) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name)",
+          "expr": "sum(sum(firehose_http_start_stop_requests{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", status_code=~\"$status_codes_pattern\", method=~\"$methods_pattern\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name=\"$organization_name\"}) by (application_id, space_name)) by (space_name) / 60",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{ space_name }}",
