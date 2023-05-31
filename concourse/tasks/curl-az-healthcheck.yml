@@ -8,6 +8,7 @@ image_resource:
 params:
   AVAILABILITY_ZONE:
   ENABLE_AZ_HEALTHCHECK:
+  DISABLED_AZS:
 inputs:
   - name: terraform-variables
   - name: paas-cf
@@ -20,7 +21,13 @@ run:
       echo "Checking the ability to perform tests on ${AVAILABILITY_ZONE}..."
 
       if [ "${ENABLE_AZ_HEALTHCHECK:-}" = "false" ]; then
-        echo "Availabilty Zone Healthchecks have been disabled."
+        echo "Availability Zone Healthchecks have been disabled."
+        exit 0
+      fi
+
+      # if we have any disabled azs then we don't want to do the curl
+      if [ -n "${DISABLED_AZS}" ]; then
+        echo "DISABLED_AZS is set, so we're skipping the check here."
         exit 0
       fi
 

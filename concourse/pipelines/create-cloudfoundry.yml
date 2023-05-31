@@ -1608,12 +1608,18 @@ jobs:
             TF_VAR_region: ((aws_region))
             AWS_DEFAULT_REGION: ((aws_region))
             ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+            DISABLED_AZS: ((disabled_azs))
           run:
             path: sh
             args:
               - -e
               - -c
               - |
+                if [ -n "${DISABLED_AZS}" ]; then
+                  WAIT_FOR_HEALTHCHECK=0
+                else
+                  WAIT_FOR_HEALTHCHECK=1
+                fi
                 cp az-healthcheck-tfstate/azhc.tfstate updated-tfstate/azhc.tfstate
 
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/azhc.tfstate
@@ -1624,11 +1630,67 @@ jobs:
                 terraform apply \
                   -auto-approve=true \
                   -var "enabled=$ENABLE_AZ_HEALTHCHECK" \
+                  -var "wait_for_healthcheck=$WAIT_FOR_HEALTHCHECK" \
                   -state=../../../updated-tfstate/azhc.tfstate
         ensure:
           put: az-healthcheck-tfstate
           params:
             file: updated-tfstate/azhc.tfstate
+
+      - task: extract-terraform-variables
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *terraform-image-resource
+          inputs:
+            - name: paas-cf
+            - name: az-healthcheck-tfstate
+          outputs:
+            - name: terraform-variables
+          params:
+            REGION: ((aws_region))
+          run:
+            path: sh
+            args:
+              - -e
+              - -c
+              - |
+                terraform output \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -raw \
+                  healthcheck_address_a > "terraform-variables/${REGION}a"
+                terraform output \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -raw \
+                  healthcheck_address_b > "terraform-variables/${REGION}b"
+                terraform output \
+                  -state=az-healthcheck-tfstate/azhc.tfstate \
+                  -raw \
+                  healthcheck_address_c > "terraform-variables/${REGION}c"
+
+      - task: curl-az-healthcheck-a
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/curl-az-healthcheck.yml
+        params:
+          AVAILABILITY_ZONE: ((aws_region))a
+          ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+          DISABLED_AZS: ((disabled_azs))
+
+      - task: curl-az-healthcheck-b
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/curl-az-healthcheck.yml
+        params:
+          AVAILABILITY_ZONE: ((aws_region))b
+          ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+          DISABLED_AZS: ((disabled_azs))
+
+      - task: curl-az-healthcheck-c
+        tags: [colocated-with-web]
+        file: paas-cf/concourse/tasks/curl-az-healthcheck.yml
+        params:
+          AVAILABILITY_ZONE: ((aws_region))c
+          ENABLE_AZ_HEALTHCHECK: ((enable_az_healthcheck))
+          DISABLED_AZS: ((disabled_azs))
 
       - *end-grafana-job-annotation
 
@@ -2604,7 +2666,9 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
           - get: pipeline-trigger
-            passed: ['cf-terraform']
+            passed:
+              - cf-terraform
+              - az-healthcheck-terraform
             trigger: true
           - <<: *get-paas-cf
             passed: ['cf-terraform']
@@ -2614,6 +2678,8 @@ jobs:
           - get: bosh-tfstate
           - get: cf-tfstate
             passed: ['cf-terraform']
+          - get: az-healthcheck-tfstate
+            passed: ['az-healthcheck-terraform']
 
       - in_parallel:
         - do:

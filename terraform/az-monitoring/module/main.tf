@@ -59,7 +59,8 @@ resource "aws_instance" "healthcheck" {
     aws_security_group.access_sg.id,
   ]
 
-  user_data = <<-EOF
+  user_data_replace_on_change = true
+  user_data                   = <<-EOF
     #!/bin/bash
     set -ex
 
@@ -80,17 +81,16 @@ WantedBy=multi-user.target
 ' >/etc/systemd/system/simple-healthcheck.service
 
     systemctl daemon-reload
- 
+
     yum update -y --setopt=retries=0
     amazon-linux-extras install docker -y --setopt=retries=0
     service docker start
-    usermod -a -G docker ec2-user 
-  
+    usermod -a -G docker ec2-user
+
     sudo systemctl enable simple-healthcheck
     sudo systemctl start simple-healthcheck
 
   EOF
-  user_data_replace_on_change = true
 
   tags = {
     Name = "az-healthcheck/${var.zone}"
@@ -99,4 +99,20 @@ WantedBy=multi-user.target
   monitoring              = true
   disable_api_termination = false
   ebs_optimized           = true
+}
+
+resource "null_resource" "wait_for_healthcheck" {
+  depends_on = [aws_instance.healthcheck]
+  count      = var.wait_for_healthcheck ? 1 : 0
+
+  triggers = {
+    healthcheck_instance_ip = aws_instance.healthcheck.public_ip
+  }
+
+  provisioner "local-exec" {
+    command = <<-EOF
+      echo "Instance ID: ${aws_instance.healthcheck.id}"
+      timeout 900s /bin/sh -c 'until wget --spider -S "http://${aws_instance.healthcheck.public_ip}:3000/healthcheck" 2>&1 | grep "HTTP/1.1 200 OK"; do sleep 5; done'
+    EOF
+  }
 }
