@@ -6,7 +6,7 @@ require (
 	code.cloudfoundry.org/lager v2.0.0+incompatible
 	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000
 	github.com/alphagov/paas-elasticache-broker v0.18.0
-	github.com/aws/aws-sdk-go v1.29.1
+	github.com/aws/aws-sdk-go v1.34.0
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20190808214049-35bcce23fc5f
 	github.com/cloudfoundry-community/go-uaa v0.2.2
 	github.com/hashicorp/go-multierror v1.0.0
@@ -31,7 +31,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/pprof v0.0.0-20210407192527-94a9f03dee38 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
-	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
+	github.com/jmespath/go-jmespath v0.3.0 // indirect
 	github.com/kr/pretty v0.2.1 // indirect
 	github.com/mattn/go-colorable v0.0.9 // indirect
 	github.com/mattn/go-isatty v0.0.3 // indirect
