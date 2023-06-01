@@ -1616,11 +1616,6 @@ jobs:
               - |
                 cp az-healthcheck-tfstate/azhc.tfstate updated-tfstate/azhc.tfstate
 
-                if [ "${ENABLE_AZ_HEALTHCHECK:-}" != "true" ]; then
-                  echo "Availabilty Zone Healthchecks have been disabled."
-                  exit 0
-                fi
-
                 sh paas-cf/terraform/./update-terraform-providers.sh updated-tfstate/azhc.tfstate
                 cd paas-cf/terraform/az-monitoring ||exit
 
@@ -1628,6 +1623,7 @@ jobs:
 
                 terraform apply \
                   -auto-approve=true \
+                  -var "enabled=$ENABLE_AZ_HEALTHCHECK" \
                   -state=../../../updated-tfstate/azhc.tfstate
         ensure:
           put: az-healthcheck-tfstate
