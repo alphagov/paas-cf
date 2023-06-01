@@ -1,0 +1,74 @@
+---
+version: 2
+updates:
+    ## Golang, alphabetical
+    - package-ecosystem: gomod
+      directory: /
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"
+    
+    - package-ecosystem: gomod
+      directory: /common-go/basic_logit_client/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"
+    
+    - package-ecosystem: gomod
+      directory: /platform-tests/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"
+
+    - package-ecosystem: gomod
+      directory: /platform-tests/example-apps/healthcheck/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"
+
+    - package-ecosystem: gomod
+      directory: /platform-tests/example-apps/http-tester/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"
+    
+    - package-ecosystem: gomod
+      directory: /tools/buildpacks/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"
+
+    - package-ecosystem: gomod
+      directory: /tools/metrics/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"    
+    
+    - package-ecosystem: gomod
+      directory: /tools/pipecleaner/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"    
+
+    - package-ecosystem: gomod
+      directory: /tools/user_emails/
+      schedule:
+        interval: "weekly"
+      commit-message:
+        prefix: "golang"
+
+      ## Ruby, alphabetical
+    - package-ecosystem: bundler
+      directory: /
+      schedule:
+          interval: "weekly"
+      commit-message:
+          prefix: "ruby"
