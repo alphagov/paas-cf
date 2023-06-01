@@ -3,6 +3,8 @@ module github.com/alphagov/paas-cf/platform-tests
 go 1.18
 
 require (
+	code.cloudfoundry.org/lager v2.0.0+incompatible
+	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000
 	github.com/aws/aws-sdk-go v1.4.22
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20220701174305-34d8f2860a20
 	github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20220701223313-91917ba99b8e
@@ -18,10 +20,8 @@ require (
 
 require (
 	code.cloudfoundry.org/gofileutils v0.0.0-20170111115228-4d0c80011a0f // indirect
-	code.cloudfoundry.org/lager v2.0.0+incompatible // indirect
 	github.com/Masterminds/semver v1.4.2 // indirect
 	github.com/Masterminds/squirrel v1.4.0 // indirect
-	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000 // indirect
 	github.com/bmizerany/pat v0.0.0-20160217103242-c068ca2f0aac // indirect
 	github.com/fsnotify/fsnotify v1.5.4 // indirect
 	github.com/go-ini/ini v1.30.0 // indirect
@@ -43,10 +43,10 @@ require (
 	github.com/streadway/quantile v0.0.0-20220407130108-4246515d968d // indirect
 	github.com/tedsuo/rata v0.0.0-20150202174335-b15ebd8bd97a // indirect
 	github.com/vito/go-sse v0.0.0-20160212001227-fd69d275caac // indirect
-	golang.org/x/net v0.3.0 // indirect
+	golang.org/x/net v0.7.0 // indirect
 	golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1 // indirect
-	golang.org/x/sys v0.3.0 // indirect
-	golang.org/x/text v0.5.0 // indirect
+	golang.org/x/sys v0.5.0 // indirect
+	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/tools v0.4.0 // indirect
 	google.golang.org/appengine v1.4.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect

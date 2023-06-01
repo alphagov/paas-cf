@@ -10,7 +10,7 @@ github.com/Masterminds/semver
 # github.com/Masterminds/squirrel v1.4.0
 ## explicit
 # github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000 => ../common-go/basic_logit_client
-## explicit; go 1.18
+## explicit; go 1.20
 github.com/alphagov/paas-cf/common-go/basic_logit_client
 # github.com/aws/aws-sdk-go v1.4.22
 ## explicit
@@ -178,7 +178,7 @@ github.com/tsenart/vegeta/lib
 # github.com/vito/go-sse v0.0.0-20160212001227-fd69d275caac
 ## explicit
 github.com/vito/go-sse/sse
-# golang.org/x/net v0.3.0
+# golang.org/x/net v0.7.0
 ## explicit; go 1.17
 golang.org/x/net/context
 golang.org/x/net/context/ctxhttp
@@ -194,10 +194,10 @@ golang.org/x/net/idna
 golang.org/x/oauth2
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.3.0
+# golang.org/x/sys v0.5.0
 ## explicit; go 1.17
 golang.org/x/sys/unix
-# golang.org/x/text v0.5.0
+# golang.org/x/text v0.7.0
 ## explicit; go 1.17
 golang.org/x/text/encoding
 golang.org/x/text/encoding/charmap
