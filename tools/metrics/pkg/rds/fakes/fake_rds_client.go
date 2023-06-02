@@ -1910,6 +1910,32 @@ type FakeRDSAPI struct {
 		result1 *rds.DescribeCertificatesOutput
 		result2 error
 	}
+	DescribeCertificatesPagesStub        func(*rds.DescribeCertificatesInput, func(*rds.DescribeCertificatesOutput, bool) bool) error
+	describeCertificatesPagesMutex       sync.RWMutex
+	describeCertificatesPagesArgsForCall []struct {
+		arg1 *rds.DescribeCertificatesInput
+		arg2 func(*rds.DescribeCertificatesOutput, bool) bool
+	}
+	describeCertificatesPagesReturns struct {
+		result1 error
+	}
+	describeCertificatesPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeCertificatesPagesWithContextStub        func(context.Context, *rds.DescribeCertificatesInput, func(*rds.DescribeCertificatesOutput, bool) bool, ...request.Option) error
+	describeCertificatesPagesWithContextMutex       sync.RWMutex
+	describeCertificatesPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribeCertificatesInput
+		arg3 func(*rds.DescribeCertificatesOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeCertificatesPagesWithContextReturns struct {
+		result1 error
+	}
+	describeCertificatesPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
 	DescribeCertificatesRequestStub        func(*rds.DescribeCertificatesInput) (*request.Request, *rds.DescribeCertificatesOutput)
 	describeCertificatesRequestMutex       sync.RWMutex
 	describeCertificatesRequestArgsForCall []struct {
@@ -2018,6 +2044,32 @@ type FakeRDSAPI struct {
 		result1 *rds.DescribeDBClusterBacktracksOutput
 		result2 error
 	}
+	DescribeDBClusterBacktracksPagesStub        func(*rds.DescribeDBClusterBacktracksInput, func(*rds.DescribeDBClusterBacktracksOutput, bool) bool) error
+	describeDBClusterBacktracksPagesMutex       sync.RWMutex
+	describeDBClusterBacktracksPagesArgsForCall []struct {
+		arg1 *rds.DescribeDBClusterBacktracksInput
+		arg2 func(*rds.DescribeDBClusterBacktracksOutput, bool) bool
+	}
+	describeDBClusterBacktracksPagesReturns struct {
+		result1 error
+	}
+	describeDBClusterBacktracksPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeDBClusterBacktracksPagesWithContextStub        func(context.Context, *rds.DescribeDBClusterBacktracksInput, func(*rds.DescribeDBClusterBacktracksOutput, bool) bool, ...request.Option) error
+	describeDBClusterBacktracksPagesWithContextMutex       sync.RWMutex
+	describeDBClusterBacktracksPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterBacktracksInput
+		arg3 func(*rds.DescribeDBClusterBacktracksOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeDBClusterBacktracksPagesWithContextReturns struct {
+		result1 error
+	}
+	describeDBClusterBacktracksPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
 	DescribeDBClusterBacktracksRequestStub        func(*rds.DescribeDBClusterBacktracksInput) (*request.Request, *rds.DescribeDBClusterBacktracksOutput)
 	describeDBClusterBacktracksRequestMutex       sync.RWMutex
 	describeDBClusterBacktracksRequestArgsForCall []struct {
@@ -2058,6 +2110,32 @@ type FakeRDSAPI struct {
 	describeDBClusterEndpointsReturnsOnCall map[int]struct {
 		result1 *rds.DescribeDBClusterEndpointsOutput
 		result2 error
+	}
+	DescribeDBClusterEndpointsPagesStub        func(*rds.DescribeDBClusterEndpointsInput, func(*rds.DescribeDBClusterEndpointsOutput, bool) bool) error
+	describeDBClusterEndpointsPagesMutex       sync.RWMutex
+	describeDBClusterEndpointsPagesArgsForCall []struct {
+		arg1 *rds.DescribeDBClusterEndpointsInput
+		arg2 func(*rds.DescribeDBClusterEndpointsOutput, bool) bool
+	}
+	describeDBClusterEndpointsPagesReturns struct {
+		result1 error
+	}
+	describeDBClusterEndpointsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeDBClusterEndpointsPagesWithContextStub        func(context.Context, *rds.DescribeDBClusterEndpointsInput, func(*rds.DescribeDBClusterEndpointsOutput, bool) bool, ...request.Option) error
+	describeDBClusterEndpointsPagesWithContextMutex       sync.RWMutex
+	describeDBClusterEndpointsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterEndpointsInput
+		arg3 func(*rds.DescribeDBClusterEndpointsOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeDBClusterEndpointsPagesWithContextReturns struct {
+		result1 error
+	}
+	describeDBClusterEndpointsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
 	}
 	DescribeDBClusterEndpointsRequestStub        func(*rds.DescribeDBClusterEndpointsInput) (*request.Request, *rds.DescribeDBClusterEndpointsOutput)
 	describeDBClusterEndpointsRequestMutex       sync.RWMutex
@@ -2100,6 +2178,32 @@ type FakeRDSAPI struct {
 		result1 *rds.DescribeDBClusterParameterGroupsOutput
 		result2 error
 	}
+	DescribeDBClusterParameterGroupsPagesStub        func(*rds.DescribeDBClusterParameterGroupsInput, func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool) error
+	describeDBClusterParameterGroupsPagesMutex       sync.RWMutex
+	describeDBClusterParameterGroupsPagesArgsForCall []struct {
+		arg1 *rds.DescribeDBClusterParameterGroupsInput
+		arg2 func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool
+	}
+	describeDBClusterParameterGroupsPagesReturns struct {
+		result1 error
+	}
+	describeDBClusterParameterGroupsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeDBClusterParameterGroupsPagesWithContextStub        func(context.Context, *rds.DescribeDBClusterParameterGroupsInput, func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool, ...request.Option) error
+	describeDBClusterParameterGroupsPagesWithContextMutex       sync.RWMutex
+	describeDBClusterParameterGroupsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterParameterGroupsInput
+		arg3 func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeDBClusterParameterGroupsPagesWithContextReturns struct {
+		result1 error
+	}
+	describeDBClusterParameterGroupsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
 	DescribeDBClusterParameterGroupsRequestStub        func(*rds.DescribeDBClusterParameterGroupsInput) (*request.Request, *rds.DescribeDBClusterParameterGroupsOutput)
 	describeDBClusterParameterGroupsRequestMutex       sync.RWMutex
 	describeDBClusterParameterGroupsRequestArgsForCall []struct {
@@ -2140,6 +2244,32 @@ type FakeRDSAPI struct {
 	describeDBClusterParametersReturnsOnCall map[int]struct {
 		result1 *rds.DescribeDBClusterParametersOutput
 		result2 error
+	}
+	DescribeDBClusterParametersPagesStub        func(*rds.DescribeDBClusterParametersInput, func(*rds.DescribeDBClusterParametersOutput, bool) bool) error
+	describeDBClusterParametersPagesMutex       sync.RWMutex
+	describeDBClusterParametersPagesArgsForCall []struct {
+		arg1 *rds.DescribeDBClusterParametersInput
+		arg2 func(*rds.DescribeDBClusterParametersOutput, bool) bool
+	}
+	describeDBClusterParametersPagesReturns struct {
+		result1 error
+	}
+	describeDBClusterParametersPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeDBClusterParametersPagesWithContextStub        func(context.Context, *rds.DescribeDBClusterParametersInput, func(*rds.DescribeDBClusterParametersOutput, bool) bool, ...request.Option) error
+	describeDBClusterParametersPagesWithContextMutex       sync.RWMutex
+	describeDBClusterParametersPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterParametersInput
+		arg3 func(*rds.DescribeDBClusterParametersOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeDBClusterParametersPagesWithContextReturns struct {
+		result1 error
+	}
+	describeDBClusterParametersPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
 	}
 	DescribeDBClusterParametersRequestStub        func(*rds.DescribeDBClusterParametersInput) (*request.Request, *rds.DescribeDBClusterParametersOutput)
 	describeDBClusterParametersRequestMutex       sync.RWMutex
@@ -2222,6 +2352,32 @@ type FakeRDSAPI struct {
 	describeDBClusterSnapshotsReturnsOnCall map[int]struct {
 		result1 *rds.DescribeDBClusterSnapshotsOutput
 		result2 error
+	}
+	DescribeDBClusterSnapshotsPagesStub        func(*rds.DescribeDBClusterSnapshotsInput, func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool) error
+	describeDBClusterSnapshotsPagesMutex       sync.RWMutex
+	describeDBClusterSnapshotsPagesArgsForCall []struct {
+		arg1 *rds.DescribeDBClusterSnapshotsInput
+		arg2 func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool
+	}
+	describeDBClusterSnapshotsPagesReturns struct {
+		result1 error
+	}
+	describeDBClusterSnapshotsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeDBClusterSnapshotsPagesWithContextStub        func(context.Context, *rds.DescribeDBClusterSnapshotsInput, func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool, ...request.Option) error
+	describeDBClusterSnapshotsPagesWithContextMutex       sync.RWMutex
+	describeDBClusterSnapshotsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterSnapshotsInput
+		arg3 func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeDBClusterSnapshotsPagesWithContextReturns struct {
+		result1 error
+	}
+	describeDBClusterSnapshotsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
 	}
 	DescribeDBClusterSnapshotsRequestStub        func(*rds.DescribeDBClusterSnapshotsInput) (*request.Request, *rds.DescribeDBClusterSnapshotsOutput)
 	describeDBClusterSnapshotsRequestMutex       sync.RWMutex
@@ -3861,6 +4017,32 @@ type FakeRDSAPI struct {
 		result1 *rds.DescribePendingMaintenanceActionsOutput
 		result2 error
 	}
+	DescribePendingMaintenanceActionsPagesStub        func(*rds.DescribePendingMaintenanceActionsInput, func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool) error
+	describePendingMaintenanceActionsPagesMutex       sync.RWMutex
+	describePendingMaintenanceActionsPagesArgsForCall []struct {
+		arg1 *rds.DescribePendingMaintenanceActionsInput
+		arg2 func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool
+	}
+	describePendingMaintenanceActionsPagesReturns struct {
+		result1 error
+	}
+	describePendingMaintenanceActionsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribePendingMaintenanceActionsPagesWithContextStub        func(context.Context, *rds.DescribePendingMaintenanceActionsInput, func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool, ...request.Option) error
+	describePendingMaintenanceActionsPagesWithContextMutex       sync.RWMutex
+	describePendingMaintenanceActionsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribePendingMaintenanceActionsInput
+		arg3 func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool
+		arg4 []request.Option
+	}
+	describePendingMaintenanceActionsPagesWithContextReturns struct {
+		result1 error
+	}
+	describePendingMaintenanceActionsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
 	DescribePendingMaintenanceActionsRequestStub        func(*rds.DescribePendingMaintenanceActionsInput) (*request.Request, *rds.DescribePendingMaintenanceActionsOutput)
 	describePendingMaintenanceActionsRequestMutex       sync.RWMutex
 	describePendingMaintenanceActionsRequestArgsForCall []struct {
@@ -4035,6 +4217,32 @@ type FakeRDSAPI struct {
 	describeSourceRegionsReturnsOnCall map[int]struct {
 		result1 *rds.DescribeSourceRegionsOutput
 		result2 error
+	}
+	DescribeSourceRegionsPagesStub        func(*rds.DescribeSourceRegionsInput, func(*rds.DescribeSourceRegionsOutput, bool) bool) error
+	describeSourceRegionsPagesMutex       sync.RWMutex
+	describeSourceRegionsPagesArgsForCall []struct {
+		arg1 *rds.DescribeSourceRegionsInput
+		arg2 func(*rds.DescribeSourceRegionsOutput, bool) bool
+	}
+	describeSourceRegionsPagesReturns struct {
+		result1 error
+	}
+	describeSourceRegionsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeSourceRegionsPagesWithContextStub        func(context.Context, *rds.DescribeSourceRegionsInput, func(*rds.DescribeSourceRegionsOutput, bool) bool, ...request.Option) error
+	describeSourceRegionsPagesWithContextMutex       sync.RWMutex
+	describeSourceRegionsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *rds.DescribeSourceRegionsInput
+		arg3 func(*rds.DescribeSourceRegionsOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeSourceRegionsPagesWithContextReturns struct {
+		result1 error
+	}
+	describeSourceRegionsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
 	}
 	DescribeSourceRegionsRequestStub        func(*rds.DescribeSourceRegionsInput) (*request.Request, *rds.DescribeSourceRegionsOutput)
 	describeSourceRegionsRequestMutex       sync.RWMutex
@@ -15153,6 +15361,132 @@ func (fake *FakeRDSAPI) DescribeCertificatesReturnsOnCall(i int, result1 *rds.De
 	}{result1, result2}
 }
 
+func (fake *FakeRDSAPI) DescribeCertificatesPages(arg1 *rds.DescribeCertificatesInput, arg2 func(*rds.DescribeCertificatesOutput, bool) bool) error {
+	fake.describeCertificatesPagesMutex.Lock()
+	ret, specificReturn := fake.describeCertificatesPagesReturnsOnCall[len(fake.describeCertificatesPagesArgsForCall)]
+	fake.describeCertificatesPagesArgsForCall = append(fake.describeCertificatesPagesArgsForCall, struct {
+		arg1 *rds.DescribeCertificatesInput
+		arg2 func(*rds.DescribeCertificatesOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeCertificatesPagesStub
+	fakeReturns := fake.describeCertificatesPagesReturns
+	fake.recordInvocation("DescribeCertificatesPages", []interface{}{arg1, arg2})
+	fake.describeCertificatesPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesCallCount() int {
+	fake.describeCertificatesPagesMutex.RLock()
+	defer fake.describeCertificatesPagesMutex.RUnlock()
+	return len(fake.describeCertificatesPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesCalls(stub func(*rds.DescribeCertificatesInput, func(*rds.DescribeCertificatesOutput, bool) bool) error) {
+	fake.describeCertificatesPagesMutex.Lock()
+	defer fake.describeCertificatesPagesMutex.Unlock()
+	fake.DescribeCertificatesPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesArgsForCall(i int) (*rds.DescribeCertificatesInput, func(*rds.DescribeCertificatesOutput, bool) bool) {
+	fake.describeCertificatesPagesMutex.RLock()
+	defer fake.describeCertificatesPagesMutex.RUnlock()
+	argsForCall := fake.describeCertificatesPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesReturns(result1 error) {
+	fake.describeCertificatesPagesMutex.Lock()
+	defer fake.describeCertificatesPagesMutex.Unlock()
+	fake.DescribeCertificatesPagesStub = nil
+	fake.describeCertificatesPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesReturnsOnCall(i int, result1 error) {
+	fake.describeCertificatesPagesMutex.Lock()
+	defer fake.describeCertificatesPagesMutex.Unlock()
+	fake.DescribeCertificatesPagesStub = nil
+	if fake.describeCertificatesPagesReturnsOnCall == nil {
+		fake.describeCertificatesPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeCertificatesPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesWithContext(arg1 context.Context, arg2 *rds.DescribeCertificatesInput, arg3 func(*rds.DescribeCertificatesOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeCertificatesPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeCertificatesPagesWithContextReturnsOnCall[len(fake.describeCertificatesPagesWithContextArgsForCall)]
+	fake.describeCertificatesPagesWithContextArgsForCall = append(fake.describeCertificatesPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribeCertificatesInput
+		arg3 func(*rds.DescribeCertificatesOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeCertificatesPagesWithContextStub
+	fakeReturns := fake.describeCertificatesPagesWithContextReturns
+	fake.recordInvocation("DescribeCertificatesPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeCertificatesPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesWithContextCallCount() int {
+	fake.describeCertificatesPagesWithContextMutex.RLock()
+	defer fake.describeCertificatesPagesWithContextMutex.RUnlock()
+	return len(fake.describeCertificatesPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesWithContextCalls(stub func(context.Context, *rds.DescribeCertificatesInput, func(*rds.DescribeCertificatesOutput, bool) bool, ...request.Option) error) {
+	fake.describeCertificatesPagesWithContextMutex.Lock()
+	defer fake.describeCertificatesPagesWithContextMutex.Unlock()
+	fake.DescribeCertificatesPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribeCertificatesInput, func(*rds.DescribeCertificatesOutput, bool) bool, []request.Option) {
+	fake.describeCertificatesPagesWithContextMutex.RLock()
+	defer fake.describeCertificatesPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeCertificatesPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesWithContextReturns(result1 error) {
+	fake.describeCertificatesPagesWithContextMutex.Lock()
+	defer fake.describeCertificatesPagesWithContextMutex.Unlock()
+	fake.DescribeCertificatesPagesWithContextStub = nil
+	fake.describeCertificatesPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeCertificatesPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeCertificatesPagesWithContextMutex.Lock()
+	defer fake.describeCertificatesPagesWithContextMutex.Unlock()
+	fake.DescribeCertificatesPagesWithContextStub = nil
+	if fake.describeCertificatesPagesWithContextReturnsOnCall == nil {
+		fake.describeCertificatesPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeCertificatesPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeRDSAPI) DescribeCertificatesRequest(arg1 *rds.DescribeCertificatesInput) (*request.Request, *rds.DescribeCertificatesOutput) {
 	fake.describeCertificatesRequestMutex.Lock()
 	ret, specificReturn := fake.describeCertificatesRequestReturnsOnCall[len(fake.describeCertificatesRequestArgsForCall)]
@@ -15667,6 +16001,132 @@ func (fake *FakeRDSAPI) DescribeDBClusterBacktracksReturnsOnCall(i int, result1 
 	}{result1, result2}
 }
 
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPages(arg1 *rds.DescribeDBClusterBacktracksInput, arg2 func(*rds.DescribeDBClusterBacktracksOutput, bool) bool) error {
+	fake.describeDBClusterBacktracksPagesMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterBacktracksPagesReturnsOnCall[len(fake.describeDBClusterBacktracksPagesArgsForCall)]
+	fake.describeDBClusterBacktracksPagesArgsForCall = append(fake.describeDBClusterBacktracksPagesArgsForCall, struct {
+		arg1 *rds.DescribeDBClusterBacktracksInput
+		arg2 func(*rds.DescribeDBClusterBacktracksOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeDBClusterBacktracksPagesStub
+	fakeReturns := fake.describeDBClusterBacktracksPagesReturns
+	fake.recordInvocation("DescribeDBClusterBacktracksPages", []interface{}{arg1, arg2})
+	fake.describeDBClusterBacktracksPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesCallCount() int {
+	fake.describeDBClusterBacktracksPagesMutex.RLock()
+	defer fake.describeDBClusterBacktracksPagesMutex.RUnlock()
+	return len(fake.describeDBClusterBacktracksPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesCalls(stub func(*rds.DescribeDBClusterBacktracksInput, func(*rds.DescribeDBClusterBacktracksOutput, bool) bool) error) {
+	fake.describeDBClusterBacktracksPagesMutex.Lock()
+	defer fake.describeDBClusterBacktracksPagesMutex.Unlock()
+	fake.DescribeDBClusterBacktracksPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesArgsForCall(i int) (*rds.DescribeDBClusterBacktracksInput, func(*rds.DescribeDBClusterBacktracksOutput, bool) bool) {
+	fake.describeDBClusterBacktracksPagesMutex.RLock()
+	defer fake.describeDBClusterBacktracksPagesMutex.RUnlock()
+	argsForCall := fake.describeDBClusterBacktracksPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesReturns(result1 error) {
+	fake.describeDBClusterBacktracksPagesMutex.Lock()
+	defer fake.describeDBClusterBacktracksPagesMutex.Unlock()
+	fake.DescribeDBClusterBacktracksPagesStub = nil
+	fake.describeDBClusterBacktracksPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterBacktracksPagesMutex.Lock()
+	defer fake.describeDBClusterBacktracksPagesMutex.Unlock()
+	fake.DescribeDBClusterBacktracksPagesStub = nil
+	if fake.describeDBClusterBacktracksPagesReturnsOnCall == nil {
+		fake.describeDBClusterBacktracksPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterBacktracksPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesWithContext(arg1 context.Context, arg2 *rds.DescribeDBClusterBacktracksInput, arg3 func(*rds.DescribeDBClusterBacktracksOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeDBClusterBacktracksPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterBacktracksPagesWithContextReturnsOnCall[len(fake.describeDBClusterBacktracksPagesWithContextArgsForCall)]
+	fake.describeDBClusterBacktracksPagesWithContextArgsForCall = append(fake.describeDBClusterBacktracksPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterBacktracksInput
+		arg3 func(*rds.DescribeDBClusterBacktracksOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBClusterBacktracksPagesWithContextStub
+	fakeReturns := fake.describeDBClusterBacktracksPagesWithContextReturns
+	fake.recordInvocation("DescribeDBClusterBacktracksPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeDBClusterBacktracksPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesWithContextCallCount() int {
+	fake.describeDBClusterBacktracksPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterBacktracksPagesWithContextMutex.RUnlock()
+	return len(fake.describeDBClusterBacktracksPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesWithContextCalls(stub func(context.Context, *rds.DescribeDBClusterBacktracksInput, func(*rds.DescribeDBClusterBacktracksOutput, bool) bool, ...request.Option) error) {
+	fake.describeDBClusterBacktracksPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterBacktracksPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterBacktracksPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribeDBClusterBacktracksInput, func(*rds.DescribeDBClusterBacktracksOutput, bool) bool, []request.Option) {
+	fake.describeDBClusterBacktracksPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterBacktracksPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeDBClusterBacktracksPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesWithContextReturns(result1 error) {
+	fake.describeDBClusterBacktracksPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterBacktracksPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterBacktracksPagesWithContextStub = nil
+	fake.describeDBClusterBacktracksPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterBacktracksPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterBacktracksPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterBacktracksPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterBacktracksPagesWithContextStub = nil
+	if fake.describeDBClusterBacktracksPagesWithContextReturnsOnCall == nil {
+		fake.describeDBClusterBacktracksPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterBacktracksPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeRDSAPI) DescribeDBClusterBacktracksRequest(arg1 *rds.DescribeDBClusterBacktracksInput) (*request.Request, *rds.DescribeDBClusterBacktracksOutput) {
 	fake.describeDBClusterBacktracksRequestMutex.Lock()
 	ret, specificReturn := fake.describeDBClusterBacktracksRequestReturnsOnCall[len(fake.describeDBClusterBacktracksRequestArgsForCall)]
@@ -15859,6 +16319,132 @@ func (fake *FakeRDSAPI) DescribeDBClusterEndpointsReturnsOnCall(i int, result1 *
 		result1 *rds.DescribeDBClusterEndpointsOutput
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPages(arg1 *rds.DescribeDBClusterEndpointsInput, arg2 func(*rds.DescribeDBClusterEndpointsOutput, bool) bool) error {
+	fake.describeDBClusterEndpointsPagesMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterEndpointsPagesReturnsOnCall[len(fake.describeDBClusterEndpointsPagesArgsForCall)]
+	fake.describeDBClusterEndpointsPagesArgsForCall = append(fake.describeDBClusterEndpointsPagesArgsForCall, struct {
+		arg1 *rds.DescribeDBClusterEndpointsInput
+		arg2 func(*rds.DescribeDBClusterEndpointsOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeDBClusterEndpointsPagesStub
+	fakeReturns := fake.describeDBClusterEndpointsPagesReturns
+	fake.recordInvocation("DescribeDBClusterEndpointsPages", []interface{}{arg1, arg2})
+	fake.describeDBClusterEndpointsPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesCallCount() int {
+	fake.describeDBClusterEndpointsPagesMutex.RLock()
+	defer fake.describeDBClusterEndpointsPagesMutex.RUnlock()
+	return len(fake.describeDBClusterEndpointsPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesCalls(stub func(*rds.DescribeDBClusterEndpointsInput, func(*rds.DescribeDBClusterEndpointsOutput, bool) bool) error) {
+	fake.describeDBClusterEndpointsPagesMutex.Lock()
+	defer fake.describeDBClusterEndpointsPagesMutex.Unlock()
+	fake.DescribeDBClusterEndpointsPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesArgsForCall(i int) (*rds.DescribeDBClusterEndpointsInput, func(*rds.DescribeDBClusterEndpointsOutput, bool) bool) {
+	fake.describeDBClusterEndpointsPagesMutex.RLock()
+	defer fake.describeDBClusterEndpointsPagesMutex.RUnlock()
+	argsForCall := fake.describeDBClusterEndpointsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesReturns(result1 error) {
+	fake.describeDBClusterEndpointsPagesMutex.Lock()
+	defer fake.describeDBClusterEndpointsPagesMutex.Unlock()
+	fake.DescribeDBClusterEndpointsPagesStub = nil
+	fake.describeDBClusterEndpointsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterEndpointsPagesMutex.Lock()
+	defer fake.describeDBClusterEndpointsPagesMutex.Unlock()
+	fake.DescribeDBClusterEndpointsPagesStub = nil
+	if fake.describeDBClusterEndpointsPagesReturnsOnCall == nil {
+		fake.describeDBClusterEndpointsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterEndpointsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesWithContext(arg1 context.Context, arg2 *rds.DescribeDBClusterEndpointsInput, arg3 func(*rds.DescribeDBClusterEndpointsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeDBClusterEndpointsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterEndpointsPagesWithContextReturnsOnCall[len(fake.describeDBClusterEndpointsPagesWithContextArgsForCall)]
+	fake.describeDBClusterEndpointsPagesWithContextArgsForCall = append(fake.describeDBClusterEndpointsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterEndpointsInput
+		arg3 func(*rds.DescribeDBClusterEndpointsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBClusterEndpointsPagesWithContextStub
+	fakeReturns := fake.describeDBClusterEndpointsPagesWithContextReturns
+	fake.recordInvocation("DescribeDBClusterEndpointsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeDBClusterEndpointsPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesWithContextCallCount() int {
+	fake.describeDBClusterEndpointsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterEndpointsPagesWithContextMutex.RUnlock()
+	return len(fake.describeDBClusterEndpointsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesWithContextCalls(stub func(context.Context, *rds.DescribeDBClusterEndpointsInput, func(*rds.DescribeDBClusterEndpointsOutput, bool) bool, ...request.Option) error) {
+	fake.describeDBClusterEndpointsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterEndpointsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterEndpointsPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribeDBClusterEndpointsInput, func(*rds.DescribeDBClusterEndpointsOutput, bool) bool, []request.Option) {
+	fake.describeDBClusterEndpointsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterEndpointsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeDBClusterEndpointsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesWithContextReturns(result1 error) {
+	fake.describeDBClusterEndpointsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterEndpointsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterEndpointsPagesWithContextStub = nil
+	fake.describeDBClusterEndpointsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterEndpointsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterEndpointsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterEndpointsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterEndpointsPagesWithContextStub = nil
+	if fake.describeDBClusterEndpointsPagesWithContextReturnsOnCall == nil {
+		fake.describeDBClusterEndpointsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterEndpointsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeRDSAPI) DescribeDBClusterEndpointsRequest(arg1 *rds.DescribeDBClusterEndpointsInput) (*request.Request, *rds.DescribeDBClusterEndpointsOutput) {
@@ -16055,6 +16641,132 @@ func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsReturnsOnCall(i int, res
 	}{result1, result2}
 }
 
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPages(arg1 *rds.DescribeDBClusterParameterGroupsInput, arg2 func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool) error {
+	fake.describeDBClusterParameterGroupsPagesMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterParameterGroupsPagesReturnsOnCall[len(fake.describeDBClusterParameterGroupsPagesArgsForCall)]
+	fake.describeDBClusterParameterGroupsPagesArgsForCall = append(fake.describeDBClusterParameterGroupsPagesArgsForCall, struct {
+		arg1 *rds.DescribeDBClusterParameterGroupsInput
+		arg2 func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeDBClusterParameterGroupsPagesStub
+	fakeReturns := fake.describeDBClusterParameterGroupsPagesReturns
+	fake.recordInvocation("DescribeDBClusterParameterGroupsPages", []interface{}{arg1, arg2})
+	fake.describeDBClusterParameterGroupsPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesCallCount() int {
+	fake.describeDBClusterParameterGroupsPagesMutex.RLock()
+	defer fake.describeDBClusterParameterGroupsPagesMutex.RUnlock()
+	return len(fake.describeDBClusterParameterGroupsPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesCalls(stub func(*rds.DescribeDBClusterParameterGroupsInput, func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool) error) {
+	fake.describeDBClusterParameterGroupsPagesMutex.Lock()
+	defer fake.describeDBClusterParameterGroupsPagesMutex.Unlock()
+	fake.DescribeDBClusterParameterGroupsPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesArgsForCall(i int) (*rds.DescribeDBClusterParameterGroupsInput, func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool) {
+	fake.describeDBClusterParameterGroupsPagesMutex.RLock()
+	defer fake.describeDBClusterParameterGroupsPagesMutex.RUnlock()
+	argsForCall := fake.describeDBClusterParameterGroupsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesReturns(result1 error) {
+	fake.describeDBClusterParameterGroupsPagesMutex.Lock()
+	defer fake.describeDBClusterParameterGroupsPagesMutex.Unlock()
+	fake.DescribeDBClusterParameterGroupsPagesStub = nil
+	fake.describeDBClusterParameterGroupsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterParameterGroupsPagesMutex.Lock()
+	defer fake.describeDBClusterParameterGroupsPagesMutex.Unlock()
+	fake.DescribeDBClusterParameterGroupsPagesStub = nil
+	if fake.describeDBClusterParameterGroupsPagesReturnsOnCall == nil {
+		fake.describeDBClusterParameterGroupsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterParameterGroupsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesWithContext(arg1 context.Context, arg2 *rds.DescribeDBClusterParameterGroupsInput, arg3 func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterParameterGroupsPagesWithContextReturnsOnCall[len(fake.describeDBClusterParameterGroupsPagesWithContextArgsForCall)]
+	fake.describeDBClusterParameterGroupsPagesWithContextArgsForCall = append(fake.describeDBClusterParameterGroupsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterParameterGroupsInput
+		arg3 func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBClusterParameterGroupsPagesWithContextStub
+	fakeReturns := fake.describeDBClusterParameterGroupsPagesWithContextReturns
+	fake.recordInvocation("DescribeDBClusterParameterGroupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesWithContextCallCount() int {
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterParameterGroupsPagesWithContextMutex.RUnlock()
+	return len(fake.describeDBClusterParameterGroupsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesWithContextCalls(stub func(context.Context, *rds.DescribeDBClusterParameterGroupsInput, func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool, ...request.Option) error) {
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterParameterGroupsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterParameterGroupsPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribeDBClusterParameterGroupsInput, func(*rds.DescribeDBClusterParameterGroupsOutput, bool) bool, []request.Option) {
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterParameterGroupsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeDBClusterParameterGroupsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesWithContextReturns(result1 error) {
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterParameterGroupsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterParameterGroupsPagesWithContextStub = nil
+	fake.describeDBClusterParameterGroupsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterParameterGroupsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterParameterGroupsPagesWithContextStub = nil
+	if fake.describeDBClusterParameterGroupsPagesWithContextReturnsOnCall == nil {
+		fake.describeDBClusterParameterGroupsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterParameterGroupsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeRDSAPI) DescribeDBClusterParameterGroupsRequest(arg1 *rds.DescribeDBClusterParameterGroupsInput) (*request.Request, *rds.DescribeDBClusterParameterGroupsOutput) {
 	fake.describeDBClusterParameterGroupsRequestMutex.Lock()
 	ret, specificReturn := fake.describeDBClusterParameterGroupsRequestReturnsOnCall[len(fake.describeDBClusterParameterGroupsRequestArgsForCall)]
@@ -16247,6 +16959,132 @@ func (fake *FakeRDSAPI) DescribeDBClusterParametersReturnsOnCall(i int, result1 
 		result1 *rds.DescribeDBClusterParametersOutput
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPages(arg1 *rds.DescribeDBClusterParametersInput, arg2 func(*rds.DescribeDBClusterParametersOutput, bool) bool) error {
+	fake.describeDBClusterParametersPagesMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterParametersPagesReturnsOnCall[len(fake.describeDBClusterParametersPagesArgsForCall)]
+	fake.describeDBClusterParametersPagesArgsForCall = append(fake.describeDBClusterParametersPagesArgsForCall, struct {
+		arg1 *rds.DescribeDBClusterParametersInput
+		arg2 func(*rds.DescribeDBClusterParametersOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeDBClusterParametersPagesStub
+	fakeReturns := fake.describeDBClusterParametersPagesReturns
+	fake.recordInvocation("DescribeDBClusterParametersPages", []interface{}{arg1, arg2})
+	fake.describeDBClusterParametersPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesCallCount() int {
+	fake.describeDBClusterParametersPagesMutex.RLock()
+	defer fake.describeDBClusterParametersPagesMutex.RUnlock()
+	return len(fake.describeDBClusterParametersPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesCalls(stub func(*rds.DescribeDBClusterParametersInput, func(*rds.DescribeDBClusterParametersOutput, bool) bool) error) {
+	fake.describeDBClusterParametersPagesMutex.Lock()
+	defer fake.describeDBClusterParametersPagesMutex.Unlock()
+	fake.DescribeDBClusterParametersPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesArgsForCall(i int) (*rds.DescribeDBClusterParametersInput, func(*rds.DescribeDBClusterParametersOutput, bool) bool) {
+	fake.describeDBClusterParametersPagesMutex.RLock()
+	defer fake.describeDBClusterParametersPagesMutex.RUnlock()
+	argsForCall := fake.describeDBClusterParametersPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesReturns(result1 error) {
+	fake.describeDBClusterParametersPagesMutex.Lock()
+	defer fake.describeDBClusterParametersPagesMutex.Unlock()
+	fake.DescribeDBClusterParametersPagesStub = nil
+	fake.describeDBClusterParametersPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterParametersPagesMutex.Lock()
+	defer fake.describeDBClusterParametersPagesMutex.Unlock()
+	fake.DescribeDBClusterParametersPagesStub = nil
+	if fake.describeDBClusterParametersPagesReturnsOnCall == nil {
+		fake.describeDBClusterParametersPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterParametersPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesWithContext(arg1 context.Context, arg2 *rds.DescribeDBClusterParametersInput, arg3 func(*rds.DescribeDBClusterParametersOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeDBClusterParametersPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterParametersPagesWithContextReturnsOnCall[len(fake.describeDBClusterParametersPagesWithContextArgsForCall)]
+	fake.describeDBClusterParametersPagesWithContextArgsForCall = append(fake.describeDBClusterParametersPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterParametersInput
+		arg3 func(*rds.DescribeDBClusterParametersOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBClusterParametersPagesWithContextStub
+	fakeReturns := fake.describeDBClusterParametersPagesWithContextReturns
+	fake.recordInvocation("DescribeDBClusterParametersPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeDBClusterParametersPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesWithContextCallCount() int {
+	fake.describeDBClusterParametersPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterParametersPagesWithContextMutex.RUnlock()
+	return len(fake.describeDBClusterParametersPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesWithContextCalls(stub func(context.Context, *rds.DescribeDBClusterParametersInput, func(*rds.DescribeDBClusterParametersOutput, bool) bool, ...request.Option) error) {
+	fake.describeDBClusterParametersPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterParametersPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterParametersPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribeDBClusterParametersInput, func(*rds.DescribeDBClusterParametersOutput, bool) bool, []request.Option) {
+	fake.describeDBClusterParametersPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterParametersPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeDBClusterParametersPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesWithContextReturns(result1 error) {
+	fake.describeDBClusterParametersPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterParametersPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterParametersPagesWithContextStub = nil
+	fake.describeDBClusterParametersPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterParametersPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterParametersPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterParametersPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterParametersPagesWithContextStub = nil
+	if fake.describeDBClusterParametersPagesWithContextReturnsOnCall == nil {
+		fake.describeDBClusterParametersPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterParametersPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeRDSAPI) DescribeDBClusterParametersRequest(arg1 *rds.DescribeDBClusterParametersInput) (*request.Request, *rds.DescribeDBClusterParametersOutput) {
@@ -16635,6 +17473,132 @@ func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsReturnsOnCall(i int, result1 *
 		result1 *rds.DescribeDBClusterSnapshotsOutput
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPages(arg1 *rds.DescribeDBClusterSnapshotsInput, arg2 func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool) error {
+	fake.describeDBClusterSnapshotsPagesMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterSnapshotsPagesReturnsOnCall[len(fake.describeDBClusterSnapshotsPagesArgsForCall)]
+	fake.describeDBClusterSnapshotsPagesArgsForCall = append(fake.describeDBClusterSnapshotsPagesArgsForCall, struct {
+		arg1 *rds.DescribeDBClusterSnapshotsInput
+		arg2 func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeDBClusterSnapshotsPagesStub
+	fakeReturns := fake.describeDBClusterSnapshotsPagesReturns
+	fake.recordInvocation("DescribeDBClusterSnapshotsPages", []interface{}{arg1, arg2})
+	fake.describeDBClusterSnapshotsPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesCallCount() int {
+	fake.describeDBClusterSnapshotsPagesMutex.RLock()
+	defer fake.describeDBClusterSnapshotsPagesMutex.RUnlock()
+	return len(fake.describeDBClusterSnapshotsPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesCalls(stub func(*rds.DescribeDBClusterSnapshotsInput, func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool) error) {
+	fake.describeDBClusterSnapshotsPagesMutex.Lock()
+	defer fake.describeDBClusterSnapshotsPagesMutex.Unlock()
+	fake.DescribeDBClusterSnapshotsPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesArgsForCall(i int) (*rds.DescribeDBClusterSnapshotsInput, func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool) {
+	fake.describeDBClusterSnapshotsPagesMutex.RLock()
+	defer fake.describeDBClusterSnapshotsPagesMutex.RUnlock()
+	argsForCall := fake.describeDBClusterSnapshotsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesReturns(result1 error) {
+	fake.describeDBClusterSnapshotsPagesMutex.Lock()
+	defer fake.describeDBClusterSnapshotsPagesMutex.Unlock()
+	fake.DescribeDBClusterSnapshotsPagesStub = nil
+	fake.describeDBClusterSnapshotsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterSnapshotsPagesMutex.Lock()
+	defer fake.describeDBClusterSnapshotsPagesMutex.Unlock()
+	fake.DescribeDBClusterSnapshotsPagesStub = nil
+	if fake.describeDBClusterSnapshotsPagesReturnsOnCall == nil {
+		fake.describeDBClusterSnapshotsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterSnapshotsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesWithContext(arg1 context.Context, arg2 *rds.DescribeDBClusterSnapshotsInput, arg3 func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeDBClusterSnapshotsPagesWithContextReturnsOnCall[len(fake.describeDBClusterSnapshotsPagesWithContextArgsForCall)]
+	fake.describeDBClusterSnapshotsPagesWithContextArgsForCall = append(fake.describeDBClusterSnapshotsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribeDBClusterSnapshotsInput
+		arg3 func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeDBClusterSnapshotsPagesWithContextStub
+	fakeReturns := fake.describeDBClusterSnapshotsPagesWithContextReturns
+	fake.recordInvocation("DescribeDBClusterSnapshotsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesWithContextCallCount() int {
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterSnapshotsPagesWithContextMutex.RUnlock()
+	return len(fake.describeDBClusterSnapshotsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesWithContextCalls(stub func(context.Context, *rds.DescribeDBClusterSnapshotsInput, func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool, ...request.Option) error) {
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterSnapshotsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterSnapshotsPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribeDBClusterSnapshotsInput, func(*rds.DescribeDBClusterSnapshotsOutput, bool) bool, []request.Option) {
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterSnapshotsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeDBClusterSnapshotsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesWithContextReturns(result1 error) {
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterSnapshotsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterSnapshotsPagesWithContextStub = nil
+	fake.describeDBClusterSnapshotsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.Lock()
+	defer fake.describeDBClusterSnapshotsPagesWithContextMutex.Unlock()
+	fake.DescribeDBClusterSnapshotsPagesWithContextStub = nil
+	if fake.describeDBClusterSnapshotsPagesWithContextReturnsOnCall == nil {
+		fake.describeDBClusterSnapshotsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeDBClusterSnapshotsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeRDSAPI) DescribeDBClusterSnapshotsRequest(arg1 *rds.DescribeDBClusterSnapshotsInput) (*request.Request, *rds.DescribeDBClusterSnapshotsOutput) {
@@ -24453,6 +25417,132 @@ func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsReturnsOnCall(i int, re
 	}{result1, result2}
 }
 
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPages(arg1 *rds.DescribePendingMaintenanceActionsInput, arg2 func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool) error {
+	fake.describePendingMaintenanceActionsPagesMutex.Lock()
+	ret, specificReturn := fake.describePendingMaintenanceActionsPagesReturnsOnCall[len(fake.describePendingMaintenanceActionsPagesArgsForCall)]
+	fake.describePendingMaintenanceActionsPagesArgsForCall = append(fake.describePendingMaintenanceActionsPagesArgsForCall, struct {
+		arg1 *rds.DescribePendingMaintenanceActionsInput
+		arg2 func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribePendingMaintenanceActionsPagesStub
+	fakeReturns := fake.describePendingMaintenanceActionsPagesReturns
+	fake.recordInvocation("DescribePendingMaintenanceActionsPages", []interface{}{arg1, arg2})
+	fake.describePendingMaintenanceActionsPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesCallCount() int {
+	fake.describePendingMaintenanceActionsPagesMutex.RLock()
+	defer fake.describePendingMaintenanceActionsPagesMutex.RUnlock()
+	return len(fake.describePendingMaintenanceActionsPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesCalls(stub func(*rds.DescribePendingMaintenanceActionsInput, func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool) error) {
+	fake.describePendingMaintenanceActionsPagesMutex.Lock()
+	defer fake.describePendingMaintenanceActionsPagesMutex.Unlock()
+	fake.DescribePendingMaintenanceActionsPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesArgsForCall(i int) (*rds.DescribePendingMaintenanceActionsInput, func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool) {
+	fake.describePendingMaintenanceActionsPagesMutex.RLock()
+	defer fake.describePendingMaintenanceActionsPagesMutex.RUnlock()
+	argsForCall := fake.describePendingMaintenanceActionsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesReturns(result1 error) {
+	fake.describePendingMaintenanceActionsPagesMutex.Lock()
+	defer fake.describePendingMaintenanceActionsPagesMutex.Unlock()
+	fake.DescribePendingMaintenanceActionsPagesStub = nil
+	fake.describePendingMaintenanceActionsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesReturnsOnCall(i int, result1 error) {
+	fake.describePendingMaintenanceActionsPagesMutex.Lock()
+	defer fake.describePendingMaintenanceActionsPagesMutex.Unlock()
+	fake.DescribePendingMaintenanceActionsPagesStub = nil
+	if fake.describePendingMaintenanceActionsPagesReturnsOnCall == nil {
+		fake.describePendingMaintenanceActionsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describePendingMaintenanceActionsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesWithContext(arg1 context.Context, arg2 *rds.DescribePendingMaintenanceActionsInput, arg3 func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describePendingMaintenanceActionsPagesWithContextReturnsOnCall[len(fake.describePendingMaintenanceActionsPagesWithContextArgsForCall)]
+	fake.describePendingMaintenanceActionsPagesWithContextArgsForCall = append(fake.describePendingMaintenanceActionsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribePendingMaintenanceActionsInput
+		arg3 func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribePendingMaintenanceActionsPagesWithContextStub
+	fakeReturns := fake.describePendingMaintenanceActionsPagesWithContextReturns
+	fake.recordInvocation("DescribePendingMaintenanceActionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesWithContextCallCount() int {
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.RLock()
+	defer fake.describePendingMaintenanceActionsPagesWithContextMutex.RUnlock()
+	return len(fake.describePendingMaintenanceActionsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesWithContextCalls(stub func(context.Context, *rds.DescribePendingMaintenanceActionsInput, func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool, ...request.Option) error) {
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.Lock()
+	defer fake.describePendingMaintenanceActionsPagesWithContextMutex.Unlock()
+	fake.DescribePendingMaintenanceActionsPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribePendingMaintenanceActionsInput, func(*rds.DescribePendingMaintenanceActionsOutput, bool) bool, []request.Option) {
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.RLock()
+	defer fake.describePendingMaintenanceActionsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describePendingMaintenanceActionsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesWithContextReturns(result1 error) {
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.Lock()
+	defer fake.describePendingMaintenanceActionsPagesWithContextMutex.Unlock()
+	fake.DescribePendingMaintenanceActionsPagesWithContextStub = nil
+	fake.describePendingMaintenanceActionsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.Lock()
+	defer fake.describePendingMaintenanceActionsPagesWithContextMutex.Unlock()
+	fake.DescribePendingMaintenanceActionsPagesWithContextStub = nil
+	if fake.describePendingMaintenanceActionsPagesWithContextReturnsOnCall == nil {
+		fake.describePendingMaintenanceActionsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describePendingMaintenanceActionsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeRDSAPI) DescribePendingMaintenanceActionsRequest(arg1 *rds.DescribePendingMaintenanceActionsInput) (*request.Request, *rds.DescribePendingMaintenanceActionsOutput) {
 	fake.describePendingMaintenanceActionsRequestMutex.Lock()
 	ret, specificReturn := fake.describePendingMaintenanceActionsRequestReturnsOnCall[len(fake.describePendingMaintenanceActionsRequestArgsForCall)]
@@ -25285,6 +26375,132 @@ func (fake *FakeRDSAPI) DescribeSourceRegionsReturnsOnCall(i int, result1 *rds.D
 		result1 *rds.DescribeSourceRegionsOutput
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPages(arg1 *rds.DescribeSourceRegionsInput, arg2 func(*rds.DescribeSourceRegionsOutput, bool) bool) error {
+	fake.describeSourceRegionsPagesMutex.Lock()
+	ret, specificReturn := fake.describeSourceRegionsPagesReturnsOnCall[len(fake.describeSourceRegionsPagesArgsForCall)]
+	fake.describeSourceRegionsPagesArgsForCall = append(fake.describeSourceRegionsPagesArgsForCall, struct {
+		arg1 *rds.DescribeSourceRegionsInput
+		arg2 func(*rds.DescribeSourceRegionsOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeSourceRegionsPagesStub
+	fakeReturns := fake.describeSourceRegionsPagesReturns
+	fake.recordInvocation("DescribeSourceRegionsPages", []interface{}{arg1, arg2})
+	fake.describeSourceRegionsPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesCallCount() int {
+	fake.describeSourceRegionsPagesMutex.RLock()
+	defer fake.describeSourceRegionsPagesMutex.RUnlock()
+	return len(fake.describeSourceRegionsPagesArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesCalls(stub func(*rds.DescribeSourceRegionsInput, func(*rds.DescribeSourceRegionsOutput, bool) bool) error) {
+	fake.describeSourceRegionsPagesMutex.Lock()
+	defer fake.describeSourceRegionsPagesMutex.Unlock()
+	fake.DescribeSourceRegionsPagesStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesArgsForCall(i int) (*rds.DescribeSourceRegionsInput, func(*rds.DescribeSourceRegionsOutput, bool) bool) {
+	fake.describeSourceRegionsPagesMutex.RLock()
+	defer fake.describeSourceRegionsPagesMutex.RUnlock()
+	argsForCall := fake.describeSourceRegionsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesReturns(result1 error) {
+	fake.describeSourceRegionsPagesMutex.Lock()
+	defer fake.describeSourceRegionsPagesMutex.Unlock()
+	fake.DescribeSourceRegionsPagesStub = nil
+	fake.describeSourceRegionsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesReturnsOnCall(i int, result1 error) {
+	fake.describeSourceRegionsPagesMutex.Lock()
+	defer fake.describeSourceRegionsPagesMutex.Unlock()
+	fake.DescribeSourceRegionsPagesStub = nil
+	if fake.describeSourceRegionsPagesReturnsOnCall == nil {
+		fake.describeSourceRegionsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeSourceRegionsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesWithContext(arg1 context.Context, arg2 *rds.DescribeSourceRegionsInput, arg3 func(*rds.DescribeSourceRegionsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeSourceRegionsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeSourceRegionsPagesWithContextReturnsOnCall[len(fake.describeSourceRegionsPagesWithContextArgsForCall)]
+	fake.describeSourceRegionsPagesWithContextArgsForCall = append(fake.describeSourceRegionsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *rds.DescribeSourceRegionsInput
+		arg3 func(*rds.DescribeSourceRegionsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeSourceRegionsPagesWithContextStub
+	fakeReturns := fake.describeSourceRegionsPagesWithContextReturns
+	fake.recordInvocation("DescribeSourceRegionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeSourceRegionsPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesWithContextCallCount() int {
+	fake.describeSourceRegionsPagesWithContextMutex.RLock()
+	defer fake.describeSourceRegionsPagesWithContextMutex.RUnlock()
+	return len(fake.describeSourceRegionsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesWithContextCalls(stub func(context.Context, *rds.DescribeSourceRegionsInput, func(*rds.DescribeSourceRegionsOutput, bool) bool, ...request.Option) error) {
+	fake.describeSourceRegionsPagesWithContextMutex.Lock()
+	defer fake.describeSourceRegionsPagesWithContextMutex.Unlock()
+	fake.DescribeSourceRegionsPagesWithContextStub = stub
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesWithContextArgsForCall(i int) (context.Context, *rds.DescribeSourceRegionsInput, func(*rds.DescribeSourceRegionsOutput, bool) bool, []request.Option) {
+	fake.describeSourceRegionsPagesWithContextMutex.RLock()
+	defer fake.describeSourceRegionsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeSourceRegionsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesWithContextReturns(result1 error) {
+	fake.describeSourceRegionsPagesWithContextMutex.Lock()
+	defer fake.describeSourceRegionsPagesWithContextMutex.Unlock()
+	fake.DescribeSourceRegionsPagesWithContextStub = nil
+	fake.describeSourceRegionsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeRDSAPI) DescribeSourceRegionsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeSourceRegionsPagesWithContextMutex.Lock()
+	defer fake.describeSourceRegionsPagesWithContextMutex.Unlock()
+	fake.DescribeSourceRegionsPagesWithContextStub = nil
+	if fake.describeSourceRegionsPagesWithContextReturnsOnCall == nil {
+		fake.describeSourceRegionsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeSourceRegionsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeRDSAPI) DescribeSourceRegionsRequest(arg1 *rds.DescribeSourceRegionsInput) (*request.Request, *rds.DescribeSourceRegionsOutput) {
@@ -35686,6 +36902,10 @@ func (fake *FakeRDSAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeAccountAttributesWithContextMutex.RUnlock()
 	fake.describeCertificatesMutex.RLock()
 	defer fake.describeCertificatesMutex.RUnlock()
+	fake.describeCertificatesPagesMutex.RLock()
+	defer fake.describeCertificatesPagesMutex.RUnlock()
+	fake.describeCertificatesPagesWithContextMutex.RLock()
+	defer fake.describeCertificatesPagesWithContextMutex.RUnlock()
 	fake.describeCertificatesRequestMutex.RLock()
 	defer fake.describeCertificatesRequestMutex.RUnlock()
 	fake.describeCertificatesWithContextMutex.RLock()
@@ -35702,24 +36922,40 @@ func (fake *FakeRDSAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeCustomAvailabilityZonesWithContextMutex.RUnlock()
 	fake.describeDBClusterBacktracksMutex.RLock()
 	defer fake.describeDBClusterBacktracksMutex.RUnlock()
+	fake.describeDBClusterBacktracksPagesMutex.RLock()
+	defer fake.describeDBClusterBacktracksPagesMutex.RUnlock()
+	fake.describeDBClusterBacktracksPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterBacktracksPagesWithContextMutex.RUnlock()
 	fake.describeDBClusterBacktracksRequestMutex.RLock()
 	defer fake.describeDBClusterBacktracksRequestMutex.RUnlock()
 	fake.describeDBClusterBacktracksWithContextMutex.RLock()
 	defer fake.describeDBClusterBacktracksWithContextMutex.RUnlock()
 	fake.describeDBClusterEndpointsMutex.RLock()
 	defer fake.describeDBClusterEndpointsMutex.RUnlock()
+	fake.describeDBClusterEndpointsPagesMutex.RLock()
+	defer fake.describeDBClusterEndpointsPagesMutex.RUnlock()
+	fake.describeDBClusterEndpointsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterEndpointsPagesWithContextMutex.RUnlock()
 	fake.describeDBClusterEndpointsRequestMutex.RLock()
 	defer fake.describeDBClusterEndpointsRequestMutex.RUnlock()
 	fake.describeDBClusterEndpointsWithContextMutex.RLock()
 	defer fake.describeDBClusterEndpointsWithContextMutex.RUnlock()
 	fake.describeDBClusterParameterGroupsMutex.RLock()
 	defer fake.describeDBClusterParameterGroupsMutex.RUnlock()
+	fake.describeDBClusterParameterGroupsPagesMutex.RLock()
+	defer fake.describeDBClusterParameterGroupsPagesMutex.RUnlock()
+	fake.describeDBClusterParameterGroupsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterParameterGroupsPagesWithContextMutex.RUnlock()
 	fake.describeDBClusterParameterGroupsRequestMutex.RLock()
 	defer fake.describeDBClusterParameterGroupsRequestMutex.RUnlock()
 	fake.describeDBClusterParameterGroupsWithContextMutex.RLock()
 	defer fake.describeDBClusterParameterGroupsWithContextMutex.RUnlock()
 	fake.describeDBClusterParametersMutex.RLock()
 	defer fake.describeDBClusterParametersMutex.RUnlock()
+	fake.describeDBClusterParametersPagesMutex.RLock()
+	defer fake.describeDBClusterParametersPagesMutex.RUnlock()
+	fake.describeDBClusterParametersPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterParametersPagesWithContextMutex.RUnlock()
 	fake.describeDBClusterParametersRequestMutex.RLock()
 	defer fake.describeDBClusterParametersRequestMutex.RUnlock()
 	fake.describeDBClusterParametersWithContextMutex.RLock()
@@ -35732,6 +36968,10 @@ func (fake *FakeRDSAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeDBClusterSnapshotAttributesWithContextMutex.RUnlock()
 	fake.describeDBClusterSnapshotsMutex.RLock()
 	defer fake.describeDBClusterSnapshotsMutex.RUnlock()
+	fake.describeDBClusterSnapshotsPagesMutex.RLock()
+	defer fake.describeDBClusterSnapshotsPagesMutex.RUnlock()
+	fake.describeDBClusterSnapshotsPagesWithContextMutex.RLock()
+	defer fake.describeDBClusterSnapshotsPagesWithContextMutex.RUnlock()
 	fake.describeDBClusterSnapshotsRequestMutex.RLock()
 	defer fake.describeDBClusterSnapshotsRequestMutex.RUnlock()
 	fake.describeDBClusterSnapshotsWithContextMutex.RLock()
@@ -35976,6 +37216,10 @@ func (fake *FakeRDSAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeOrderableDBInstanceOptionsWithContextMutex.RUnlock()
 	fake.describePendingMaintenanceActionsMutex.RLock()
 	defer fake.describePendingMaintenanceActionsMutex.RUnlock()
+	fake.describePendingMaintenanceActionsPagesMutex.RLock()
+	defer fake.describePendingMaintenanceActionsPagesMutex.RUnlock()
+	fake.describePendingMaintenanceActionsPagesWithContextMutex.RLock()
+	defer fake.describePendingMaintenanceActionsPagesWithContextMutex.RUnlock()
 	fake.describePendingMaintenanceActionsRequestMutex.RLock()
 	defer fake.describePendingMaintenanceActionsRequestMutex.RUnlock()
 	fake.describePendingMaintenanceActionsWithContextMutex.RLock()
@@ -36002,6 +37246,10 @@ func (fake *FakeRDSAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeReservedDBInstancesWithContextMutex.RUnlock()
 	fake.describeSourceRegionsMutex.RLock()
 	defer fake.describeSourceRegionsMutex.RUnlock()
+	fake.describeSourceRegionsPagesMutex.RLock()
+	defer fake.describeSourceRegionsPagesMutex.RUnlock()
+	fake.describeSourceRegionsPagesWithContextMutex.RLock()
+	defer fake.describeSourceRegionsPagesWithContextMutex.RUnlock()
 	fake.describeSourceRegionsRequestMutex.RLock()
 	defer fake.describeSourceRegionsRequestMutex.RUnlock()
 	fake.describeSourceRegionsWithContextMutex.RLock()
