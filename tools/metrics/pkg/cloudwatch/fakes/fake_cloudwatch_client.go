@@ -1069,6 +1069,47 @@ type FakeCloudWatchAPI struct {
 		result1 *cloudwatch.PutAnomalyDetectorOutput
 		result2 error
 	}
+	PutCompositeAlarmStub        func(*cloudwatch.PutCompositeAlarmInput) (*cloudwatch.PutCompositeAlarmOutput, error)
+	putCompositeAlarmMutex       sync.RWMutex
+	putCompositeAlarmArgsForCall []struct {
+		arg1 *cloudwatch.PutCompositeAlarmInput
+	}
+	putCompositeAlarmReturns struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}
+	putCompositeAlarmReturnsOnCall map[int]struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}
+	PutCompositeAlarmRequestStub        func(*cloudwatch.PutCompositeAlarmInput) (*request.Request, *cloudwatch.PutCompositeAlarmOutput)
+	putCompositeAlarmRequestMutex       sync.RWMutex
+	putCompositeAlarmRequestArgsForCall []struct {
+		arg1 *cloudwatch.PutCompositeAlarmInput
+	}
+	putCompositeAlarmRequestReturns struct {
+		result1 *request.Request
+		result2 *cloudwatch.PutCompositeAlarmOutput
+	}
+	putCompositeAlarmRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *cloudwatch.PutCompositeAlarmOutput
+	}
+	PutCompositeAlarmWithContextStub        func(context.Context, *cloudwatch.PutCompositeAlarmInput, ...request.Option) (*cloudwatch.PutCompositeAlarmOutput, error)
+	putCompositeAlarmWithContextMutex       sync.RWMutex
+	putCompositeAlarmWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *cloudwatch.PutCompositeAlarmInput
+		arg3 []request.Option
+	}
+	putCompositeAlarmWithContextReturns struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}
+	putCompositeAlarmWithContextReturnsOnCall map[int]struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}
 	PutDashboardStub        func(*cloudwatch.PutDashboardInput) (*cloudwatch.PutDashboardOutput, error)
 	putDashboardMutex       sync.RWMutex
 	putDashboardArgsForCall []struct {
@@ -1378,6 +1419,30 @@ type FakeCloudWatchAPI struct {
 		result1 error
 	}
 	waitUntilAlarmExistsWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
+	WaitUntilCompositeAlarmExistsStub        func(*cloudwatch.DescribeAlarmsInput) error
+	waitUntilCompositeAlarmExistsMutex       sync.RWMutex
+	waitUntilCompositeAlarmExistsArgsForCall []struct {
+		arg1 *cloudwatch.DescribeAlarmsInput
+	}
+	waitUntilCompositeAlarmExistsReturns struct {
+		result1 error
+	}
+	waitUntilCompositeAlarmExistsReturnsOnCall map[int]struct {
+		result1 error
+	}
+	WaitUntilCompositeAlarmExistsWithContextStub        func(context.Context, *cloudwatch.DescribeAlarmsInput, ...request.WaiterOption) error
+	waitUntilCompositeAlarmExistsWithContextMutex       sync.RWMutex
+	waitUntilCompositeAlarmExistsWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *cloudwatch.DescribeAlarmsInput
+		arg3 []request.WaiterOption
+	}
+	waitUntilCompositeAlarmExistsWithContextReturns struct {
+		result1 error
+	}
+	waitUntilCompositeAlarmExistsWithContextReturnsOnCall map[int]struct {
 		result1 error
 	}
 	invocations      map[string][][]interface{}
@@ -6408,6 +6473,200 @@ func (fake *FakeCloudWatchAPI) PutAnomalyDetectorWithContextReturnsOnCall(i int,
 	}{result1, result2}
 }
 
+func (fake *FakeCloudWatchAPI) PutCompositeAlarm(arg1 *cloudwatch.PutCompositeAlarmInput) (*cloudwatch.PutCompositeAlarmOutput, error) {
+	fake.putCompositeAlarmMutex.Lock()
+	ret, specificReturn := fake.putCompositeAlarmReturnsOnCall[len(fake.putCompositeAlarmArgsForCall)]
+	fake.putCompositeAlarmArgsForCall = append(fake.putCompositeAlarmArgsForCall, struct {
+		arg1 *cloudwatch.PutCompositeAlarmInput
+	}{arg1})
+	stub := fake.PutCompositeAlarmStub
+	fakeReturns := fake.putCompositeAlarmReturns
+	fake.recordInvocation("PutCompositeAlarm", []interface{}{arg1})
+	fake.putCompositeAlarmMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmCallCount() int {
+	fake.putCompositeAlarmMutex.RLock()
+	defer fake.putCompositeAlarmMutex.RUnlock()
+	return len(fake.putCompositeAlarmArgsForCall)
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmCalls(stub func(*cloudwatch.PutCompositeAlarmInput) (*cloudwatch.PutCompositeAlarmOutput, error)) {
+	fake.putCompositeAlarmMutex.Lock()
+	defer fake.putCompositeAlarmMutex.Unlock()
+	fake.PutCompositeAlarmStub = stub
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmArgsForCall(i int) *cloudwatch.PutCompositeAlarmInput {
+	fake.putCompositeAlarmMutex.RLock()
+	defer fake.putCompositeAlarmMutex.RUnlock()
+	argsForCall := fake.putCompositeAlarmArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmReturns(result1 *cloudwatch.PutCompositeAlarmOutput, result2 error) {
+	fake.putCompositeAlarmMutex.Lock()
+	defer fake.putCompositeAlarmMutex.Unlock()
+	fake.PutCompositeAlarmStub = nil
+	fake.putCompositeAlarmReturns = struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmReturnsOnCall(i int, result1 *cloudwatch.PutCompositeAlarmOutput, result2 error) {
+	fake.putCompositeAlarmMutex.Lock()
+	defer fake.putCompositeAlarmMutex.Unlock()
+	fake.PutCompositeAlarmStub = nil
+	if fake.putCompositeAlarmReturnsOnCall == nil {
+		fake.putCompositeAlarmReturnsOnCall = make(map[int]struct {
+			result1 *cloudwatch.PutCompositeAlarmOutput
+			result2 error
+		})
+	}
+	fake.putCompositeAlarmReturnsOnCall[i] = struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmRequest(arg1 *cloudwatch.PutCompositeAlarmInput) (*request.Request, *cloudwatch.PutCompositeAlarmOutput) {
+	fake.putCompositeAlarmRequestMutex.Lock()
+	ret, specificReturn := fake.putCompositeAlarmRequestReturnsOnCall[len(fake.putCompositeAlarmRequestArgsForCall)]
+	fake.putCompositeAlarmRequestArgsForCall = append(fake.putCompositeAlarmRequestArgsForCall, struct {
+		arg1 *cloudwatch.PutCompositeAlarmInput
+	}{arg1})
+	stub := fake.PutCompositeAlarmRequestStub
+	fakeReturns := fake.putCompositeAlarmRequestReturns
+	fake.recordInvocation("PutCompositeAlarmRequest", []interface{}{arg1})
+	fake.putCompositeAlarmRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmRequestCallCount() int {
+	fake.putCompositeAlarmRequestMutex.RLock()
+	defer fake.putCompositeAlarmRequestMutex.RUnlock()
+	return len(fake.putCompositeAlarmRequestArgsForCall)
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmRequestCalls(stub func(*cloudwatch.PutCompositeAlarmInput) (*request.Request, *cloudwatch.PutCompositeAlarmOutput)) {
+	fake.putCompositeAlarmRequestMutex.Lock()
+	defer fake.putCompositeAlarmRequestMutex.Unlock()
+	fake.PutCompositeAlarmRequestStub = stub
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmRequestArgsForCall(i int) *cloudwatch.PutCompositeAlarmInput {
+	fake.putCompositeAlarmRequestMutex.RLock()
+	defer fake.putCompositeAlarmRequestMutex.RUnlock()
+	argsForCall := fake.putCompositeAlarmRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmRequestReturns(result1 *request.Request, result2 *cloudwatch.PutCompositeAlarmOutput) {
+	fake.putCompositeAlarmRequestMutex.Lock()
+	defer fake.putCompositeAlarmRequestMutex.Unlock()
+	fake.PutCompositeAlarmRequestStub = nil
+	fake.putCompositeAlarmRequestReturns = struct {
+		result1 *request.Request
+		result2 *cloudwatch.PutCompositeAlarmOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmRequestReturnsOnCall(i int, result1 *request.Request, result2 *cloudwatch.PutCompositeAlarmOutput) {
+	fake.putCompositeAlarmRequestMutex.Lock()
+	defer fake.putCompositeAlarmRequestMutex.Unlock()
+	fake.PutCompositeAlarmRequestStub = nil
+	if fake.putCompositeAlarmRequestReturnsOnCall == nil {
+		fake.putCompositeAlarmRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *cloudwatch.PutCompositeAlarmOutput
+		})
+	}
+	fake.putCompositeAlarmRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *cloudwatch.PutCompositeAlarmOutput
+	}{result1, result2}
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmWithContext(arg1 context.Context, arg2 *cloudwatch.PutCompositeAlarmInput, arg3 ...request.Option) (*cloudwatch.PutCompositeAlarmOutput, error) {
+	fake.putCompositeAlarmWithContextMutex.Lock()
+	ret, specificReturn := fake.putCompositeAlarmWithContextReturnsOnCall[len(fake.putCompositeAlarmWithContextArgsForCall)]
+	fake.putCompositeAlarmWithContextArgsForCall = append(fake.putCompositeAlarmWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *cloudwatch.PutCompositeAlarmInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.PutCompositeAlarmWithContextStub
+	fakeReturns := fake.putCompositeAlarmWithContextReturns
+	fake.recordInvocation("PutCompositeAlarmWithContext", []interface{}{arg1, arg2, arg3})
+	fake.putCompositeAlarmWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmWithContextCallCount() int {
+	fake.putCompositeAlarmWithContextMutex.RLock()
+	defer fake.putCompositeAlarmWithContextMutex.RUnlock()
+	return len(fake.putCompositeAlarmWithContextArgsForCall)
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmWithContextCalls(stub func(context.Context, *cloudwatch.PutCompositeAlarmInput, ...request.Option) (*cloudwatch.PutCompositeAlarmOutput, error)) {
+	fake.putCompositeAlarmWithContextMutex.Lock()
+	defer fake.putCompositeAlarmWithContextMutex.Unlock()
+	fake.PutCompositeAlarmWithContextStub = stub
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmWithContextArgsForCall(i int) (context.Context, *cloudwatch.PutCompositeAlarmInput, []request.Option) {
+	fake.putCompositeAlarmWithContextMutex.RLock()
+	defer fake.putCompositeAlarmWithContextMutex.RUnlock()
+	argsForCall := fake.putCompositeAlarmWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmWithContextReturns(result1 *cloudwatch.PutCompositeAlarmOutput, result2 error) {
+	fake.putCompositeAlarmWithContextMutex.Lock()
+	defer fake.putCompositeAlarmWithContextMutex.Unlock()
+	fake.PutCompositeAlarmWithContextStub = nil
+	fake.putCompositeAlarmWithContextReturns = struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeCloudWatchAPI) PutCompositeAlarmWithContextReturnsOnCall(i int, result1 *cloudwatch.PutCompositeAlarmOutput, result2 error) {
+	fake.putCompositeAlarmWithContextMutex.Lock()
+	defer fake.putCompositeAlarmWithContextMutex.Unlock()
+	fake.PutCompositeAlarmWithContextStub = nil
+	if fake.putCompositeAlarmWithContextReturnsOnCall == nil {
+		fake.putCompositeAlarmWithContextReturnsOnCall = make(map[int]struct {
+			result1 *cloudwatch.PutCompositeAlarmOutput
+			result2 error
+		})
+	}
+	fake.putCompositeAlarmWithContextReturnsOnCall[i] = struct {
+		result1 *cloudwatch.PutCompositeAlarmOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeCloudWatchAPI) PutDashboard(arg1 *cloudwatch.PutDashboardInput) (*cloudwatch.PutDashboardOutput, error) {
 	fake.putDashboardMutex.Lock()
 	ret, specificReturn := fake.putDashboardReturnsOnCall[len(fake.putDashboardArgsForCall)]
@@ -7890,6 +8149,130 @@ func (fake *FakeCloudWatchAPI) WaitUntilAlarmExistsWithContextReturnsOnCall(i in
 	}{result1}
 }
 
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExists(arg1 *cloudwatch.DescribeAlarmsInput) error {
+	fake.waitUntilCompositeAlarmExistsMutex.Lock()
+	ret, specificReturn := fake.waitUntilCompositeAlarmExistsReturnsOnCall[len(fake.waitUntilCompositeAlarmExistsArgsForCall)]
+	fake.waitUntilCompositeAlarmExistsArgsForCall = append(fake.waitUntilCompositeAlarmExistsArgsForCall, struct {
+		arg1 *cloudwatch.DescribeAlarmsInput
+	}{arg1})
+	stub := fake.WaitUntilCompositeAlarmExistsStub
+	fakeReturns := fake.waitUntilCompositeAlarmExistsReturns
+	fake.recordInvocation("WaitUntilCompositeAlarmExists", []interface{}{arg1})
+	fake.waitUntilCompositeAlarmExistsMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsCallCount() int {
+	fake.waitUntilCompositeAlarmExistsMutex.RLock()
+	defer fake.waitUntilCompositeAlarmExistsMutex.RUnlock()
+	return len(fake.waitUntilCompositeAlarmExistsArgsForCall)
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsCalls(stub func(*cloudwatch.DescribeAlarmsInput) error) {
+	fake.waitUntilCompositeAlarmExistsMutex.Lock()
+	defer fake.waitUntilCompositeAlarmExistsMutex.Unlock()
+	fake.WaitUntilCompositeAlarmExistsStub = stub
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsArgsForCall(i int) *cloudwatch.DescribeAlarmsInput {
+	fake.waitUntilCompositeAlarmExistsMutex.RLock()
+	defer fake.waitUntilCompositeAlarmExistsMutex.RUnlock()
+	argsForCall := fake.waitUntilCompositeAlarmExistsArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsReturns(result1 error) {
+	fake.waitUntilCompositeAlarmExistsMutex.Lock()
+	defer fake.waitUntilCompositeAlarmExistsMutex.Unlock()
+	fake.WaitUntilCompositeAlarmExistsStub = nil
+	fake.waitUntilCompositeAlarmExistsReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsReturnsOnCall(i int, result1 error) {
+	fake.waitUntilCompositeAlarmExistsMutex.Lock()
+	defer fake.waitUntilCompositeAlarmExistsMutex.Unlock()
+	fake.WaitUntilCompositeAlarmExistsStub = nil
+	if fake.waitUntilCompositeAlarmExistsReturnsOnCall == nil {
+		fake.waitUntilCompositeAlarmExistsReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.waitUntilCompositeAlarmExistsReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsWithContext(arg1 context.Context, arg2 *cloudwatch.DescribeAlarmsInput, arg3 ...request.WaiterOption) error {
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.Lock()
+	ret, specificReturn := fake.waitUntilCompositeAlarmExistsWithContextReturnsOnCall[len(fake.waitUntilCompositeAlarmExistsWithContextArgsForCall)]
+	fake.waitUntilCompositeAlarmExistsWithContextArgsForCall = append(fake.waitUntilCompositeAlarmExistsWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *cloudwatch.DescribeAlarmsInput
+		arg3 []request.WaiterOption
+	}{arg1, arg2, arg3})
+	stub := fake.WaitUntilCompositeAlarmExistsWithContextStub
+	fakeReturns := fake.waitUntilCompositeAlarmExistsWithContextReturns
+	fake.recordInvocation("WaitUntilCompositeAlarmExistsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsWithContextCallCount() int {
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.RLock()
+	defer fake.waitUntilCompositeAlarmExistsWithContextMutex.RUnlock()
+	return len(fake.waitUntilCompositeAlarmExistsWithContextArgsForCall)
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsWithContextCalls(stub func(context.Context, *cloudwatch.DescribeAlarmsInput, ...request.WaiterOption) error) {
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.Lock()
+	defer fake.waitUntilCompositeAlarmExistsWithContextMutex.Unlock()
+	fake.WaitUntilCompositeAlarmExistsWithContextStub = stub
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsWithContextArgsForCall(i int) (context.Context, *cloudwatch.DescribeAlarmsInput, []request.WaiterOption) {
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.RLock()
+	defer fake.waitUntilCompositeAlarmExistsWithContextMutex.RUnlock()
+	argsForCall := fake.waitUntilCompositeAlarmExistsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsWithContextReturns(result1 error) {
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.Lock()
+	defer fake.waitUntilCompositeAlarmExistsWithContextMutex.Unlock()
+	fake.WaitUntilCompositeAlarmExistsWithContextStub = nil
+	fake.waitUntilCompositeAlarmExistsWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeCloudWatchAPI) WaitUntilCompositeAlarmExistsWithContextReturnsOnCall(i int, result1 error) {
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.Lock()
+	defer fake.waitUntilCompositeAlarmExistsWithContextMutex.Unlock()
+	fake.WaitUntilCompositeAlarmExistsWithContextStub = nil
+	if fake.waitUntilCompositeAlarmExistsWithContextReturnsOnCall == nil {
+		fake.waitUntilCompositeAlarmExistsWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.waitUntilCompositeAlarmExistsWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeCloudWatchAPI) Invocations() map[string][][]interface{} {
 	fake.invocationsMutex.RLock()
 	defer fake.invocationsMutex.RUnlock()
@@ -8049,6 +8432,12 @@ func (fake *FakeCloudWatchAPI) Invocations() map[string][][]interface{} {
 	defer fake.putAnomalyDetectorRequestMutex.RUnlock()
 	fake.putAnomalyDetectorWithContextMutex.RLock()
 	defer fake.putAnomalyDetectorWithContextMutex.RUnlock()
+	fake.putCompositeAlarmMutex.RLock()
+	defer fake.putCompositeAlarmMutex.RUnlock()
+	fake.putCompositeAlarmRequestMutex.RLock()
+	defer fake.putCompositeAlarmRequestMutex.RUnlock()
+	fake.putCompositeAlarmWithContextMutex.RLock()
+	defer fake.putCompositeAlarmWithContextMutex.RUnlock()
 	fake.putDashboardMutex.RLock()
 	defer fake.putDashboardMutex.RUnlock()
 	fake.putDashboardRequestMutex.RLock()
@@ -8095,6 +8484,10 @@ func (fake *FakeCloudWatchAPI) Invocations() map[string][][]interface{} {
 	defer fake.waitUntilAlarmExistsMutex.RUnlock()
 	fake.waitUntilAlarmExistsWithContextMutex.RLock()
 	defer fake.waitUntilAlarmExistsWithContextMutex.RUnlock()
+	fake.waitUntilCompositeAlarmExistsMutex.RLock()
+	defer fake.waitUntilCompositeAlarmExistsMutex.RUnlock()
+	fake.waitUntilCompositeAlarmExistsWithContextMutex.RLock()
+	defer fake.waitUntilCompositeAlarmExistsWithContextMutex.RUnlock()
 	copiedInvocations := map[string][][]interface{}{}
 	for key, value := range fake.invocations {
 		copiedInvocations[key] = value

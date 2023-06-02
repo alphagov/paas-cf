@@ -421,6 +421,47 @@ type FakeElastiCacheAPI struct {
 		result1 *elasticache.CreateCacheSubnetGroupOutput
 		result2 error
 	}
+	CreateGlobalReplicationGroupStub        func(*elasticache.CreateGlobalReplicationGroupInput) (*elasticache.CreateGlobalReplicationGroupOutput, error)
+	createGlobalReplicationGroupMutex       sync.RWMutex
+	createGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.CreateGlobalReplicationGroupInput
+	}
+	createGlobalReplicationGroupReturns struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}
+	createGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}
+	CreateGlobalReplicationGroupRequestStub        func(*elasticache.CreateGlobalReplicationGroupInput) (*request.Request, *elasticache.CreateGlobalReplicationGroupOutput)
+	createGlobalReplicationGroupRequestMutex       sync.RWMutex
+	createGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.CreateGlobalReplicationGroupInput
+	}
+	createGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.CreateGlobalReplicationGroupOutput
+	}
+	createGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.CreateGlobalReplicationGroupOutput
+	}
+	CreateGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.CreateGlobalReplicationGroupInput, ...request.Option) (*elasticache.CreateGlobalReplicationGroupOutput, error)
+	createGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	createGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.CreateGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	createGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}
+	createGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}
 	CreateReplicationGroupStub        func(*elasticache.CreateReplicationGroupInput) (*elasticache.CreateReplicationGroupOutput, error)
 	createReplicationGroupMutex       sync.RWMutex
 	createReplicationGroupArgsForCall []struct {
@@ -501,6 +542,47 @@ type FakeElastiCacheAPI struct {
 	}
 	createSnapshotWithContextReturnsOnCall map[int]struct {
 		result1 *elasticache.CreateSnapshotOutput
+		result2 error
+	}
+	DecreaseNodeGroupsInGlobalReplicationGroupStub        func(*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput) (*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, error)
+	decreaseNodeGroupsInGlobalReplicationGroupMutex       sync.RWMutex
+	decreaseNodeGroupsInGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput
+	}
+	decreaseNodeGroupsInGlobalReplicationGroupReturns struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	decreaseNodeGroupsInGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	DecreaseNodeGroupsInGlobalReplicationGroupRequestStub        func(*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput) (*request.Request, *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput)
+	decreaseNodeGroupsInGlobalReplicationGroupRequestMutex       sync.RWMutex
+	decreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput
+	}
+	decreaseNodeGroupsInGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+	}
+	decreaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+	}
+	DecreaseNodeGroupsInGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput, ...request.Option) (*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, error)
+	decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	decreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	decreaseNodeGroupsInGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	decreaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
 		result2 error
 	}
 	DecreaseReplicaCountStub        func(*elasticache.DecreaseReplicaCountInput) (*elasticache.DecreaseReplicaCountOutput, error)
@@ -706,6 +788,47 @@ type FakeElastiCacheAPI struct {
 	}
 	deleteCacheSubnetGroupWithContextReturnsOnCall map[int]struct {
 		result1 *elasticache.DeleteCacheSubnetGroupOutput
+		result2 error
+	}
+	DeleteGlobalReplicationGroupStub        func(*elasticache.DeleteGlobalReplicationGroupInput) (*elasticache.DeleteGlobalReplicationGroupOutput, error)
+	deleteGlobalReplicationGroupMutex       sync.RWMutex
+	deleteGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.DeleteGlobalReplicationGroupInput
+	}
+	deleteGlobalReplicationGroupReturns struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
+		result2 error
+	}
+	deleteGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
+		result2 error
+	}
+	DeleteGlobalReplicationGroupRequestStub        func(*elasticache.DeleteGlobalReplicationGroupInput) (*request.Request, *elasticache.DeleteGlobalReplicationGroupOutput)
+	deleteGlobalReplicationGroupRequestMutex       sync.RWMutex
+	deleteGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.DeleteGlobalReplicationGroupInput
+	}
+	deleteGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.DeleteGlobalReplicationGroupOutput
+	}
+	deleteGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.DeleteGlobalReplicationGroupOutput
+	}
+	DeleteGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.DeleteGlobalReplicationGroupInput, ...request.Option) (*elasticache.DeleteGlobalReplicationGroupOutput, error)
+	deleteGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	deleteGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DeleteGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	deleteGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
+		result2 error
+	}
+	deleteGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
 		result2 error
 	}
 	DeleteReplicationGroupStub        func(*elasticache.DeleteReplicationGroupInput) (*elasticache.DeleteReplicationGroupOutput, error)
@@ -1326,6 +1449,73 @@ type FakeElastiCacheAPI struct {
 		result1 *elasticache.DescribeEventsOutput
 		result2 error
 	}
+	DescribeGlobalReplicationGroupsStub        func(*elasticache.DescribeGlobalReplicationGroupsInput) (*elasticache.DescribeGlobalReplicationGroupsOutput, error)
+	describeGlobalReplicationGroupsMutex       sync.RWMutex
+	describeGlobalReplicationGroupsArgsForCall []struct {
+		arg1 *elasticache.DescribeGlobalReplicationGroupsInput
+	}
+	describeGlobalReplicationGroupsReturns struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}
+	describeGlobalReplicationGroupsReturnsOnCall map[int]struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}
+	DescribeGlobalReplicationGroupsPagesStub        func(*elasticache.DescribeGlobalReplicationGroupsInput, func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool) error
+	describeGlobalReplicationGroupsPagesMutex       sync.RWMutex
+	describeGlobalReplicationGroupsPagesArgsForCall []struct {
+		arg1 *elasticache.DescribeGlobalReplicationGroupsInput
+		arg2 func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool
+	}
+	describeGlobalReplicationGroupsPagesReturns struct {
+		result1 error
+	}
+	describeGlobalReplicationGroupsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeGlobalReplicationGroupsPagesWithContextStub        func(context.Context, *elasticache.DescribeGlobalReplicationGroupsInput, func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool, ...request.Option) error
+	describeGlobalReplicationGroupsPagesWithContextMutex       sync.RWMutex
+	describeGlobalReplicationGroupsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeGlobalReplicationGroupsInput
+		arg3 func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool
+		arg4 []request.Option
+	}
+	describeGlobalReplicationGroupsPagesWithContextReturns struct {
+		result1 error
+	}
+	describeGlobalReplicationGroupsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
+	DescribeGlobalReplicationGroupsRequestStub        func(*elasticache.DescribeGlobalReplicationGroupsInput) (*request.Request, *elasticache.DescribeGlobalReplicationGroupsOutput)
+	describeGlobalReplicationGroupsRequestMutex       sync.RWMutex
+	describeGlobalReplicationGroupsRequestArgsForCall []struct {
+		arg1 *elasticache.DescribeGlobalReplicationGroupsInput
+	}
+	describeGlobalReplicationGroupsRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeGlobalReplicationGroupsOutput
+	}
+	describeGlobalReplicationGroupsRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeGlobalReplicationGroupsOutput
+	}
+	DescribeGlobalReplicationGroupsWithContextStub        func(context.Context, *elasticache.DescribeGlobalReplicationGroupsInput, ...request.Option) (*elasticache.DescribeGlobalReplicationGroupsOutput, error)
+	describeGlobalReplicationGroupsWithContextMutex       sync.RWMutex
+	describeGlobalReplicationGroupsWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeGlobalReplicationGroupsInput
+		arg3 []request.Option
+	}
+	describeGlobalReplicationGroupsWithContextReturns struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}
+	describeGlobalReplicationGroupsWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}
 	DescribeReplicationGroupsStub        func(*elasticache.DescribeReplicationGroupsInput) (*elasticache.DescribeReplicationGroupsOutput, error)
 	describeReplicationGroupsMutex       sync.RWMutex
 	describeReplicationGroupsArgsForCall []struct {
@@ -1728,6 +1918,129 @@ type FakeElastiCacheAPI struct {
 		result1 *elasticache.DescribeUpdateActionsOutput
 		result2 error
 	}
+	DisassociateGlobalReplicationGroupStub        func(*elasticache.DisassociateGlobalReplicationGroupInput) (*elasticache.DisassociateGlobalReplicationGroupOutput, error)
+	disassociateGlobalReplicationGroupMutex       sync.RWMutex
+	disassociateGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.DisassociateGlobalReplicationGroupInput
+	}
+	disassociateGlobalReplicationGroupReturns struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}
+	disassociateGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}
+	DisassociateGlobalReplicationGroupRequestStub        func(*elasticache.DisassociateGlobalReplicationGroupInput) (*request.Request, *elasticache.DisassociateGlobalReplicationGroupOutput)
+	disassociateGlobalReplicationGroupRequestMutex       sync.RWMutex
+	disassociateGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.DisassociateGlobalReplicationGroupInput
+	}
+	disassociateGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.DisassociateGlobalReplicationGroupOutput
+	}
+	disassociateGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.DisassociateGlobalReplicationGroupOutput
+	}
+	DisassociateGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.DisassociateGlobalReplicationGroupInput, ...request.Option) (*elasticache.DisassociateGlobalReplicationGroupOutput, error)
+	disassociateGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	disassociateGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.DisassociateGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	disassociateGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}
+	disassociateGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}
+	FailoverGlobalReplicationGroupStub        func(*elasticache.FailoverGlobalReplicationGroupInput) (*elasticache.FailoverGlobalReplicationGroupOutput, error)
+	failoverGlobalReplicationGroupMutex       sync.RWMutex
+	failoverGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.FailoverGlobalReplicationGroupInput
+	}
+	failoverGlobalReplicationGroupReturns struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}
+	failoverGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}
+	FailoverGlobalReplicationGroupRequestStub        func(*elasticache.FailoverGlobalReplicationGroupInput) (*request.Request, *elasticache.FailoverGlobalReplicationGroupOutput)
+	failoverGlobalReplicationGroupRequestMutex       sync.RWMutex
+	failoverGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.FailoverGlobalReplicationGroupInput
+	}
+	failoverGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.FailoverGlobalReplicationGroupOutput
+	}
+	failoverGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.FailoverGlobalReplicationGroupOutput
+	}
+	FailoverGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.FailoverGlobalReplicationGroupInput, ...request.Option) (*elasticache.FailoverGlobalReplicationGroupOutput, error)
+	failoverGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	failoverGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.FailoverGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	failoverGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}
+	failoverGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}
+	IncreaseNodeGroupsInGlobalReplicationGroupStub        func(*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput) (*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, error)
+	increaseNodeGroupsInGlobalReplicationGroupMutex       sync.RWMutex
+	increaseNodeGroupsInGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput
+	}
+	increaseNodeGroupsInGlobalReplicationGroupReturns struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	increaseNodeGroupsInGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	IncreaseNodeGroupsInGlobalReplicationGroupRequestStub        func(*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput) (*request.Request, *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput)
+	increaseNodeGroupsInGlobalReplicationGroupRequestMutex       sync.RWMutex
+	increaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput
+	}
+	increaseNodeGroupsInGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+	}
+	increaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+	}
+	IncreaseNodeGroupsInGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput, ...request.Option) (*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, error)
+	increaseNodeGroupsInGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	increaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	increaseNodeGroupsInGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	increaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}
 	IncreaseReplicaCountStub        func(*elasticache.IncreaseReplicaCountInput) (*elasticache.IncreaseReplicaCountOutput, error)
 	increaseReplicaCountMutex       sync.RWMutex
 	increaseReplicaCountArgsForCall []struct {
@@ -1974,6 +2287,47 @@ type FakeElastiCacheAPI struct {
 		result1 *elasticache.ModifyCacheSubnetGroupOutput
 		result2 error
 	}
+	ModifyGlobalReplicationGroupStub        func(*elasticache.ModifyGlobalReplicationGroupInput) (*elasticache.ModifyGlobalReplicationGroupOutput, error)
+	modifyGlobalReplicationGroupMutex       sync.RWMutex
+	modifyGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.ModifyGlobalReplicationGroupInput
+	}
+	modifyGlobalReplicationGroupReturns struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}
+	modifyGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}
+	ModifyGlobalReplicationGroupRequestStub        func(*elasticache.ModifyGlobalReplicationGroupInput) (*request.Request, *elasticache.ModifyGlobalReplicationGroupOutput)
+	modifyGlobalReplicationGroupRequestMutex       sync.RWMutex
+	modifyGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.ModifyGlobalReplicationGroupInput
+	}
+	modifyGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.ModifyGlobalReplicationGroupOutput
+	}
+	modifyGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.ModifyGlobalReplicationGroupOutput
+	}
+	ModifyGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.ModifyGlobalReplicationGroupInput, ...request.Option) (*elasticache.ModifyGlobalReplicationGroupOutput, error)
+	modifyGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	modifyGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.ModifyGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	modifyGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}
+	modifyGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}
 	ModifyReplicationGroupStub        func(*elasticache.ModifyReplicationGroupInput) (*elasticache.ModifyReplicationGroupOutput, error)
 	modifyReplicationGroupMutex       sync.RWMutex
 	modifyReplicationGroupArgsForCall []struct {
@@ -2095,6 +2449,47 @@ type FakeElastiCacheAPI struct {
 	}
 	purchaseReservedCacheNodesOfferingWithContextReturnsOnCall map[int]struct {
 		result1 *elasticache.PurchaseReservedCacheNodesOfferingOutput
+		result2 error
+	}
+	RebalanceSlotsInGlobalReplicationGroupStub        func(*elasticache.RebalanceSlotsInGlobalReplicationGroupInput) (*elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, error)
+	rebalanceSlotsInGlobalReplicationGroupMutex       sync.RWMutex
+	rebalanceSlotsInGlobalReplicationGroupArgsForCall []struct {
+		arg1 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput
+	}
+	rebalanceSlotsInGlobalReplicationGroupReturns struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	rebalanceSlotsInGlobalReplicationGroupReturnsOnCall map[int]struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	RebalanceSlotsInGlobalReplicationGroupRequestStub        func(*elasticache.RebalanceSlotsInGlobalReplicationGroupInput) (*request.Request, *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput)
+	rebalanceSlotsInGlobalReplicationGroupRequestMutex       sync.RWMutex
+	rebalanceSlotsInGlobalReplicationGroupRequestArgsForCall []struct {
+		arg1 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput
+	}
+	rebalanceSlotsInGlobalReplicationGroupRequestReturns struct {
+		result1 *request.Request
+		result2 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+	}
+	rebalanceSlotsInGlobalReplicationGroupRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+	}
+	RebalanceSlotsInGlobalReplicationGroupWithContextStub        func(context.Context, *elasticache.RebalanceSlotsInGlobalReplicationGroupInput, ...request.Option) (*elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, error)
+	rebalanceSlotsInGlobalReplicationGroupWithContextMutex       sync.RWMutex
+	rebalanceSlotsInGlobalReplicationGroupWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput
+		arg3 []request.Option
+	}
+	rebalanceSlotsInGlobalReplicationGroupWithContextReturns struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+		result2 error
+	}
+	rebalanceSlotsInGlobalReplicationGroupWithContextReturnsOnCall map[int]struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
 		result2 error
 	}
 	RebootCacheClusterStub        func(*elasticache.RebootCacheClusterInput) (*elasticache.RebootCacheClusterOutput, error)
@@ -4383,6 +4778,200 @@ func (fake *FakeElastiCacheAPI) CreateCacheSubnetGroupWithContextReturnsOnCall(i
 	}{result1, result2}
 }
 
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroup(arg1 *elasticache.CreateGlobalReplicationGroupInput) (*elasticache.CreateGlobalReplicationGroupOutput, error) {
+	fake.createGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.createGlobalReplicationGroupReturnsOnCall[len(fake.createGlobalReplicationGroupArgsForCall)]
+	fake.createGlobalReplicationGroupArgsForCall = append(fake.createGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.CreateGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.CreateGlobalReplicationGroupStub
+	fakeReturns := fake.createGlobalReplicationGroupReturns
+	fake.recordInvocation("CreateGlobalReplicationGroup", []interface{}{arg1})
+	fake.createGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupCallCount() int {
+	fake.createGlobalReplicationGroupMutex.RLock()
+	defer fake.createGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.createGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupCalls(stub func(*elasticache.CreateGlobalReplicationGroupInput) (*elasticache.CreateGlobalReplicationGroupOutput, error)) {
+	fake.createGlobalReplicationGroupMutex.Lock()
+	defer fake.createGlobalReplicationGroupMutex.Unlock()
+	fake.CreateGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupArgsForCall(i int) *elasticache.CreateGlobalReplicationGroupInput {
+	fake.createGlobalReplicationGroupMutex.RLock()
+	defer fake.createGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.createGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupReturns(result1 *elasticache.CreateGlobalReplicationGroupOutput, result2 error) {
+	fake.createGlobalReplicationGroupMutex.Lock()
+	defer fake.createGlobalReplicationGroupMutex.Unlock()
+	fake.CreateGlobalReplicationGroupStub = nil
+	fake.createGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.CreateGlobalReplicationGroupOutput, result2 error) {
+	fake.createGlobalReplicationGroupMutex.Lock()
+	defer fake.createGlobalReplicationGroupMutex.Unlock()
+	fake.CreateGlobalReplicationGroupStub = nil
+	if fake.createGlobalReplicationGroupReturnsOnCall == nil {
+		fake.createGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.CreateGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.createGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupRequest(arg1 *elasticache.CreateGlobalReplicationGroupInput) (*request.Request, *elasticache.CreateGlobalReplicationGroupOutput) {
+	fake.createGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.createGlobalReplicationGroupRequestReturnsOnCall[len(fake.createGlobalReplicationGroupRequestArgsForCall)]
+	fake.createGlobalReplicationGroupRequestArgsForCall = append(fake.createGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.CreateGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.CreateGlobalReplicationGroupRequestStub
+	fakeReturns := fake.createGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("CreateGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.createGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupRequestCallCount() int {
+	fake.createGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.createGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.createGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupRequestCalls(stub func(*elasticache.CreateGlobalReplicationGroupInput) (*request.Request, *elasticache.CreateGlobalReplicationGroupOutput)) {
+	fake.createGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.createGlobalReplicationGroupRequestMutex.Unlock()
+	fake.CreateGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.CreateGlobalReplicationGroupInput {
+	fake.createGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.createGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.createGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.CreateGlobalReplicationGroupOutput) {
+	fake.createGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.createGlobalReplicationGroupRequestMutex.Unlock()
+	fake.CreateGlobalReplicationGroupRequestStub = nil
+	fake.createGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.CreateGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.CreateGlobalReplicationGroupOutput) {
+	fake.createGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.createGlobalReplicationGroupRequestMutex.Unlock()
+	fake.CreateGlobalReplicationGroupRequestStub = nil
+	if fake.createGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.createGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.CreateGlobalReplicationGroupOutput
+		})
+	}
+	fake.createGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.CreateGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.CreateGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.CreateGlobalReplicationGroupOutput, error) {
+	fake.createGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.createGlobalReplicationGroupWithContextReturnsOnCall[len(fake.createGlobalReplicationGroupWithContextArgsForCall)]
+	fake.createGlobalReplicationGroupWithContextArgsForCall = append(fake.createGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.CreateGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.CreateGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.createGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("CreateGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.createGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupWithContextCallCount() int {
+	fake.createGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.createGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.createGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.CreateGlobalReplicationGroupInput, ...request.Option) (*elasticache.CreateGlobalReplicationGroupOutput, error)) {
+	fake.createGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.createGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.CreateGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.CreateGlobalReplicationGroupInput, []request.Option) {
+	fake.createGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.createGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.createGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupWithContextReturns(result1 *elasticache.CreateGlobalReplicationGroupOutput, result2 error) {
+	fake.createGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.createGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.CreateGlobalReplicationGroupWithContextStub = nil
+	fake.createGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) CreateGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.CreateGlobalReplicationGroupOutput, result2 error) {
+	fake.createGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.createGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.CreateGlobalReplicationGroupWithContextStub = nil
+	if fake.createGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.createGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.CreateGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.createGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.CreateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeElastiCacheAPI) CreateReplicationGroup(arg1 *elasticache.CreateReplicationGroupInput) (*elasticache.CreateReplicationGroupOutput, error) {
 	fake.createReplicationGroupMutex.Lock()
 	ret, specificReturn := fake.createReplicationGroupReturnsOnCall[len(fake.createReplicationGroupArgsForCall)]
@@ -4767,6 +5356,200 @@ func (fake *FakeElastiCacheAPI) CreateSnapshotWithContextReturnsOnCall(i int, re
 	}
 	fake.createSnapshotWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.CreateSnapshotOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroup(arg1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput) (*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, error) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.decreaseNodeGroupsInGlobalReplicationGroupReturnsOnCall[len(fake.decreaseNodeGroupsInGlobalReplicationGroupArgsForCall)]
+	fake.decreaseNodeGroupsInGlobalReplicationGroupArgsForCall = append(fake.decreaseNodeGroupsInGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.DecreaseNodeGroupsInGlobalReplicationGroupStub
+	fakeReturns := fake.decreaseNodeGroupsInGlobalReplicationGroupReturns
+	fake.recordInvocation("DecreaseNodeGroupsInGlobalReplicationGroup", []interface{}{arg1})
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupCallCount() int {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.decreaseNodeGroupsInGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupCalls(stub func(*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput) (*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, error)) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupArgsForCall(i int) *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.decreaseNodeGroupsInGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupReturns(result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupStub = nil
+	fake.decreaseNodeGroupsInGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupStub = nil
+	if fake.decreaseNodeGroupsInGlobalReplicationGroupReturnsOnCall == nil {
+		fake.decreaseNodeGroupsInGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.decreaseNodeGroupsInGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupRequest(arg1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput) (*request.Request, *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.decreaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall[len(fake.decreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall)]
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall = append(fake.decreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.DecreaseNodeGroupsInGlobalReplicationGroupRequestStub
+	fakeReturns := fake.decreaseNodeGroupsInGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("DecreaseNodeGroupsInGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupRequestCallCount() int {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.decreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupRequestCalls(stub func(*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput) (*request.Request, *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput)) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.decreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupRequestStub = nil
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupRequestStub = nil
+	if fake.decreaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.decreaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+		})
+	}
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, error) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall[len(fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall)]
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall = append(fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.DecreaseNodeGroupsInGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("DecreaseNodeGroupsInGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupWithContextCallCount() int {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput, ...request.Option) (*elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, error)) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupInput, []request.Option) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupWithContextReturns(result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupWithContextStub = nil
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DecreaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DecreaseNodeGroupsInGlobalReplicationGroupWithContextStub = nil
+	if fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.DecreaseNodeGroupsInGlobalReplicationGroupOutput
 		result2 error
 	}{result1, result2}
 }
@@ -5737,6 +6520,200 @@ func (fake *FakeElastiCacheAPI) DeleteCacheSubnetGroupWithContextReturnsOnCall(i
 	}
 	fake.deleteCacheSubnetGroupWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.DeleteCacheSubnetGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroup(arg1 *elasticache.DeleteGlobalReplicationGroupInput) (*elasticache.DeleteGlobalReplicationGroupOutput, error) {
+	fake.deleteGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.deleteGlobalReplicationGroupReturnsOnCall[len(fake.deleteGlobalReplicationGroupArgsForCall)]
+	fake.deleteGlobalReplicationGroupArgsForCall = append(fake.deleteGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.DeleteGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.DeleteGlobalReplicationGroupStub
+	fakeReturns := fake.deleteGlobalReplicationGroupReturns
+	fake.recordInvocation("DeleteGlobalReplicationGroup", []interface{}{arg1})
+	fake.deleteGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupCallCount() int {
+	fake.deleteGlobalReplicationGroupMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.deleteGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupCalls(stub func(*elasticache.DeleteGlobalReplicationGroupInput) (*elasticache.DeleteGlobalReplicationGroupOutput, error)) {
+	fake.deleteGlobalReplicationGroupMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupArgsForCall(i int) *elasticache.DeleteGlobalReplicationGroupInput {
+	fake.deleteGlobalReplicationGroupMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.deleteGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupReturns(result1 *elasticache.DeleteGlobalReplicationGroupOutput, result2 error) {
+	fake.deleteGlobalReplicationGroupMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupStub = nil
+	fake.deleteGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.DeleteGlobalReplicationGroupOutput, result2 error) {
+	fake.deleteGlobalReplicationGroupMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupStub = nil
+	if fake.deleteGlobalReplicationGroupReturnsOnCall == nil {
+		fake.deleteGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DeleteGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.deleteGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupRequest(arg1 *elasticache.DeleteGlobalReplicationGroupInput) (*request.Request, *elasticache.DeleteGlobalReplicationGroupOutput) {
+	fake.deleteGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.deleteGlobalReplicationGroupRequestReturnsOnCall[len(fake.deleteGlobalReplicationGroupRequestArgsForCall)]
+	fake.deleteGlobalReplicationGroupRequestArgsForCall = append(fake.deleteGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.DeleteGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.DeleteGlobalReplicationGroupRequestStub
+	fakeReturns := fake.deleteGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("DeleteGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.deleteGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupRequestCallCount() int {
+	fake.deleteGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.deleteGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupRequestCalls(stub func(*elasticache.DeleteGlobalReplicationGroupInput) (*request.Request, *elasticache.DeleteGlobalReplicationGroupOutput)) {
+	fake.deleteGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.DeleteGlobalReplicationGroupInput {
+	fake.deleteGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.deleteGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.DeleteGlobalReplicationGroupOutput) {
+	fake.deleteGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupRequestStub = nil
+	fake.deleteGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.DeleteGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.DeleteGlobalReplicationGroupOutput) {
+	fake.deleteGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupRequestStub = nil
+	if fake.deleteGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.deleteGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.DeleteGlobalReplicationGroupOutput
+		})
+	}
+	fake.deleteGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.DeleteGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.DeleteGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.DeleteGlobalReplicationGroupOutput, error) {
+	fake.deleteGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.deleteGlobalReplicationGroupWithContextReturnsOnCall[len(fake.deleteGlobalReplicationGroupWithContextArgsForCall)]
+	fake.deleteGlobalReplicationGroupWithContextArgsForCall = append(fake.deleteGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DeleteGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.DeleteGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.deleteGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("DeleteGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.deleteGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupWithContextCallCount() int {
+	fake.deleteGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.deleteGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.DeleteGlobalReplicationGroupInput, ...request.Option) (*elasticache.DeleteGlobalReplicationGroupOutput, error)) {
+	fake.deleteGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.DeleteGlobalReplicationGroupInput, []request.Option) {
+	fake.deleteGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.deleteGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupWithContextReturns(result1 *elasticache.DeleteGlobalReplicationGroupOutput, result2 error) {
+	fake.deleteGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupWithContextStub = nil
+	fake.deleteGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DeleteGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.DeleteGlobalReplicationGroupOutput, result2 error) {
+	fake.deleteGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.deleteGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DeleteGlobalReplicationGroupWithContextStub = nil
+	if fake.deleteGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.deleteGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DeleteGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.deleteGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.DeleteGlobalReplicationGroupOutput
 		result2 error
 	}{result1, result2}
 }
@@ -8689,6 +9666,326 @@ func (fake *FakeElastiCacheAPI) DescribeEventsWithContextReturnsOnCall(i int, re
 	}{result1, result2}
 }
 
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroups(arg1 *elasticache.DescribeGlobalReplicationGroupsInput) (*elasticache.DescribeGlobalReplicationGroupsOutput, error) {
+	fake.describeGlobalReplicationGroupsMutex.Lock()
+	ret, specificReturn := fake.describeGlobalReplicationGroupsReturnsOnCall[len(fake.describeGlobalReplicationGroupsArgsForCall)]
+	fake.describeGlobalReplicationGroupsArgsForCall = append(fake.describeGlobalReplicationGroupsArgsForCall, struct {
+		arg1 *elasticache.DescribeGlobalReplicationGroupsInput
+	}{arg1})
+	stub := fake.DescribeGlobalReplicationGroupsStub
+	fakeReturns := fake.describeGlobalReplicationGroupsReturns
+	fake.recordInvocation("DescribeGlobalReplicationGroups", []interface{}{arg1})
+	fake.describeGlobalReplicationGroupsMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsCallCount() int {
+	fake.describeGlobalReplicationGroupsMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsMutex.RUnlock()
+	return len(fake.describeGlobalReplicationGroupsArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsCalls(stub func(*elasticache.DescribeGlobalReplicationGroupsInput) (*elasticache.DescribeGlobalReplicationGroupsOutput, error)) {
+	fake.describeGlobalReplicationGroupsMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsArgsForCall(i int) *elasticache.DescribeGlobalReplicationGroupsInput {
+	fake.describeGlobalReplicationGroupsMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsMutex.RUnlock()
+	argsForCall := fake.describeGlobalReplicationGroupsArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsReturns(result1 *elasticache.DescribeGlobalReplicationGroupsOutput, result2 error) {
+	fake.describeGlobalReplicationGroupsMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsStub = nil
+	fake.describeGlobalReplicationGroupsReturns = struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsReturnsOnCall(i int, result1 *elasticache.DescribeGlobalReplicationGroupsOutput, result2 error) {
+	fake.describeGlobalReplicationGroupsMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsStub = nil
+	if fake.describeGlobalReplicationGroupsReturnsOnCall == nil {
+		fake.describeGlobalReplicationGroupsReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+			result2 error
+		})
+	}
+	fake.describeGlobalReplicationGroupsReturnsOnCall[i] = struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPages(arg1 *elasticache.DescribeGlobalReplicationGroupsInput, arg2 func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool) error {
+	fake.describeGlobalReplicationGroupsPagesMutex.Lock()
+	ret, specificReturn := fake.describeGlobalReplicationGroupsPagesReturnsOnCall[len(fake.describeGlobalReplicationGroupsPagesArgsForCall)]
+	fake.describeGlobalReplicationGroupsPagesArgsForCall = append(fake.describeGlobalReplicationGroupsPagesArgsForCall, struct {
+		arg1 *elasticache.DescribeGlobalReplicationGroupsInput
+		arg2 func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.DescribeGlobalReplicationGroupsPagesStub
+	fakeReturns := fake.describeGlobalReplicationGroupsPagesReturns
+	fake.recordInvocation("DescribeGlobalReplicationGroupsPages", []interface{}{arg1, arg2})
+	fake.describeGlobalReplicationGroupsPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesCallCount() int {
+	fake.describeGlobalReplicationGroupsPagesMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsPagesMutex.RUnlock()
+	return len(fake.describeGlobalReplicationGroupsPagesArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesCalls(stub func(*elasticache.DescribeGlobalReplicationGroupsInput, func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool) error) {
+	fake.describeGlobalReplicationGroupsPagesMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsPagesMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsPagesStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesArgsForCall(i int) (*elasticache.DescribeGlobalReplicationGroupsInput, func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool) {
+	fake.describeGlobalReplicationGroupsPagesMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsPagesMutex.RUnlock()
+	argsForCall := fake.describeGlobalReplicationGroupsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesReturns(result1 error) {
+	fake.describeGlobalReplicationGroupsPagesMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsPagesMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsPagesStub = nil
+	fake.describeGlobalReplicationGroupsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesReturnsOnCall(i int, result1 error) {
+	fake.describeGlobalReplicationGroupsPagesMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsPagesMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsPagesStub = nil
+	if fake.describeGlobalReplicationGroupsPagesReturnsOnCall == nil {
+		fake.describeGlobalReplicationGroupsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeGlobalReplicationGroupsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesWithContext(arg1 context.Context, arg2 *elasticache.DescribeGlobalReplicationGroupsInput, arg3 func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.describeGlobalReplicationGroupsPagesWithContextReturnsOnCall[len(fake.describeGlobalReplicationGroupsPagesWithContextArgsForCall)]
+	fake.describeGlobalReplicationGroupsPagesWithContextArgsForCall = append(fake.describeGlobalReplicationGroupsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeGlobalReplicationGroupsInput
+		arg3 func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.DescribeGlobalReplicationGroupsPagesWithContextStub
+	fakeReturns := fake.describeGlobalReplicationGroupsPagesWithContextReturns
+	fake.recordInvocation("DescribeGlobalReplicationGroupsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesWithContextCallCount() int {
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsPagesWithContextMutex.RUnlock()
+	return len(fake.describeGlobalReplicationGroupsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesWithContextCalls(stub func(context.Context, *elasticache.DescribeGlobalReplicationGroupsInput, func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool, ...request.Option) error) {
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsPagesWithContextMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsPagesWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeGlobalReplicationGroupsInput, func(*elasticache.DescribeGlobalReplicationGroupsOutput, bool) bool, []request.Option) {
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.describeGlobalReplicationGroupsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesWithContextReturns(result1 error) {
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsPagesWithContextMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsPagesWithContextStub = nil
+	fake.describeGlobalReplicationGroupsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsPagesWithContextMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsPagesWithContextStub = nil
+	if fake.describeGlobalReplicationGroupsPagesWithContextReturnsOnCall == nil {
+		fake.describeGlobalReplicationGroupsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.describeGlobalReplicationGroupsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsRequest(arg1 *elasticache.DescribeGlobalReplicationGroupsInput) (*request.Request, *elasticache.DescribeGlobalReplicationGroupsOutput) {
+	fake.describeGlobalReplicationGroupsRequestMutex.Lock()
+	ret, specificReturn := fake.describeGlobalReplicationGroupsRequestReturnsOnCall[len(fake.describeGlobalReplicationGroupsRequestArgsForCall)]
+	fake.describeGlobalReplicationGroupsRequestArgsForCall = append(fake.describeGlobalReplicationGroupsRequestArgsForCall, struct {
+		arg1 *elasticache.DescribeGlobalReplicationGroupsInput
+	}{arg1})
+	stub := fake.DescribeGlobalReplicationGroupsRequestStub
+	fakeReturns := fake.describeGlobalReplicationGroupsRequestReturns
+	fake.recordInvocation("DescribeGlobalReplicationGroupsRequest", []interface{}{arg1})
+	fake.describeGlobalReplicationGroupsRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsRequestCallCount() int {
+	fake.describeGlobalReplicationGroupsRequestMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsRequestMutex.RUnlock()
+	return len(fake.describeGlobalReplicationGroupsRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsRequestCalls(stub func(*elasticache.DescribeGlobalReplicationGroupsInput) (*request.Request, *elasticache.DescribeGlobalReplicationGroupsOutput)) {
+	fake.describeGlobalReplicationGroupsRequestMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsRequestMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsRequestArgsForCall(i int) *elasticache.DescribeGlobalReplicationGroupsInput {
+	fake.describeGlobalReplicationGroupsRequestMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsRequestMutex.RUnlock()
+	argsForCall := fake.describeGlobalReplicationGroupsRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsRequestReturns(result1 *request.Request, result2 *elasticache.DescribeGlobalReplicationGroupsOutput) {
+	fake.describeGlobalReplicationGroupsRequestMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsRequestMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsRequestStub = nil
+	fake.describeGlobalReplicationGroupsRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeGlobalReplicationGroupsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.DescribeGlobalReplicationGroupsOutput) {
+	fake.describeGlobalReplicationGroupsRequestMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsRequestMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsRequestStub = nil
+	if fake.describeGlobalReplicationGroupsRequestReturnsOnCall == nil {
+		fake.describeGlobalReplicationGroupsRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.DescribeGlobalReplicationGroupsOutput
+		})
+	}
+	fake.describeGlobalReplicationGroupsRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.DescribeGlobalReplicationGroupsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsWithContext(arg1 context.Context, arg2 *elasticache.DescribeGlobalReplicationGroupsInput, arg3 ...request.Option) (*elasticache.DescribeGlobalReplicationGroupsOutput, error) {
+	fake.describeGlobalReplicationGroupsWithContextMutex.Lock()
+	ret, specificReturn := fake.describeGlobalReplicationGroupsWithContextReturnsOnCall[len(fake.describeGlobalReplicationGroupsWithContextArgsForCall)]
+	fake.describeGlobalReplicationGroupsWithContextArgsForCall = append(fake.describeGlobalReplicationGroupsWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DescribeGlobalReplicationGroupsInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.DescribeGlobalReplicationGroupsWithContextStub
+	fakeReturns := fake.describeGlobalReplicationGroupsWithContextReturns
+	fake.recordInvocation("DescribeGlobalReplicationGroupsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.describeGlobalReplicationGroupsWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsWithContextCallCount() int {
+	fake.describeGlobalReplicationGroupsWithContextMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsWithContextMutex.RUnlock()
+	return len(fake.describeGlobalReplicationGroupsWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsWithContextCalls(stub func(context.Context, *elasticache.DescribeGlobalReplicationGroupsInput, ...request.Option) (*elasticache.DescribeGlobalReplicationGroupsOutput, error)) {
+	fake.describeGlobalReplicationGroupsWithContextMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsWithContextMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsWithContextArgsForCall(i int) (context.Context, *elasticache.DescribeGlobalReplicationGroupsInput, []request.Option) {
+	fake.describeGlobalReplicationGroupsWithContextMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsWithContextMutex.RUnlock()
+	argsForCall := fake.describeGlobalReplicationGroupsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsWithContextReturns(result1 *elasticache.DescribeGlobalReplicationGroupsOutput, result2 error) {
+	fake.describeGlobalReplicationGroupsWithContextMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsWithContextMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsWithContextStub = nil
+	fake.describeGlobalReplicationGroupsWithContextReturns = struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DescribeGlobalReplicationGroupsWithContextReturnsOnCall(i int, result1 *elasticache.DescribeGlobalReplicationGroupsOutput, result2 error) {
+	fake.describeGlobalReplicationGroupsWithContextMutex.Lock()
+	defer fake.describeGlobalReplicationGroupsWithContextMutex.Unlock()
+	fake.DescribeGlobalReplicationGroupsWithContextStub = nil
+	if fake.describeGlobalReplicationGroupsWithContextReturnsOnCall == nil {
+		fake.describeGlobalReplicationGroupsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+			result2 error
+		})
+	}
+	fake.describeGlobalReplicationGroupsWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.DescribeGlobalReplicationGroupsOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeElastiCacheAPI) DescribeReplicationGroups(arg1 *elasticache.DescribeReplicationGroupsInput) (*elasticache.DescribeReplicationGroupsOutput, error) {
 	fake.describeReplicationGroupsMutex.Lock()
 	ret, specificReturn := fake.describeReplicationGroupsReturnsOnCall[len(fake.describeReplicationGroupsArgsForCall)]
@@ -10609,6 +11906,588 @@ func (fake *FakeElastiCacheAPI) DescribeUpdateActionsWithContextReturnsOnCall(i 
 	}{result1, result2}
 }
 
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroup(arg1 *elasticache.DisassociateGlobalReplicationGroupInput) (*elasticache.DisassociateGlobalReplicationGroupOutput, error) {
+	fake.disassociateGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.disassociateGlobalReplicationGroupReturnsOnCall[len(fake.disassociateGlobalReplicationGroupArgsForCall)]
+	fake.disassociateGlobalReplicationGroupArgsForCall = append(fake.disassociateGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.DisassociateGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.DisassociateGlobalReplicationGroupStub
+	fakeReturns := fake.disassociateGlobalReplicationGroupReturns
+	fake.recordInvocation("DisassociateGlobalReplicationGroup", []interface{}{arg1})
+	fake.disassociateGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupCallCount() int {
+	fake.disassociateGlobalReplicationGroupMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.disassociateGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupCalls(stub func(*elasticache.DisassociateGlobalReplicationGroupInput) (*elasticache.DisassociateGlobalReplicationGroupOutput, error)) {
+	fake.disassociateGlobalReplicationGroupMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupArgsForCall(i int) *elasticache.DisassociateGlobalReplicationGroupInput {
+	fake.disassociateGlobalReplicationGroupMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.disassociateGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupReturns(result1 *elasticache.DisassociateGlobalReplicationGroupOutput, result2 error) {
+	fake.disassociateGlobalReplicationGroupMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupStub = nil
+	fake.disassociateGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.DisassociateGlobalReplicationGroupOutput, result2 error) {
+	fake.disassociateGlobalReplicationGroupMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupStub = nil
+	if fake.disassociateGlobalReplicationGroupReturnsOnCall == nil {
+		fake.disassociateGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.disassociateGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupRequest(arg1 *elasticache.DisassociateGlobalReplicationGroupInput) (*request.Request, *elasticache.DisassociateGlobalReplicationGroupOutput) {
+	fake.disassociateGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.disassociateGlobalReplicationGroupRequestReturnsOnCall[len(fake.disassociateGlobalReplicationGroupRequestArgsForCall)]
+	fake.disassociateGlobalReplicationGroupRequestArgsForCall = append(fake.disassociateGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.DisassociateGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.DisassociateGlobalReplicationGroupRequestStub
+	fakeReturns := fake.disassociateGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("DisassociateGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.disassociateGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupRequestCallCount() int {
+	fake.disassociateGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.disassociateGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupRequestCalls(stub func(*elasticache.DisassociateGlobalReplicationGroupInput) (*request.Request, *elasticache.DisassociateGlobalReplicationGroupOutput)) {
+	fake.disassociateGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.DisassociateGlobalReplicationGroupInput {
+	fake.disassociateGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.disassociateGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.DisassociateGlobalReplicationGroupOutput) {
+	fake.disassociateGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupRequestStub = nil
+	fake.disassociateGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.DisassociateGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.DisassociateGlobalReplicationGroupOutput) {
+	fake.disassociateGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupRequestMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupRequestStub = nil
+	if fake.disassociateGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.disassociateGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.DisassociateGlobalReplicationGroupOutput
+		})
+	}
+	fake.disassociateGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.DisassociateGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.DisassociateGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.DisassociateGlobalReplicationGroupOutput, error) {
+	fake.disassociateGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.disassociateGlobalReplicationGroupWithContextReturnsOnCall[len(fake.disassociateGlobalReplicationGroupWithContextArgsForCall)]
+	fake.disassociateGlobalReplicationGroupWithContextArgsForCall = append(fake.disassociateGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.DisassociateGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.DisassociateGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.disassociateGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("DisassociateGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.disassociateGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupWithContextCallCount() int {
+	fake.disassociateGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.disassociateGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.DisassociateGlobalReplicationGroupInput, ...request.Option) (*elasticache.DisassociateGlobalReplicationGroupOutput, error)) {
+	fake.disassociateGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.DisassociateGlobalReplicationGroupInput, []request.Option) {
+	fake.disassociateGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.disassociateGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupWithContextReturns(result1 *elasticache.DisassociateGlobalReplicationGroupOutput, result2 error) {
+	fake.disassociateGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupWithContextStub = nil
+	fake.disassociateGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) DisassociateGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.DisassociateGlobalReplicationGroupOutput, result2 error) {
+	fake.disassociateGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.disassociateGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.DisassociateGlobalReplicationGroupWithContextStub = nil
+	if fake.disassociateGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.disassociateGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.disassociateGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.DisassociateGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroup(arg1 *elasticache.FailoverGlobalReplicationGroupInput) (*elasticache.FailoverGlobalReplicationGroupOutput, error) {
+	fake.failoverGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.failoverGlobalReplicationGroupReturnsOnCall[len(fake.failoverGlobalReplicationGroupArgsForCall)]
+	fake.failoverGlobalReplicationGroupArgsForCall = append(fake.failoverGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.FailoverGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.FailoverGlobalReplicationGroupStub
+	fakeReturns := fake.failoverGlobalReplicationGroupReturns
+	fake.recordInvocation("FailoverGlobalReplicationGroup", []interface{}{arg1})
+	fake.failoverGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupCallCount() int {
+	fake.failoverGlobalReplicationGroupMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.failoverGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupCalls(stub func(*elasticache.FailoverGlobalReplicationGroupInput) (*elasticache.FailoverGlobalReplicationGroupOutput, error)) {
+	fake.failoverGlobalReplicationGroupMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupArgsForCall(i int) *elasticache.FailoverGlobalReplicationGroupInput {
+	fake.failoverGlobalReplicationGroupMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.failoverGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupReturns(result1 *elasticache.FailoverGlobalReplicationGroupOutput, result2 error) {
+	fake.failoverGlobalReplicationGroupMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupStub = nil
+	fake.failoverGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.FailoverGlobalReplicationGroupOutput, result2 error) {
+	fake.failoverGlobalReplicationGroupMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupStub = nil
+	if fake.failoverGlobalReplicationGroupReturnsOnCall == nil {
+		fake.failoverGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.FailoverGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.failoverGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupRequest(arg1 *elasticache.FailoverGlobalReplicationGroupInput) (*request.Request, *elasticache.FailoverGlobalReplicationGroupOutput) {
+	fake.failoverGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.failoverGlobalReplicationGroupRequestReturnsOnCall[len(fake.failoverGlobalReplicationGroupRequestArgsForCall)]
+	fake.failoverGlobalReplicationGroupRequestArgsForCall = append(fake.failoverGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.FailoverGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.FailoverGlobalReplicationGroupRequestStub
+	fakeReturns := fake.failoverGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("FailoverGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.failoverGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupRequestCallCount() int {
+	fake.failoverGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.failoverGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupRequestCalls(stub func(*elasticache.FailoverGlobalReplicationGroupInput) (*request.Request, *elasticache.FailoverGlobalReplicationGroupOutput)) {
+	fake.failoverGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupRequestMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.FailoverGlobalReplicationGroupInput {
+	fake.failoverGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.failoverGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.FailoverGlobalReplicationGroupOutput) {
+	fake.failoverGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupRequestMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupRequestStub = nil
+	fake.failoverGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.FailoverGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.FailoverGlobalReplicationGroupOutput) {
+	fake.failoverGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupRequestMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupRequestStub = nil
+	if fake.failoverGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.failoverGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.FailoverGlobalReplicationGroupOutput
+		})
+	}
+	fake.failoverGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.FailoverGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.FailoverGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.FailoverGlobalReplicationGroupOutput, error) {
+	fake.failoverGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.failoverGlobalReplicationGroupWithContextReturnsOnCall[len(fake.failoverGlobalReplicationGroupWithContextArgsForCall)]
+	fake.failoverGlobalReplicationGroupWithContextArgsForCall = append(fake.failoverGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.FailoverGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.FailoverGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.failoverGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("FailoverGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.failoverGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupWithContextCallCount() int {
+	fake.failoverGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.failoverGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.FailoverGlobalReplicationGroupInput, ...request.Option) (*elasticache.FailoverGlobalReplicationGroupOutput, error)) {
+	fake.failoverGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.FailoverGlobalReplicationGroupInput, []request.Option) {
+	fake.failoverGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.failoverGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupWithContextReturns(result1 *elasticache.FailoverGlobalReplicationGroupOutput, result2 error) {
+	fake.failoverGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupWithContextStub = nil
+	fake.failoverGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) FailoverGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.FailoverGlobalReplicationGroupOutput, result2 error) {
+	fake.failoverGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.failoverGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.FailoverGlobalReplicationGroupWithContextStub = nil
+	if fake.failoverGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.failoverGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.FailoverGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.failoverGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.FailoverGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroup(arg1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput) (*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, error) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.increaseNodeGroupsInGlobalReplicationGroupReturnsOnCall[len(fake.increaseNodeGroupsInGlobalReplicationGroupArgsForCall)]
+	fake.increaseNodeGroupsInGlobalReplicationGroupArgsForCall = append(fake.increaseNodeGroupsInGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.IncreaseNodeGroupsInGlobalReplicationGroupStub
+	fakeReturns := fake.increaseNodeGroupsInGlobalReplicationGroupReturns
+	fake.recordInvocation("IncreaseNodeGroupsInGlobalReplicationGroup", []interface{}{arg1})
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupCallCount() int {
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.increaseNodeGroupsInGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupCalls(stub func(*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput) (*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, error)) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupArgsForCall(i int) *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput {
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.increaseNodeGroupsInGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupReturns(result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupStub = nil
+	fake.increaseNodeGroupsInGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupStub = nil
+	if fake.increaseNodeGroupsInGlobalReplicationGroupReturnsOnCall == nil {
+		fake.increaseNodeGroupsInGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.increaseNodeGroupsInGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupRequest(arg1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput) (*request.Request, *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.increaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall[len(fake.increaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall)]
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall = append(fake.increaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.IncreaseNodeGroupsInGlobalReplicationGroupRequestStub
+	fakeReturns := fake.increaseNodeGroupsInGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("IncreaseNodeGroupsInGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupRequestCallCount() int {
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.increaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupRequestCalls(stub func(*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput) (*request.Request, *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput)) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput {
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.increaseNodeGroupsInGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupRequestStub = nil
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupRequestStub = nil
+	if fake.increaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.increaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		})
+	}
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, error) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.increaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall[len(fake.increaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall)]
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall = append(fake.increaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.IncreaseNodeGroupsInGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.increaseNodeGroupsInGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("IncreaseNodeGroupsInGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupWithContextCallCount() int {
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.increaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput, ...request.Option) (*elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, error)) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupInput, []request.Option) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.increaseNodeGroupsInGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupWithContextReturns(result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupWithContextStub = nil
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) IncreaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput, result2 error) {
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.IncreaseNodeGroupsInGlobalReplicationGroupWithContextStub = nil
+	if fake.increaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.increaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.IncreaseNodeGroupsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeElastiCacheAPI) IncreaseReplicaCount(arg1 *elasticache.IncreaseReplicaCountInput) (*elasticache.IncreaseReplicaCountOutput, error) {
 	fake.increaseReplicaCountMutex.Lock()
 	ret, specificReturn := fake.increaseReplicaCountReturnsOnCall[len(fake.increaseReplicaCountArgsForCall)]
@@ -11773,6 +13652,200 @@ func (fake *FakeElastiCacheAPI) ModifyCacheSubnetGroupWithContextReturnsOnCall(i
 	}{result1, result2}
 }
 
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroup(arg1 *elasticache.ModifyGlobalReplicationGroupInput) (*elasticache.ModifyGlobalReplicationGroupOutput, error) {
+	fake.modifyGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.modifyGlobalReplicationGroupReturnsOnCall[len(fake.modifyGlobalReplicationGroupArgsForCall)]
+	fake.modifyGlobalReplicationGroupArgsForCall = append(fake.modifyGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.ModifyGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.ModifyGlobalReplicationGroupStub
+	fakeReturns := fake.modifyGlobalReplicationGroupReturns
+	fake.recordInvocation("ModifyGlobalReplicationGroup", []interface{}{arg1})
+	fake.modifyGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupCallCount() int {
+	fake.modifyGlobalReplicationGroupMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.modifyGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupCalls(stub func(*elasticache.ModifyGlobalReplicationGroupInput) (*elasticache.ModifyGlobalReplicationGroupOutput, error)) {
+	fake.modifyGlobalReplicationGroupMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupArgsForCall(i int) *elasticache.ModifyGlobalReplicationGroupInput {
+	fake.modifyGlobalReplicationGroupMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.modifyGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupReturns(result1 *elasticache.ModifyGlobalReplicationGroupOutput, result2 error) {
+	fake.modifyGlobalReplicationGroupMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupStub = nil
+	fake.modifyGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.ModifyGlobalReplicationGroupOutput, result2 error) {
+	fake.modifyGlobalReplicationGroupMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupStub = nil
+	if fake.modifyGlobalReplicationGroupReturnsOnCall == nil {
+		fake.modifyGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.ModifyGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.modifyGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupRequest(arg1 *elasticache.ModifyGlobalReplicationGroupInput) (*request.Request, *elasticache.ModifyGlobalReplicationGroupOutput) {
+	fake.modifyGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.modifyGlobalReplicationGroupRequestReturnsOnCall[len(fake.modifyGlobalReplicationGroupRequestArgsForCall)]
+	fake.modifyGlobalReplicationGroupRequestArgsForCall = append(fake.modifyGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.ModifyGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.ModifyGlobalReplicationGroupRequestStub
+	fakeReturns := fake.modifyGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("ModifyGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.modifyGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupRequestCallCount() int {
+	fake.modifyGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.modifyGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupRequestCalls(stub func(*elasticache.ModifyGlobalReplicationGroupInput) (*request.Request, *elasticache.ModifyGlobalReplicationGroupOutput)) {
+	fake.modifyGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupRequestMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.ModifyGlobalReplicationGroupInput {
+	fake.modifyGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.modifyGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.ModifyGlobalReplicationGroupOutput) {
+	fake.modifyGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupRequestMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupRequestStub = nil
+	fake.modifyGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.ModifyGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.ModifyGlobalReplicationGroupOutput) {
+	fake.modifyGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupRequestMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupRequestStub = nil
+	if fake.modifyGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.modifyGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.ModifyGlobalReplicationGroupOutput
+		})
+	}
+	fake.modifyGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.ModifyGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.ModifyGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.ModifyGlobalReplicationGroupOutput, error) {
+	fake.modifyGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.modifyGlobalReplicationGroupWithContextReturnsOnCall[len(fake.modifyGlobalReplicationGroupWithContextArgsForCall)]
+	fake.modifyGlobalReplicationGroupWithContextArgsForCall = append(fake.modifyGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.ModifyGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.ModifyGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.modifyGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("ModifyGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.modifyGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupWithContextCallCount() int {
+	fake.modifyGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.modifyGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.ModifyGlobalReplicationGroupInput, ...request.Option) (*elasticache.ModifyGlobalReplicationGroupOutput, error)) {
+	fake.modifyGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.ModifyGlobalReplicationGroupInput, []request.Option) {
+	fake.modifyGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.modifyGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupWithContextReturns(result1 *elasticache.ModifyGlobalReplicationGroupOutput, result2 error) {
+	fake.modifyGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupWithContextStub = nil
+	fake.modifyGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) ModifyGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.ModifyGlobalReplicationGroupOutput, result2 error) {
+	fake.modifyGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.modifyGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.ModifyGlobalReplicationGroupWithContextStub = nil
+	if fake.modifyGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.modifyGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.ModifyGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.modifyGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.ModifyGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeElastiCacheAPI) ModifyReplicationGroup(arg1 *elasticache.ModifyReplicationGroupInput) (*elasticache.ModifyReplicationGroupOutput, error) {
 	fake.modifyReplicationGroupMutex.Lock()
 	ret, specificReturn := fake.modifyReplicationGroupReturnsOnCall[len(fake.modifyReplicationGroupArgsForCall)]
@@ -12351,6 +14424,200 @@ func (fake *FakeElastiCacheAPI) PurchaseReservedCacheNodesOfferingWithContextRet
 	}
 	fake.purchaseReservedCacheNodesOfferingWithContextReturnsOnCall[i] = struct {
 		result1 *elasticache.PurchaseReservedCacheNodesOfferingOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroup(arg1 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput) (*elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, error) {
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.Lock()
+	ret, specificReturn := fake.rebalanceSlotsInGlobalReplicationGroupReturnsOnCall[len(fake.rebalanceSlotsInGlobalReplicationGroupArgsForCall)]
+	fake.rebalanceSlotsInGlobalReplicationGroupArgsForCall = append(fake.rebalanceSlotsInGlobalReplicationGroupArgsForCall, struct {
+		arg1 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.RebalanceSlotsInGlobalReplicationGroupStub
+	fakeReturns := fake.rebalanceSlotsInGlobalReplicationGroupReturns
+	fake.recordInvocation("RebalanceSlotsInGlobalReplicationGroup", []interface{}{arg1})
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupCallCount() int {
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupMutex.RUnlock()
+	return len(fake.rebalanceSlotsInGlobalReplicationGroupArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupCalls(stub func(*elasticache.RebalanceSlotsInGlobalReplicationGroupInput) (*elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, error)) {
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupArgsForCall(i int) *elasticache.RebalanceSlotsInGlobalReplicationGroupInput {
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupMutex.RUnlock()
+	argsForCall := fake.rebalanceSlotsInGlobalReplicationGroupArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupReturns(result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, result2 error) {
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupStub = nil
+	fake.rebalanceSlotsInGlobalReplicationGroupReturns = struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupReturnsOnCall(i int, result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, result2 error) {
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupStub = nil
+	if fake.rebalanceSlotsInGlobalReplicationGroupReturnsOnCall == nil {
+		fake.rebalanceSlotsInGlobalReplicationGroupReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.rebalanceSlotsInGlobalReplicationGroupReturnsOnCall[i] = struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupRequest(arg1 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput) (*request.Request, *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput) {
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Lock()
+	ret, specificReturn := fake.rebalanceSlotsInGlobalReplicationGroupRequestReturnsOnCall[len(fake.rebalanceSlotsInGlobalReplicationGroupRequestArgsForCall)]
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestArgsForCall = append(fake.rebalanceSlotsInGlobalReplicationGroupRequestArgsForCall, struct {
+		arg1 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput
+	}{arg1})
+	stub := fake.RebalanceSlotsInGlobalReplicationGroupRequestStub
+	fakeReturns := fake.rebalanceSlotsInGlobalReplicationGroupRequestReturns
+	fake.recordInvocation("RebalanceSlotsInGlobalReplicationGroupRequest", []interface{}{arg1})
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupRequestCallCount() int {
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.RUnlock()
+	return len(fake.rebalanceSlotsInGlobalReplicationGroupRequestArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupRequestCalls(stub func(*elasticache.RebalanceSlotsInGlobalReplicationGroupInput) (*request.Request, *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput)) {
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupRequestStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupRequestArgsForCall(i int) *elasticache.RebalanceSlotsInGlobalReplicationGroupInput {
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.RUnlock()
+	argsForCall := fake.rebalanceSlotsInGlobalReplicationGroupRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupRequestReturns(result1 *request.Request, result2 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput) {
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupRequestStub = nil
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestReturns = struct {
+		result1 *request.Request
+		result2 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupRequestReturnsOnCall(i int, result1 *request.Request, result2 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput) {
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupRequestStub = nil
+	if fake.rebalanceSlotsInGlobalReplicationGroupRequestReturnsOnCall == nil {
+		fake.rebalanceSlotsInGlobalReplicationGroupRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+		})
+	}
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupWithContext(arg1 context.Context, arg2 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput, arg3 ...request.Option) (*elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, error) {
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Lock()
+	ret, specificReturn := fake.rebalanceSlotsInGlobalReplicationGroupWithContextReturnsOnCall[len(fake.rebalanceSlotsInGlobalReplicationGroupWithContextArgsForCall)]
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextArgsForCall = append(fake.rebalanceSlotsInGlobalReplicationGroupWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *elasticache.RebalanceSlotsInGlobalReplicationGroupInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.RebalanceSlotsInGlobalReplicationGroupWithContextStub
+	fakeReturns := fake.rebalanceSlotsInGlobalReplicationGroupWithContextReturns
+	fake.recordInvocation("RebalanceSlotsInGlobalReplicationGroupWithContext", []interface{}{arg1, arg2, arg3})
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupWithContextCallCount() int {
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.RUnlock()
+	return len(fake.rebalanceSlotsInGlobalReplicationGroupWithContextArgsForCall)
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupWithContextCalls(stub func(context.Context, *elasticache.RebalanceSlotsInGlobalReplicationGroupInput, ...request.Option) (*elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, error)) {
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupWithContextStub = stub
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupWithContextArgsForCall(i int) (context.Context, *elasticache.RebalanceSlotsInGlobalReplicationGroupInput, []request.Option) {
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.RUnlock()
+	argsForCall := fake.rebalanceSlotsInGlobalReplicationGroupWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupWithContextReturns(result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, result2 error) {
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupWithContextStub = nil
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextReturns = struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeElastiCacheAPI) RebalanceSlotsInGlobalReplicationGroupWithContextReturnsOnCall(i int, result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput, result2 error) {
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Lock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.Unlock()
+	fake.RebalanceSlotsInGlobalReplicationGroupWithContextStub = nil
+	if fake.rebalanceSlotsInGlobalReplicationGroupWithContextReturnsOnCall == nil {
+		fake.rebalanceSlotsInGlobalReplicationGroupWithContextReturnsOnCall = make(map[int]struct {
+			result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
+			result2 error
+		})
+	}
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextReturnsOnCall[i] = struct {
+		result1 *elasticache.RebalanceSlotsInGlobalReplicationGroupOutput
 		result2 error
 	}{result1, result2}
 }
@@ -14078,6 +16345,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.createCacheSubnetGroupRequestMutex.RUnlock()
 	fake.createCacheSubnetGroupWithContextMutex.RLock()
 	defer fake.createCacheSubnetGroupWithContextMutex.RUnlock()
+	fake.createGlobalReplicationGroupMutex.RLock()
+	defer fake.createGlobalReplicationGroupMutex.RUnlock()
+	fake.createGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.createGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.createGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.createGlobalReplicationGroupWithContextMutex.RUnlock()
 	fake.createReplicationGroupMutex.RLock()
 	defer fake.createReplicationGroupMutex.RUnlock()
 	fake.createReplicationGroupRequestMutex.RLock()
@@ -14090,6 +16363,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.createSnapshotRequestMutex.RUnlock()
 	fake.createSnapshotWithContextMutex.RLock()
 	defer fake.createSnapshotWithContextMutex.RUnlock()
+	fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupMutex.RUnlock()
+	fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.decreaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RUnlock()
 	fake.decreaseReplicaCountMutex.RLock()
 	defer fake.decreaseReplicaCountMutex.RUnlock()
 	fake.decreaseReplicaCountRequestMutex.RLock()
@@ -14120,6 +16399,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.deleteCacheSubnetGroupRequestMutex.RUnlock()
 	fake.deleteCacheSubnetGroupWithContextMutex.RLock()
 	defer fake.deleteCacheSubnetGroupWithContextMutex.RUnlock()
+	fake.deleteGlobalReplicationGroupMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupMutex.RUnlock()
+	fake.deleteGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.deleteGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.deleteGlobalReplicationGroupWithContextMutex.RUnlock()
 	fake.deleteReplicationGroupMutex.RLock()
 	defer fake.deleteReplicationGroupMutex.RUnlock()
 	fake.deleteReplicationGroupRequestMutex.RLock()
@@ -14212,6 +16497,16 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeEventsRequestMutex.RUnlock()
 	fake.describeEventsWithContextMutex.RLock()
 	defer fake.describeEventsWithContextMutex.RUnlock()
+	fake.describeGlobalReplicationGroupsMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsMutex.RUnlock()
+	fake.describeGlobalReplicationGroupsPagesMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsPagesMutex.RUnlock()
+	fake.describeGlobalReplicationGroupsPagesWithContextMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsPagesWithContextMutex.RUnlock()
+	fake.describeGlobalReplicationGroupsRequestMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsRequestMutex.RUnlock()
+	fake.describeGlobalReplicationGroupsWithContextMutex.RLock()
+	defer fake.describeGlobalReplicationGroupsWithContextMutex.RUnlock()
 	fake.describeReplicationGroupsMutex.RLock()
 	defer fake.describeReplicationGroupsMutex.RUnlock()
 	fake.describeReplicationGroupsPagesMutex.RLock()
@@ -14272,6 +16567,24 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeUpdateActionsRequestMutex.RUnlock()
 	fake.describeUpdateActionsWithContextMutex.RLock()
 	defer fake.describeUpdateActionsWithContextMutex.RUnlock()
+	fake.disassociateGlobalReplicationGroupMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupMutex.RUnlock()
+	fake.disassociateGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.disassociateGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.disassociateGlobalReplicationGroupWithContextMutex.RUnlock()
+	fake.failoverGlobalReplicationGroupMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupMutex.RUnlock()
+	fake.failoverGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.failoverGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.failoverGlobalReplicationGroupWithContextMutex.RUnlock()
+	fake.increaseNodeGroupsInGlobalReplicationGroupMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupMutex.RUnlock()
+	fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.increaseNodeGroupsInGlobalReplicationGroupWithContextMutex.RUnlock()
 	fake.increaseReplicaCountMutex.RLock()
 	defer fake.increaseReplicaCountMutex.RUnlock()
 	fake.increaseReplicaCountRequestMutex.RLock()
@@ -14308,6 +16621,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.modifyCacheSubnetGroupRequestMutex.RUnlock()
 	fake.modifyCacheSubnetGroupWithContextMutex.RLock()
 	defer fake.modifyCacheSubnetGroupWithContextMutex.RUnlock()
+	fake.modifyGlobalReplicationGroupMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupMutex.RUnlock()
+	fake.modifyGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.modifyGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.modifyGlobalReplicationGroupWithContextMutex.RUnlock()
 	fake.modifyReplicationGroupMutex.RLock()
 	defer fake.modifyReplicationGroupMutex.RUnlock()
 	fake.modifyReplicationGroupRequestMutex.RLock()
@@ -14326,6 +16645,12 @@ func (fake *FakeElastiCacheAPI) Invocations() map[string][][]interface{} {
 	defer fake.purchaseReservedCacheNodesOfferingRequestMutex.RUnlock()
 	fake.purchaseReservedCacheNodesOfferingWithContextMutex.RLock()
 	defer fake.purchaseReservedCacheNodesOfferingWithContextMutex.RUnlock()
+	fake.rebalanceSlotsInGlobalReplicationGroupMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupMutex.RUnlock()
+	fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupRequestMutex.RUnlock()
+	fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.RLock()
+	defer fake.rebalanceSlotsInGlobalReplicationGroupWithContextMutex.RUnlock()
 	fake.rebootCacheClusterMutex.RLock()
 	defer fake.rebootCacheClusterMutex.RUnlock()
 	fake.rebootCacheClusterRequestMutex.RLock()

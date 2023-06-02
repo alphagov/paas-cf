@@ -93,6 +93,88 @@ type FakeShieldAPI struct {
 		result1 *shield.AssociateDRTRoleOutput
 		result2 error
 	}
+	AssociateHealthCheckStub        func(*shield.AssociateHealthCheckInput) (*shield.AssociateHealthCheckOutput, error)
+	associateHealthCheckMutex       sync.RWMutex
+	associateHealthCheckArgsForCall []struct {
+		arg1 *shield.AssociateHealthCheckInput
+	}
+	associateHealthCheckReturns struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}
+	associateHealthCheckReturnsOnCall map[int]struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}
+	AssociateHealthCheckRequestStub        func(*shield.AssociateHealthCheckInput) (*request.Request, *shield.AssociateHealthCheckOutput)
+	associateHealthCheckRequestMutex       sync.RWMutex
+	associateHealthCheckRequestArgsForCall []struct {
+		arg1 *shield.AssociateHealthCheckInput
+	}
+	associateHealthCheckRequestReturns struct {
+		result1 *request.Request
+		result2 *shield.AssociateHealthCheckOutput
+	}
+	associateHealthCheckRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *shield.AssociateHealthCheckOutput
+	}
+	AssociateHealthCheckWithContextStub        func(context.Context, *shield.AssociateHealthCheckInput, ...request.Option) (*shield.AssociateHealthCheckOutput, error)
+	associateHealthCheckWithContextMutex       sync.RWMutex
+	associateHealthCheckWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *shield.AssociateHealthCheckInput
+		arg3 []request.Option
+	}
+	associateHealthCheckWithContextReturns struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}
+	associateHealthCheckWithContextReturnsOnCall map[int]struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}
+	AssociateProactiveEngagementDetailsStub        func(*shield.AssociateProactiveEngagementDetailsInput) (*shield.AssociateProactiveEngagementDetailsOutput, error)
+	associateProactiveEngagementDetailsMutex       sync.RWMutex
+	associateProactiveEngagementDetailsArgsForCall []struct {
+		arg1 *shield.AssociateProactiveEngagementDetailsInput
+	}
+	associateProactiveEngagementDetailsReturns struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
+		result2 error
+	}
+	associateProactiveEngagementDetailsReturnsOnCall map[int]struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
+		result2 error
+	}
+	AssociateProactiveEngagementDetailsRequestStub        func(*shield.AssociateProactiveEngagementDetailsInput) (*request.Request, *shield.AssociateProactiveEngagementDetailsOutput)
+	associateProactiveEngagementDetailsRequestMutex       sync.RWMutex
+	associateProactiveEngagementDetailsRequestArgsForCall []struct {
+		arg1 *shield.AssociateProactiveEngagementDetailsInput
+	}
+	associateProactiveEngagementDetailsRequestReturns struct {
+		result1 *request.Request
+		result2 *shield.AssociateProactiveEngagementDetailsOutput
+	}
+	associateProactiveEngagementDetailsRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *shield.AssociateProactiveEngagementDetailsOutput
+	}
+	AssociateProactiveEngagementDetailsWithContextStub        func(context.Context, *shield.AssociateProactiveEngagementDetailsInput, ...request.Option) (*shield.AssociateProactiveEngagementDetailsOutput, error)
+	associateProactiveEngagementDetailsWithContextMutex       sync.RWMutex
+	associateProactiveEngagementDetailsWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *shield.AssociateProactiveEngagementDetailsInput
+		arg3 []request.Option
+	}
+	associateProactiveEngagementDetailsWithContextReturns struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
+		result2 error
+	}
+	associateProactiveEngagementDetailsWithContextReturnsOnCall map[int]struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
+		result2 error
+	}
 	CreateProtectionStub        func(*shield.CreateProtectionInput) (*shield.CreateProtectionOutput, error)
 	createProtectionMutex       sync.RWMutex
 	createProtectionArgsForCall []struct {
@@ -462,6 +544,47 @@ type FakeShieldAPI struct {
 		result1 *shield.DescribeSubscriptionOutput
 		result2 error
 	}
+	DisableProactiveEngagementStub        func(*shield.DisableProactiveEngagementInput) (*shield.DisableProactiveEngagementOutput, error)
+	disableProactiveEngagementMutex       sync.RWMutex
+	disableProactiveEngagementArgsForCall []struct {
+		arg1 *shield.DisableProactiveEngagementInput
+	}
+	disableProactiveEngagementReturns struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}
+	disableProactiveEngagementReturnsOnCall map[int]struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}
+	DisableProactiveEngagementRequestStub        func(*shield.DisableProactiveEngagementInput) (*request.Request, *shield.DisableProactiveEngagementOutput)
+	disableProactiveEngagementRequestMutex       sync.RWMutex
+	disableProactiveEngagementRequestArgsForCall []struct {
+		arg1 *shield.DisableProactiveEngagementInput
+	}
+	disableProactiveEngagementRequestReturns struct {
+		result1 *request.Request
+		result2 *shield.DisableProactiveEngagementOutput
+	}
+	disableProactiveEngagementRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *shield.DisableProactiveEngagementOutput
+	}
+	DisableProactiveEngagementWithContextStub        func(context.Context, *shield.DisableProactiveEngagementInput, ...request.Option) (*shield.DisableProactiveEngagementOutput, error)
+	disableProactiveEngagementWithContextMutex       sync.RWMutex
+	disableProactiveEngagementWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *shield.DisableProactiveEngagementInput
+		arg3 []request.Option
+	}
+	disableProactiveEngagementWithContextReturns struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}
+	disableProactiveEngagementWithContextReturnsOnCall map[int]struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}
 	DisassociateDRTLogBucketStub        func(*shield.DisassociateDRTLogBucketInput) (*shield.DisassociateDRTLogBucketOutput, error)
 	disassociateDRTLogBucketMutex       sync.RWMutex
 	disassociateDRTLogBucketArgsForCall []struct {
@@ -544,6 +667,88 @@ type FakeShieldAPI struct {
 		result1 *shield.DisassociateDRTRoleOutput
 		result2 error
 	}
+	DisassociateHealthCheckStub        func(*shield.DisassociateHealthCheckInput) (*shield.DisassociateHealthCheckOutput, error)
+	disassociateHealthCheckMutex       sync.RWMutex
+	disassociateHealthCheckArgsForCall []struct {
+		arg1 *shield.DisassociateHealthCheckInput
+	}
+	disassociateHealthCheckReturns struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}
+	disassociateHealthCheckReturnsOnCall map[int]struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}
+	DisassociateHealthCheckRequestStub        func(*shield.DisassociateHealthCheckInput) (*request.Request, *shield.DisassociateHealthCheckOutput)
+	disassociateHealthCheckRequestMutex       sync.RWMutex
+	disassociateHealthCheckRequestArgsForCall []struct {
+		arg1 *shield.DisassociateHealthCheckInput
+	}
+	disassociateHealthCheckRequestReturns struct {
+		result1 *request.Request
+		result2 *shield.DisassociateHealthCheckOutput
+	}
+	disassociateHealthCheckRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *shield.DisassociateHealthCheckOutput
+	}
+	DisassociateHealthCheckWithContextStub        func(context.Context, *shield.DisassociateHealthCheckInput, ...request.Option) (*shield.DisassociateHealthCheckOutput, error)
+	disassociateHealthCheckWithContextMutex       sync.RWMutex
+	disassociateHealthCheckWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *shield.DisassociateHealthCheckInput
+		arg3 []request.Option
+	}
+	disassociateHealthCheckWithContextReturns struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}
+	disassociateHealthCheckWithContextReturnsOnCall map[int]struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}
+	EnableProactiveEngagementStub        func(*shield.EnableProactiveEngagementInput) (*shield.EnableProactiveEngagementOutput, error)
+	enableProactiveEngagementMutex       sync.RWMutex
+	enableProactiveEngagementArgsForCall []struct {
+		arg1 *shield.EnableProactiveEngagementInput
+	}
+	enableProactiveEngagementReturns struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}
+	enableProactiveEngagementReturnsOnCall map[int]struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}
+	EnableProactiveEngagementRequestStub        func(*shield.EnableProactiveEngagementInput) (*request.Request, *shield.EnableProactiveEngagementOutput)
+	enableProactiveEngagementRequestMutex       sync.RWMutex
+	enableProactiveEngagementRequestArgsForCall []struct {
+		arg1 *shield.EnableProactiveEngagementInput
+	}
+	enableProactiveEngagementRequestReturns struct {
+		result1 *request.Request
+		result2 *shield.EnableProactiveEngagementOutput
+	}
+	enableProactiveEngagementRequestReturnsOnCall map[int]struct {
+		result1 *request.Request
+		result2 *shield.EnableProactiveEngagementOutput
+	}
+	EnableProactiveEngagementWithContextStub        func(context.Context, *shield.EnableProactiveEngagementInput, ...request.Option) (*shield.EnableProactiveEngagementOutput, error)
+	enableProactiveEngagementWithContextMutex       sync.RWMutex
+	enableProactiveEngagementWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *shield.EnableProactiveEngagementInput
+		arg3 []request.Option
+	}
+	enableProactiveEngagementWithContextReturns struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}
+	enableProactiveEngagementWithContextReturnsOnCall map[int]struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}
 	GetSubscriptionStateStub        func(*shield.GetSubscriptionStateInput) (*shield.GetSubscriptionStateOutput, error)
 	getSubscriptionStateMutex       sync.RWMutex
 	getSubscriptionStateArgsForCall []struct {
@@ -598,6 +803,32 @@ type FakeShieldAPI struct {
 		result1 *shield.ListAttacksOutput
 		result2 error
 	}
+	ListAttacksPagesStub        func(*shield.ListAttacksInput, func(*shield.ListAttacksOutput, bool) bool) error
+	listAttacksPagesMutex       sync.RWMutex
+	listAttacksPagesArgsForCall []struct {
+		arg1 *shield.ListAttacksInput
+		arg2 func(*shield.ListAttacksOutput, bool) bool
+	}
+	listAttacksPagesReturns struct {
+		result1 error
+	}
+	listAttacksPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	ListAttacksPagesWithContextStub        func(context.Context, *shield.ListAttacksInput, func(*shield.ListAttacksOutput, bool) bool, ...request.Option) error
+	listAttacksPagesWithContextMutex       sync.RWMutex
+	listAttacksPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *shield.ListAttacksInput
+		arg3 func(*shield.ListAttacksOutput, bool) bool
+		arg4 []request.Option
+	}
+	listAttacksPagesWithContextReturns struct {
+		result1 error
+	}
+	listAttacksPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
+	}
 	ListAttacksRequestStub        func(*shield.ListAttacksInput) (*request.Request, *shield.ListAttacksOutput)
 	listAttacksRequestMutex       sync.RWMutex
 	listAttacksRequestArgsForCall []struct {
@@ -638,6 +869,32 @@ type FakeShieldAPI struct {
 	listProtectionsReturnsOnCall map[int]struct {
 		result1 *shield.ListProtectionsOutput
 		result2 error
+	}
+	ListProtectionsPagesStub        func(*shield.ListProtectionsInput, func(*shield.ListProtectionsOutput, bool) bool) error
+	listProtectionsPagesMutex       sync.RWMutex
+	listProtectionsPagesArgsForCall []struct {
+		arg1 *shield.ListProtectionsInput
+		arg2 func(*shield.ListProtectionsOutput, bool) bool
+	}
+	listProtectionsPagesReturns struct {
+		result1 error
+	}
+	listProtectionsPagesReturnsOnCall map[int]struct {
+		result1 error
+	}
+	ListProtectionsPagesWithContextStub        func(context.Context, *shield.ListProtectionsInput, func(*shield.ListProtectionsOutput, bool) bool, ...request.Option) error
+	listProtectionsPagesWithContextMutex       sync.RWMutex
+	listProtectionsPagesWithContextArgsForCall []struct {
+		arg1 context.Context
+		arg2 *shield.ListProtectionsInput
+		arg3 func(*shield.ListProtectionsOutput, bool) bool
+		arg4 []request.Option
+	}
+	listProtectionsPagesWithContextReturns struct {
+		result1 error
+	}
+	listProtectionsPagesWithContextReturnsOnCall map[int]struct {
+		result1 error
 	}
 	ListProtectionsRequestStub        func(*shield.ListProtectionsInput) (*request.Request, *shield.ListProtectionsOutput)
 	listProtectionsRequestMutex       sync.RWMutex
@@ -1137,6 +1394,394 @@ func (fake *FakeShieldAPI) AssociateDRTRoleWithContextReturnsOnCall(i int, resul
 	}
 	fake.associateDRTRoleWithContextReturnsOnCall[i] = struct {
 		result1 *shield.AssociateDRTRoleOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheck(arg1 *shield.AssociateHealthCheckInput) (*shield.AssociateHealthCheckOutput, error) {
+	fake.associateHealthCheckMutex.Lock()
+	ret, specificReturn := fake.associateHealthCheckReturnsOnCall[len(fake.associateHealthCheckArgsForCall)]
+	fake.associateHealthCheckArgsForCall = append(fake.associateHealthCheckArgsForCall, struct {
+		arg1 *shield.AssociateHealthCheckInput
+	}{arg1})
+	stub := fake.AssociateHealthCheckStub
+	fakeReturns := fake.associateHealthCheckReturns
+	fake.recordInvocation("AssociateHealthCheck", []interface{}{arg1})
+	fake.associateHealthCheckMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckCallCount() int {
+	fake.associateHealthCheckMutex.RLock()
+	defer fake.associateHealthCheckMutex.RUnlock()
+	return len(fake.associateHealthCheckArgsForCall)
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckCalls(stub func(*shield.AssociateHealthCheckInput) (*shield.AssociateHealthCheckOutput, error)) {
+	fake.associateHealthCheckMutex.Lock()
+	defer fake.associateHealthCheckMutex.Unlock()
+	fake.AssociateHealthCheckStub = stub
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckArgsForCall(i int) *shield.AssociateHealthCheckInput {
+	fake.associateHealthCheckMutex.RLock()
+	defer fake.associateHealthCheckMutex.RUnlock()
+	argsForCall := fake.associateHealthCheckArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckReturns(result1 *shield.AssociateHealthCheckOutput, result2 error) {
+	fake.associateHealthCheckMutex.Lock()
+	defer fake.associateHealthCheckMutex.Unlock()
+	fake.AssociateHealthCheckStub = nil
+	fake.associateHealthCheckReturns = struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckReturnsOnCall(i int, result1 *shield.AssociateHealthCheckOutput, result2 error) {
+	fake.associateHealthCheckMutex.Lock()
+	defer fake.associateHealthCheckMutex.Unlock()
+	fake.AssociateHealthCheckStub = nil
+	if fake.associateHealthCheckReturnsOnCall == nil {
+		fake.associateHealthCheckReturnsOnCall = make(map[int]struct {
+			result1 *shield.AssociateHealthCheckOutput
+			result2 error
+		})
+	}
+	fake.associateHealthCheckReturnsOnCall[i] = struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckRequest(arg1 *shield.AssociateHealthCheckInput) (*request.Request, *shield.AssociateHealthCheckOutput) {
+	fake.associateHealthCheckRequestMutex.Lock()
+	ret, specificReturn := fake.associateHealthCheckRequestReturnsOnCall[len(fake.associateHealthCheckRequestArgsForCall)]
+	fake.associateHealthCheckRequestArgsForCall = append(fake.associateHealthCheckRequestArgsForCall, struct {
+		arg1 *shield.AssociateHealthCheckInput
+	}{arg1})
+	stub := fake.AssociateHealthCheckRequestStub
+	fakeReturns := fake.associateHealthCheckRequestReturns
+	fake.recordInvocation("AssociateHealthCheckRequest", []interface{}{arg1})
+	fake.associateHealthCheckRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckRequestCallCount() int {
+	fake.associateHealthCheckRequestMutex.RLock()
+	defer fake.associateHealthCheckRequestMutex.RUnlock()
+	return len(fake.associateHealthCheckRequestArgsForCall)
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckRequestCalls(stub func(*shield.AssociateHealthCheckInput) (*request.Request, *shield.AssociateHealthCheckOutput)) {
+	fake.associateHealthCheckRequestMutex.Lock()
+	defer fake.associateHealthCheckRequestMutex.Unlock()
+	fake.AssociateHealthCheckRequestStub = stub
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckRequestArgsForCall(i int) *shield.AssociateHealthCheckInput {
+	fake.associateHealthCheckRequestMutex.RLock()
+	defer fake.associateHealthCheckRequestMutex.RUnlock()
+	argsForCall := fake.associateHealthCheckRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckRequestReturns(result1 *request.Request, result2 *shield.AssociateHealthCheckOutput) {
+	fake.associateHealthCheckRequestMutex.Lock()
+	defer fake.associateHealthCheckRequestMutex.Unlock()
+	fake.AssociateHealthCheckRequestStub = nil
+	fake.associateHealthCheckRequestReturns = struct {
+		result1 *request.Request
+		result2 *shield.AssociateHealthCheckOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckRequestReturnsOnCall(i int, result1 *request.Request, result2 *shield.AssociateHealthCheckOutput) {
+	fake.associateHealthCheckRequestMutex.Lock()
+	defer fake.associateHealthCheckRequestMutex.Unlock()
+	fake.AssociateHealthCheckRequestStub = nil
+	if fake.associateHealthCheckRequestReturnsOnCall == nil {
+		fake.associateHealthCheckRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *shield.AssociateHealthCheckOutput
+		})
+	}
+	fake.associateHealthCheckRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *shield.AssociateHealthCheckOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckWithContext(arg1 context.Context, arg2 *shield.AssociateHealthCheckInput, arg3 ...request.Option) (*shield.AssociateHealthCheckOutput, error) {
+	fake.associateHealthCheckWithContextMutex.Lock()
+	ret, specificReturn := fake.associateHealthCheckWithContextReturnsOnCall[len(fake.associateHealthCheckWithContextArgsForCall)]
+	fake.associateHealthCheckWithContextArgsForCall = append(fake.associateHealthCheckWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *shield.AssociateHealthCheckInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.AssociateHealthCheckWithContextStub
+	fakeReturns := fake.associateHealthCheckWithContextReturns
+	fake.recordInvocation("AssociateHealthCheckWithContext", []interface{}{arg1, arg2, arg3})
+	fake.associateHealthCheckWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckWithContextCallCount() int {
+	fake.associateHealthCheckWithContextMutex.RLock()
+	defer fake.associateHealthCheckWithContextMutex.RUnlock()
+	return len(fake.associateHealthCheckWithContextArgsForCall)
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckWithContextCalls(stub func(context.Context, *shield.AssociateHealthCheckInput, ...request.Option) (*shield.AssociateHealthCheckOutput, error)) {
+	fake.associateHealthCheckWithContextMutex.Lock()
+	defer fake.associateHealthCheckWithContextMutex.Unlock()
+	fake.AssociateHealthCheckWithContextStub = stub
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckWithContextArgsForCall(i int) (context.Context, *shield.AssociateHealthCheckInput, []request.Option) {
+	fake.associateHealthCheckWithContextMutex.RLock()
+	defer fake.associateHealthCheckWithContextMutex.RUnlock()
+	argsForCall := fake.associateHealthCheckWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckWithContextReturns(result1 *shield.AssociateHealthCheckOutput, result2 error) {
+	fake.associateHealthCheckWithContextMutex.Lock()
+	defer fake.associateHealthCheckWithContextMutex.Unlock()
+	fake.AssociateHealthCheckWithContextStub = nil
+	fake.associateHealthCheckWithContextReturns = struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateHealthCheckWithContextReturnsOnCall(i int, result1 *shield.AssociateHealthCheckOutput, result2 error) {
+	fake.associateHealthCheckWithContextMutex.Lock()
+	defer fake.associateHealthCheckWithContextMutex.Unlock()
+	fake.AssociateHealthCheckWithContextStub = nil
+	if fake.associateHealthCheckWithContextReturnsOnCall == nil {
+		fake.associateHealthCheckWithContextReturnsOnCall = make(map[int]struct {
+			result1 *shield.AssociateHealthCheckOutput
+			result2 error
+		})
+	}
+	fake.associateHealthCheckWithContextReturnsOnCall[i] = struct {
+		result1 *shield.AssociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetails(arg1 *shield.AssociateProactiveEngagementDetailsInput) (*shield.AssociateProactiveEngagementDetailsOutput, error) {
+	fake.associateProactiveEngagementDetailsMutex.Lock()
+	ret, specificReturn := fake.associateProactiveEngagementDetailsReturnsOnCall[len(fake.associateProactiveEngagementDetailsArgsForCall)]
+	fake.associateProactiveEngagementDetailsArgsForCall = append(fake.associateProactiveEngagementDetailsArgsForCall, struct {
+		arg1 *shield.AssociateProactiveEngagementDetailsInput
+	}{arg1})
+	stub := fake.AssociateProactiveEngagementDetailsStub
+	fakeReturns := fake.associateProactiveEngagementDetailsReturns
+	fake.recordInvocation("AssociateProactiveEngagementDetails", []interface{}{arg1})
+	fake.associateProactiveEngagementDetailsMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsCallCount() int {
+	fake.associateProactiveEngagementDetailsMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsMutex.RUnlock()
+	return len(fake.associateProactiveEngagementDetailsArgsForCall)
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsCalls(stub func(*shield.AssociateProactiveEngagementDetailsInput) (*shield.AssociateProactiveEngagementDetailsOutput, error)) {
+	fake.associateProactiveEngagementDetailsMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsStub = stub
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsArgsForCall(i int) *shield.AssociateProactiveEngagementDetailsInput {
+	fake.associateProactiveEngagementDetailsMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsMutex.RUnlock()
+	argsForCall := fake.associateProactiveEngagementDetailsArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsReturns(result1 *shield.AssociateProactiveEngagementDetailsOutput, result2 error) {
+	fake.associateProactiveEngagementDetailsMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsStub = nil
+	fake.associateProactiveEngagementDetailsReturns = struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsReturnsOnCall(i int, result1 *shield.AssociateProactiveEngagementDetailsOutput, result2 error) {
+	fake.associateProactiveEngagementDetailsMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsStub = nil
+	if fake.associateProactiveEngagementDetailsReturnsOnCall == nil {
+		fake.associateProactiveEngagementDetailsReturnsOnCall = make(map[int]struct {
+			result1 *shield.AssociateProactiveEngagementDetailsOutput
+			result2 error
+		})
+	}
+	fake.associateProactiveEngagementDetailsReturnsOnCall[i] = struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsRequest(arg1 *shield.AssociateProactiveEngagementDetailsInput) (*request.Request, *shield.AssociateProactiveEngagementDetailsOutput) {
+	fake.associateProactiveEngagementDetailsRequestMutex.Lock()
+	ret, specificReturn := fake.associateProactiveEngagementDetailsRequestReturnsOnCall[len(fake.associateProactiveEngagementDetailsRequestArgsForCall)]
+	fake.associateProactiveEngagementDetailsRequestArgsForCall = append(fake.associateProactiveEngagementDetailsRequestArgsForCall, struct {
+		arg1 *shield.AssociateProactiveEngagementDetailsInput
+	}{arg1})
+	stub := fake.AssociateProactiveEngagementDetailsRequestStub
+	fakeReturns := fake.associateProactiveEngagementDetailsRequestReturns
+	fake.recordInvocation("AssociateProactiveEngagementDetailsRequest", []interface{}{arg1})
+	fake.associateProactiveEngagementDetailsRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsRequestCallCount() int {
+	fake.associateProactiveEngagementDetailsRequestMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsRequestMutex.RUnlock()
+	return len(fake.associateProactiveEngagementDetailsRequestArgsForCall)
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsRequestCalls(stub func(*shield.AssociateProactiveEngagementDetailsInput) (*request.Request, *shield.AssociateProactiveEngagementDetailsOutput)) {
+	fake.associateProactiveEngagementDetailsRequestMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsRequestMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsRequestStub = stub
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsRequestArgsForCall(i int) *shield.AssociateProactiveEngagementDetailsInput {
+	fake.associateProactiveEngagementDetailsRequestMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsRequestMutex.RUnlock()
+	argsForCall := fake.associateProactiveEngagementDetailsRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsRequestReturns(result1 *request.Request, result2 *shield.AssociateProactiveEngagementDetailsOutput) {
+	fake.associateProactiveEngagementDetailsRequestMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsRequestMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsRequestStub = nil
+	fake.associateProactiveEngagementDetailsRequestReturns = struct {
+		result1 *request.Request
+		result2 *shield.AssociateProactiveEngagementDetailsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsRequestReturnsOnCall(i int, result1 *request.Request, result2 *shield.AssociateProactiveEngagementDetailsOutput) {
+	fake.associateProactiveEngagementDetailsRequestMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsRequestMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsRequestStub = nil
+	if fake.associateProactiveEngagementDetailsRequestReturnsOnCall == nil {
+		fake.associateProactiveEngagementDetailsRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *shield.AssociateProactiveEngagementDetailsOutput
+		})
+	}
+	fake.associateProactiveEngagementDetailsRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *shield.AssociateProactiveEngagementDetailsOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsWithContext(arg1 context.Context, arg2 *shield.AssociateProactiveEngagementDetailsInput, arg3 ...request.Option) (*shield.AssociateProactiveEngagementDetailsOutput, error) {
+	fake.associateProactiveEngagementDetailsWithContextMutex.Lock()
+	ret, specificReturn := fake.associateProactiveEngagementDetailsWithContextReturnsOnCall[len(fake.associateProactiveEngagementDetailsWithContextArgsForCall)]
+	fake.associateProactiveEngagementDetailsWithContextArgsForCall = append(fake.associateProactiveEngagementDetailsWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *shield.AssociateProactiveEngagementDetailsInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.AssociateProactiveEngagementDetailsWithContextStub
+	fakeReturns := fake.associateProactiveEngagementDetailsWithContextReturns
+	fake.recordInvocation("AssociateProactiveEngagementDetailsWithContext", []interface{}{arg1, arg2, arg3})
+	fake.associateProactiveEngagementDetailsWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsWithContextCallCount() int {
+	fake.associateProactiveEngagementDetailsWithContextMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsWithContextMutex.RUnlock()
+	return len(fake.associateProactiveEngagementDetailsWithContextArgsForCall)
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsWithContextCalls(stub func(context.Context, *shield.AssociateProactiveEngagementDetailsInput, ...request.Option) (*shield.AssociateProactiveEngagementDetailsOutput, error)) {
+	fake.associateProactiveEngagementDetailsWithContextMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsWithContextMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsWithContextStub = stub
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsWithContextArgsForCall(i int) (context.Context, *shield.AssociateProactiveEngagementDetailsInput, []request.Option) {
+	fake.associateProactiveEngagementDetailsWithContextMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsWithContextMutex.RUnlock()
+	argsForCall := fake.associateProactiveEngagementDetailsWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsWithContextReturns(result1 *shield.AssociateProactiveEngagementDetailsOutput, result2 error) {
+	fake.associateProactiveEngagementDetailsWithContextMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsWithContextMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsWithContextStub = nil
+	fake.associateProactiveEngagementDetailsWithContextReturns = struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) AssociateProactiveEngagementDetailsWithContextReturnsOnCall(i int, result1 *shield.AssociateProactiveEngagementDetailsOutput, result2 error) {
+	fake.associateProactiveEngagementDetailsWithContextMutex.Lock()
+	defer fake.associateProactiveEngagementDetailsWithContextMutex.Unlock()
+	fake.AssociateProactiveEngagementDetailsWithContextStub = nil
+	if fake.associateProactiveEngagementDetailsWithContextReturnsOnCall == nil {
+		fake.associateProactiveEngagementDetailsWithContextReturnsOnCall = make(map[int]struct {
+			result1 *shield.AssociateProactiveEngagementDetailsOutput
+			result2 error
+		})
+	}
+	fake.associateProactiveEngagementDetailsWithContextReturnsOnCall[i] = struct {
+		result1 *shield.AssociateProactiveEngagementDetailsOutput
 		result2 error
 	}{result1, result2}
 }
@@ -2887,6 +3532,200 @@ func (fake *FakeShieldAPI) DescribeSubscriptionWithContextReturnsOnCall(i int, r
 	}{result1, result2}
 }
 
+func (fake *FakeShieldAPI) DisableProactiveEngagement(arg1 *shield.DisableProactiveEngagementInput) (*shield.DisableProactiveEngagementOutput, error) {
+	fake.disableProactiveEngagementMutex.Lock()
+	ret, specificReturn := fake.disableProactiveEngagementReturnsOnCall[len(fake.disableProactiveEngagementArgsForCall)]
+	fake.disableProactiveEngagementArgsForCall = append(fake.disableProactiveEngagementArgsForCall, struct {
+		arg1 *shield.DisableProactiveEngagementInput
+	}{arg1})
+	stub := fake.DisableProactiveEngagementStub
+	fakeReturns := fake.disableProactiveEngagementReturns
+	fake.recordInvocation("DisableProactiveEngagement", []interface{}{arg1})
+	fake.disableProactiveEngagementMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementCallCount() int {
+	fake.disableProactiveEngagementMutex.RLock()
+	defer fake.disableProactiveEngagementMutex.RUnlock()
+	return len(fake.disableProactiveEngagementArgsForCall)
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementCalls(stub func(*shield.DisableProactiveEngagementInput) (*shield.DisableProactiveEngagementOutput, error)) {
+	fake.disableProactiveEngagementMutex.Lock()
+	defer fake.disableProactiveEngagementMutex.Unlock()
+	fake.DisableProactiveEngagementStub = stub
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementArgsForCall(i int) *shield.DisableProactiveEngagementInput {
+	fake.disableProactiveEngagementMutex.RLock()
+	defer fake.disableProactiveEngagementMutex.RUnlock()
+	argsForCall := fake.disableProactiveEngagementArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementReturns(result1 *shield.DisableProactiveEngagementOutput, result2 error) {
+	fake.disableProactiveEngagementMutex.Lock()
+	defer fake.disableProactiveEngagementMutex.Unlock()
+	fake.DisableProactiveEngagementStub = nil
+	fake.disableProactiveEngagementReturns = struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementReturnsOnCall(i int, result1 *shield.DisableProactiveEngagementOutput, result2 error) {
+	fake.disableProactiveEngagementMutex.Lock()
+	defer fake.disableProactiveEngagementMutex.Unlock()
+	fake.DisableProactiveEngagementStub = nil
+	if fake.disableProactiveEngagementReturnsOnCall == nil {
+		fake.disableProactiveEngagementReturnsOnCall = make(map[int]struct {
+			result1 *shield.DisableProactiveEngagementOutput
+			result2 error
+		})
+	}
+	fake.disableProactiveEngagementReturnsOnCall[i] = struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementRequest(arg1 *shield.DisableProactiveEngagementInput) (*request.Request, *shield.DisableProactiveEngagementOutput) {
+	fake.disableProactiveEngagementRequestMutex.Lock()
+	ret, specificReturn := fake.disableProactiveEngagementRequestReturnsOnCall[len(fake.disableProactiveEngagementRequestArgsForCall)]
+	fake.disableProactiveEngagementRequestArgsForCall = append(fake.disableProactiveEngagementRequestArgsForCall, struct {
+		arg1 *shield.DisableProactiveEngagementInput
+	}{arg1})
+	stub := fake.DisableProactiveEngagementRequestStub
+	fakeReturns := fake.disableProactiveEngagementRequestReturns
+	fake.recordInvocation("DisableProactiveEngagementRequest", []interface{}{arg1})
+	fake.disableProactiveEngagementRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementRequestCallCount() int {
+	fake.disableProactiveEngagementRequestMutex.RLock()
+	defer fake.disableProactiveEngagementRequestMutex.RUnlock()
+	return len(fake.disableProactiveEngagementRequestArgsForCall)
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementRequestCalls(stub func(*shield.DisableProactiveEngagementInput) (*request.Request, *shield.DisableProactiveEngagementOutput)) {
+	fake.disableProactiveEngagementRequestMutex.Lock()
+	defer fake.disableProactiveEngagementRequestMutex.Unlock()
+	fake.DisableProactiveEngagementRequestStub = stub
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementRequestArgsForCall(i int) *shield.DisableProactiveEngagementInput {
+	fake.disableProactiveEngagementRequestMutex.RLock()
+	defer fake.disableProactiveEngagementRequestMutex.RUnlock()
+	argsForCall := fake.disableProactiveEngagementRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementRequestReturns(result1 *request.Request, result2 *shield.DisableProactiveEngagementOutput) {
+	fake.disableProactiveEngagementRequestMutex.Lock()
+	defer fake.disableProactiveEngagementRequestMutex.Unlock()
+	fake.DisableProactiveEngagementRequestStub = nil
+	fake.disableProactiveEngagementRequestReturns = struct {
+		result1 *request.Request
+		result2 *shield.DisableProactiveEngagementOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementRequestReturnsOnCall(i int, result1 *request.Request, result2 *shield.DisableProactiveEngagementOutput) {
+	fake.disableProactiveEngagementRequestMutex.Lock()
+	defer fake.disableProactiveEngagementRequestMutex.Unlock()
+	fake.DisableProactiveEngagementRequestStub = nil
+	if fake.disableProactiveEngagementRequestReturnsOnCall == nil {
+		fake.disableProactiveEngagementRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *shield.DisableProactiveEngagementOutput
+		})
+	}
+	fake.disableProactiveEngagementRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *shield.DisableProactiveEngagementOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementWithContext(arg1 context.Context, arg2 *shield.DisableProactiveEngagementInput, arg3 ...request.Option) (*shield.DisableProactiveEngagementOutput, error) {
+	fake.disableProactiveEngagementWithContextMutex.Lock()
+	ret, specificReturn := fake.disableProactiveEngagementWithContextReturnsOnCall[len(fake.disableProactiveEngagementWithContextArgsForCall)]
+	fake.disableProactiveEngagementWithContextArgsForCall = append(fake.disableProactiveEngagementWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *shield.DisableProactiveEngagementInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.DisableProactiveEngagementWithContextStub
+	fakeReturns := fake.disableProactiveEngagementWithContextReturns
+	fake.recordInvocation("DisableProactiveEngagementWithContext", []interface{}{arg1, arg2, arg3})
+	fake.disableProactiveEngagementWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementWithContextCallCount() int {
+	fake.disableProactiveEngagementWithContextMutex.RLock()
+	defer fake.disableProactiveEngagementWithContextMutex.RUnlock()
+	return len(fake.disableProactiveEngagementWithContextArgsForCall)
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementWithContextCalls(stub func(context.Context, *shield.DisableProactiveEngagementInput, ...request.Option) (*shield.DisableProactiveEngagementOutput, error)) {
+	fake.disableProactiveEngagementWithContextMutex.Lock()
+	defer fake.disableProactiveEngagementWithContextMutex.Unlock()
+	fake.DisableProactiveEngagementWithContextStub = stub
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementWithContextArgsForCall(i int) (context.Context, *shield.DisableProactiveEngagementInput, []request.Option) {
+	fake.disableProactiveEngagementWithContextMutex.RLock()
+	defer fake.disableProactiveEngagementWithContextMutex.RUnlock()
+	argsForCall := fake.disableProactiveEngagementWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementWithContextReturns(result1 *shield.DisableProactiveEngagementOutput, result2 error) {
+	fake.disableProactiveEngagementWithContextMutex.Lock()
+	defer fake.disableProactiveEngagementWithContextMutex.Unlock()
+	fake.DisableProactiveEngagementWithContextStub = nil
+	fake.disableProactiveEngagementWithContextReturns = struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisableProactiveEngagementWithContextReturnsOnCall(i int, result1 *shield.DisableProactiveEngagementOutput, result2 error) {
+	fake.disableProactiveEngagementWithContextMutex.Lock()
+	defer fake.disableProactiveEngagementWithContextMutex.Unlock()
+	fake.DisableProactiveEngagementWithContextStub = nil
+	if fake.disableProactiveEngagementWithContextReturnsOnCall == nil {
+		fake.disableProactiveEngagementWithContextReturnsOnCall = make(map[int]struct {
+			result1 *shield.DisableProactiveEngagementOutput
+			result2 error
+		})
+	}
+	fake.disableProactiveEngagementWithContextReturnsOnCall[i] = struct {
+		result1 *shield.DisableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeShieldAPI) DisassociateDRTLogBucket(arg1 *shield.DisassociateDRTLogBucketInput) (*shield.DisassociateDRTLogBucketOutput, error) {
 	fake.disassociateDRTLogBucketMutex.Lock()
 	ret, specificReturn := fake.disassociateDRTLogBucketReturnsOnCall[len(fake.disassociateDRTLogBucketArgsForCall)]
@@ -3275,6 +4114,394 @@ func (fake *FakeShieldAPI) DisassociateDRTRoleWithContextReturnsOnCall(i int, re
 	}{result1, result2}
 }
 
+func (fake *FakeShieldAPI) DisassociateHealthCheck(arg1 *shield.DisassociateHealthCheckInput) (*shield.DisassociateHealthCheckOutput, error) {
+	fake.disassociateHealthCheckMutex.Lock()
+	ret, specificReturn := fake.disassociateHealthCheckReturnsOnCall[len(fake.disassociateHealthCheckArgsForCall)]
+	fake.disassociateHealthCheckArgsForCall = append(fake.disassociateHealthCheckArgsForCall, struct {
+		arg1 *shield.DisassociateHealthCheckInput
+	}{arg1})
+	stub := fake.DisassociateHealthCheckStub
+	fakeReturns := fake.disassociateHealthCheckReturns
+	fake.recordInvocation("DisassociateHealthCheck", []interface{}{arg1})
+	fake.disassociateHealthCheckMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckCallCount() int {
+	fake.disassociateHealthCheckMutex.RLock()
+	defer fake.disassociateHealthCheckMutex.RUnlock()
+	return len(fake.disassociateHealthCheckArgsForCall)
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckCalls(stub func(*shield.DisassociateHealthCheckInput) (*shield.DisassociateHealthCheckOutput, error)) {
+	fake.disassociateHealthCheckMutex.Lock()
+	defer fake.disassociateHealthCheckMutex.Unlock()
+	fake.DisassociateHealthCheckStub = stub
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckArgsForCall(i int) *shield.DisassociateHealthCheckInput {
+	fake.disassociateHealthCheckMutex.RLock()
+	defer fake.disassociateHealthCheckMutex.RUnlock()
+	argsForCall := fake.disassociateHealthCheckArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckReturns(result1 *shield.DisassociateHealthCheckOutput, result2 error) {
+	fake.disassociateHealthCheckMutex.Lock()
+	defer fake.disassociateHealthCheckMutex.Unlock()
+	fake.DisassociateHealthCheckStub = nil
+	fake.disassociateHealthCheckReturns = struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckReturnsOnCall(i int, result1 *shield.DisassociateHealthCheckOutput, result2 error) {
+	fake.disassociateHealthCheckMutex.Lock()
+	defer fake.disassociateHealthCheckMutex.Unlock()
+	fake.DisassociateHealthCheckStub = nil
+	if fake.disassociateHealthCheckReturnsOnCall == nil {
+		fake.disassociateHealthCheckReturnsOnCall = make(map[int]struct {
+			result1 *shield.DisassociateHealthCheckOutput
+			result2 error
+		})
+	}
+	fake.disassociateHealthCheckReturnsOnCall[i] = struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckRequest(arg1 *shield.DisassociateHealthCheckInput) (*request.Request, *shield.DisassociateHealthCheckOutput) {
+	fake.disassociateHealthCheckRequestMutex.Lock()
+	ret, specificReturn := fake.disassociateHealthCheckRequestReturnsOnCall[len(fake.disassociateHealthCheckRequestArgsForCall)]
+	fake.disassociateHealthCheckRequestArgsForCall = append(fake.disassociateHealthCheckRequestArgsForCall, struct {
+		arg1 *shield.DisassociateHealthCheckInput
+	}{arg1})
+	stub := fake.DisassociateHealthCheckRequestStub
+	fakeReturns := fake.disassociateHealthCheckRequestReturns
+	fake.recordInvocation("DisassociateHealthCheckRequest", []interface{}{arg1})
+	fake.disassociateHealthCheckRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckRequestCallCount() int {
+	fake.disassociateHealthCheckRequestMutex.RLock()
+	defer fake.disassociateHealthCheckRequestMutex.RUnlock()
+	return len(fake.disassociateHealthCheckRequestArgsForCall)
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckRequestCalls(stub func(*shield.DisassociateHealthCheckInput) (*request.Request, *shield.DisassociateHealthCheckOutput)) {
+	fake.disassociateHealthCheckRequestMutex.Lock()
+	defer fake.disassociateHealthCheckRequestMutex.Unlock()
+	fake.DisassociateHealthCheckRequestStub = stub
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckRequestArgsForCall(i int) *shield.DisassociateHealthCheckInput {
+	fake.disassociateHealthCheckRequestMutex.RLock()
+	defer fake.disassociateHealthCheckRequestMutex.RUnlock()
+	argsForCall := fake.disassociateHealthCheckRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckRequestReturns(result1 *request.Request, result2 *shield.DisassociateHealthCheckOutput) {
+	fake.disassociateHealthCheckRequestMutex.Lock()
+	defer fake.disassociateHealthCheckRequestMutex.Unlock()
+	fake.DisassociateHealthCheckRequestStub = nil
+	fake.disassociateHealthCheckRequestReturns = struct {
+		result1 *request.Request
+		result2 *shield.DisassociateHealthCheckOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckRequestReturnsOnCall(i int, result1 *request.Request, result2 *shield.DisassociateHealthCheckOutput) {
+	fake.disassociateHealthCheckRequestMutex.Lock()
+	defer fake.disassociateHealthCheckRequestMutex.Unlock()
+	fake.DisassociateHealthCheckRequestStub = nil
+	if fake.disassociateHealthCheckRequestReturnsOnCall == nil {
+		fake.disassociateHealthCheckRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *shield.DisassociateHealthCheckOutput
+		})
+	}
+	fake.disassociateHealthCheckRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *shield.DisassociateHealthCheckOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckWithContext(arg1 context.Context, arg2 *shield.DisassociateHealthCheckInput, arg3 ...request.Option) (*shield.DisassociateHealthCheckOutput, error) {
+	fake.disassociateHealthCheckWithContextMutex.Lock()
+	ret, specificReturn := fake.disassociateHealthCheckWithContextReturnsOnCall[len(fake.disassociateHealthCheckWithContextArgsForCall)]
+	fake.disassociateHealthCheckWithContextArgsForCall = append(fake.disassociateHealthCheckWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *shield.DisassociateHealthCheckInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.DisassociateHealthCheckWithContextStub
+	fakeReturns := fake.disassociateHealthCheckWithContextReturns
+	fake.recordInvocation("DisassociateHealthCheckWithContext", []interface{}{arg1, arg2, arg3})
+	fake.disassociateHealthCheckWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckWithContextCallCount() int {
+	fake.disassociateHealthCheckWithContextMutex.RLock()
+	defer fake.disassociateHealthCheckWithContextMutex.RUnlock()
+	return len(fake.disassociateHealthCheckWithContextArgsForCall)
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckWithContextCalls(stub func(context.Context, *shield.DisassociateHealthCheckInput, ...request.Option) (*shield.DisassociateHealthCheckOutput, error)) {
+	fake.disassociateHealthCheckWithContextMutex.Lock()
+	defer fake.disassociateHealthCheckWithContextMutex.Unlock()
+	fake.DisassociateHealthCheckWithContextStub = stub
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckWithContextArgsForCall(i int) (context.Context, *shield.DisassociateHealthCheckInput, []request.Option) {
+	fake.disassociateHealthCheckWithContextMutex.RLock()
+	defer fake.disassociateHealthCheckWithContextMutex.RUnlock()
+	argsForCall := fake.disassociateHealthCheckWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckWithContextReturns(result1 *shield.DisassociateHealthCheckOutput, result2 error) {
+	fake.disassociateHealthCheckWithContextMutex.Lock()
+	defer fake.disassociateHealthCheckWithContextMutex.Unlock()
+	fake.DisassociateHealthCheckWithContextStub = nil
+	fake.disassociateHealthCheckWithContextReturns = struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) DisassociateHealthCheckWithContextReturnsOnCall(i int, result1 *shield.DisassociateHealthCheckOutput, result2 error) {
+	fake.disassociateHealthCheckWithContextMutex.Lock()
+	defer fake.disassociateHealthCheckWithContextMutex.Unlock()
+	fake.DisassociateHealthCheckWithContextStub = nil
+	if fake.disassociateHealthCheckWithContextReturnsOnCall == nil {
+		fake.disassociateHealthCheckWithContextReturnsOnCall = make(map[int]struct {
+			result1 *shield.DisassociateHealthCheckOutput
+			result2 error
+		})
+	}
+	fake.disassociateHealthCheckWithContextReturnsOnCall[i] = struct {
+		result1 *shield.DisassociateHealthCheckOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagement(arg1 *shield.EnableProactiveEngagementInput) (*shield.EnableProactiveEngagementOutput, error) {
+	fake.enableProactiveEngagementMutex.Lock()
+	ret, specificReturn := fake.enableProactiveEngagementReturnsOnCall[len(fake.enableProactiveEngagementArgsForCall)]
+	fake.enableProactiveEngagementArgsForCall = append(fake.enableProactiveEngagementArgsForCall, struct {
+		arg1 *shield.EnableProactiveEngagementInput
+	}{arg1})
+	stub := fake.EnableProactiveEngagementStub
+	fakeReturns := fake.enableProactiveEngagementReturns
+	fake.recordInvocation("EnableProactiveEngagement", []interface{}{arg1})
+	fake.enableProactiveEngagementMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementCallCount() int {
+	fake.enableProactiveEngagementMutex.RLock()
+	defer fake.enableProactiveEngagementMutex.RUnlock()
+	return len(fake.enableProactiveEngagementArgsForCall)
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementCalls(stub func(*shield.EnableProactiveEngagementInput) (*shield.EnableProactiveEngagementOutput, error)) {
+	fake.enableProactiveEngagementMutex.Lock()
+	defer fake.enableProactiveEngagementMutex.Unlock()
+	fake.EnableProactiveEngagementStub = stub
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementArgsForCall(i int) *shield.EnableProactiveEngagementInput {
+	fake.enableProactiveEngagementMutex.RLock()
+	defer fake.enableProactiveEngagementMutex.RUnlock()
+	argsForCall := fake.enableProactiveEngagementArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementReturns(result1 *shield.EnableProactiveEngagementOutput, result2 error) {
+	fake.enableProactiveEngagementMutex.Lock()
+	defer fake.enableProactiveEngagementMutex.Unlock()
+	fake.EnableProactiveEngagementStub = nil
+	fake.enableProactiveEngagementReturns = struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementReturnsOnCall(i int, result1 *shield.EnableProactiveEngagementOutput, result2 error) {
+	fake.enableProactiveEngagementMutex.Lock()
+	defer fake.enableProactiveEngagementMutex.Unlock()
+	fake.EnableProactiveEngagementStub = nil
+	if fake.enableProactiveEngagementReturnsOnCall == nil {
+		fake.enableProactiveEngagementReturnsOnCall = make(map[int]struct {
+			result1 *shield.EnableProactiveEngagementOutput
+			result2 error
+		})
+	}
+	fake.enableProactiveEngagementReturnsOnCall[i] = struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementRequest(arg1 *shield.EnableProactiveEngagementInput) (*request.Request, *shield.EnableProactiveEngagementOutput) {
+	fake.enableProactiveEngagementRequestMutex.Lock()
+	ret, specificReturn := fake.enableProactiveEngagementRequestReturnsOnCall[len(fake.enableProactiveEngagementRequestArgsForCall)]
+	fake.enableProactiveEngagementRequestArgsForCall = append(fake.enableProactiveEngagementRequestArgsForCall, struct {
+		arg1 *shield.EnableProactiveEngagementInput
+	}{arg1})
+	stub := fake.EnableProactiveEngagementRequestStub
+	fakeReturns := fake.enableProactiveEngagementRequestReturns
+	fake.recordInvocation("EnableProactiveEngagementRequest", []interface{}{arg1})
+	fake.enableProactiveEngagementRequestMutex.Unlock()
+	if stub != nil {
+		return stub(arg1)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementRequestCallCount() int {
+	fake.enableProactiveEngagementRequestMutex.RLock()
+	defer fake.enableProactiveEngagementRequestMutex.RUnlock()
+	return len(fake.enableProactiveEngagementRequestArgsForCall)
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementRequestCalls(stub func(*shield.EnableProactiveEngagementInput) (*request.Request, *shield.EnableProactiveEngagementOutput)) {
+	fake.enableProactiveEngagementRequestMutex.Lock()
+	defer fake.enableProactiveEngagementRequestMutex.Unlock()
+	fake.EnableProactiveEngagementRequestStub = stub
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementRequestArgsForCall(i int) *shield.EnableProactiveEngagementInput {
+	fake.enableProactiveEngagementRequestMutex.RLock()
+	defer fake.enableProactiveEngagementRequestMutex.RUnlock()
+	argsForCall := fake.enableProactiveEngagementRequestArgsForCall[i]
+	return argsForCall.arg1
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementRequestReturns(result1 *request.Request, result2 *shield.EnableProactiveEngagementOutput) {
+	fake.enableProactiveEngagementRequestMutex.Lock()
+	defer fake.enableProactiveEngagementRequestMutex.Unlock()
+	fake.EnableProactiveEngagementRequestStub = nil
+	fake.enableProactiveEngagementRequestReturns = struct {
+		result1 *request.Request
+		result2 *shield.EnableProactiveEngagementOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementRequestReturnsOnCall(i int, result1 *request.Request, result2 *shield.EnableProactiveEngagementOutput) {
+	fake.enableProactiveEngagementRequestMutex.Lock()
+	defer fake.enableProactiveEngagementRequestMutex.Unlock()
+	fake.EnableProactiveEngagementRequestStub = nil
+	if fake.enableProactiveEngagementRequestReturnsOnCall == nil {
+		fake.enableProactiveEngagementRequestReturnsOnCall = make(map[int]struct {
+			result1 *request.Request
+			result2 *shield.EnableProactiveEngagementOutput
+		})
+	}
+	fake.enableProactiveEngagementRequestReturnsOnCall[i] = struct {
+		result1 *request.Request
+		result2 *shield.EnableProactiveEngagementOutput
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementWithContext(arg1 context.Context, arg2 *shield.EnableProactiveEngagementInput, arg3 ...request.Option) (*shield.EnableProactiveEngagementOutput, error) {
+	fake.enableProactiveEngagementWithContextMutex.Lock()
+	ret, specificReturn := fake.enableProactiveEngagementWithContextReturnsOnCall[len(fake.enableProactiveEngagementWithContextArgsForCall)]
+	fake.enableProactiveEngagementWithContextArgsForCall = append(fake.enableProactiveEngagementWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *shield.EnableProactiveEngagementInput
+		arg3 []request.Option
+	}{arg1, arg2, arg3})
+	stub := fake.EnableProactiveEngagementWithContextStub
+	fakeReturns := fake.enableProactiveEngagementWithContextReturns
+	fake.recordInvocation("EnableProactiveEngagementWithContext", []interface{}{arg1, arg2, arg3})
+	fake.enableProactiveEngagementWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3...)
+	}
+	if specificReturn {
+		return ret.result1, ret.result2
+	}
+	return fakeReturns.result1, fakeReturns.result2
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementWithContextCallCount() int {
+	fake.enableProactiveEngagementWithContextMutex.RLock()
+	defer fake.enableProactiveEngagementWithContextMutex.RUnlock()
+	return len(fake.enableProactiveEngagementWithContextArgsForCall)
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementWithContextCalls(stub func(context.Context, *shield.EnableProactiveEngagementInput, ...request.Option) (*shield.EnableProactiveEngagementOutput, error)) {
+	fake.enableProactiveEngagementWithContextMutex.Lock()
+	defer fake.enableProactiveEngagementWithContextMutex.Unlock()
+	fake.EnableProactiveEngagementWithContextStub = stub
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementWithContextArgsForCall(i int) (context.Context, *shield.EnableProactiveEngagementInput, []request.Option) {
+	fake.enableProactiveEngagementWithContextMutex.RLock()
+	defer fake.enableProactiveEngagementWithContextMutex.RUnlock()
+	argsForCall := fake.enableProactiveEngagementWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementWithContextReturns(result1 *shield.EnableProactiveEngagementOutput, result2 error) {
+	fake.enableProactiveEngagementWithContextMutex.Lock()
+	defer fake.enableProactiveEngagementWithContextMutex.Unlock()
+	fake.EnableProactiveEngagementWithContextStub = nil
+	fake.enableProactiveEngagementWithContextReturns = struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) EnableProactiveEngagementWithContextReturnsOnCall(i int, result1 *shield.EnableProactiveEngagementOutput, result2 error) {
+	fake.enableProactiveEngagementWithContextMutex.Lock()
+	defer fake.enableProactiveEngagementWithContextMutex.Unlock()
+	fake.EnableProactiveEngagementWithContextStub = nil
+	if fake.enableProactiveEngagementWithContextReturnsOnCall == nil {
+		fake.enableProactiveEngagementWithContextReturnsOnCall = make(map[int]struct {
+			result1 *shield.EnableProactiveEngagementOutput
+			result2 error
+		})
+	}
+	fake.enableProactiveEngagementWithContextReturnsOnCall[i] = struct {
+		result1 *shield.EnableProactiveEngagementOutput
+		result2 error
+	}{result1, result2}
+}
+
 func (fake *FakeShieldAPI) GetSubscriptionState(arg1 *shield.GetSubscriptionStateInput) (*shield.GetSubscriptionStateOutput, error) {
 	fake.getSubscriptionStateMutex.Lock()
 	ret, specificReturn := fake.getSubscriptionStateReturnsOnCall[len(fake.getSubscriptionStateArgsForCall)]
@@ -3533,6 +4760,132 @@ func (fake *FakeShieldAPI) ListAttacksReturnsOnCall(i int, result1 *shield.ListA
 	}{result1, result2}
 }
 
+func (fake *FakeShieldAPI) ListAttacksPages(arg1 *shield.ListAttacksInput, arg2 func(*shield.ListAttacksOutput, bool) bool) error {
+	fake.listAttacksPagesMutex.Lock()
+	ret, specificReturn := fake.listAttacksPagesReturnsOnCall[len(fake.listAttacksPagesArgsForCall)]
+	fake.listAttacksPagesArgsForCall = append(fake.listAttacksPagesArgsForCall, struct {
+		arg1 *shield.ListAttacksInput
+		arg2 func(*shield.ListAttacksOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.ListAttacksPagesStub
+	fakeReturns := fake.listAttacksPagesReturns
+	fake.recordInvocation("ListAttacksPages", []interface{}{arg1, arg2})
+	fake.listAttacksPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesCallCount() int {
+	fake.listAttacksPagesMutex.RLock()
+	defer fake.listAttacksPagesMutex.RUnlock()
+	return len(fake.listAttacksPagesArgsForCall)
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesCalls(stub func(*shield.ListAttacksInput, func(*shield.ListAttacksOutput, bool) bool) error) {
+	fake.listAttacksPagesMutex.Lock()
+	defer fake.listAttacksPagesMutex.Unlock()
+	fake.ListAttacksPagesStub = stub
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesArgsForCall(i int) (*shield.ListAttacksInput, func(*shield.ListAttacksOutput, bool) bool) {
+	fake.listAttacksPagesMutex.RLock()
+	defer fake.listAttacksPagesMutex.RUnlock()
+	argsForCall := fake.listAttacksPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesReturns(result1 error) {
+	fake.listAttacksPagesMutex.Lock()
+	defer fake.listAttacksPagesMutex.Unlock()
+	fake.ListAttacksPagesStub = nil
+	fake.listAttacksPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesReturnsOnCall(i int, result1 error) {
+	fake.listAttacksPagesMutex.Lock()
+	defer fake.listAttacksPagesMutex.Unlock()
+	fake.ListAttacksPagesStub = nil
+	if fake.listAttacksPagesReturnsOnCall == nil {
+		fake.listAttacksPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.listAttacksPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesWithContext(arg1 context.Context, arg2 *shield.ListAttacksInput, arg3 func(*shield.ListAttacksOutput, bool) bool, arg4 ...request.Option) error {
+	fake.listAttacksPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.listAttacksPagesWithContextReturnsOnCall[len(fake.listAttacksPagesWithContextArgsForCall)]
+	fake.listAttacksPagesWithContextArgsForCall = append(fake.listAttacksPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *shield.ListAttacksInput
+		arg3 func(*shield.ListAttacksOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListAttacksPagesWithContextStub
+	fakeReturns := fake.listAttacksPagesWithContextReturns
+	fake.recordInvocation("ListAttacksPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.listAttacksPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesWithContextCallCount() int {
+	fake.listAttacksPagesWithContextMutex.RLock()
+	defer fake.listAttacksPagesWithContextMutex.RUnlock()
+	return len(fake.listAttacksPagesWithContextArgsForCall)
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesWithContextCalls(stub func(context.Context, *shield.ListAttacksInput, func(*shield.ListAttacksOutput, bool) bool, ...request.Option) error) {
+	fake.listAttacksPagesWithContextMutex.Lock()
+	defer fake.listAttacksPagesWithContextMutex.Unlock()
+	fake.ListAttacksPagesWithContextStub = stub
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesWithContextArgsForCall(i int) (context.Context, *shield.ListAttacksInput, func(*shield.ListAttacksOutput, bool) bool, []request.Option) {
+	fake.listAttacksPagesWithContextMutex.RLock()
+	defer fake.listAttacksPagesWithContextMutex.RUnlock()
+	argsForCall := fake.listAttacksPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesWithContextReturns(result1 error) {
+	fake.listAttacksPagesWithContextMutex.Lock()
+	defer fake.listAttacksPagesWithContextMutex.Unlock()
+	fake.ListAttacksPagesWithContextStub = nil
+	fake.listAttacksPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeShieldAPI) ListAttacksPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.listAttacksPagesWithContextMutex.Lock()
+	defer fake.listAttacksPagesWithContextMutex.Unlock()
+	fake.ListAttacksPagesWithContextStub = nil
+	if fake.listAttacksPagesWithContextReturnsOnCall == nil {
+		fake.listAttacksPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.listAttacksPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
 func (fake *FakeShieldAPI) ListAttacksRequest(arg1 *shield.ListAttacksInput) (*request.Request, *shield.ListAttacksOutput) {
 	fake.listAttacksRequestMutex.Lock()
 	ret, specificReturn := fake.listAttacksRequestReturnsOnCall[len(fake.listAttacksRequestArgsForCall)]
@@ -3725,6 +5078,132 @@ func (fake *FakeShieldAPI) ListProtectionsReturnsOnCall(i int, result1 *shield.L
 		result1 *shield.ListProtectionsOutput
 		result2 error
 	}{result1, result2}
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPages(arg1 *shield.ListProtectionsInput, arg2 func(*shield.ListProtectionsOutput, bool) bool) error {
+	fake.listProtectionsPagesMutex.Lock()
+	ret, specificReturn := fake.listProtectionsPagesReturnsOnCall[len(fake.listProtectionsPagesArgsForCall)]
+	fake.listProtectionsPagesArgsForCall = append(fake.listProtectionsPagesArgsForCall, struct {
+		arg1 *shield.ListProtectionsInput
+		arg2 func(*shield.ListProtectionsOutput, bool) bool
+	}{arg1, arg2})
+	stub := fake.ListProtectionsPagesStub
+	fakeReturns := fake.listProtectionsPagesReturns
+	fake.recordInvocation("ListProtectionsPages", []interface{}{arg1, arg2})
+	fake.listProtectionsPagesMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesCallCount() int {
+	fake.listProtectionsPagesMutex.RLock()
+	defer fake.listProtectionsPagesMutex.RUnlock()
+	return len(fake.listProtectionsPagesArgsForCall)
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesCalls(stub func(*shield.ListProtectionsInput, func(*shield.ListProtectionsOutput, bool) bool) error) {
+	fake.listProtectionsPagesMutex.Lock()
+	defer fake.listProtectionsPagesMutex.Unlock()
+	fake.ListProtectionsPagesStub = stub
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesArgsForCall(i int) (*shield.ListProtectionsInput, func(*shield.ListProtectionsOutput, bool) bool) {
+	fake.listProtectionsPagesMutex.RLock()
+	defer fake.listProtectionsPagesMutex.RUnlock()
+	argsForCall := fake.listProtectionsPagesArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesReturns(result1 error) {
+	fake.listProtectionsPagesMutex.Lock()
+	defer fake.listProtectionsPagesMutex.Unlock()
+	fake.ListProtectionsPagesStub = nil
+	fake.listProtectionsPagesReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesReturnsOnCall(i int, result1 error) {
+	fake.listProtectionsPagesMutex.Lock()
+	defer fake.listProtectionsPagesMutex.Unlock()
+	fake.ListProtectionsPagesStub = nil
+	if fake.listProtectionsPagesReturnsOnCall == nil {
+		fake.listProtectionsPagesReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.listProtectionsPagesReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesWithContext(arg1 context.Context, arg2 *shield.ListProtectionsInput, arg3 func(*shield.ListProtectionsOutput, bool) bool, arg4 ...request.Option) error {
+	fake.listProtectionsPagesWithContextMutex.Lock()
+	ret, specificReturn := fake.listProtectionsPagesWithContextReturnsOnCall[len(fake.listProtectionsPagesWithContextArgsForCall)]
+	fake.listProtectionsPagesWithContextArgsForCall = append(fake.listProtectionsPagesWithContextArgsForCall, struct {
+		arg1 context.Context
+		arg2 *shield.ListProtectionsInput
+		arg3 func(*shield.ListProtectionsOutput, bool) bool
+		arg4 []request.Option
+	}{arg1, arg2, arg3, arg4})
+	stub := fake.ListProtectionsPagesWithContextStub
+	fakeReturns := fake.listProtectionsPagesWithContextReturns
+	fake.recordInvocation("ListProtectionsPagesWithContext", []interface{}{arg1, arg2, arg3, arg4})
+	fake.listProtectionsPagesWithContextMutex.Unlock()
+	if stub != nil {
+		return stub(arg1, arg2, arg3, arg4...)
+	}
+	if specificReturn {
+		return ret.result1
+	}
+	return fakeReturns.result1
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesWithContextCallCount() int {
+	fake.listProtectionsPagesWithContextMutex.RLock()
+	defer fake.listProtectionsPagesWithContextMutex.RUnlock()
+	return len(fake.listProtectionsPagesWithContextArgsForCall)
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesWithContextCalls(stub func(context.Context, *shield.ListProtectionsInput, func(*shield.ListProtectionsOutput, bool) bool, ...request.Option) error) {
+	fake.listProtectionsPagesWithContextMutex.Lock()
+	defer fake.listProtectionsPagesWithContextMutex.Unlock()
+	fake.ListProtectionsPagesWithContextStub = stub
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesWithContextArgsForCall(i int) (context.Context, *shield.ListProtectionsInput, func(*shield.ListProtectionsOutput, bool) bool, []request.Option) {
+	fake.listProtectionsPagesWithContextMutex.RLock()
+	defer fake.listProtectionsPagesWithContextMutex.RUnlock()
+	argsForCall := fake.listProtectionsPagesWithContextArgsForCall[i]
+	return argsForCall.arg1, argsForCall.arg2, argsForCall.arg3, argsForCall.arg4
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesWithContextReturns(result1 error) {
+	fake.listProtectionsPagesWithContextMutex.Lock()
+	defer fake.listProtectionsPagesWithContextMutex.Unlock()
+	fake.ListProtectionsPagesWithContextStub = nil
+	fake.listProtectionsPagesWithContextReturns = struct {
+		result1 error
+	}{result1}
+}
+
+func (fake *FakeShieldAPI) ListProtectionsPagesWithContextReturnsOnCall(i int, result1 error) {
+	fake.listProtectionsPagesWithContextMutex.Lock()
+	defer fake.listProtectionsPagesWithContextMutex.Unlock()
+	fake.ListProtectionsPagesWithContextStub = nil
+	if fake.listProtectionsPagesWithContextReturnsOnCall == nil {
+		fake.listProtectionsPagesWithContextReturnsOnCall = make(map[int]struct {
+			result1 error
+		})
+	}
+	fake.listProtectionsPagesWithContextReturnsOnCall[i] = struct {
+		result1 error
+	}{result1}
 }
 
 func (fake *FakeShieldAPI) ListProtectionsRequest(arg1 *shield.ListProtectionsInput) (*request.Request, *shield.ListProtectionsOutput) {
@@ -4260,6 +5739,18 @@ func (fake *FakeShieldAPI) Invocations() map[string][][]interface{} {
 	defer fake.associateDRTRoleRequestMutex.RUnlock()
 	fake.associateDRTRoleWithContextMutex.RLock()
 	defer fake.associateDRTRoleWithContextMutex.RUnlock()
+	fake.associateHealthCheckMutex.RLock()
+	defer fake.associateHealthCheckMutex.RUnlock()
+	fake.associateHealthCheckRequestMutex.RLock()
+	defer fake.associateHealthCheckRequestMutex.RUnlock()
+	fake.associateHealthCheckWithContextMutex.RLock()
+	defer fake.associateHealthCheckWithContextMutex.RUnlock()
+	fake.associateProactiveEngagementDetailsMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsMutex.RUnlock()
+	fake.associateProactiveEngagementDetailsRequestMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsRequestMutex.RUnlock()
+	fake.associateProactiveEngagementDetailsWithContextMutex.RLock()
+	defer fake.associateProactiveEngagementDetailsWithContextMutex.RUnlock()
 	fake.createProtectionMutex.RLock()
 	defer fake.createProtectionMutex.RUnlock()
 	fake.createProtectionRequestMutex.RLock()
@@ -4314,6 +5805,12 @@ func (fake *FakeShieldAPI) Invocations() map[string][][]interface{} {
 	defer fake.describeSubscriptionRequestMutex.RUnlock()
 	fake.describeSubscriptionWithContextMutex.RLock()
 	defer fake.describeSubscriptionWithContextMutex.RUnlock()
+	fake.disableProactiveEngagementMutex.RLock()
+	defer fake.disableProactiveEngagementMutex.RUnlock()
+	fake.disableProactiveEngagementRequestMutex.RLock()
+	defer fake.disableProactiveEngagementRequestMutex.RUnlock()
+	fake.disableProactiveEngagementWithContextMutex.RLock()
+	defer fake.disableProactiveEngagementWithContextMutex.RUnlock()
 	fake.disassociateDRTLogBucketMutex.RLock()
 	defer fake.disassociateDRTLogBucketMutex.RUnlock()
 	fake.disassociateDRTLogBucketRequestMutex.RLock()
@@ -4326,6 +5823,18 @@ func (fake *FakeShieldAPI) Invocations() map[string][][]interface{} {
 	defer fake.disassociateDRTRoleRequestMutex.RUnlock()
 	fake.disassociateDRTRoleWithContextMutex.RLock()
 	defer fake.disassociateDRTRoleWithContextMutex.RUnlock()
+	fake.disassociateHealthCheckMutex.RLock()
+	defer fake.disassociateHealthCheckMutex.RUnlock()
+	fake.disassociateHealthCheckRequestMutex.RLock()
+	defer fake.disassociateHealthCheckRequestMutex.RUnlock()
+	fake.disassociateHealthCheckWithContextMutex.RLock()
+	defer fake.disassociateHealthCheckWithContextMutex.RUnlock()
+	fake.enableProactiveEngagementMutex.RLock()
+	defer fake.enableProactiveEngagementMutex.RUnlock()
+	fake.enableProactiveEngagementRequestMutex.RLock()
+	defer fake.enableProactiveEngagementRequestMutex.RUnlock()
+	fake.enableProactiveEngagementWithContextMutex.RLock()
+	defer fake.enableProactiveEngagementWithContextMutex.RUnlock()
 	fake.getSubscriptionStateMutex.RLock()
 	defer fake.getSubscriptionStateMutex.RUnlock()
 	fake.getSubscriptionStateRequestMutex.RLock()
@@ -4334,12 +5843,20 @@ func (fake *FakeShieldAPI) Invocations() map[string][][]interface{} {
 	defer fake.getSubscriptionStateWithContextMutex.RUnlock()
 	fake.listAttacksMutex.RLock()
 	defer fake.listAttacksMutex.RUnlock()
+	fake.listAttacksPagesMutex.RLock()
+	defer fake.listAttacksPagesMutex.RUnlock()
+	fake.listAttacksPagesWithContextMutex.RLock()
+	defer fake.listAttacksPagesWithContextMutex.RUnlock()
 	fake.listAttacksRequestMutex.RLock()
 	defer fake.listAttacksRequestMutex.RUnlock()
 	fake.listAttacksWithContextMutex.RLock()
 	defer fake.listAttacksWithContextMutex.RUnlock()
 	fake.listProtectionsMutex.RLock()
 	defer fake.listProtectionsMutex.RUnlock()
+	fake.listProtectionsPagesMutex.RLock()
+	defer fake.listProtectionsPagesMutex.RUnlock()
+	fake.listProtectionsPagesWithContextMutex.RLock()
+	defer fake.listProtectionsPagesWithContextMutex.RUnlock()
 	fake.listProtectionsRequestMutex.RLock()
 	defer fake.listProtectionsRequestMutex.RUnlock()
 	fake.listProtectionsWithContextMutex.RLock()
