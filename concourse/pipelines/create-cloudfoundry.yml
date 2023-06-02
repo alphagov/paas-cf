@@ -3380,14 +3380,18 @@ jobs:
 
                   for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
                     for az in $(seq 1 $AZ_COUNT); do
+                      echo "Uploading ${f} to grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
+
                       sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
                       | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
+                      | jq '{"dashboard": ., "overwrite": true, "folderId": 0}' \
                       | curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
                         --user "admin:$GRAFANA_PASS" \
                         --header 'Content-Type: application/json' \
                         --data "@-" \
                         --fail \
                         --include
+                      echo
                     done;
                   done
 
@@ -5490,7 +5494,7 @@ jobs:
 
                 make integration
 
-      - task: deploy-paas-billing
+      - task: create-database-and-config-files
         tags: [colocated-with-web]
         config:
           platform: linux
@@ -5507,6 +5511,8 @@ jobs:
             CF_PASS: ((cf_pass))
           inputs:
             - name: paas-cf
+            - name: paas-billing
+          outputs:
             - name: paas-billing
           run:
             path: sh
@@ -5527,6 +5533,7 @@ jobs:
 
                 cf target -o admin -s billing
 
+                # Ensure the billing DB Exists
                 if ! cf service billing-db > /dev/null; then
                   cf create-service postgres "${BILLING_DB_PLAN}" billing-db
                   while ! cf service billing-db | grep -iqE 'status:\s+create succeeded'; do
@@ -5535,6 +5542,7 @@ jobs:
                   done
                 fi
 
+                # Ensure logit ssl drain exists and is configured
                 if ! cf service billing-logit-ssl-drain > /dev/null; then
                   cf create-user-provided-service \
                     billing-logit-ssl-drain \
@@ -5545,10 +5553,12 @@ jobs:
                     -l "syslog-tls://${LOGIT_ADDRESS}:${LOGIT_PORT}"
                 fi
 
+
+                # Update the billing config with the correct values
                 cp "paas-cf/config/billing/output/${AWS_REGION}.json" paas-billing/config.json
 
+                # Update the manifest yaml with the correct values
                 cd paas-billing
-
                 ruby -ryaml -e "
                   env = {
                     'CF_CLIENT_ID' => 'paas-billing',
@@ -5587,15 +5597,145 @@ jobs:
                     ]
                   }
                   File.write('manifest-collector.yml', collector.to_yaml)
+
+                  proxy = YAML.load_file('manifest-metricsproxy.yml', aliases: true)
+                  proxy['applications'].each { |app|
+                    app['env'] = {} unless app['env']
+                    app['env'] = app['env'].merge(env)
+                    app['env']['APP_NAMES'] = 'paas-billing-api,paas-billing-collector'
+                    app['routes'] = [
+                      { 'route' => 'billing-metrics-proxy.${SYSTEM_DNS_ZONE_NAME}' }
+                    ]
+                    app['health-check-http-endpoint'] = '/'
+                  }
+                  File.write('manifest-metricsproxy.yml', proxy.to_yaml)
                 "
 
-                cf cancel-deployment paas-billing-api || true
-                cf push --strategy=rolling paas-billing-api -f manifest-api.yml
+      - in_parallel:
+        - task: deploy-paas-billing-api
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-cli-image-resource
+            params:
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              CF_CLIENT_SECRET: ((cf_client_secret))
+              LOGIT_ADDRESS: ((logit_syslog_address))
+              LOGIT_PORT: ((logit_syslog_port))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
+            inputs:
+              - name: paas-cf
+              - name: paas-billing
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+                  cf target -o admin -s billing
 
-                cf cancel-deployment paas-billing-collector || true
-                cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
+                  cd paas-billing
 
-                while ! ../paas-cf/concourse/scripts/check-billing-logit-ssl-drain-service-app-bindings.sh; do
+                  cf cancel-deployment paas-billing-api || true
+                  cf push --strategy=rolling paas-billing-api -f manifest-api.yml
+        - task: deploy-paas-billing-collector
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-cli-image-resource
+            params:
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              CF_CLIENT_SECRET: ((cf_client_secret))
+              LOGIT_ADDRESS: ((logit_syslog_address))
+              LOGIT_PORT: ((logit_syslog_port))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
+            inputs:
+              - name: paas-cf
+              - name: paas-billing
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+                  cf target -o admin -s billing
+
+                  cd paas-billing
+
+                  cf cancel-deployment paas-billing-collector || true
+                  cf push --strategy=rolling paas-billing-collector -f manifest-collector.yml
+
+        - task: deploy-paas-billing-metrics-proxy
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-cli-image-resource
+            params:
+              AWS_REGION: ((aws_region))
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              CF_CLIENT_SECRET: ((cf_client_secret))
+              LOGIT_ADDRESS: ((logit_syslog_address))
+              LOGIT_PORT: ((logit_syslog_port))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
+            inputs:
+              - name: paas-cf
+              - name: paas-billing
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+                  cf target -o admin -s billing
+
+                  cd paas-billing
+
+                  cf cancel-deployment paas-billing-metrics-proxy || true
+                  cf push --strategy=rolling paas-billing-metrics-proxy -f manifest-metricsproxy.yml
+
+      - task: wait-for-bindings-to-complete
+        tags: [colocated-with-web]
+        config:
+          platform: linux
+          image_resource: *cf-cli-image-resource
+          params:
+            API_ENDPOINT: ((api_endpoint))
+            CF_ADMIN: ((cf_admin))
+            CF_PASS: ((cf_pass))
+          inputs:
+            - name: paas-cf
+          run:
+            path: sh
+            args:
+              - -e
+              - -u
+              - -c
+              - |
+                cf api "${API_ENDPOINT}"
+                cf auth "${CF_ADMIN}" "${CF_PASS}"
+                cf target -o admin -s billing
+
+                while ! paas-cf/concourse/scripts/check-billing-logit-ssl-drain-service-app-bindings.sh; do
                   echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
                   sleep 10
                 done
@@ -5628,6 +5768,7 @@ jobs:
                 cf target -o admin -s billing
 
                 export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
+                export METRICSPROXY_API_URL="https://billing-metrics-proxy.${SYSTEM_DNS_ZONE_NAME}"
                 cd src/github.com/alphagov/paas-billing
 
                 make acceptance
