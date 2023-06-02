@@ -205,7 +205,7 @@ dev: ## Set Environment to DEV
 	$(eval export MAKEFILE_ENV_TARGET=dev)
 	$(eval export PERSISTENT_ENVIRONMENT=false)
 	$(eval export ENABLE_DESTROY=true)
-	$(eval export ENABLE_AUTODELETE=true)
+	$(eval export ENABLE_AUTODELETE ?= false)
 	$(eval export ENABLE_TEST_PIPELINES=true)
 	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
 	$(eval export SYSTEM_DNS_ZONE_NAME=$${DEPLOY_ENV}.dev.cloudpipeline.digital)
@@ -236,8 +236,6 @@ dev: ## Set Environment to DEV
 .PHONY: $(filter-out dev%,$(MAKECMDGOALS))
 dev%: dev
 	$(eval export DEPLOY_ENV=$@)
-	$(eval export ENABLE_AUTODELETE=false)
-	$(eval export ENABLE_AZ_HEALTHCHECK ?= false)
 	@true
 
 .PHONY: stg-lon
