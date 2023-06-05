@@ -1111,7 +1111,7 @@
   },
   "timezone": "",
   "title": "Billing compared to spending (new billing metrics)",
-  "uid": "billing-compared-to-spending--new-metrics",
+  "uid": "billing-compared-to-spending-new-metrics",
   "version": 5,
   "weekStart": ""
 }
