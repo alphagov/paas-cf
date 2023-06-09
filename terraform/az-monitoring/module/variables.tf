@@ -26,3 +26,7 @@ variable "zone" {
 variable "aws_route_table_id" {
   description = "Route Table ID for association with subnets"
 }
+
+variable "wait_for_healthcheck" {
+  description = "Wait for the healthchecks"
+}

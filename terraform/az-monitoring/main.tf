@@ -25,7 +25,7 @@ resource "aws_vpc" "main" {
 
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main[0].id
-  count = var.enabled ? 1 : 0
+  count  = var.enabled ? 1 : 0
 }
 
 resource "aws_route_table" "main" {
@@ -41,35 +41,38 @@ resource "aws_route_table" "main" {
 module "healthcheck_a" {
   source = "./module"
 
-  ami                = data.aws_ami.amazon_linux_2.id
-  cidr               = "10.0.1.0/24"
-  region             = var.region
-  aws_route_table_id = aws_route_table.main[0].id
-  vpc_id             = aws_vpc.main[0].id
-  zone               = "a"
-  count              = var.enabled ? 1 : 0
+  ami                  = data.aws_ami.amazon_linux_2.id
+  cidr                 = "10.0.1.0/24"
+  region               = var.region
+  aws_route_table_id   = aws_route_table.main[0].id
+  vpc_id               = aws_vpc.main[0].id
+  zone                 = "a"
+  count                = var.enabled ? 1 : 0
+  wait_for_healthcheck = var.wait_for_healthcheck
 }
 
 module "healthcheck_b" {
   source = "./module"
 
-  ami                = data.aws_ami.amazon_linux_2.id
-  cidr               = "10.0.2.0/24"
-  region             = var.region
-  aws_route_table_id = aws_route_table.main[0].id
-  vpc_id             = aws_vpc.main[0].id
-  zone               = "b"
-  count              = var.enabled ? 1 : 0
+  ami                  = data.aws_ami.amazon_linux_2.id
+  cidr                 = "10.0.2.0/24"
+  region               = var.region
+  aws_route_table_id   = aws_route_table.main[0].id
+  vpc_id               = aws_vpc.main[0].id
+  zone                 = "b"
+  count                = var.enabled ? 1 : 0
+  wait_for_healthcheck = var.wait_for_healthcheck
 }
 
 module "healthcheck_c" {
   source = "./module"
 
-  ami                = data.aws_ami.amazon_linux_2.id
-  cidr               = "10.0.3.0/24"
-  region             = var.region
-  aws_route_table_id = aws_route_table.main[0].id
-  vpc_id             = aws_vpc.main[0].id
-  zone               = "c"
-  count              = var.enabled ? 1 : 0
+  ami                  = data.aws_ami.amazon_linux_2.id
+  cidr                 = "10.0.3.0/24"
+  region               = var.region
+  aws_route_table_id   = aws_route_table.main[0].id
+  vpc_id               = aws_vpc.main[0].id
+  zone                 = "c"
+  count                = var.enabled ? 1 : 0
+  wait_for_healthcheck = var.wait_for_healthcheck
 }
