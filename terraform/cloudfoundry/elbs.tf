@@ -30,5 +30,10 @@ resource "aws_elb" "ssh_proxy" {
     lb_port           = 2222
     lb_protocol       = "tcp"
   }
-}
 
+  access_logs {
+    bucket = data.aws_s3_bucket.account_region_wide_alb_access_logs.id
+    bucket_prefix = "${var.env}/ssh-proxy"
+    enabled = true
+  }
+}

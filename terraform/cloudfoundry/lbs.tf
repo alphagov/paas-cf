@@ -6,8 +6,8 @@ resource "aws_lb" "cf_loggregator" {
   subnets            = split(",", var.infra_subnet_ids)
 
   access_logs {
-    bucket  = aws_s3_bucket.elb_access_log.id
-    prefix  = "cf-loggregator"
+    bucket  = data.aws_s3_bucket.account_region_wide_alb_access_logs.id
+    prefix  = "${var.env}/cf-loggregator"
     enabled = true
   }
 
@@ -147,8 +147,8 @@ resource "aws_lb" "cf_router_app_domain" {
   idle_timeout       = 900
 
   access_logs {
-    bucket  = aws_s3_bucket.elb_access_log.id
-    prefix  = "cf-rtr-apps"
+    bucket  = data.aws_s3_bucket.account_region_wide_alb_access_logs.id
+    prefix  = "${var.env}/cf-rtr-apps"
     enabled = true
   }
 
@@ -252,8 +252,8 @@ resource "aws_lb" "cf_router_system_domain" {
   idle_timeout       = 900
 
   access_logs {
-    bucket  = aws_s3_bucket.elb_access_log.id
-    prefix  = "cf-rtr-sys"
+    bucket  = data.aws_s3_bucket.account_region_wide_alb_access_logs.id
+    prefix  = "${var.env}/cf-rtr-sys"
     enabled = true
   }
 
@@ -374,4 +374,3 @@ output "cf_router_system_domain_https_target_group_name" {
 output "cf_router_app_domain_https_target_group_name" {
   value = aws_lb_target_group.cf_router_app_domain_https.name
 }
-

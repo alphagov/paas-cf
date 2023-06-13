@@ -6,8 +6,8 @@ resource "aws_lb" "prometheus" {
   subnets            = split(",", var.infra_subnet_ids)
 
   access_logs {
-    bucket  = aws_s3_bucket.elb_access_log.id
-    prefix  = "prometheus"
+    bucket  = data.aws_s3_bucket.account_region_wide_alb_access_logs.id
+    prefix  = "${var.env}/prometheus"
     enabled = true
   }
 }
@@ -227,4 +227,3 @@ resource "aws_route53_record" "prometheus" {
     evaluate_target_health = false
   }
 }
-
