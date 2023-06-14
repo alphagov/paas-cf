@@ -556,3 +556,7 @@ list-gpg-keys: ## List all the keys in .gpg-id with their names
 .PHONY: update-concourse-gpg-keys
 update-concourse-gpg-keys: .download-gpg-keys ## Update vars file for concourse with the latest GPG keys
 	@ruby concourse/scripts/generate-public-key-vars.rb
+
+.PHONY: enable_vpc_peer_db_access
+enable_vpc_peer_db_access: ## Update vars file for concourse with the latest GPG keys
+	@ruby scripts/enable_vpc_peer_db_access.rb
