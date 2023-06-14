@@ -7,42 +7,13 @@ set -eo pipefail
 
 echo "${0#$PWD}" >> ~/.paas-script-usage
 
-logsearch_boshrelease_tag=$1
-logsearch_for_cloudfoundry_tag=$2
-
-if [ -z "${logsearch_boshrelease_tag}" ]
-then
-    echo "logsearch boshrelease tag not set."
-    exit 1
-fi
-
-if [ -z "${logsearch_for_cloudfoundry_tag}" ]
-then
-    echo "logsearch for cloudfoundry tag not set."
-    exit 1
-fi
-
 set -u
-
-apk update && apk add git
-
-cd /tmp
-git clone https://github.com/cloudfoundry-community/logsearch-for-cloudfoundry.git
-cd logsearch-for-cloudfoundry
-git checkout "${logsearch_for_cloudfoundry_tag}"
-cd src/logsearch-config
-rm Gemfile.lock
-bundle install
-bundle exec rake build
 
 # Remove the following stanza as it's not supported in the context of logit.
 # mutate {
 #   add_field => { "[@metadata][index]" => "%{@index_type}" }
 # }
 sed -i '/^ *mutate *{/{N;N;s/^ *mutate *{\n *add_field.*index_type}" *}\n *}//;}' /tmp/logsearch-for-cloudfoundry/src/logsearch-config/target/logstash-filters-default.conf
-
-wget -q -O /tmp/redact_passwords.conf "https://raw.githubusercontent.com/cloudfoundry-community/logsearch-boshrelease/${logsearch_boshrelease_tag}/src/logsearch-config/src/logstash-filters/snippets/redact_passwords.conf"
-wget -q -O /tmp/syslog_standard.conf "https://raw.githubusercontent.com/cloudfoundry-community/logsearch-boshrelease/${logsearch_boshrelease_tag}/src/logsearch-config/src/logstash-filters/snippets/syslog_standard.conf"
 
 echo "filter {" > /output/generated_logit_filters.conf
 {
@@ -57,19 +28,24 @@ echo "filter {" > /output/generated_logit_filters.conf
     echo "}"
 } >> /output/generated_logit_filters.conf
 
-sed -i 's/^ *$//g' /output/generated_logit_filters.conf
+sed 's/^ *$//g' /output/generated_logit_filters.conf > /output/generated_logit_filters.conf.tmp && \
+    mv /output/generated_logit_filters.conf.tmp /output/generated_logit_filters.conf
 
-sed -i \
+sed \
     "s/if \[@source\]\[component\] != \"vcap.uaa\".*/if [@source][component] != \"uaa\" and [@source][component] != \"app\" {/" \
-    /output/generated_logit_filters.conf
+    /output/generated_logit_filters.conf > /output/generated_logit_filters.conf.tmp && \
+    mv /output/generated_logit_filters.conf.tmp /output/generated_logit_filters.conf
 
-sed -i \
+sed \
     "s/if \[@index_type\] == \"platform\" {/if [@index_type] == \"platform\" and [@source][component] != \"app\" {/" \
-    /output/generated_logit_filters.conf
+    /output/generated_logit_filters.conf > /output/generated_logit_filters.conf.tmp && \
+    mv /output/generated_logit_filters.conf.tmp /output/generated_logit_filters.conf
 
-sed -i \
+sed \
     "s/vcap\.uaa/uaa/" \
-    /output/generated_logit_filters.conf
+    /output/generated_logit_filters.conf > /output/generated_logit_filters.conf.tmp && \
+    mv /output/generated_logit_filters.conf.tmp /output/generated_logit_filters.conf
 
 # FIXME: Allowed in Logstash 6
-sed -i '/tag_on_failure.*kv/d' /output/generated_logit_filters.conf
+sed '/tag_on_failure.*kv/d' /output/generated_logit_filters.conf > /output/generated_logit_filters.conf.tmp && \
+    mv /output/generated_logit_filters.conf.tmp /output/generated_logit_filters.conf
