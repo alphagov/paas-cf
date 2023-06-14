@@ -25,6 +25,7 @@ echo "filter {" > /output/generated_logit_filters.conf
     sed 's/^/  /' < /mnt/config/logit/filters.d/20_custom_cf_filters.conf
     sed 's/^/  /' < /mnt/config/logit/filters.d/21_paas_billing_filters.conf
     sed 's/^/  /' < /mnt/config/logit/filters.d/30_various_timestamps.conf
+    sed 's/^/  /' < /mnt/config/logit/filters.d/99_clean_alb_access.conf
     echo "}"
 } >> /output/generated_logit_filters.conf
 
