@@ -5526,6 +5526,9 @@ jobs:
           trigger: true
           passed: ['post-deploy']
 
+        - get: cf-manifest
+          passed: ['post-deploy']
+
       # this tests the "integration" of this paas-billing revision with the
       # configuration in this paas-cf revision, performed before deployment
       # to give us a chance to avoid deploying a broken combination.
@@ -5818,38 +5821,62 @@ jobs:
                   sleep 10
                 done
 
-      - task: paas-billing-acceptance-tests
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *cf-acceptance-tests-image-resource
+      - do:
+        - task: create-temp-admin
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/create_admin.yml
           params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            DEPLOY_ENV: ((deploy_env))
+            PREFIX: billing-acctests-admin
+            DISABLE_ADMIN_USER_CREATION: false
+            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
+        - task: paas-billing-acceptance-tests
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-acceptance-tests-image-resource
+            params:
+              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              DEPLOY_ENV: ((deploy_env))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
+            inputs:
+              - name: paas-cf
+              - name: admin-creds
+              - name: paas-billing
+                path: src/github.com/alphagov/paas-billing
+            run:
+              path: sh
+              args:
+                - -e
+                - -u
+                - -c
+                - |
+                  cf api "${API_ENDPOINT}"
+
+                  cf auth "$(cat admin-creds/username)" "$(cat admin-creds/password)"
+                  # if we don't target a space with these creds we will run into
+                  # https://github.com/cloudfoundry/cli/issues/2086 and not be able to
+                  # delete the account
+                  cf target -o admin -s billing
+                  export CF_ADMIN_BEARER_TOKEN="$(cf oauth-token | cut -d' ' -f2)"
+
+                  export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
+                  export METRICSPROXY_API_URL="https://billing-metrics-proxy.${SYSTEM_DNS_ZONE_NAME}"
+                  cd src/github.com/alphagov/paas-billing
+
+                  make acceptance
+        ensure:
+          task: remove-temp-admin
+          tags: [colocated-with-web]
+          file: paas-cf/concourse/tasks/delete_user.yml
+          timeout: 5m
+          input_mapping:
+            user-creds: admin-creds
+          params:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
-          inputs:
-            - name: paas-cf
-            - name: paas-billing
-              path: src/github.com/alphagov/paas-billing
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                cf api "${API_ENDPOINT}"
-                cf auth "${CF_ADMIN}" "${CF_PASS}"
-
-                cf target -o admin -s billing
-
-                export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                export METRICSPROXY_API_URL="https://billing-metrics-proxy.${SYSTEM_DNS_ZONE_NAME}"
-                cd src/github.com/alphagov/paas-billing
-
-                make acceptance
 
       - task: tag-repo
         tags: [colocated-with-web]
