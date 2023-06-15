@@ -4801,8 +4801,10 @@ jobs:
         ensure:
           task: remove-temp-user
           tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_user.yml
           timeout: 5m
+          input_mapping:
+            user-creds: admin-creds
           params:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
@@ -4866,8 +4868,10 @@ jobs:
           ensure:
             task: remove-temp-user
             tags: [colocated-with-web]
-            file: paas-cf/concourse/tasks/delete_admin.yml
+            file: paas-cf/concourse/tasks/delete_user.yml
             timeout: 5m
+            input_mapping:
+              user-creds: admin-creds
             params:
               DISABLE_ADMIN_USER_CREATION: ((disable_cf_acceptance_tests))
               API_ENDPOINT: ((api_endpoint))
@@ -4932,8 +4936,10 @@ jobs:
         ensure:
           task: remove-temp-user
           tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_user.yml
           timeout: 5m
+          input_mapping:
+            user-creds: admin-creds
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -4993,8 +4999,10 @@ jobs:
         ensure:
           task: remove-temp-user
           tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_user.yml
           timeout: 5m
+          input_mapping:
+            user-creds: admin-creds
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -5082,8 +5090,10 @@ jobs:
         ensure:
           task: remove-temp-user
           tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_user.yml
           timeout: 5m
+          input_mapping:
+            user-creds: admin-creds
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_app_autoscaler_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -5480,8 +5490,10 @@ jobs:
         ensure:
           task: remove-temp-user
           tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_user.yml
           timeout: 5m
+          input_mapping:
+            user-creds: admin-creds
           params:
             API_ENDPOINT: ((api_endpoint))
             CF_ADMIN: ((cf_admin))
@@ -6241,8 +6253,10 @@ jobs:
         ensure:
           task: remove-temp-user
           tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_admin.yml
+          file: paas-cf/concourse/tasks/delete_user.yml
           timeout: 5m
+          input_mapping:
+            user-creds: admin-creds
           params:
             DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
             API_ENDPOINT: ((api_endpoint))
@@ -7002,8 +7016,10 @@ jobs:
           in_parallel:
             - task: remove-temp-user
               tags: [colocated-with-web]
-              file: paas-cf/concourse/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_user.yml
               timeout: 5m
+              input_mapping:
+                user-creds: admin-creds
               params:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
@@ -7124,8 +7140,10 @@ jobs:
           in_parallel:
             - task: remove-temp-user
               tags: [colocated-with-web]
-              file: paas-cf/concourse/tasks/delete_admin.yml
+              file: paas-cf/concourse/tasks/delete_user.yml
               timeout: 5m
+              input_mapping:
+                user-creds: admin-creds
               params:
                 API_ENDPOINT: ((api_endpoint))
                 CF_ADMIN: ((cf_admin))
