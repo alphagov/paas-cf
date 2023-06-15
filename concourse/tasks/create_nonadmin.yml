@@ -1,0 +1,42 @@
+---
+platform: linux
+image_resource:
+  type: registry-image
+  source:
+    repository: ghcr.io/alphagov/paas/cf-cli
+    tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+inputs:
+  - name: paas-cf
+outputs:
+  - name: nonadmin-creds
+params:
+  BILLING_MANAGER_ORG:
+run:
+  path: sh
+  args:
+    - -e
+    - -c
+    - |
+      [ -z "${PREFIX}" ] && echo "You need to specify \$PREFIX" && exit 1
+      [ -z "${CF_ADMIN}" ] && echo "You need to specify \$CF_ADMIN" && exit 1
+      [ -z "${CF_PASS}" ] && echo "You need to specify \$CF_PASS" && exit 1
+      [ -z "${API_ENDPOINT}" ] && echo "You need to specify \$API_ENDPOINT" && exit 1
+
+      SUFFIX=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c10)
+      PASSWORD=$(tr -cd '[:alpha:]0-9' < /dev/urandom | head -c32)
+      NAME=${PREFIX}-${SUFFIX}
+
+      echo "Creating user $NAME"
+
+      cf api "${API_ENDPOINT}"
+      cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+      cf create-user "${NAME}" "${PASSWORD}"
+
+      echo "${NAME}" > nonadmin-creds/username
+      echo "${PASSWORD}" > nonadmin-creds/password
+
+      if [ -n "${BILLING_MANAGER_ORG:-}" ]; then
+        cf set-org-role "${NAME}" "${BILLING_MANAGER_ORG}" BillingManager
+        cf curl -f "/v3/organizations?names=${BILLING_MANAGER_ORG}" | jq -r '.resources[0].guid' > nonadmin-creds/billing-manager-org-guid
+      fi
