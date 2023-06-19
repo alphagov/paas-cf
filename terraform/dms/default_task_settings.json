@@ -11,7 +11,7 @@
     "ParallelLoadThreads": 0,
     "ParallelLoadBufferSize": 0,
     "BatchApplyEnabled": false,
-    "TaskRecoveryTableEnabled": false,
+    "TaskRecoveryTableEnabled": true,
     "ParallelLoadQueuesPerThread": 0,
     "ParallelApplyThreads": 0,
     "ParallelApplyBufferSize": 0,
@@ -21,7 +21,7 @@
     "TargetTablePrepMode": "DO_NOTHING",
     "CreatePkAfterFullLoad": false,
     "StopTaskCachedChangesApplied": false,
-    "StopTaskCachedChangesNotApplied": false,
+    "StopTaskCachedChangesNotApplied": true,
     "MaxFullLoadSubTasks": 8,
     "TransactionConsistencyTimeout": 600,
     "CommitRate": 10000
@@ -184,7 +184,7 @@
     "TableFailureMaxCount": 1000,
     "RecordFailureDelayInMinutes": 5,
     "MaxKeyColumnSize": 8096,
-    "EnableValidation": true,
+    "EnableValidation": false,
     "ThreadCount": 5,
     "RecordSuspendDelayInMinutes": 30,
     "ValidationOnly": false
