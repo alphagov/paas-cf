@@ -8,6 +8,11 @@ locals {
   peer_name_to_details = {
     for peer in var.vpc_peers : peer.peer_name => peer
   }
+  // filter peers so that we only include peers with the
+  // backing_service_routing variable set to "true"
+  backing_service_routing_peers = {
+    for peer in var.vpc_peers : peer.peer_name => peer if peer.backing_service_routing == true
+  }
 }
 
 data "aws_route_tables" "internet" {
@@ -18,11 +23,27 @@ data "aws_route_tables" "internet" {
   }
 }
 
+data "aws_route_tables" "aws_backing_services" {
+  vpc_id = var.vpc_id
+
+  filter {
+    name   = "tag:Name"
+    values = ["${var.env}-aws-backing-services"]
+  }
+}
+
 resource "aws_vpc_peering_connection" "vpc_peer" {
   for_each      = local.peer_name_to_details
   peer_owner_id = each.value.account_id
   peer_vpc_id   = each.value.vpc_id
   vpc_id        = var.vpc_id
+
+  # possibly irritating for us, but it will be more irritating to our tenants if
+  # we accidentally re-create an existing peering, leaving them to re-accept it
+  # and reconfigure their route tables
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "aws_route" "vpc_peer_route_0" {
@@ -53,4 +74,12 @@ resource "aws_route" "vpc_peer_route_2" {
   timeouts {
     create = "5m"
   }
+}
+
+resource "aws_route" "backing_service_to_vpc_peer" {
+  for_each = local.backing_service_routing_peers
+
+  route_table_id         = data.aws_route_tables.aws_backing_services.ids[0]
+  destination_cidr_block = each.value.subnet_cidr
+  gateway_id             = local.vpc_to_peer_id[each.value.vpc_id][0]
 }
