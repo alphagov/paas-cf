@@ -10,4 +10,4 @@ gem "rest-client", "~> 2.1.0"
 gem "rspec", "~> 3"
 gem "rubocop-govuk", "~> 4.8"
 gem "simplecov", require: false, group: :test
-gem "webmock", "~> 2"
+gem "webmock", "~> 3"
