@@ -15,9 +15,15 @@ import (
 	"path/filepath"
 )
 
-var _ = Describe("VPC peering", func() {
+type Peer struct {
+	PeerName              string `json:"peer_name"`
+	AccountID             string `json:"account_id"`
+	VPCID                 string `json:"vpc_id"`
+	SubnetCIDR            string `json:"subnet_cidr"`
+	BackingServiceRouting bool   `json:"backing_service_routing,omitempty"`
+}
 
-	var KEY_NAMES = []string{"peer_name", "account_id", "vpc_id", "subnet_cidr"}
+var _ = Describe("VPC peering", func() {
 	var ENV_NAMES = []string{"dev", "prod", "staging"}
 	var REGION_NAMES = []string{"eu-west-1", "eu-west-2"}
 
@@ -32,14 +38,15 @@ var _ = Describe("VPC peering", func() {
 			for _, filename := range files {
 				file, _ := ioutil.ReadFile(filename)
 
-				var peers []map[string]string
+				var peers []Peer
 				err := json.Unmarshal([]byte(file), &peers)
 				Expect(err).To(BeNil(), "Config file: %s", filename)
 
 				for _, peer := range peers {
-					for _, v := range KEY_NAMES {
-						Expect(peer).To(HaveKeyWithValue(v, Not(BeEmpty())), "Config %s missing %s", filename, v)
-					}
+					Expect(peer.PeerName).ToNot(BeEmpty(), "Config %s missing peer_name", filename)
+					Expect(peer.VPCID).ToNot(BeEmpty(), "Config %s missing vpc_id", filename)
+					Expect(peer.SubnetCIDR).ToNot(BeEmpty(), "Config %s missing subnet_cidr", filename)
+					Expect(peer.AccountID).ToNot(BeEmpty(), "Config %s missing account_id", filename)
 				}
 			}
 		})
@@ -48,13 +55,13 @@ var _ = Describe("VPC peering", func() {
 			for _, filename := range files {
 				file, _ := ioutil.ReadFile(filename)
 
-				var peers []map[string]string
+				var peers []Peer
 				err := json.Unmarshal([]byte(file), &peers)
 				Expect(err).To(BeNil(), "Config file: %s", filename)
 
 				var nets []*net.IPNet
 				for _, peer := range peers {
-					_, net, err := net.ParseCIDR(peer["subnet_cidr"])
+					_, net, err := net.ParseCIDR(peer.SubnetCIDR)
 					Expect(err).To(BeNil(), "Config file: %s", filename)
 
 					for _, othernet := range nets {
@@ -72,7 +79,7 @@ var _ = Describe("VPC peering", func() {
 			for _, filename := range files {
 				file, _ := ioutil.ReadFile(filename)
 
-				var peers []map[string]string
+				var peers []Peer
 				err := json.Unmarshal([]byte(file), &peers)
 				Expect(err).To(BeNil(), "Config file: %s", filename)
 
@@ -87,7 +94,7 @@ var _ = Describe("VPC peering", func() {
 				}
 
 				for _, peer := range peers {
-					_, net, err := net.ParseCIDR(peer["subnet_cidr"])
+					_, net, err := net.ParseCIDR(peer.SubnetCIDR)
 					Expect(err).To(BeNil(), "Config file: %s", filename)
 
 					for _, reservedRange := range reservedRanges {
@@ -116,13 +123,13 @@ var _ = Describe("VPC peering", func() {
 						for _, filename := range files {
 							file, _ := ioutil.ReadFile(filename)
 
-							var peers []map[string]string
+							var peers []Peer
 							err := json.Unmarshal([]byte(file), &peers)
 							Expect(err).ToNot(HaveOccurred(), "Config file: %s", filename)
 
 							for _, peer := range peers {
-								_, peerNet, err := net.ParseCIDR(peer["subnet_cidr"])
-								peerName := peer["peer_name"]
+								_, peerNet, err := net.ParseCIDR(peer.SubnetCIDR)
+								peerName := peer.PeerName
 								Expect(err).ToNot(HaveOccurred(), "Config file: %s", filename)
 
 								for _, infraNet := range infraNets {
