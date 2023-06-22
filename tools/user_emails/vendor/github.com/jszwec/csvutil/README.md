@@ -1,14 +1,14 @@
-csvutil [![GoDoc](https://godoc.org/github.com/jszwec/csvutil?status.svg)](http://godoc.org/github.com/jszwec/csvutil) [![Build Status](https://travis-ci.org/jszwec/csvutil.svg?branch=master)](https://travis-ci.org/jszwec/csvutil) [![Build status](https://ci.appveyor.com/api/projects/status/eiyx0htjrieoo821/branch/master?svg=true)](https://ci.appveyor.com/project/jszwec/csvutil/branch/master) [![Go Report Card](https://goreportcard.com/badge/github.com/jszwec/csvutil)](https://goreportcard.com/report/github.com/jszwec/csvutil) [![codecov](https://codecov.io/gh/jszwec/csvutil/branch/master/graph/badge.svg)](https://codecov.io/gh/jszwec/csvutil)
+csvutil [![PkgGoDev](https://pkg.go.dev/badge/github.com/jszwec/csvutil@v1.4.0?tab=doc)](https://pkg.go.dev/github.com/jszwec/csvutil?tab=doc) ![Go](https://github.com/jszwec/csvutil/workflows/Go/badge.svg) [![Go Report Card](https://goreportcard.com/badge/github.com/jszwec/csvutil)](https://goreportcard.com/report/github.com/jszwec/csvutil) [![codecov](https://codecov.io/gh/jszwec/csvutil/branch/master/graph/badge.svg)](https://codecov.io/gh/jszwec/csvutil)
 =================
 
 <p align="center">
   <img style="float: right;" src="https://user-images.githubusercontent.com/3941256/33054906-52b4bc08-ce4a-11e7-9651-b70c5a47c921.png"/ width=200>
 </p>
 
-Package csvutil provides fast and idiomatic mapping between CSV and Go values.
+Package csvutil provides fast, idiomatic, and dependency free mapping between CSV and Go (golang) values.
 
-This package does not provide a CSV parser itself, it is based on the [Reader](https://godoc.org/github.com/jszwec/csvutil#Reader) and [Writer](https://godoc.org/github.com/jszwec/csvutil#Writer)
-interfaces which are implemented by eg. std csv package. This gives a possibility
+This package is not a CSV parser, it is based on the [Reader](https://godoc.org/github.com/jszwec/csvutil#Reader) and [Writer](https://godoc.org/github.com/jszwec/csvutil#Writer)
+interfaces which are implemented by eg. std Go (golang) [csv package](https://golang.org/pkg/encoding/csv). This gives a possibility
 of choosing any other CSV writer or reader which may be more performant.
 
 Installation
@@ -19,7 +19,7 @@ Installation
 Requirements
 -------------
 
-* Go1.7+
+* Go1.18+
 
 Index
 ------
@@ -31,8 +31,12 @@ Index
 	4. [But my CSV file has no header...](#examples_but_my_csv_has_no_header)
 	5. [Decoder.Map - data normalization](#examples_decoder_map)
 	6. [Different separator/delimiter](#examples_different_separator)
-	7. [Decoder and interface values](#examples_decoder_interface_values)
+	7. [Custom Types](#examples_custom_types)
 	8. [Custom time.Time format](#examples_time_format)
+	9. [Custom struct tags](#examples_struct_tags)
+	10. [Slice and Map fields](#examples_slice_and_map_field)
+	11. [Nested/Embedded structs](#examples_nested_structs)
+	12. [Inline tag](#examples_inlined_structs)
 2. [Performance](#performance)
 	1. [Unmarshal](#performance_unmarshal)
 	2. [Marshal](#performance_marshal)
@@ -42,7 +46,7 @@ Example <a name="examples"></a>
 
 ### Unmarshal <a name="examples_unmarshal"></a>
 
-Nice and easy Unmarshal is using the std csv.Reader with its default options. Use [Decoder](https://godoc.org/github.com/jszwec/csvutil#Decoder) for streaming and more advanced use cases.
+Nice and easy Unmarshal is using the Go std [csv.Reader](https://golang.org/pkg/encoding/csv/#Reader) with its default options. Use [Decoder](https://godoc.org/github.com/jszwec/csvutil#Decoder) for streaming and more advanced use cases.
 
 ```go
 	var csvInput = []byte(`
@@ -73,7 +77,7 @@ john,,0001-01-01T00:00:00Z`,
 
 ### Marshal <a name="examples_marshal"></a>
 
-Marshal is using the std csv.Writer with its default options. Use [Encoder](https://godoc.org/github.com/jszwec/csvutil#Encoder) for streaming or to use a different Writer.
+Marshal is using the Go std [csv.Writer](https://golang.org/pkg/encoding/csv/#Writer) with its default options. Use [Encoder](https://godoc.org/github.com/jszwec/csvutil#Encoder) for streaming or to use a different Writer.
 
 ```go
 	type Address struct {
@@ -222,7 +226,7 @@ Lets say we want to decode some floats and the csv input contains some NaN value
 		log.Fatal(err)
 	}
 
-	dec.Map = func(field, column string, v interface{}) string {
+	dec.Map = func(field, column string, v any) string {
 		if _, ok := v.(float64); ok && field == "n/a" {
 			return "NaN"
 		}
@@ -268,7 +272,7 @@ Some files may use different value separators, for example TSV files would use `
 	enc := csvutil.NewEncoder(w)
 
 	for _, u := range users {
-		if err != enc.Encode(u); err != nil {
+		if err := enc.Encode(u); err != nil {
 			log.Fatal(err)
 		}
         }
@@ -279,100 +283,133 @@ Some files may use different value separators, for example TSV files would use `
 	}
 ```
 
-### Decoder and interface values <a name="examples_decoder_interface_values"></a>
+### Custom Types and Overrides <a name="examples_custom_types"></a>
 
-In the case of interface struct fields data is decoded into strings. However, if Decoder finds out that
-these fields were initialized with pointer values of a specific type prior to decoding, it will try to decode data into that type.
+There are multiple ways to customize or override your type's behavior.
 
-Why only pointer values? Because these values must be both addressable and settable, otherwise Decoder
-will have to initialize these types on its own, which could result in losing some unexported information.
-
-If interface stores a non-pointer value it will be replaced with a string.
-
-This example will show how this feature could be useful:
+1. a type implements [csvutil.Marshaler](https://pkg.go.dev/github.com/jszwec/csvutil#Marshaler) and/or [csvutil.Unmarshaler](https://pkg.go.dev/github.com/jszwec/csvutil#Unmarshaler)
 ```go
-package main
+type Foo int64
 
-import (
-	"bytes"
-	"encoding/csv"
-	"fmt"
-	"io"
-	"log"
-
-	"github.com/jszwec/csvutil"
-)
-
-// Value defines one record in the csv input. In this example it is important
-// that Type field is defined before Value. Decoder reads headers and values
-// in the same order as struct fields are defined.
-type Value struct {
-	Type  string      `csv:"type"`
-	Value interface{} `csv:"value"`
+func (f Foo) MarshalCSV() ([]byte, error) {
+	return strconv.AppendInt(nil, int64(f), 16), nil
 }
 
-func main() {
-	// lets say our csv input defines variables with their types and values.
-	data := []byte(`
-type,value
-string,string_value
-int,10
-`)
-
-	dec, err := csvutil.NewDecoder(csv.NewReader(bytes.NewReader(data)))
+func (f *Foo) UnmarshalCSV(data []byte) error {
+	i, err := strconv.ParseInt(string(data), 16, 64)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
-
-	// we would like to read every variable and store their already parsed values
-	// in the interface field. We can use Decoder.Map function to initialize
-	// interface with proper values depending on the input.
-	var value Value
-	dec.Map = func(field, column string, v interface{}) string {
-		if column == "type" {
-			switch field {
-			case "int": // csv input tells us that this variable contains an int.
-				var n int
-				value.Value = &n // lets initialize interface with an initialized int pointer.
-			default:
-				return field
-			}
-		}
-		return field
-	}
-
-	for {
-		value = Value{}
-		if err := dec.Decode(&value); err == io.EOF {
-			break
-		} else if err != nil {
-			log.Fatal(err)
-		}
-
-		if value.Type == "int" {
-			// our variable type is int, Map func already initialized our interface
-			// as int pointer, so we can safely cast it and use it.
-			n, ok := value.Value.(*int)
-			if !ok {
-				log.Fatal("expected value to be *int")
-			}
-			fmt.Printf("value_type: %s; value: (%T) %d\n", value.Type, value.Value, *n)
-		} else {
-			fmt.Printf("value_type: %s; value: (%T) %v\n", value.Type, value.Value, value.Value)
-		}
-	}
-
-	// Output:
-	// value_type: string; value: (string) string_value
-	// value_type: int; value: (*int) 10
+	*f = Foo(i)
+	return nil
 }
 ```
+2. a type implements [encoding.TextUnmarshaler](https://golang.org/pkg/encoding/#TextUnmarshaler) and/or [encoding.TextMarshaler](https://golang.org/pkg/encoding/#TextMarshaler)
+```go
+type Foo int64
+
+func (f Foo) MarshalText() ([]byte, error) {
+	return strconv.AppendInt(nil, int64(f), 16), nil
+}
+
+func (f *Foo) UnmarshalText(data []byte) error {
+	i, err := strconv.ParseInt(string(data), 16, 64)
+	if err != nil {
+		return err
+	}
+	*f = Foo(i)
+	return nil
+}
+```
+3. a type is registered using [Encoder.WithMarshalers](https://pkg.go.dev/github.com/jszwec/csvutil#Encoder.WithMarshalers) and/or [Decoder.WithUnmarshalers](https://pkg.go.dev/github.com/jszwec/csvutil#Decoder.WithUnmarshalers)
+```go
+type Foo int64
+
+enc.WithMarshalers(
+	csvutil.MarshalFunc(func(f Foo) ([]byte, error) {
+		return strconv.AppendInt(nil, int64(f), 16), nil
+	}),
+)
+
+dec.WithUnmarshalers(
+	csvutil.UnmarshalFunc(func(data []byte, f *Foo) error {
+		v, err := strconv.ParseInt(string(data), 16, 64)
+		if err != nil {
+			return err
+		}
+		*f = Foo(v)
+		return nil
+	}),
+)
+```
+4. a type implements an interface that was registered using [Encoder.WithMarshalers](https://pkg.go.dev/github.com/jszwec/csvutil#Encoder.WithMarshalers) and/or [Decoder.WithUnmarshalers](https://pkg.go.dev/github.com/jszwec/csvutil#Decoder.WithUnmarshalers)
+```go
+type Foo int64
+
+func (f Foo) String() string {
+	return strconv.FormatInt(int64(f), 16)
+}
+
+func (f *Foo) Scan(state fmt.ScanState, verb rune) error {
+	// too long; look here: https://github.com/jszwec/csvutil/blob/master/example_decoder_register_test.go#L19
+}
+
+enc.WithMarshalers(
+	csvutil.MarshalFunc(func(s fmt.Stringer) ([]byte, error) {
+		return []byte(s.String()), nil
+	}),
+)
+
+dec.WithUnmarshalers(
+	csvutil.UnmarshalFunc(func(data []byte, s fmt.Scanner) error {
+		_, err := fmt.Sscan(string(data), s)
+		return err
+	}),
+)
+```
+
+The order of precedence for both Encoder and Decoder is:
+1. type is registered
+2. type implements an interface that was registered
+3. csvutil.{Un,M}arshaler
+4. encoding.Text{Un,M}arshaler
+
+For more examples look [here](https://pkg.go.dev/github.com/jszwec/csvutil?readme=expanded#pkg-examples)
 
 ### Custom time.Time format <a name="examples_time_format"></a>
 
 Type [time.Time](https://golang.org/pkg/time/#Time) can be used as is in the struct fields by both Decoder and Encoder
 due to the fact that both have builtin support for [encoding.TextUnmarshaler](https://golang.org/pkg/encoding/#TextUnmarshaler) and [encoding.TextMarshaler](https://golang.org/pkg/encoding/#TextMarshaler). This means that by default
-Time has a specific format; look at [MarshalText](https://golang.org/pkg/time/#Time.MarshalText) and [UnmarshalText](https://golang.org/pkg/time/#Time.UnmarshalText). This example shows how to override it.
+Time has a specific format; look at [MarshalText](https://golang.org/pkg/time/#Time.MarshalText) and [UnmarshalText](https://golang.org/pkg/time/#Time.UnmarshalText). There are two ways to override it, which one you choose depends on your use case:
+
+1. Via Register func (based on encoding/json)
+```go
+const format = "2006/01/02 15:04:05"
+
+marshalTime := func(t time.Time) ([]byte, error) {
+	return t.AppendFormat(nil, format), nil
+}
+
+unmarshalTime := func(data []byte, t *time.Time) error {
+	tt, err := time.Parse(format, string(data))
+	if err != nil {
+		return err
+	}
+	*t = tt
+	return nil
+}
+
+enc := csvutil.NewEncoder(w)
+enc.Register(marshalTime)
+
+dec, err := csvutil.NewDecoder(r)
+if err != nil {
+	return err
+}
+dec.Register(unmarshalTime)
+```
+
+2. With custom type:
 ```go
 type Time struct {
 	time.Time
@@ -395,6 +432,186 @@ func (t *Time) UnmarshalCSV(data []byte) error {
 }
 ```
 
+### Custom struct tags <a name="examples_struct_tags"></a>
+
+Like in other Go encoding packages struct field tags can be used to set
+custom names or options. By default encoders and decoders are looking at `csv` tag.
+However, this can be overriden by manually setting the Tag field.
+
+```go
+	type Foo struct {
+		Bar int `custom:"bar"`
+	}
+```
+
+```go
+	dec, err := csvutil.NewDecoder(r)
+	if err != nil {
+		log.Fatal(err)
+	}
+	dec.Tag = "custom"
+```
+
+```go
+	enc := csvutil.NewEncoder(w)
+	enc.Tag = "custom"
+```
+
+### Slice and Map fields <a name="examples_slice_and_map_field"></a>
+
+There is no default encoding/decoding support for slice and map fields because there is no CSV spec for such values.
+In such case, it is recommended to create a custom type alias and implement Marshaler and Unmarshaler interfaces.
+Please note that slice and map aliases behave differently than aliases of other types - there is no need for type casting.
+
+```go
+	type Strings []string
+
+	func (s Strings) MarshalCSV() ([]byte, error) {
+		return []byte(strings.Join(s, ",")), nil // strings.Join takes []string but it will also accept Strings
+	}
+
+	type StringMap map[string]string
+
+	func (sm StringMap) MarshalCSV() ([]byte, error) {
+		return []byte(fmt.Sprint(sm)), nil
+	}
+
+	func main() {
+		b, err := csvutil.Marshal([]struct {
+			Strings Strings   `csv:"strings"`
+			Map     StringMap `csv:"map"`
+		}{
+			{[]string{"a", "b"}, map[string]string{"a": "1"}}, // no type casting is required for slice and map aliases
+			{Strings{"c", "d"}, StringMap{"b": "1"}},
+		})
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("%s\n", b)
+
+		// Output:
+		// strings,map
+		// "a,b",map[a:1]
+		// "c,d",map[b:1]
+	}
+```
+
+### Nested/Embedded structs <a name="examples_nested_structs"></a>
+
+Both Encoder and Decoder support nested or embedded structs.
+
+Playground: https://play.golang.org/p/ZySjdVkovbf
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/jszwec/csvutil"
+)
+
+type Address struct {
+	Street string `csv:"street"`
+	City   string `csv:"city"`
+}
+
+type User struct {
+	Name string `csv:"name"`
+	Address
+}
+
+func main() {
+	users := []User{
+		{
+			Name: "John",
+			Address: Address{
+				Street: "Boylston",
+				City:   "Boston",
+			},
+		},
+	}
+
+	b, err := csvutil.Marshal(users)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%s\n", b)
+
+	var out []User
+	if err := csvutil.Unmarshal(b, &out); err != nil {
+		panic(err)
+	}
+
+	fmt.Printf("%+v\n", out)
+
+	// Output:
+	//
+	// name,street,city
+	// John,Boylston,Boston
+	//
+	// [{Name:John Address:{Street:Boylston City:Boston}}]
+}
+```
+
+### Inline tag <a name="examples_inlined_structs"></a>
+
+Fields with inline tag behave similarly to embedded struct fields. However,
+it gives a possibility to specify the prefix for all underlying fields. This
+can be useful when one structure can define multiple CSV columns because they 
+are different from each other only by a certain prefix. Look at the example below.
+
+Playground: https://play.golang.org/p/jyEzeskSnj7
+
+```go
+package main
+
+import (
+	"fmt"
+
+	"github.com/jszwec/csvutil"
+)
+
+func main() {
+	type Address struct {
+		Street string `csv:"street"`
+		City   string `csv:"city"`
+	}
+
+	type User struct {
+		Name        string  `csv:"name"`
+		Address     Address `csv:",inline"`
+		HomeAddress Address `csv:"home_address_,inline"`
+		WorkAddress Address `csv:"work_address_,inline"`
+		Age         int     `csv:"age,omitempty"`
+	}
+
+	users := []User{
+		{
+			Name:        "John",
+			Address:     Address{"Washington", "Boston"},
+			HomeAddress: Address{"Boylston", "Boston"},
+			WorkAddress: Address{"River St", "Cambridge"},
+			Age:         26,
+		},
+	}
+
+	b, err := csvutil.Marshal(users)
+	if err != nil {
+		fmt.Println("error:", err)
+	}
+
+	fmt.Printf("%s\n", b)
+
+	// Output:
+	// name,street,city,home_address_street,home_address_city,work_address_street,work_address_city,age
+	// John,Washington,Boston,Boylston,Boston,River St,Cambridge,26
+}
+```
+
 Performance
 ------------
 
@@ -406,32 +623,32 @@ csvutil provides the best encoding and decoding performance with small memory us
 
 #### csvutil:
 ```
-BenchmarkUnmarshal/csvutil.Unmarshal/1_record-8         	  300000	      5852 ns/op	    6900 B/op	      32 allocs/op
-BenchmarkUnmarshal/csvutil.Unmarshal/10_records-8       	  100000	     13946 ns/op	    7924 B/op	      41 allocs/op
-BenchmarkUnmarshal/csvutil.Unmarshal/100_records-8      	   20000	     95234 ns/op	   18100 B/op	     131 allocs/op
-BenchmarkUnmarshal/csvutil.Unmarshal/1000_records-8     	    2000	    903502 ns/op	  120652 B/op	    1031 allocs/op
-BenchmarkUnmarshal/csvutil.Unmarshal/10000_records-8    	     200	   9273741 ns/op	 1134694 B/op	   10031 allocs/op
-BenchmarkUnmarshal/csvutil.Unmarshal/100000_records-8   	      20	  94125839 ns/op	11628908 B/op	  100031 allocs/op
+BenchmarkUnmarshal/csvutil.Unmarshal/1_record-12         	  280696	      4516 ns/op	    7332 B/op	      26 allocs/op
+BenchmarkUnmarshal/csvutil.Unmarshal/10_records-12       	   95750	     11517 ns/op	    8356 B/op	      35 allocs/op
+BenchmarkUnmarshal/csvutil.Unmarshal/100_records-12      	   14997	     83146 ns/op	   18532 B/op	     125 allocs/op
+BenchmarkUnmarshal/csvutil.Unmarshal/1000_records-12     	    1485	    750143 ns/op	  121094 B/op	    1025 allocs/op
+BenchmarkUnmarshal/csvutil.Unmarshal/10000_records-12    	     154	   7587205 ns/op	 1136662 B/op	   10025 allocs/op
+BenchmarkUnmarshal/csvutil.Unmarshal/100000_records-12   	      14	  76126616 ns/op	11808744 B/op	  100025 allocs/op
 ```
 
 #### gocsv:
 ```
-BenchmarkUnmarshal/gocsv.Unmarshal/1_record-8           	  200000	     10363 ns/op	    7651 B/op	      96 allocs/op
-BenchmarkUnmarshal/gocsv.Unmarshal/10_records-8         	   50000	     31308 ns/op	   13747 B/op	     306 allocs/op
-BenchmarkUnmarshal/gocsv.Unmarshal/100_records-8        	   10000	    237417 ns/op	   72499 B/op	    2379 allocs/op
-BenchmarkUnmarshal/gocsv.Unmarshal/1000_records-8       	     500	   2264064 ns/op	  650135 B/op	   23082 allocs/op
-BenchmarkUnmarshal/gocsv.Unmarshal/10000_records-8      	      50	  24189980 ns/op	 7023592 B/op	  230091 allocs/op
-BenchmarkUnmarshal/gocsv.Unmarshal/100000_records-8     	       5	 264797120 ns/op	75483184 B/op	 2300104 allocs/op
+BenchmarkUnmarshal/gocsv.Unmarshal/1_record-12           	  141330	      7499 ns/op	    7795 B/op	      97 allocs/op
+BenchmarkUnmarshal/gocsv.Unmarshal/10_records-12         	   54252	     21664 ns/op	   13891 B/op	     307 allocs/op
+BenchmarkUnmarshal/gocsv.Unmarshal/100_records-12        	    6920	    159662 ns/op	   72644 B/op	    2380 allocs/op
+BenchmarkUnmarshal/gocsv.Unmarshal/1000_records-12       	     752	   1556083 ns/op	  650248 B/op	   23083 allocs/op
+BenchmarkUnmarshal/gocsv.Unmarshal/10000_records-12      	      72	  17086623 ns/op	 7017469 B/op	  230092 allocs/op
+BenchmarkUnmarshal/gocsv.Unmarshal/100000_records-12     	       7	 163610749 ns/op	75004923 B/op	 2300105 allocs/op
 ```
 
 #### easycsv:
 ```
-BenchmarkUnmarshal/easycsv.ReadAll/1_record-8           	  100000	     13287 ns/op	    8855 B/op	      81 allocs/op
-BenchmarkUnmarshal/easycsv.ReadAll/10_records-8         	   20000	     66767 ns/op	   24072 B/op	     391 allocs/op
-BenchmarkUnmarshal/easycsv.ReadAll/100_records-8        	    3000	    586222 ns/op	  170537 B/op	    3454 allocs/op
-BenchmarkUnmarshal/easycsv.ReadAll/1000_records-8       	     300	   5630293 ns/op	 1595662 B/op	   34057 allocs/op
-BenchmarkUnmarshal/easycsv.ReadAll/10000_records-8      	      20	  60513920 ns/op	18870410 B/op	  340068 allocs/op
-BenchmarkUnmarshal/easycsv.ReadAll/100000_records-8     	       2	 623618489 ns/op	190822456 B/op	 3400084 allocs/op
+BenchmarkUnmarshal/easycsv.ReadAll/1_record-12           	  101527	     10662 ns/op	    8855 B/op	      81 allocs/op
+BenchmarkUnmarshal/easycsv.ReadAll/10_records-12         	   23325	     51437 ns/op	   24072 B/op	     391 allocs/op
+BenchmarkUnmarshal/easycsv.ReadAll/100_records-12        	    2402	    447296 ns/op	  170538 B/op	    3454 allocs/op
+BenchmarkUnmarshal/easycsv.ReadAll/1000_records-12       	     272	   4370854 ns/op	 1595683 B/op	   34057 allocs/op
+BenchmarkUnmarshal/easycsv.ReadAll/10000_records-12      	      24	  47502457 ns/op	18861808 B/op	  340068 allocs/op
+BenchmarkUnmarshal/easycsv.ReadAll/100000_records-12     	       3	 468974170 ns/op	189427066 B/op	 3400082 allocs/op
 ```
 
 ### Marshal <a name="performance_marshal"></a>
@@ -440,20 +657,20 @@ BenchmarkUnmarshal/easycsv.ReadAll/100000_records-8     	       2	 623618489 ns/
 
 #### csvutil:
 ```
-BenchmarkMarshal/csvutil.Marshal/1_record-8         	  300000	      5501 ns/op	    6336 B/op	      26 allocs/op
-BenchmarkMarshal/csvutil.Marshal/10_records-8       	  100000	     20647 ns/op	    7248 B/op	      36 allocs/op
-BenchmarkMarshal/csvutil.Marshal/100_records-8      	   10000	    174656 ns/op	   24656 B/op	     127 allocs/op
-BenchmarkMarshal/csvutil.Marshal/1000_records-8     	    1000	   1697202 ns/op	  164961 B/op	    1029 allocs/op
-BenchmarkMarshal/csvutil.Marshal/10000_records-8    	     100	  16995940 ns/op	 1522412 B/op	   10032 allocs/op
-BenchmarkMarshal/csvutil.Marshal/100000_records-8   	      10	 172411108 ns/op	22363382 B/op	  100036 allocs/op
+BenchmarkMarshal/csvutil.Marshal/1_record-12         	  279558	      4390 ns/op	    9952 B/op	      12 allocs/op
+BenchmarkMarshal/csvutil.Marshal/10_records-12       	   82478	     15608 ns/op	   10800 B/op	      21 allocs/op
+BenchmarkMarshal/csvutil.Marshal/100_records-12      	   10275	    117288 ns/op	   28208 B/op	     112 allocs/op
+BenchmarkMarshal/csvutil.Marshal/1000_records-12     	    1075	   1147473 ns/op	  168508 B/op	    1014 allocs/op
+BenchmarkMarshal/csvutil.Marshal/10000_records-12    	     100	  11985382 ns/op	 1525973 B/op	   10017 allocs/op
+BenchmarkMarshal/csvutil.Marshal/100000_records-12   	       9	 113640813 ns/op	22455873 B/op	  100021 allocs/op
 ```
 
 #### gocsv:
 ```
-BenchmarkMarshal/gocsv.Marshal/1_record-8           	  200000	      7202 ns/op	    5922 B/op	      83 allocs/op
-BenchmarkMarshal/gocsv.Marshal/10_records-8         	   50000	     31821 ns/op	    9427 B/op	     390 allocs/op
-BenchmarkMarshal/gocsv.Marshal/100_records-8        	    5000	    285885 ns/op	   52773 B/op	    3451 allocs/op
-BenchmarkMarshal/gocsv.Marshal/1000_records-8       	     500	   2806405 ns/op	  452517 B/op	   34053 allocs/op
-BenchmarkMarshal/gocsv.Marshal/10000_records-8      	      50	  28682052 ns/op	 4412157 B/op	  340065 allocs/op
-BenchmarkMarshal/gocsv.Marshal/100000_records-8     	       5	 286836492 ns/op	51969227 B/op	 3400083 allocs/op
+BenchmarkMarshal/gocsv.Marshal/1_record-12           	  203052	      6077 ns/op	    5914 B/op	      81 allocs/op
+BenchmarkMarshal/gocsv.Marshal/10_records-12         	   50132	     24585 ns/op	    9284 B/op	     360 allocs/op
+BenchmarkMarshal/gocsv.Marshal/100_records-12        	    5480	    212008 ns/op	   51916 B/op	    3151 allocs/op
+BenchmarkMarshal/gocsv.Marshal/1000_records-12       	     514	   2053919 ns/op	  444506 B/op	   31053 allocs/op
+BenchmarkMarshal/gocsv.Marshal/10000_records-12      	      52	  21066666 ns/op	 4332377 B/op	  310064 allocs/op
+BenchmarkMarshal/gocsv.Marshal/100000_records-12     	       5	 207408929 ns/op	51169419 B/op	 3100077 allocs/op
 ```
