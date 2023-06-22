@@ -1,7 +1,7 @@
 source "https://rubygems.org"
 
 gem "aws-sdk", "~> 3"
-gem "colorize", "~> 0.8.1"
+gem "colorize", "~> 1.0.3"
 gem "http", "~> 4"
 gem "mail", "~> 2.7"
 gem "notifications-ruby-client", "~> 5"
