@@ -8,7 +8,7 @@ image_resource:
 inputs:
   - name: paas-cf
   - name: cf-manifest
-  - name: admin-creds
+  - name: user-creds
 run:
   path: sh
   args:
@@ -21,7 +21,7 @@ run:
         exit 0
       fi
 
-      USERNAME=$(cat admin-creds/username)
+      USERNAME=$(cat user-creds/username)
 
       echo "Removing user ${USERNAME}"
 
