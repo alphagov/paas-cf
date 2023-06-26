@@ -481,12 +481,17 @@ stop-tunnel: check-env ## Stop SSH tunnel
 .PHONY: logit-filters
 logit-filters:
 	mkdir -p config/logit/output
+	docker build -t logit-filters \
+		--pull \
+		-f $(CURDIR)/config/logit/Dockerfile.generate_logit_filters \
+		--build-arg LOGSEARCH_FOR_CLOUDFOUNDRY_TAG=$(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG) \
+		--build-arg LOGSEARCH_BOSHRELEASE_TAG=$(LOGSEARCH_BOSHRELEASE_TAG) \
+		$(CURDIR)/config/logit
 	docker run --rm -it \
 		-v $(CURDIR):/mnt:ro \
 		-v $(CURDIR)/config/logit/output:/output:rw \
 		-w /mnt \
-		--platform linux/amd64 \
-		jruby:9.2-alpine ./scripts/generate_logit_filters.sh $(LOGSEARCH_BOSHRELEASE_TAG) $(LOGSEARCH_FOR_CLOUDFOUNDRY_TAG)
+		logit-filters ./scripts/generate_logit_filters.sh
 	@echo "updated $(CURDIR)/config/logit/output/generated_logit_filters.conf"
 
 .PHONY: logit-alerts
