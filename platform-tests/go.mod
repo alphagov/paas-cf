@@ -5,7 +5,7 @@ go 1.18
 require (
 	code.cloudfoundry.org/lager v2.0.0+incompatible
 	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000
-	github.com/aws/aws-sdk-go v1.34.0
+	github.com/aws/aws-sdk-go v1.44.289
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20220701174305-34d8f2860a20
 	github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20220701223313-91917ba99b8e
 	github.com/cloudfoundry/cf-test-helpers v1.0.1-0.20220603211108-d498b915ef74
@@ -33,7 +33,7 @@ require (
 	github.com/hashicorp/go-cleanhttp v0.5.0 // indirect
 	github.com/hashicorp/go-multierror v0.0.0-20160811015721-8c5f0ad93604 // indirect
 	github.com/jackc/pgx v3.6.2+incompatible // indirect
-	github.com/jmespath/go-jmespath v0.3.0 // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/lib/pq v1.8.0 // indirect
 	github.com/mitchellh/mapstructure v0.0.0-20150717051158-281073eb9eb0 // indirect
 	github.com/onsi/ginkgo v1.16.5 // indirect
