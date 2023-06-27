@@ -4,6 +4,7 @@ applications:
     memory: 64M
     disk_quota: 64M
     instances: 1
+    stack: cflinuxfs4
     buildpacks: [go_buildpack]
     command: ./bin/http-tester; sleep 1; echo 'done'
     env:

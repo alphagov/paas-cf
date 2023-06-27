@@ -2,14 +2,13 @@ package config
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"net"
 	"net/url"
 	"os"
 	"path/filepath"
 	"time"
-
-	. "github.com/cloudfoundry/cf-acceptance-tests/helpers/validationerrors"
 )
 
 const (
@@ -56,9 +55,9 @@ type config struct {
 	GoBuildpackName         *string `json:"go_buildpack_name"`
 	HwcBuildpackName        *string `json:"hwc_buildpack_name"`
 	JavaBuildpackName       *string `json:"java_buildpack_name"`
+	NginxBuildpackName      *string `json:"nginx_buildpack_name"`
 	NodejsBuildpackName     *string `json:"nodejs_buildpack_name"`
-	PhpBuildpackName        *string `json:"php_buildpack_name"`
-	PythonBuildpackName     *string `json:"python_buildpack_name"`
+	RBuildpackName          *string `json:"r_buildpack_name"`
 	RubyBuildpackName       *string `json:"ruby_buildpack_name"`
 	StaticFileBuildpackName *string `json:"staticfile_buildpack_name"`
 
@@ -66,7 +65,7 @@ type config struct {
 	VolumeServicePlanName     *string `json:"volume_service_plan_name"`
 	VolumeServiceCreateConfig *string `json:"volume_service_create_config"`
 
-	IncludeAppSyslogTcp             *bool `json:"include_app_syslog_tcp"`
+	IncludeAppSyslogTCP             *bool `json:"include_app_syslog_tcp"`
 	IncludeApps                     *bool `json:"include_apps"`
 	IncludeContainerNetworking      *bool `json:"include_container_networking"`
 	IncludeDeployments              *bool `json:"include_deployments"`
@@ -112,6 +111,8 @@ type config struct {
 	UnallocatedIPForSecurityGroup *string `json:"unallocated_ip_for_security_group"`
 	RequireProxiedAppTraffic      *bool   `json:"require_proxied_app_traffic"`
 
+	DynamicASGsEnabled *bool `json:"dynamic_asgs_enabled"`
+
 	NamePrefix *string `json:"name_prefix"`
 
 	ReporterConfig *reporterConfig `json:"reporter_config"`
@@ -151,13 +152,13 @@ func getDefaults() config {
 	defaults.GoBuildpackName = ptrToString("go_buildpack")
 	defaults.HwcBuildpackName = ptrToString("hwc_buildpack")
 	defaults.JavaBuildpackName = ptrToString("java_buildpack")
+	defaults.NginxBuildpackName = ptrToString("nginx_buildpack")
 	defaults.NodejsBuildpackName = ptrToString("nodejs_buildpack")
-	defaults.PhpBuildpackName = ptrToString("php_buildpack")
-	defaults.PythonBuildpackName = ptrToString("python_buildpack")
+	defaults.RBuildpackName = ptrToString("r_buildpack")
 	defaults.RubyBuildpackName = ptrToString("ruby_buildpack")
 	defaults.StaticFileBuildpackName = ptrToString("staticfile_buildpack")
 
-	defaults.IncludeAppSyslogTcp = ptrToBool(true)
+	defaults.IncludeAppSyslogTCP = ptrToBool(true)
 	defaults.IncludeApps = ptrToBool(true)
 	defaults.IncludeDetect = ptrToBool(true)
 	defaults.IncludeRouting = ptrToBool(true)
@@ -228,251 +229,261 @@ func getDefaults() config {
 	defaults.UnallocatedIPForSecurityGroup = ptrToString("10.0.244.255")
 	defaults.RequireProxiedAppTraffic = ptrToBool(false)
 
+	defaults.DynamicASGsEnabled = ptrToBool(true)
+
 	defaults.NamePrefix = ptrToString("CATS")
 
-	defaults.Stacks = &[]string{"cflinuxfs3"}
+	defaults.Stacks = &[]string{"cflinuxfs4"}
 
 	defaults.Infrastructure = ptrToString("vms")
 	return defaults
 }
 
 func NewConfig(path string) (*config, error) {
-	d := getDefaults()
-	cfg := &d
-	err := load(path, cfg)
-	if err.Empty() {
-		return cfg, nil
-	}
-	return nil, err
+	cfg := getDefaults()
+	err := load(path, &cfg)
+	return &cfg, err
 }
 
-func validateConfig(config *config) Errors {
-	errs := Errors{}
+func validateConfig(config *config) error {
+	var errs error
 
-	var err error
-	err = validateAdminUser(config)
+	err := validateAdminUser(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
 	}
 
 	err = validateAdminPassword(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateApiEndpoint(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateAppsDomain(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validatePublicDockerAppImage(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validatePrivateDockerRegistry(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateIsolationSegments(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateRoutingIsolationSegments(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateTCPIsolationSegments(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateCredHubSettings(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateWindows(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateStacks(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+
 	}
 
 	err = validateVolumeServices(config)
 	if err != nil {
-		errs.Add(err)
+		errs = errors.Join(errs, err)
+	}
+
+	err = validateTimeoutScale(config)
+	if err != nil {
+		errs = errors.Join(errs, err)
 	}
 
 	if config.UseHttp == nil {
-		errs.Add(fmt.Errorf("* 'use_http' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'use_http' must not be null"))
 	}
 	if config.ShouldKeepUser == nil {
-		errs.Add(fmt.Errorf("* 'keep_user_at_suite_end' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'keep_user_at_suite_end' must not be null"))
 	}
 	if config.UseExistingUser == nil {
-		errs.Add(fmt.Errorf("* 'use_existing_user' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'use_existing_user' must not be null"))
 	}
 	if config.ConfigurableTestPassword == nil {
-		errs.Add(fmt.Errorf("* 'test_password' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'test_password' must not be null"))
 	}
 	if config.IsolationSegmentName == nil {
-		errs.Add(fmt.Errorf("* 'isolation_segment_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'isolation_segment_name' must not be null"))
 	}
 	if config.IsolationSegmentDomain == nil {
-		errs.Add(fmt.Errorf("* 'isolation_segment_domain' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'isolation_segment_domain' must not be null"))
 	}
 	if config.SkipSSLValidation == nil {
-		errs.Add(fmt.Errorf("* 'skip_ssl_validation' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'skip_ssl_validation' must not be null"))
 	}
 	if config.ArtifactsDirectory == nil {
-		errs.Add(fmt.Errorf("* 'artifacts_directory' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'artifacts_directory' must not be null"))
 	}
 	if config.AsyncServiceOperationTimeout == nil {
-		errs.Add(fmt.Errorf("* 'async_service_operation_timeout' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'async_service_operation_timeout' must not be null"))
 	}
 	if config.BrokerStartTimeout == nil {
-		errs.Add(fmt.Errorf("* 'broker_start_timeout' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'broker_start_timeout' must not be null"))
 	}
 	if config.CfPushTimeout == nil {
-		errs.Add(fmt.Errorf("* 'cf_push_timeout' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'cf_push_timeout' must not be null"))
 	}
 	if config.DefaultTimeout == nil {
-		errs.Add(fmt.Errorf("* 'default_timeout' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'default_timeout' must not be null"))
 	}
 	if config.DetectTimeout == nil {
-		errs.Add(fmt.Errorf("* 'detect_timeout' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'detect_timeout' must not be null"))
 	}
 	if config.LongCurlTimeout == nil {
-		errs.Add(fmt.Errorf("* 'long_curl_timeout' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'long_curl_timeout' must not be null"))
 	}
 	if config.SleepTimeout == nil {
-		errs.Add(fmt.Errorf("* 'sleep_timeout' must not be null"))
-	}
-	if config.TimeoutScale == nil {
-		errs.Add(fmt.Errorf("* 'timeout_scale' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'sleep_timeout' must not be null"))
 	}
 	if config.BinaryBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'binary_buildpack_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'binary_buildpack_name' must not be null"))
 	}
 	if config.GoBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'go_buildpack_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'go_buildpack_name' must not be null"))
 	}
 	if config.HwcBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'hwc_buildpack_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'hwc_buildpack_name' must not be null"))
 	}
 	if config.JavaBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'java_buildpack_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'java_buildpack_name' must not be null"))
+	}
+	if config.NginxBuildpackName == nil {
+		errs = errors.Join(errs, fmt.Errorf("* 'nginx_buildpack_name' must not be null"))
 	}
 	if config.NodejsBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'nodejs_buildpack_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'nodejs_buildpack_name' must not be null"))
 	}
-	if config.PhpBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'php_buildpack_name' must not be null"))
-	}
-	if config.PythonBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'python_buildpack_name' must not be null"))
+	if config.RBuildpackName == nil {
+		errs = errors.Join(errs, fmt.Errorf("* 'r_buildpack_name' must not be null"))
 	}
 	if config.RubyBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'ruby_buildpack_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'ruby_buildpack_name' must not be null"))
 	}
 	if config.StaticFileBuildpackName == nil {
-		errs.Add(fmt.Errorf("* 'staticfile_buildpack_name' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'staticfile_buildpack_name' must not be null"))
 	}
-	if config.IncludeAppSyslogTcp == nil {
-		errs.Add(fmt.Errorf("* 'include_app_syslog_tcp' must not be null"))
+	if config.IncludeAppSyslogTCP == nil {
+		errs = errors.Join(errs, fmt.Errorf("* 'include_app_syslog_tcp' must not be null"))
 	}
 	if config.IncludeApps == nil {
-		errs.Add(fmt.Errorf("* 'include_apps' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_apps' must not be null"))
 	}
 	if config.IncludeContainerNetworking == nil {
-		errs.Add(fmt.Errorf("* 'include_container_networking' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_container_networking' must not be null"))
 	}
 	if config.IncludeDetect == nil {
-		errs.Add(fmt.Errorf("* 'include_detect' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_detect' must not be null"))
 	}
 	if config.IncludeDocker == nil {
-		errs.Add(fmt.Errorf("* 'include_docker' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_docker' must not be null"))
 	}
 	if config.IncludeInternetDependent == nil {
-		errs.Add(fmt.Errorf("* 'include_internet_dependent' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_internet_dependent' must not be null"))
 	}
 	if config.IncludePrivateDockerRegistry == nil {
-		errs.Add(fmt.Errorf("* 'include_private_docker_registry' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_private_docker_registry' must not be null"))
 	}
 	if config.IncludeRouteServices == nil {
-		errs.Add(fmt.Errorf("* 'include_route_services' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_route_services' must not be null"))
 	}
 	if config.IncludeRouting == nil {
-		errs.Add(fmt.Errorf("* 'include_routing' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_routing' must not be null"))
 	}
 	if config.IncludeSSO == nil {
-		errs.Add(fmt.Errorf("* 'include_sso' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_sso' must not be null"))
 	}
 	if config.IncludeSecurityGroups == nil {
-		errs.Add(fmt.Errorf("* 'include_security_groups' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_security_groups' must not be null"))
 	}
 	if config.IncludeServiceDiscovery == nil {
-		errs.Add(fmt.Errorf("* 'include_service_discovery' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_service_discovery' must not be null"))
 	}
 	if config.IncludeServices == nil {
-		errs.Add(fmt.Errorf("* 'include_services' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_services' must not be null"))
 	}
 	if config.IncludeUserProvidedServices == nil {
-		errs.Add(fmt.Errorf("* 'include_user_provided_services' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_user_provided_services' must not be null"))
 	}
 	if config.IncludeServiceInstanceSharing == nil {
-		errs.Add(fmt.Errorf("* 'include_service_instance_sharing' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_service_instance_sharing' must not be null"))
 	}
 	if config.IncludeSsh == nil {
-		errs.Add(fmt.Errorf("* 'include_ssh' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_ssh' must not be null"))
 	}
 	if config.IncludeTasks == nil {
-		errs.Add(fmt.Errorf("* 'include_tasks' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_tasks' must not be null"))
 	}
 	if config.IncludeHTTP2Routing == nil {
-		errs.Add(fmt.Errorf("* 'include_http2_routing' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_http2_routing' must not be null"))
 	}
 	if config.IncludeTCPRouting == nil {
-		errs.Add(fmt.Errorf("* 'include_tcp_routing' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_tcp_routing' must not be null"))
 	}
 	if config.IncludeV3 == nil {
-		errs.Add(fmt.Errorf("* 'include_v3' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_v3' must not be null"))
 	}
 	if config.IncludeZipkin == nil {
-		errs.Add(fmt.Errorf("* 'include_zipkin' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_zipkin' must not be null"))
 	}
 	if config.IncludeIsolationSegments == nil {
-		errs.Add(fmt.Errorf("* 'include_isolation_segments' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_isolation_segments' must not be null"))
 	}
 	if config.IncludeTCPIsolationSegments == nil {
-		errs.Add(fmt.Errorf("* 'include_isolation_segments' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'include_isolation_segments' must not be null"))
 	}
 	if config.PrivateDockerRegistryImage == nil {
-		errs.Add(fmt.Errorf("* 'private_docker_registry_image' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'private_docker_registry_image' must not be null"))
 	}
 	if config.PrivateDockerRegistryUsername == nil {
-		errs.Add(fmt.Errorf("* 'private_docker_registry_username' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'private_docker_registry_username' must not be null"))
 	}
 	if config.PrivateDockerRegistryPassword == nil {
-		errs.Add(fmt.Errorf("* 'private_docker_registry_password' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'private_docker_registry_password' must not be null"))
 	}
 	if config.NamePrefix == nil {
-		errs.Add(fmt.Errorf("* 'name_prefix' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'name_prefix' must not be null"))
 	}
 	if config.Infrastructure == nil {
-		errs.Add(fmt.Errorf("* 'infrastructure' must not be null"))
+		errs = errors.Join(errs, fmt.Errorf("* 'infrastructure' must not be null"))
 	}
 
 	return errs
@@ -676,6 +687,10 @@ func validateCredHubSettings(config *config) error {
 }
 
 func validateVolumeServices(config *config) error {
+	if config.IncludeVolumeServices == nil {
+		return nil
+	}
+
 	if !config.GetIncludeVolumeServices() {
 		return nil
 	}
@@ -708,32 +723,33 @@ func validateStacks(config *config) error {
 	}
 
 	for _, stack := range config.GetStacks() {
-		if stack != "cflinuxfs3" {
-			return fmt.Errorf("* Invalid configuration: unknown stack '%s'. Only 'cflinuxfs3' is supported for the 'stacks' property", stack)
+		if stack != "cflinuxfs3" && stack != "cflinuxfs4" {
+			return fmt.Errorf("* Invalid configuration: unknown stack '%s'. Only 'cflinuxfs3' and 'cflinuxfs4' is supported for the 'stacks' property", stack)
 		}
 	}
 
 	return nil
 }
 
-func load(path string, config *config) Errors {
-	errs := Errors{}
-	err := loadConfigFromPath(path, config)
-	if err != nil {
-		errs.Add(fmt.Errorf("* Failed to unmarshal: %s", err))
-		return errs
-	}
-
-	errs = validateConfig(config)
-	if !errs.Empty() {
-		return errs
+func validateTimeoutScale(config *config) error {
+	if config.TimeoutScale == nil {
+		return fmt.Errorf("* 'timeout_scale' must not be null")
 	}
 
 	if *config.TimeoutScale <= 0 {
-		*config.TimeoutScale = 1.0
+		return fmt.Errorf("* 'timeout_scale' must be greater than zero")
 	}
 
-	return errs
+	return nil
+}
+
+func load(path string, config *config) error {
+	err := loadConfigFromPath(path, config)
+	if err != nil {
+		return fmt.Errorf("* Failed to unmarshal: %w", err)
+	}
+
+	return validateConfig(config)
 }
 
 func loadConfigFromPath(path string, config interface{}) error {
@@ -839,6 +855,10 @@ func (c *config) GetExistingUserPassword() string {
 	return *c.ExistingUserPassword
 }
 
+func (c *config) GetUserOrigin() string {
+	return ""
+}
+
 func (c *config) GetConfigurableTestPassword() string {
 	return *c.ConfigurableTestPassword
 }
@@ -859,6 +879,10 @@ func (c *config) GetAdminPassword() string {
 	return *c.AdminPassword
 }
 
+func (c *config) GetAdminOrigin() string {
+	return ""
+}
+
 func (c *config) GetApiEndpoint() string {
 	return *c.ApiEndpoint
 }
@@ -868,7 +892,7 @@ func (c *config) GetIncludeSsh() bool {
 }
 
 func (c *config) GetIncludeAppSyslogTcp() bool {
-	return *c.IncludeAppSyslogTcp
+	return *c.IncludeAppSyslogTCP
 }
 
 func (c *config) GetIncludeApps() bool {
@@ -915,6 +939,9 @@ func (c *config) GetIncludeSecurityGroups() bool {
 	return *c.IncludeSecurityGroups
 }
 
+func (c *config) GetDynamicASGsEnabled() bool {
+	return *c.DynamicASGsEnabled
+}
 func (c *config) GetIncludeServices() bool {
 	return *c.IncludeServices
 }
@@ -991,6 +1018,10 @@ func (c *config) GetIncludeVolumeServices() bool {
 	return *c.IncludeVolumeServices
 }
 
+func (c *config) GetRBuildpackName() string {
+	return *c.RBuildpackName
+}
+
 func (c *config) GetRubyBuildpackName() string {
 	return *c.RubyBuildpackName
 }
@@ -1005,6 +1036,10 @@ func (c *config) GetHwcBuildpackName() string {
 
 func (c *config) GetJavaBuildpackName() string {
 	return *c.JavaBuildpackName
+}
+
+func (c *config) GetNginxBuildpackName() string {
+	return *c.NginxBuildpackName
 }
 
 func (c *config) GetNodejsBuildpackName() string {

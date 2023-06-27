@@ -6,7 +6,7 @@ applications:
    instances: 2
    command: "./bin/logging-pipeline"
    buildpacks: [go_buildpack]
-   stack: cflinuxfs3
+   stack: cflinuxfs4
    env:
      GOVERSION: go1.20
      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/logging-pipeline

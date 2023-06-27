@@ -1,13 +1,13 @@
 ---
 applications:
- - name: healthcheck-pinger
-   memory: 64M
-   disk_quota: 256M
-   instances: 2
-   command: "./bin/healthcheck-pinger"
-   buildpacks: [go_buildpack]
-   stack: cflinuxfs3
-   env:
-     GOVERSION: go1.20
-     GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/healthcheck-pinger
-     UPSTREAM: http://healthcheck-ponger.apps.internal:8080
+  - name: healthcheck-pinger
+    memory: 64M
+    disk_quota: 256M
+    instances: 2
+    command: "./bin/healthcheck-pinger"
+    buildpacks: [go_buildpack]
+    stack: cflinuxfs4
+    env:
+      GOVERSION: go1.20
+      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/healthcheck-pinger
+      UPSTREAM: http://healthcheck-ponger.apps.internal:8080

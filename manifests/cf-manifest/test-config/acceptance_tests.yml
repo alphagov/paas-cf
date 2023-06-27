@@ -27,4 +27,4 @@ include_container_networking: true
 name_prefix: ((name_prefix))
 include_isolation_segments: false
 stacks:
-  - "cflinuxfs3"
+  - "cflinuxfs4"
