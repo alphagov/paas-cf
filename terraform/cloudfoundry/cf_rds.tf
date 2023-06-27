@@ -56,7 +56,7 @@ resource "aws_db_instance" "cf" {
   vpc_security_group_ids    = [aws_security_group.cf_rds.id]
 
   allow_major_version_upgrade = false
-  auto_minor_version_upgrade  = false
+  auto_minor_version_upgrade  = true
   apply_immediately           = false
 
   tags = {
