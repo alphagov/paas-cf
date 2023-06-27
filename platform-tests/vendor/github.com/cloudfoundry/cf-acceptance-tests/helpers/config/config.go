@@ -41,6 +41,7 @@ type CatsConfig interface {
 	GetAddExistingUserToExistingSpace() bool
 	GetAdminPassword() string
 	GetAdminUser() string
+	GetAdminOrigin() string
 	GetAdminClient() string
 	GetAdminClientSecret() string
 	GetApiEndpoint() string
@@ -58,6 +59,7 @@ type CatsConfig interface {
 	GetUseExistingSpace() bool
 	GetExistingUser() string
 	GetExistingUserPassword() string
+	GetUserOrigin() string
 	GetExistingClient() string
 	GetExistingClientSecret() string
 	GetGoBuildpackName() string
@@ -66,13 +68,16 @@ type CatsConfig interface {
 	GetIsolationSegmentDomain() string
 	GetJavaBuildpackName() string
 	GetNamePrefix() string
+	GetNginxBuildpackName() string
 	GetNodejsBuildpackName() string
 	GetPrivateDockerRegistryImage() string
 	GetPrivateDockerRegistryUsername() string
 	GetPrivateDockerRegistryPassword() string
+	GetRBuildpackName() string
 	GetRubyBuildpackName() string
 	GetUnallocatedIPForSecurityGroup() string
 	GetRequireProxiedAppTraffic() bool
+	GetDynamicASGsEnabled() bool
 	Protocol() string
 
 	GetStacks() []string

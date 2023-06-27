@@ -21,7 +21,7 @@ filename="$3"
 url="$4"
 checksum="$5"
 
-existing="$(cf curl '/v3/buildpacks?per_page=100' | jq -r --arg name "$name" '.resources | map(select(.name == $name))[0] | [.name, .stack, .filename] | join(" ")')"
+existing="$(cf curl '/v3/buildpacks?per_page=100' | jq -r --arg name "$name" --arg stack "$stack" '.resources | map(select(.name == $name) | select(.stack == $stack))[0] | [.name, .stack, .filename] | join(" ")')"
 if [ "$existing" = "$name $stack $filename" ]; then
     echo "${filename} already set for ${name} ${stack}, skipping"
     exit 0

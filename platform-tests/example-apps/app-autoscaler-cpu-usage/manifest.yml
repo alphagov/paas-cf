@@ -7,7 +7,7 @@ applications:
 
     services: [scale-app-autoscaler-cpu-usage]
     buildpacks: [go_buildpack]
-    stack: cflinuxfs3
+    stack: cflinuxfs4
 
     health-check-type: process
     no-route: true
@@ -24,7 +24,7 @@ applications:
 
     services: [scale-app-autoscaler-cpu-usage]
     buildpacks: [go_buildpack]
-    stack: cflinuxfs3
+    stack: cflinuxfs4
 
     no-route: true
 
