@@ -385,8 +385,8 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "Logging volume",
+  "title": "Logging demand",
   "uid": "logging-volume",
-  "version": 19,
+  "version": 20,
   "weekStart": ""
 }
