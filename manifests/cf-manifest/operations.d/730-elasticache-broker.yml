@@ -139,11 +139,10 @@
                         displayName: Clustered Tiny
                         AdditionalMetadata:
                           version: '3.2'
-
-                    # 3.2
                     - id: c84d1bef-9500-4ce9-88b2-c0bd421bbf8a
                       name: tiny-3.2
-                      description: "568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
+                      active: false
+                      description: "DEPRECATED - do not use, 568MB RAM, single node, no failover, daily backups (for instances created after 21/1/2019). Free for trial orgs. Costs for billable orgs."
                       free: true
                       metadata:
                         displayName: Tiny
@@ -157,7 +156,8 @@
                           version: '3.2'
                     - id: ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d
                       name: tiny-ha-3.2
-                      description: 1.5GB RAM, highly-available, daily backups
+                      active: false
+                      description: DEPRECATED - do not use, 1.5GB RAM, highly-available, daily backups
                       free: false
                       metadata:
                         displayName: Tiny
@@ -171,7 +171,8 @@
                           version: '3.2'
                     - id: 9162ed5b-0c88-4f43-bcaf-c6d4a45dd243
                       name: small-ha-3.2
-                      description: 3GB RAM, highly-available, daily backups
+                      active: false
+                      description: DEPRECATED - do not use, 3GB RAM, highly-available, daily backups
                       free: false
                       metadata:
                         displayName: Small
@@ -185,7 +186,8 @@
                           version: '3.2'
                     - id: b6949ea7-5c98-4c69-b981-4b5318ea8b7c
                       name: medium-ha-3.2
-                      description: 6.37GB RAM, highly-available, daily backups
+                      active: false
+                      description: DEPRECATED - do not use, 6.37GB RAM, highly-available, daily backups
                       free: false
                       metadata:
                         displayName: Medium
