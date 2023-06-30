@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: s3-broker
-    version: 0.1.19
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.19.tgz
-    sha1: 91f190c89d77cc7aa1fc23c49209c742f4b31955
+    version: 0.1.21 
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.21.tgz
+    sha1: 31818e98cd5b420a64c9c695f866a97d7d8497f7
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -31,7 +31,7 @@
         release: s3-broker
         properties:
           s3-broker:
-            port: 80
+            port: 443
             basic_auth_username: s3-broker
             basic_auth_password: ((secrets_s3_broker_admin_password))
             log_level: INFO
@@ -40,6 +40,7 @@
             iam_user_path: "/paas-s3-broker/"
             iam_ip_restriction_policy_arn: "((terraform_outputs_s3_broker_ip_restriction_policy_arn))"
             deploy_environment: "((environment))"
+            tls: ((secrets_s3_broker_tls_cert))
             locket:
               api_location: "locket.service.cf.internal:8891"
               ca_cert: "((diego_locket_client.ca))"
@@ -87,3 +88,14 @@
   value:
     name: secrets_s3_broker_admin_password
     type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_s3_broker_tls_cert
+    type: certificate
+    update_mode: converge
+    options:
+      ca: broker_tls_ca
+      common_name: "s3-broker.service.cf.internal"
+      alternative_names:
+        - "s3-broker.service.cf.internal"
