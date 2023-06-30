@@ -13,7 +13,7 @@ resource "aws_elb" "s3_broker" {
   }
 
   health_check {
-    target              = "HTTP:80/healthcheck"
+    target              = "HTTPS:443/healthcheck"
     interval            = var.health_check_interval
     timeout             = var.health_check_timeout
     healthy_threshold   = var.health_check_healthy
@@ -21,8 +21,8 @@ resource "aws_elb" "s3_broker" {
   }
 
   listener {
-    instance_port      = 80
-    instance_protocol  = "http"
+    instance_port      = 443
+    instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
     ssl_certificate_id = data.aws_acm_certificate.system.arn
@@ -47,4 +47,3 @@ resource "aws_iam_policy" "s3_broker_user_ip_restriction" {
   name        = "${var.env}S3BrokerUserIpRestriction"
   description = "Restricts S3 API Access to just the NAT Gateway IPs"
 }
-
