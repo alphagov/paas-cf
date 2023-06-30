@@ -353,6 +353,13 @@
   value: true
 
 - type: replace
+  path: /instance_groups/name=uaa/jobs/name=uaa/properties/uaa/csp?/script-src?
+  value:
+    - "'self'"
+    # SRI hash of our uaa-customized's `application.min.js`
+    - "'sha256-0EjrOAFUD7PfcL1fVdExK2Tcc2sR9IOEEu9But6mW7A='"
+
+- type: replace
   path: /releases/-
   value:
     name: uaa-customized
