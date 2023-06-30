@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: s3-broker
-    version: 0.0.1688127035
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.0.1688127035.tgz
-    sha1: 8ec587c1277f3e1968a911da51f886229a2405b2
+    version: 0.0.1688129892
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.0.1688129892.tgz
+    sha1: 284904d834b146730583162353b6cb6f855eca6c
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -31,7 +31,7 @@
         release: s3-broker
         properties:
           s3-broker:
-            port: 80
+            port: 443
             basic_auth_username: s3-broker
             basic_auth_password: ((secrets_s3_broker_admin_password))
             log_level: INFO
