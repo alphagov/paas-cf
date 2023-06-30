@@ -14,9 +14,9 @@ RSpec.describe "Monitor CF" do
     expect(cf_exporter_config).not_to be_nil
   end
 
-  it "adds the cloudfoundry_dashboards-attic job" do
+  it "adds the cloudfoundry_dashboards job" do
     cf_dashboards_config = manifest_with_defaults.get(
-      "instance_groups.grafana.jobs.cloudfoundry_dashboards-attic",
+      "instance_groups.grafana.jobs.cloudfoundry_dashboards",
     )
 
     expect(cf_dashboards_config).not_to be_nil
