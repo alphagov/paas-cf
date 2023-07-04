@@ -30,3 +30,7 @@ variable "aws_route_table_id" {
 variable "wait_for_healthcheck" {
   description = "Wait for the healthchecks"
 }
+
+variable "env" {
+  description = "Environment name"
+}

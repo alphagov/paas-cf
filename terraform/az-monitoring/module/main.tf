@@ -93,7 +93,8 @@ WantedBy=multi-user.target
   EOF
 
   tags = {
-    Name = "az-healthcheck/${var.zone}"
+    Name       = "az-healthcheck/${var.zone}"
+    deploy_env = var.env
   }
 
   monitoring              = true
