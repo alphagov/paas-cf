@@ -4697,6 +4697,14 @@ jobs:
                   cf create-service-broker elasticache-broker elasticache-broker "${ELASTICACHE_BROKER_PASS}" "https://${ELASTICACHE_BROKER_SERVER}"
                 fi
                 cf enable-service-access redis -b elasticache-broker
+                # Disable deprecated Redis 3.2 plans
+                cat <<EOF | xargs -n1 cf disable-service-access redis -p
+                tiny-clustered-3.2
+                tiny-3.2
+                tiny-ha-3.2
+                small-ha-3.2
+                medium-ha-3.2
+                EOF
 
       - task: remove-unused-iam-access-keys
         tags: [colocated-with-web]

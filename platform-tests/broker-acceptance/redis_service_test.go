@@ -16,18 +16,12 @@ import (
 var _ = Describe("Redis backing service", func() {
 	var (
 		plansToTestAgainst = []string{
-			"tiny-3.2",
 			"tiny-4.x",
 			"tiny-5.x",
 			"tiny-6.x",
 		}
 
 		knownPlanNames = []string{
-			"tiny-clustered-3.2",
-			"tiny-3.2",
-			"tiny-ha-3.2",
-			"small-ha-3.2",
-			"medium-ha-3.2",
 			"tiny-4.x",
 			"tiny-ha-4.x",
 			"small-ha-4.x",
