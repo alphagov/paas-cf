@@ -8,7 +8,7 @@
   value: high_cpu_xlarge
 
 - type: replace
-  path: /instance_groups/name=firehose/jobs/name=firehose_exporter-attic/properties/firehose_exporter/doppler/idle_timeout?
+  path: /instance_groups/name=firehose/jobs/name=firehose_exporter/properties/firehose_exporter/doppler/idle_timeout?
   value: 5m
 
 - type: replace
@@ -21,3 +21,7 @@
   path: /instance_groups/name=prometheus2/jobs/name=cf_exporter/properties/cf_exporter/filter?
   value:
     collectors: Applications,Organizations,Routes,ServiceBindings,ServiceInstances,ServicePlans,Services,Spaces
+
+- type: replace
+  path: /instance_groups/name=firehose/jobs/name=firehose_exporter/consumes/reverse_log_proxy/deployment
+  value: ((metrics_environment))

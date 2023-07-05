@@ -285,7 +285,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(sum(firehose_http_start_stop_requests{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", status_code=~\"$status_codes_pattern\", method=~\"$methods_pattern\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name!~\"[A-Z]+-.*\"}) by (application_id, organization_name)) by (organization_name) / 60",
+          "expr": "sum(sum(rate(firehose_http_total{environment=~\"$environment\", status_code=~\"$status_codes_pattern\", method=~\"$methods_pattern\"}[10m])) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name!~\"[A-Z]+-.*\"}) by (application_id, organization_name)) by (organization_name)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{ organization_name }}",
@@ -480,7 +480,7 @@
         "type": "prometheus",
         "uid": "P1809F7CD0C75ACF3"
       },
-      "description": "Total amount of http connection time used during a time period (i.e. 60 * 1s connections would be 1 minute).\n\nUnit is seconds, but telling grafana that makes it list large values in weeks etc. - not very useful.\n\nSorry, no status-code filtering here.",
+      "description": "Total amount of http connection time used during a 1 second period.\n\nUnit is seconds, but telling grafana that makes it list large values in weeks etc. - not very useful.\n\nSorry, no status-code filtering here.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -559,14 +559,14 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "exemplar": true,
-          "expr": "sum(sum(firehose_http_start_stop_server_request_duration_seconds_sum{environment=~\"$environment\", bosh_deployment=~\"$bosh_deployment\", method=~\"$methods_pattern\"}) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name!~\"[A-Z]+-.*\"}) by (application_id, organization_name)) by (organization_name)",
+          "expr": "sum(sum(rate(firehose_http_duration_seconds_sum{environment=~\"$environment\", method=~\"$methods_pattern\", source_id!=\"gorouter\"}[10m])) by (application_id) * on(application_id) group_right group(cf_application_info{organization_name!~\"[A-Z]+-.*\"}) by (application_id, organization_name)) by (organization_name)",
           "interval": "",
           "intervalFactor": 2,
           "legendFormat": "{{ organization_name }}",
           "refId": "A"
         }
       ],
-      "title": "Total request time ($methods_pattern)",
+      "title": "Total request time per second ($methods_pattern)",
       "type": "timeseries"
     }
   ],
@@ -656,7 +656,7 @@
         "name": "bosh_deployment",
         "options": [],
         "query": {
-          "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment!=\"bosh-health-check\"}, bosh_deployment)",
+          "query": "label_values(bosh_job_healthy{environment=~\"$environment\",bosh_name=~\"$bosh_director\",bosh_deployment!~\"(bosh-health-check|concourse|app-autoscaler|prometheus)\"}, bosh_deployment)",
           "refId": "prometheus-bosh_deployment-Variable-Query"
         },
         "refresh": 1,
@@ -748,7 +748,7 @@
             "$__all"
           ]
         },
-        "definition": "label_values(firehose_http_start_stop_server_request_duration_seconds_sum, method)",
+        "definition": "label_values(firehose_http_duration_seconds_sum, method)",
         "description": "",
         "hide": 0,
         "includeAll": true,
@@ -757,7 +757,7 @@
         "name": "methods_pattern",
         "options": [],
         "query": {
-          "query": "label_values(firehose_http_start_stop_server_request_duration_seconds_sum, method)",
+          "query": "label_values(firehose_http_duration_seconds_sum, method)",
           "refId": "StandardVariableQuery"
         },
         "refresh": 2,

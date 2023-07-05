@@ -8,7 +8,7 @@
     sha1: "e4949efdf353742360955316d69e3c1d59a6cdf0"
 
 - type: replace
-  path: /addons/-
+  path: /addons?/-
   value:
     name: bosh-dns
     jobs:

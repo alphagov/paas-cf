@@ -1,5 +1,5 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=firehose/jobs/name=firehose_exporter-attic/properties/firehose_exporter/doppler/use_unique_subscription_id?
+  path: /instance_groups/name=firehose/jobs/name=firehose_exporter/properties/firehose_exporter/doppler/use_unique_subscription_id?
   value: true
