@@ -3,7 +3,7 @@
   value: nano
 - type: replace
   path: /instance_groups/name=grafana/vm_type
-  value: nano
+  value: small
 - type: replace
   path: /instance_groups/name=prometheus2/vm_type
   value: xlarge
