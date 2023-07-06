@@ -204,7 +204,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "(\n  (sum(firehose_value_metric_rep_log_rate{bosh_deployment=~\"$bosh_deployment\"}) by (app_id, app_name, space_name, organization_name))\n  + on (app_id) group_left() (\n    (512 * sum(label_replace(rate(firehose_http_total[10m]), \"app_id\", \"$1\", \"application_id\", \"(.+)\")) by (app_id))\n    or on (app_id) ((sum(firehose_value_metric_rep_log_rate{bosh_deployment=~\"$bosh_deployment\"}) by (app_id, app_name, space_name, organization_name)) * 0) # hack to get a vector of 0\n  )\n)",
+          "expr": "(\n  (sum(firehose_value_metric_rep_log_rate{bosh_deployment=~\"$bosh_deployment\"}) by (app_id, app_name, space_name, organization_name))\n  + on (app_id, app_name) group_left() (\n    (512 * sum(label_replace(rate(firehose_http_total[10m]), \"app_id\", \"$1\", \"application_id\", \"(.+)\")) by (app_id))\n    or on (app_id, app_name) ((sum(firehose_value_metric_rep_log_rate{bosh_deployment=~\"$bosh_deployment\"}) by (app_id, app_name, space_name, organization_name)) * 0) # hack to get a vector of 0\n  )\n)",
           "interval": "1m",
           "legendFormat": "{{ organization_name }}/{{ space_name }}/{{ app_name }}",
           "range": true,
