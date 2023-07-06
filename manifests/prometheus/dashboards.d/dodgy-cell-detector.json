@@ -108,7 +108,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "sum(\n    label_replace(\n        present_over_time((\n            (group(firehose_value_metric_rep_container_age{bosh_job_name=~\"$bosh_job_name\", bosh_job_id=~\"$bosh_job_id\", bosh_job_ip=~\"$bosh_job_ip\"}) by (process_instance_id, bosh_job_id, bosh_job_name))\n            * on (bosh_job_id) group_left() (group(node_role{bosh_deployment=~\"$bosh_deployment\",bosh_job_az=~\"$zone\"}) by (bosh_job_id))\n        )[$interval:]),\n        \"instance_id\",\n        \"$0\",\n        \"process_instance_id\",\n        \".*\"\n    ) * on(instance_id) group_left(process_instance_id) (\n    present_over_time(\n        (group(firehose_http_start_stop_requests{status_code=~\"$status_codes_pattern\"}) by (instance_id))[$interval:]\n    )\n)) by (bosh_job_id, bosh_job_name)",
+          "expr": "sum(\n    present_over_time((\n        (group(firehose_value_metric_rep_container_age{bosh_job_name=~\"$bosh_job_name\", bosh_job_id=~\"$bosh_job_id\", bosh_job_ip=~\"$bosh_job_ip\"}) by (process_instance_id, bosh_job_id, bosh_job_name))\n        * on (bosh_job_id) group_left() (group(node_role{bosh_deployment=~\"$bosh_deployment\",bosh_job_az=~\"$zone\"}) by (bosh_job_id))\n    )[$interval:]) * on(process_instance_id) group_left() (\n        group(increase(firehose_http_total{status_code=~\"$status_codes_pattern\"}[$interval]) > 0) by (process_instance_id)\n)) by (bosh_job_id, bosh_job_name)",
           "legendFormat": "{{bosh_job_name}}/{{bosh_job_id}}",
           "range": true,
           "refId": "A"
@@ -297,7 +297,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "avg_over_time(\n    (\n        sum(\n            label_replace(\n                present_over_time((\n                    (group(firehose_value_metric_rep_container_age{bosh_job_name=~\"$bosh_job_name\", bosh_job_id=~\"$bosh_job_id\", bosh_job_ip=~\"$bosh_job_ip\"}) by (process_instance_id, bosh_job_id, bosh_job_name))\n                    * on (bosh_job_id) group_left() (group(node_role{bosh_deployment=~\"$bosh_deployment\",bosh_job_az=~\"$zone\"}) by (bosh_job_id))\n                )[$interval:]),\n                \"instance_id\",\n                \"$0\",\n                \"process_instance_id\",\n                \".*\"\n            ) * on(instance_id) group_left(process_instance_id)\n            (sum(firehose_http_start_stop_requests{status_code=~\"$status_codes_pattern\"}) by (instance_id))\n        ) by (bosh_job_id, bosh_job_name) / 60\n    )[$interval:]\n)",
+           "expr": "sum(\n    present_over_time((\n        (group(firehose_value_metric_rep_container_age{bosh_job_name=~\"$bosh_job_name\", bosh_job_id=~\"$bosh_job_id\", bosh_job_ip=~\"$bosh_job_ip\"}) by (process_instance_id, bosh_job_id, bosh_job_name))\n        * on (bosh_job_id) group_left() (group(node_role{bosh_deployment=~\"$bosh_deployment\",bosh_job_az=~\"$zone\"}) by (bosh_job_id))\n    )[$interval:]) * on(process_instance_id) group_left() (\n        sum(rate(firehose_http_total{status_code=~\"$status_codes_pattern\"}[$interval]) > 0) by (process_instance_id)\n)) by (bosh_job_id, bosh_job_name)",
           "legendFormat": "{{bosh_job_name}}/{{bosh_job_id}}",
           "range": true,
           "refId": "A"
