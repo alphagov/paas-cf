@@ -17,7 +17,7 @@ jobs:
     steps:
       ## Setup
       - name: Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
         with:
           submodules: true
 
@@ -27,7 +27,7 @@ jobs:
           # for envsubst
 
       - name: "Install Go ${{env.GO_VERSION}}"
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@6edd4406fa81c3da01a34fa6f6343087c207a568
         with:
           go-version: "${{env.GO_VERSION}}"
 
