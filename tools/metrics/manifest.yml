@@ -1,12 +1,12 @@
 ---
 applications:
- - name: paas-metrics
-   memory: 128M
-   disk_quota: 512M
-   instances: 1
-   buildpack: go_buildpack
-   stack: cflinuxfs3
-   env:
-     GOVERSION: go1.20
-     GOPACKAGENAME: github.com/alphagov/paas-cf/tools/metrics
-   command: ./bin/metrics
+  - name: paas-metrics
+    memory: 128M
+    disk_quota: 512M
+    instances: 1
+    buildpack: go_buildpack
+    stack: cflinuxfs4
+    env:
+      GOVERSION: go1.20
+      GOPACKAGENAME: github.com/alphagov/paas-cf/tools/metrics
+    command: ./bin/metrics
