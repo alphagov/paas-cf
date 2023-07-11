@@ -10,3 +10,7 @@ variable "wait_for_healthcheck" {
   description = "Wait for the healthchecks"
   default     = true
 }
+
+variable "env" {
+  description = "Environment name"
+}

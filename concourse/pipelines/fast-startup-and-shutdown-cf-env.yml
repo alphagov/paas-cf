@@ -37,12 +37,7 @@ groups:
       - fast-shutdown-cf-env
 
 resources:
-  - name: build-created-by-keyval-startup
-    type: keyval
-    icon: table
-    expose_build_created_by: true
-
-  - name: build-created-by-keyval-shutdown
+  - name: build-created-by-keyval
     type: keyval
     icon: table
     expose_build_created_by: true
@@ -72,7 +67,11 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: ((branch_name))
+      # This is hardcoded to main to deal with the situation where the branch is merged
+      # into main and we fail to shutdown as the branch doesn't exist anymore.
+      # Set this to the below when you want to work on this pipeline.
+      # branch: ((branch_name))
+      branch: main
       tag_filter: ((paas_cf_tag_filter))
       commit_verification_keys: ((gpg_public_keys))
 
@@ -93,7 +92,7 @@ jobs:
   - name: kick-off-startup
     serial: true
     plan:
-      - put: build-created-by-keyval-startup
+      - put: build-created-by-keyval
       - get: paas-cf
       - task: self-update-pipeline-and-trigger
         tags: [colocated-with-web]
@@ -129,14 +128,16 @@ jobs:
   - name: kick-off-shutdown
     serial: true
     plan:
-      - put: build-created-by-keyval-shutdown
+      - put: build-created-by-keyval
       - put: shutdown-trigger
         params: {bump: patch}
+      - get: shutdown-timer
+        trigger: true
 
   - name: fast-startup-cf-env
     serial: true
     plan:
-      - get: build-created-by-keyval-startup
+      - get: build-created-by-keyval
         passed: ['kick-off-startup']
       - get: startup-trigger
         passed: ['kick-off-startup']
@@ -153,7 +154,7 @@ jobs:
             - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
-            - name: build-created-by-keyval-startup
+            - name: build-created-by-keyval
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: ((bosh-ca-cert))
@@ -177,13 +178,12 @@ jobs:
   - name: fast-shutdown-cf-env
     serial: true
     plan:
-      - get: build-created-by-keyval-shutdown
+      - get: build-created-by-keyval
         passed: ['kick-off-shutdown']
       - get: bosh-vars-store
       - get: paas-cf
       - get: bosh-ca-crt
-      - get: shutdown-timer
-        trigger: true
+
       - get: shutdown-trigger
         passed: ['kick-off-shutdown']
         trigger: true
@@ -195,7 +195,7 @@ jobs:
             - name: bosh-vars-store
             - name: paas-cf
             - name: bosh-ca-crt
-            - name: build-created-by-keyval-shutdown
+            - name: build-created-by-keyval
           params:
             BOSH_ENVIRONMENT: ((bosh_fqdn))
             BOSH_CA_CERT: ((bosh-ca-cert))

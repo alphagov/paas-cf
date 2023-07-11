@@ -192,7 +192,6 @@ parse_args() {
     initial_db_state='available'
     target_db_state='stopped'
     past_tense='asleep'
-    operation='shutdown'
   elif [[ "${action_arg}" = 'wake' ]]; then
     action='start'
     initial_ec2_state='stopped'
@@ -200,7 +199,6 @@ parse_args() {
     initial_db_state='stopped'
     target_db_state='available'
     past_tense='awake'
-    operation='startup'
   fi
   webhook_arg="${3:-}"
   if [[ "${webhook_arg}" = '' ]]; then
@@ -384,7 +382,12 @@ update_usage_and_slack() {
   local usage_msg=""
   echo "updating dev-env-usage..."
   local build_created_by
-  build_created_by=$(jq -r '.build_created_by' < build-created-by-keyval-${operation}/version.json)
+  build_created_by=$(jq -r '.build_created_by' < build-created-by-keyval/version.json)
+  if [[ "${build_created_by}" = "null" ]]; then
+    echo "build_created_by not found in version.json assuming scheduled build"
+    echo "getting last user of environment"
+    build_created_by=$(aws s3 cp "s3://gds-paas-${env_arg}-state/dev-env-usage-file" - | cut -d '|' -f1 || echo "no one")
+  fi
   local update_usage="${build_created_by} | ${past_tense}"
   local s3_dev_envs
   s3_dev_envs=$(aws s3api list-buckets | jq -r '.Buckets[].Name|match("gds-paas-(dev[0-9][0-9])-state").captures[].string')

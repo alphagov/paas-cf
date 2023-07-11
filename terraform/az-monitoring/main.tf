@@ -41,6 +41,7 @@ resource "aws_route_table" "main" {
 module "healthcheck_a" {
   source = "./module"
 
+  env                  = var.env
   ami                  = data.aws_ami.amazon_linux_2.id
   cidr                 = "10.0.1.0/24"
   region               = var.region
@@ -54,6 +55,7 @@ module "healthcheck_a" {
 module "healthcheck_b" {
   source = "./module"
 
+  env                  = var.env
   ami                  = data.aws_ami.amazon_linux_2.id
   cidr                 = "10.0.2.0/24"
   region               = var.region
@@ -67,6 +69,7 @@ module "healthcheck_b" {
 module "healthcheck_c" {
   source = "./module"
 
+  env                  = var.env
   ami                  = data.aws_ami.amazon_linux_2.id
   cidr                 = "10.0.3.0/24"
   region               = var.region
