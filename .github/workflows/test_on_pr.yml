@@ -68,7 +68,7 @@ jobs:
         run: pip install --user yamllint
 
       - name: Install Ruby
-        uses: ruby/setup-ruby@d3c9825d67b0d8720afdfdde5af56c79fdb38d16
+        uses: ruby/setup-ruby@250fcd6a742febb1123a77a841497ccaa8b9e939
         with:
           ruby-version: "${{env.RUBY_VERSION}}"
 
