@@ -37,13 +37,6 @@ resource "aws_vpc_peering_connection" "vpc_peer" {
   peer_owner_id = each.value.account_id
   peer_vpc_id   = each.value.vpc_id
   vpc_id        = var.vpc_id
-
-  # possibly irritating for us, but it will be more irritating to our tenants if
-  # we accidentally re-create an existing peering, leaving them to re-accept it
-  # and reconfigure their route tables
-  lifecycle {
-    prevent_destroy = true
-  }
 }
 
 resource "aws_route" "vpc_peer_route_0" {
