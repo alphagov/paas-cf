@@ -4,7 +4,7 @@ image_resource:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/ruby
-    tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+    tag: 540813b98e23f9865b33c206a840a8d5633287e9
 inputs:
   - name: paas-cf
   - name: cf-manifest

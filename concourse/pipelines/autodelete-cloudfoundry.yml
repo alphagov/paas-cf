@@ -115,7 +115,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/alpine
-              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
           inputs:
             - name: paas-cf
           params:
@@ -142,7 +142,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/bosh-cli-v2
-              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
           run:
             path: sh
             args:
@@ -178,7 +178,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/awscli
-              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
           run:
             path: ./paas-cf/concourse/scripts/rds_instances.sh
             args:

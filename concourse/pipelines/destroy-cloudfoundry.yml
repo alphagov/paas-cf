@@ -99,7 +99,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
 
           inputs:
             - name: paas-cf
@@ -144,13 +144,13 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/cf-cli
-              tag: 1b0fef4a74c771a23dbdf67cd830dc08b9c49258
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
           inputs:
             - name: paas-cf
             - name: config
           run:
             path: sh
-            args:    
+            args:
                 - -e
                 - -u
                 - -c
@@ -178,7 +178,7 @@ jobs:
                     if [ "${tries}" -le 0 ]; then
                       echo "Failed after ${retries} tries. Exiting."
                       exit 1
-                    fi  
+                    fi
                   done
 
       - task: delete-deployments
@@ -189,7 +189,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/bosh-cli-v2
-              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
 
           inputs:
             - name: bosh-vars-store
@@ -243,7 +243,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/ruby
-              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
           inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -286,7 +286,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/terraform
-              tag: 826b547c6411b0fd22ac0b07bde11eed5523879c
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
 
           inputs:
             - name: terraform-variables

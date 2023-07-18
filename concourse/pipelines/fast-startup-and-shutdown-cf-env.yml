@@ -99,10 +99,10 @@ jobs:
         config:
           platform: linux
           image_resource:
-            type: docker-image
+            type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 8621ead7e4ef0dd653aec80a15b6727b06927e59
+              tag: 540813b98e23f9865b33c206a840a8d5633287e9
           inputs:
             - name: paas-cf
           params:
@@ -173,7 +173,7 @@ jobs:
               - -e
               - -c
               - |
-                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" wake "((dev_env_usage_slack_webhook_url))" 
+                bash ./paas-cf/concourse/scripts/fast-startup-and-shutdown-cf-env.sh "((deploy_env))" wake "((dev_env_usage_slack_webhook_url))"
 
   - name: fast-shutdown-cf-env
     serial: true
