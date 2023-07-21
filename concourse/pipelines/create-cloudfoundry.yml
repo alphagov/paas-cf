@@ -146,7 +146,8 @@ groups:
       - cf-deploy
       - app-autoscaler-deploy
       - prometheus-deploy
-      - post-deploy
+      - post-cf-deploy
+      - post-bosh-deploys
       - deploy-paas-accounts
       - deploy-paas-admin
       - deploy-paas-auditor
@@ -180,7 +181,8 @@ groups:
       - cf-deploy
       - app-autoscaler-deploy
       - prometheus-deploy
-      - post-deploy
+      - post-cf-deploy
+      - post-bosh-deploys
       - smoke-tests
       - acceptance-tests
       - custom-acceptance-tests
@@ -1029,7 +1031,7 @@ jobs:
                 CONCOURSE_PIPELINE_NAME="create-cloudfoundry"
                 export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
 
-                CONCOURSE_JOB_NAME="post-deploy"
+                CONCOURSE_JOB_NAME="post-cf-deploy"
                 CONCOURSE_RESOURCE_NAME="pipeline-trigger"
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
@@ -1087,7 +1089,7 @@ jobs:
                 CONCOURSE_PIPELINE_NAME="create-cloudfoundry"
                 export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
 
-                CONCOURSE_JOB_NAME="post-deploy"
+                CONCOURSE_JOB_NAME="post-cf-deploy"
                 CONCOURSE_RESOURCE_NAME="pipeline-trigger"
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
@@ -1173,7 +1175,7 @@ jobs:
                 CONCOURSE_PIPELINE_NAME="create-cloudfoundry"
                 export CONCOURSE_TEAM_NAME CONCOURSE_PIPELINE_NAME
 
-                CONCOURSE_JOB_NAME="post-deploy"
+                CONCOURSE_JOB_NAME="post-cf-deploy"
                 CONCOURSE_RESOURCE_NAME="pipeline-trigger"
                 export CONCOURSE_JOB_NAME CONCOURSE_RESOURCE_NAME
 
@@ -2670,6 +2672,7 @@ jobs:
             passed:
               - cf-terraform
               - az-healthcheck-terraform
+              - psn-terraform
             trigger: true
           - <<: *get-paas-cf
             passed: ['cf-terraform']
@@ -2952,7 +2955,6 @@ jobs:
           - get: cf-manifest
             passed: ['generate-cf-config']
           - get: cf-tfstate
-            passed: ['generate-cf-config']
 
       - in_parallel:
         - task: get-and-upload-stemcell
@@ -3729,7 +3731,9 @@ jobs:
 
       - *end-grafana-job-annotation
 
-  - name: post-deploy
+  - name: post-cf-deploy
+    # TODO: "old_name" can be removed once the pipeline is fully deployed to all environments
+    old_name: post-deploy
     serial: true
     plan:
     - *add-grafana-job-annotation
@@ -3740,9 +3744,7 @@ jobs:
       - <<: *get-paas-cf
         passed: ['cf-deploy']
       - get: cf-manifest
-        passed: ['generate-cf-config']
       - get: cf-tfstate
-        passed: ['generate-cf-config']
       - get: paas-trusted-people
 
     - task: retrieve-config
@@ -4707,58 +4709,80 @@ jobs:
                 medium-ha-3.2
                 EOF
 
-      - task: remove-unused-iam-access-keys
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *awscli-image-resource
-          inputs:
-            - name: cf-tfstate
-          params:
-            DEPLOY_ENV: ((deploy_env))
-            AWS_DEFAULT_REGION: ((aws_region))
-          run:
-            path: sh
-            args:
-              - -e
-              - -c
-              - |
-                delete_unused_keys() {
-                  terraform_outputs_key=$1
-                  username=$2
-                  VERSION=$(jq -r ".version" cf-tfstate/cf.tfstate)
-
-                  if [ "$VERSION" -gt 3 ]; then
-                    jq_path=".outputs.${terraform_outputs_key}.value"
-                  else
-                    jq_path=".modules[].outputs.${terraform_outputs_key}.value"
-                  fi
-
-                  ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
-                  if [ -z "$ACCESS_KEY_ID" ]; then
-                    echo "could not find $terraform_outputs_key in terraform outputs"
-                    exit 1
-                  fi
-
-                  UNUSED_ACCESS_KEYS=$(\
-                    aws iam list-access-keys --user-name "$username" \
-                    --query "AccessKeyMetadata[?AccessKeyId!=\`${ACCESS_KEY_ID}\`].AccessKeyId" \
-                    --output text \
-                  )
-                  if [ -z "$UNUSED_ACCESS_KEYS" ]; then
-                    echo "no access keys to revoke"
-                  else
-                    for key in $UNUSED_ACCESS_KEYS; do
-                      echo "deleting key $key for user $username"
-                      aws iam delete-access-key --user-name "$username" --access-key-id "$key"
-                    done
-                  fi
-                }
-
-                delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
-                delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
-                delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
     - *end-grafana-job-annotation
+
+  - name: post-bosh-deploys
+    serial: true
+    plan:
+      - *add-grafana-job-annotation
+      - in_parallel:
+        - get: pipeline-trigger
+          passed: 
+            - post-cf-deploy
+            - prometheus-deploy
+            - app-autoscaler-deploy
+            - app-availability-tests
+            - internal-app-availability-tests
+            - api-availability-tests
+          trigger: true
+        - get: cf-tfstate
+        - <<: *get-paas-cf
+          passed: ["post-cf-deploy"]
+
+      - do:
+        - task: remove-unused-iam-access-keys
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *awscli-image-resource
+            inputs:
+              - name: cf-tfstate
+            params:
+              DEPLOY_ENV: ((deploy_env))
+              AWS_DEFAULT_REGION: ((aws_region))
+            run:
+              path: sh
+              args:
+                - -e
+                - -c
+                - |
+                  delete_unused_keys() {
+                    terraform_outputs_key=$1
+                    username=$2
+                    VERSION=$(jq -r ".version" cf-tfstate/cf.tfstate)
+
+                    if [ "$VERSION" -gt 3 ]; then
+                      jq_path=".outputs.${terraform_outputs_key}.value"
+                    else
+                      jq_path=".modules[].outputs.${terraform_outputs_key}.value"
+                    fi
+
+                    ACCESS_KEY_ID=$(jq -r "$jq_path" cf-tfstate/cf.tfstate)
+                    if [ -z "$ACCESS_KEY_ID" ]; then
+                      echo "could not find $terraform_outputs_key in terraform outputs"
+                      exit 1
+                    fi
+
+                    UNUSED_ACCESS_KEYS=$(\
+                      aws iam list-access-keys --user-name "$username" \
+                      --query "AccessKeyMetadata[?AccessKeyId!=\`${ACCESS_KEY_ID}\`].AccessKeyId" \
+                      --output text \
+                    )
+                    if [ -z "$UNUSED_ACCESS_KEYS" ]; then
+                      echo "no access keys to revoke"
+                    else
+                      for key in $UNUSED_ACCESS_KEYS; do
+                        echo "deleting key $key for user $username"
+                        aws iam delete-access-key --user-name "$username" --access-key-id "$key"
+                      done
+                    fi
+                  }
+
+                  delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
+                  delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
+                  delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"          
+      
+      - *end-grafana-job-annotation
 
   - name: smoke-tests
     serial_groups: [smoke-tests]
@@ -4767,18 +4791,12 @@ jobs:
       - in_parallel:
           - get: pipeline-trigger
             passed: &smoke-tests-resource-passed
-              - post-deploy
-              - app-autoscaler-deploy
-              - prometheus-deploy
-              - app-availability-tests
-              - internal-app-availability-tests
-              - api-availability-tests
+              - post-bosh-deploys
             trigger: true
           - get: cf-smoke-tests-release
           - <<: *get-paas-cf
             passed: *smoke-tests-resource-passed
           - get: cf-manifest
-            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -4831,7 +4849,6 @@ jobs:
           - <<: *get-paas-cf
             passed: *smoke-tests-resource-passed
           - get: cf-manifest
-            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -4897,8 +4914,7 @@ jobs:
             trigger: true
           - <<: *get-paas-cf
             passed: *smoke-tests-resource-passed
-          - get: cf-manifest
-            passed: ['post-deploy']
+          - get: cf-manifest            
           - get: cf-acceptance-tests
 
       - do:
@@ -4966,7 +4982,6 @@ jobs:
           - <<: *get-paas-cf
             passed: *smoke-tests-resource-passed
           - get: cf-manifest
-            passed: ['post-deploy']
           - get: cf-acceptance-tests
 
       - do:
@@ -5070,7 +5085,6 @@ jobs:
           - get: paas-cf
             passed: *smoke-tests-resource-passed
           - get: cf-manifest
-            passed: ['post-deploy']
 
       - do:
         - task: create-temp-user
@@ -5121,7 +5135,7 @@ jobs:
 
         - <<: *get-paas-cf
           trigger: true
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
       - task: deploy-paas-auditor
         tags: [colocated-with-web]
@@ -5193,7 +5207,7 @@ jobs:
       - in_parallel:
         - <<: *get-paas-cf
           trigger: true
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
       - task: deploy-paas-accounts
         tags: [colocated-with-web]
@@ -5321,10 +5335,10 @@ jobs:
       - in_parallel:
         - <<: *get-paas-cf
           trigger: true
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
         - get: cf-manifest
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
       - task: build
         tags: [colocated-with-web]
@@ -5533,10 +5547,9 @@ jobs:
       - in_parallel:
         - <<: *get-paas-cf
           trigger: true
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
         - get: cf-manifest
-          passed: ['post-deploy']
 
       # this tests the "integration" of this paas-billing revision with the
       # configuration in this paas-cf revision, performed before deployment
@@ -5939,7 +5952,7 @@ jobs:
       - *add-grafana-job-annotation
       - <<: *get-paas-cf
         trigger: true
-        passed: ['post-deploy']
+        passed: ['post-cf-deploy']
 
       - task: deploy
         tags: [colocated-with-web]
@@ -6065,7 +6078,7 @@ jobs:
 
         - get: paas-cf
           trigger: true
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
       - task: create-metrics-domain
         tags: [colocated-with-web]
@@ -6154,14 +6167,10 @@ jobs:
 
           - <<: *get-paas-cf
             trigger: true
-            passed: ['post-deploy']
+            passed: ['post-cf-deploy']
 
           - get: cf-tfstate
-            passed: ['generate-cf-config']
-
           - get: cf-manifest
-            passed: ['post-deploy']
-
           - get: cf-acceptance-tests
 
       - task: retrieve-config
@@ -7011,7 +7020,7 @@ jobs:
         - <<: *get-paas-cf
           passed: ['pipeline-lock']
         - get: cf-manifest
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
       - try:
           task: ping-cronitor-smoke-test-start
@@ -7152,7 +7161,7 @@ jobs:
         - <<: *get-paas-cf
           passed: ['pipeline-lock']
         - get: cf-manifest
-          passed: ['post-deploy']
+          passed: ['post-cf-deploy']
 
       - try:
           task: ping-cronitor-billing-test-start
