@@ -11,9 +11,6 @@ env:
 jobs:
   generate-buildpack-bump-pr:
     runs-on: ubuntu-latest
-    env:
-      GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
-      GITHUB_UNPRIV_USERNAME: govuk-paas-unprivileged-bot
     steps:
       ## Setup
       - name: Checkout repo
@@ -40,6 +37,9 @@ jobs:
           ./scripts/update_buildpacks.sh
 
       - name: Commit and push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
+          GITHUB_UNPRIV_USERNAME: govuk-paas-unprivileged-bot
         run: |
           export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '+%Y%m%dT%H%M')"
           export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL
@@ -55,6 +55,9 @@ jobs:
           echo "NEW_BRANCH_NAME=$NEW_BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
+          GITHUB_UNPRIV_USERNAME: govuk-paas-unprivileged-bot
         run: |
           FINAL_BODY=$(mktemp)
           envsubst < ./.github/workflows/automatic_buildpack_bump_pr_body.md > $FINAL_BODY
