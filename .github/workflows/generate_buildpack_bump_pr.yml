@@ -3,13 +3,11 @@ on:
   schedule:
     - cron: "0 9 1 * *"
 
-permissions:
-  contents: write
-
 env:
   GO_VERSION: "1.20"
   GIT_AUTHOR_NAME: github-actions
   GIT_AUTHOR_EMAIL: github-actions@github.com
+  GITHUB_UNPRIV_USERNAME: govuk-paas-unprivileged-bot
 
 jobs:
   generate-buildpack-bump-pr:
@@ -20,6 +18,8 @@ jobs:
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
         with:
           submodules: true
+          # auth will be retained by repo configuration
+          token: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
 
       - name: Install gettext
         run: |
@@ -44,11 +44,14 @@ jobs:
           export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '+%Y%m%dT%H%M')"
           export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL
           export GIT_COMMITTER_NAME=$GIT_AUTHOR_NAME
+
+          git remote add unpriv-fork "https://github.com/${GITHUB_UNPRIV_USERNAME}/paas-cf.git"
+
           git checkout -b "$NEW_BRANCH_NAME"
           git add config/buildpacks.yml
           git add config/buildpacks.rolling.yml
           git commit -m 'bump buildpacks'
-          git push origin "$NEW_BRANCH_NAME"
+          git push unpriv-fork "$NEW_BRANCH_NAME"
           echo "NEW_BRANCH_NAME=$NEW_BRANCH_NAME" >> $GITHUB_ENV
 
       - name: Create PR
@@ -60,6 +63,6 @@ jobs:
 
           gh pr create \
             --base main \
-            --head "$NEW_BRANCH_NAME" \
-            --title "Buildpack upgrades, $(date -u '+%B %Y')" \
+            --head "$GITHUB_UNPRIV_USERNAME:$NEW_BRANCH_NAME" \
+            --title "[TEST] Buildpack upgrades, $(date -u '+%B %Y')" \
             --body-file "$FINAL_BODY"
