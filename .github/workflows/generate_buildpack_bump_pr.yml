@@ -15,6 +15,8 @@ jobs:
       ## Setup
       - name: Checkout repo
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
+        env:
+          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
         with:
           submodules: true
 
@@ -38,14 +40,13 @@ jobs:
 
       - name: Commit and push
         env:
-          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
           GITHUB_UNPRIV_USERNAME: govuk-paas-unprivileged-bot
         run: |
           export NEW_BRANCH_NAME="auto-bump-buildpacks-$(date -u '+%Y%m%dT%H%M')"
           export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL
           export GIT_COMMITTER_NAME=$GIT_AUTHOR_NAME
 
-          git remote add unpriv-fork "https://asdf234@github.com/${GITHUB_UNPRIV_USERNAME}/paas-cf.git"
+          git remote add unpriv-fork "https://github.com/${GITHUB_UNPRIV_USERNAME}/paas-cf.git"
 
           git checkout -b "$NEW_BRANCH_NAME"
           git add config/buildpacks.yml
