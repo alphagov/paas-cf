@@ -8,7 +8,7 @@ env:
   GIT_AUTHOR_NAME: github-actions
   GIT_AUTHOR_EMAIL: github-actions@github.com
   GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
-  GITHUB_UNPRIV_USERNAME: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_USERNAME }}
+  GITHUB_UNPRIV_USERNAME: govuk-paas-unprivileged-bot
 
 jobs:
   generate-buildpack-bump-pr:
@@ -44,7 +44,7 @@ jobs:
           export GIT_COMMITTER_EMAIL=$GIT_AUTHOR_EMAIL
           export GIT_COMMITTER_NAME=$GIT_AUTHOR_NAME
 
-          git remote add unpriv-fork 'https://${{env.GITHUB_UNPRIV_USERNAME}}:${{env.GITHUB_TOKEN}}@github.com/${{env.GITHUB_UNPRIV_USERNAME}}.git'
+          git remote add unpriv-fork 'https://${GITHUB_UNPRIV_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_UNPRIV_USERNAME}/paas-cf.git'
 
           git checkout -b "$NEW_BRANCH_NAME"
           git add config/buildpacks.yml
