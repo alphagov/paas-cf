@@ -15,9 +15,8 @@ jobs:
       ## Setup
       - name: Checkout repo
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab
-        env:
-          GITHUB_TOKEN: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
         with:
+          token: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_PAT }}
           submodules: true
 
       - name: Install gettext
