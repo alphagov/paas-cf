@@ -62,15 +62,27 @@ cf_manifest_spec:
 	cd manifests/cf-manifest &&\
 		bundle exec rspec
 
+.PHONY: cf_manifest_stub
+cf_manifest_stub:
+	@./manifests/cf-manifest/scripts/generate-stub-manifest.sh
+
 .PHONY: prometheus_manifest_spec
 prometheus_manifest_spec:
 	cd manifests/prometheus &&\
 		bundle exec rspec
 
+.PHONY: prometheus_manifest_stub
+prometheus_manifest_stub:
+	@./manifests/prometheus/scripts/generate-stub-manifest.sh
+
 .PHONY: app_autoscaler_manifest_spec
 app_autoscaler_manifest_spec:
 	cd manifests/app-autoscaler &&\
 		bundle exec rspec
+
+.PHONY: app_autoscaler_manifest_stub
+app_autoscaler_manifest_stub:
+	@./manifests/app-autoscaler/scripts/generate-stub-manifest.sh
 
 .PHONY: manifest_spec
 manifests_spec: cloud_config_manifests_spec runtime_config_manifests_spec cf_manifest_spec prometheus_manifest_spec app_autoscaler_manifest_spec
