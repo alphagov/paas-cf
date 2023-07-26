@@ -894,6 +894,7 @@ jobs:
                     external_uaa_database_password
                     external_silk_controller_database_password
                     external_policy_server_database_password
+                    waf_xff_auth_key
                   )
 
                   app_autoscaler_credentials=(
@@ -1279,6 +1280,7 @@ jobs:
                 export TF_VAR_external_silk_controller_database_password="((external_silk_controller_database_password))"
                 export TF_VAR_external_policy_server_database_password="((external_policy_server_database_password))"
                 export TF_VAR_external_app_autoscaler_database_password="((external_app_autoscaler_database_password))"
+                export TF_VAR_waf_xff_auth_key="((waf_xff_auth_key))"
                 EOF
 
                 cat <<EOF > terraform-variables/cyber-secrets.tfvars.sh
