@@ -58,5 +58,11 @@
         "account_id": "058191034505",
         "vpc_id": "vpc-0e17f1882d87df50d",
         "subnet_cidr": "172.18.64.0/22"
+    },
+    {
+        "peer_name": "uk-space-agency-space-surveillance-and-tracking",
+        "account_id": "744996504263",
+        "vpc_id": "vpc-0d86d778df6c0b18c",
+        "subnet_cidr": "172.18.24.0/22"
     }
 ]
