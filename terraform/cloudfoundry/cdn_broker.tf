@@ -129,7 +129,7 @@ resource "aws_db_instance" "cdn" {
   engine               = "postgres"
   engine_version       = "12"
   instance_class       = "db.t2.small"
-  name                 = "cdn"
+  db_name              = "cdn"
   username             = "dbadmin"
   password             = var.secrets_cdn_db_master_password
   db_subnet_group_name = aws_db_subnet_group.cdn_rds.name
