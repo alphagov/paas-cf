@@ -61,7 +61,7 @@ output "cdn_db_connection_string" {
     aws_db_instance.cdn.username,
     var.secrets_cdn_db_master_password,
     aws_db_instance.cdn.address,
-    aws_db_instance.cdn.name,
+    aws_db_instance.cdn.db_name,
   )
 }
 
