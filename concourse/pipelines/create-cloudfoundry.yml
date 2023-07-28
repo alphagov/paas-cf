@@ -694,11 +694,14 @@ resources:
       region_name: ((aws_region))
       versioned_file: app-autoscaler-manifest-pre-vars.yml
 
-  - name: paas-yet-another-cloudwatch-exporter
+  - name: yet-another-cloudwatch-exporter
     type: git
     source:
-      uri: https://github.com/alphagov/paas-yet-another-cloudwatch-exporter.git
-      branch: gds_main
+      uri: https://github.com/nerdswords/yet-another-cloudwatch-exporter.git
+      fetch_tags: true
+    version:
+      # v0.53.0
+      ref: 2fd8cd322931aeb5a39c457ede31022e67f479b9
 
   - name: grafana-overview-annotation-id
     type: s3-iam
@@ -3200,7 +3203,7 @@ jobs:
           - get: paas-cf
             passed: ['cf-deploy']
           - get: cf-tfstate
-          - get: paas-yet-another-cloudwatch-exporter
+          - get: yet-another-cloudwatch-exporter
           - get: paas-trusted-people
 
       - task: extract-terraform-outputs
@@ -3373,7 +3376,7 @@ jobs:
             inputs:
               - name: paas-cf
               - name: config
-              - name: paas-yet-another-cloudwatch-exporter
+              - name: yet-another-cloudwatch-exporter
             run:
               path: sh
               args:
@@ -3386,28 +3389,29 @@ jobs:
 
                   cf target -o admin -s monitoring
 
-                  spruce merge paas-cf/config/cloudwatch-exporter/config.yml > paas-yet-another-cloudwatch-exporter/src/config.yml
+                  spruce merge paas-cf/config/cloudwatch-exporter/config.yml > yet-another-cloudwatch-exporter/config.yml
 
-                  cd paas-yet-another-cloudwatch-exporter/src
+                  cd yet-another-cloudwatch-exporter/
 
                   cat << EOF > manifest.yml
                   ---
                   applications:
                     - name: cloudwatch-exporter
-                      memory: 128M
-                      disk_quota: 100M
+                      memory: 2048M
+                      disk_quota: 256M
                       instances: 1
                       buildpacks: [go_buildpack]
                       health-check-type: http
                       health-check-http-endpoint: /
-                      stack: cflinuxfs3
+                      stack: cflinuxfs4
                       services:
                         - logit-syslog-drain
                       env:
-                        GOPACKAGENAME: github.com/alphagov/paas-yet-another-cloudwatch-exporter/src
+                        GO_INSTALL_PACKAGE_SPEC: github.com/nerdswords/yet-another-cloudwatch-exporter/cmd/yace
                         AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
                         AWS_SECRET_ACCESS_KEY: "${YACE_AWS_SECRET_ACCESS_KEY}"
-                      command: "src -listen-address=0.0.0.0:\$PORT"
+                        GOVERSION: go1.20
+                      command: "yace --listen-address=0.0.0.0:\$PORT"
                   EOF
 
                   if ! cf service logit-syslog-drain > /dev/null; then

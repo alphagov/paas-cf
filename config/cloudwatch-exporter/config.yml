@@ -1,4 +1,5 @@
 ---
+apiVersion: v1alpha1
 discovery:
   exportedTagsOnMetrics:
     ec2:
@@ -7,21 +8,24 @@ discovery:
       - Name
   jobs:
     - type: "ec2"
-      region: (( grab $AWS_REGION ))
+      regions:
+        - (( grab $AWS_REGION ))
       searchTags:
-        - Key: deploy_env
-          Value: (( concat "^" $DEPLOY_ENV "$" ))
+        - key: deploy_env
+          value: (( concat "^" $DEPLOY_ENV "$" ))
       metrics:
         - name: CPUCreditBalance
           statistics:
             - Minimum
           period: 60
           length: 600
+      addCloudwatchTimestamp: true
     - type: "rds"
-      region: (( grab $AWS_REGION ))
+      regions:
+        - (( grab $AWS_REGION ))
       searchTags:
-        - Key: deploy_env
-          Value: (( concat "^" $DEPLOY_ENV "$" ))
+        - key: deploy_env
+          value: (( concat "^" $DEPLOY_ENV "$" ))
       metrics:
         - name: FreeStorageSpace
           statistics:
@@ -33,3 +37,6 @@ discovery:
             - Minimum
           period: 60
           length: 600
+      dimensionNameRequirements:
+      - DBInstanceIdentifier
+      addCloudwatchTimestamp: true
