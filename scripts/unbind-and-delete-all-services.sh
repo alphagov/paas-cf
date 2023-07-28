@@ -25,10 +25,11 @@ test_orgs=""
 
 usage() {
   echo
-  echo "usage: $0 ( test | test-non-dev | dryrun | execute | execute-non-dev )"
+  echo "usage: $0 ( create-test-set | test | test-non-dev | dryrun | execute | execute-non-dev )"
   echo
+  echo "create-test-set: create test orgs/spaces/apps/services/bindings only"
   echo "test:            create test orgs/spaces/apps/services/bindings"
-  echo "                 as configured by internal variables"
+  echo "                 as configured by internal variables, and then unbind and delete them"
   echo "test-non-dev:    similar to test, but will run against non-dev platforms"
   echo "dryrun:          show operations that would be run, without making any changes"
   echo "execute:         normal operation"
@@ -92,9 +93,9 @@ deploy_test_app() {
   get_test_manifest "${name}" >"${dir}/manifest.yml"
   echo "${name}" >"${dir}/index.html"
   touch "${dir}/Staticfile"
-  do_cmd "cf create-service -w aws-s3-bucket default ${name}"
+  do_cmd "cf create-service -w aws-s3-bucket default \"${name}\""
   cd "${dir}"
-  do_cmd "cf push ${name}"
+  do_cmd "cf push \"${name}\""
   add_output_row "${org_name}" "${space_name}" "${deploy_name}" "${deploy_name}" "deployed OK"
 }
 
@@ -106,18 +107,20 @@ create_test_set() {
   local space_name
   local deploy_num
   local deploy_name
+  local special_chars
+  special_chars='!#%$&*()-_+={}[]|\;:,.<>?~'
   for org_num in $(seq 1 "${test_org_count}"); do
-    org_name="${test_prefix}-org-${org_num}"
+    org_name="${test_prefix}-${special_chars}-org-${org_num}"
     add_output_row "${org_name}" "-" "-" "-" "created OK" 
-    do_cmd "cf create-org ${org_name}"
-    do_cmd "cf target -o ${org_name}"
+    do_cmd "cf create-org \"${org_name}\""
+    do_cmd "cf target -o \"${org_name}\""
     for space_num in $(seq 1 "${test_space_count}"); do
       space_name="${org_name}-space-${space_num}"
       add_output_row "${org_name}" "${space_name}" "-" "-" "created OK"
-      do_cmd "cf create-space ${space_name}"
-      do_cmd "cf target -s ${space_name}"
+      do_cmd "cf create-space \"${space_name}\""
+      do_cmd "cf target -s \"${space_name}\""
       for deploy_num in $(seq 1 "${test_deploy_count}"); do
-        deploy_name="${space_name}-app-${deploy_num}"
+        deploy_name="${test_prefix}-org-${org_num}-space-${space_num}-app-${deploy_num}"
         deploy_test_app "${deploy_name}"
       done
     done
@@ -168,7 +171,7 @@ cf_curl() {
   elif ! json=$(cf curl "${url}" 2>&1); then
     print_error "cf curl failed\n${json}"
   elif [[ "${json}" = "" ]]; then
-    print_error "empty response from API"
+    print_error "empty response from API, environment sleeping?"
   elif ! jq -e . < <(echo "${json}") >/dev/null 2>&1; then
     print_error "could not parse json response\n${json}"
   elif jq -e '.error_code' < <(echo "${json}") >/dev/null 2>&1; then
@@ -289,7 +292,7 @@ get_cf_target() {
   local space_name
   org_name="${1}"
   space_name="${2}"
-  do_cmd "cf target -o ${org_name} -s ${space_name}"
+  do_cmd "cf target -o \"${org_name}\" -s \"${space_name}\""
 }
 
 unbind_service() {
@@ -302,7 +305,7 @@ unbind_service() {
   service_instance_name="${3}"
   app_name="${4}"
   get_cf_target "${org_name}" "${space_name}"
-  do_cmd "cf unbind-service -w ${app_name} ${service_instance_name}"
+  do_cmd "cf unbind-service -w \"${app_name}\" \"${service_instance_name}\""
   add_output_row "${org_name}" "${space_name}" "${service_instance_name}" "${app_name}" "unbound OK"
 }
 
@@ -314,7 +317,7 @@ delete_service() {
   space_name="${2}"
   service_instance_name="${3}"
   get_cf_target "${org_name}" "${space_name}"
-  do_cmd "cf delete-service -w -f ${service_instance_name}"
+  do_cmd "cf delete-service -w -f \"${service_instance_name}\""
   add_output_row "${org_name}" "${space_name}" "${service_instance_name}" "-" "deleted OK"
 }
 
@@ -405,7 +408,12 @@ fi
 
 mode="${1}"
 
-if [[ "${mode}" = "test" ]]; then
+if [[ "${mode}" = "create-test-set" ]]; then
+  non_dev_protect
+  prepare_test
+  create_test_set
+  test_orgs=$(get_test_orgs)
+elif [[ "${mode}" = "test" ]]; then
   non_dev_protect
   prepare_test
   create_test_set
@@ -432,4 +440,5 @@ fi
 # TODO: add column binary to the build docker container so we can use column to print a pretty results table
 #print_banner "results"
 #print_output_table
+
 print_banner "completed"
