@@ -3397,7 +3397,7 @@ jobs:
                   ---
                   applications:
                     - name: cloudwatch-exporter
-                      memory: 2048M
+                      memory: 3072M
                       disk_quota: 256M
                       instances: 1
                       buildpacks: [go_buildpack]
