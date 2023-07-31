@@ -42,7 +42,6 @@ skip_ssl_verify: false
 traffic_controller_external_port: 443
 loggregator_ca_name: /$DEPLOY_ENV/$DEPLOY_ENV/loggregator_ca
 uaa_clients_cf_exporter_secret: $UAA_CLIENTS_CF_EXPORTER_SECRET
-uaa_clients_firehose_exporter_secret: $UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET
 aws_account: $AWS_ACCOUNT
 aws_region: $AWS_REGION
 grafana_auth_google_client_id: $GRAFANA_AUTH_GOOGLE_CLIENT_ID
