@@ -148,10 +148,12 @@ variable "router_cidrs" {
 
 variable "secrets_cdn_db_master_password" {
   description = "Master password for CDN database"
+  sensitive = true
 }
 
 variable "secrets_cf_db_master_password" {
   description = "Master password for CF database"
+  sensitive = true
 }
 
 variable "system_dns_zone_id" {
