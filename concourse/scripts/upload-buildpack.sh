@@ -21,7 +21,12 @@ filename="$3"
 url="$4"
 checksum="$5"
 
-existing="$(cf curl '/v3/buildpacks?per_page=100' | jq -r --arg name "$name" --arg stack "$stack" '.resources | map(select(.name == $name) | select(.stack == $stack))[0] | [.name, .stack, .filename] | join(" ")')"
+if cf curl '/v3/buildpacks?per_page=1000' | jq -e -r '.pagination.total_results > 1000' ; then
+  echo "More than 1000 buildpacks. This script will need to be adapted."
+  exit 1
+fi
+
+existing="$(cf curl '/v3/buildpacks?per_page=1000' | jq -r --arg name "$name" --arg stack "$stack" '.resources | map(select(.name == $name) | select(.stack == $stack))[0] | [.name, .stack, .filename] | join(" ")')"
 if [ "$existing" = "$name $stack $filename" ]; then
     echo "${filename} already set for ${name} ${stack}, skipping"
     exit 0
@@ -40,7 +45,7 @@ fi
 
 echo "Setting up ${filename}..."
 
-existing="$(cf curl '/v3/buildpacks?per_page=100' | jq -r --arg name "$name" '.resources | map(select(.name == $name))[0] | [.name, .stack] | join(" ")')"
+existing="$(cf curl '/v3/buildpacks?per_page=1000' | jq -r --arg name "$name" --arg stack "$stack" '.resources | map(select(.name == $name) | select(.stack == $stack))[0] | [.name, .stack] | join(" ")')"
 if [ "$existing" = "$name $stack" ]; then
   cf update-buildpack \
     "${name}" \
