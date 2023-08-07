@@ -1,6 +1,7 @@
 source "https://rubygems.org"
 
 gem "aws-sdk", "~> 3"
+gem "cli-ui", "~> 1.5", ">= 1.5.1"
 gem "colorize", "~> 0.8.1"
 gem "http", "~> 4"
 gem "mail", "~> 2.7"
