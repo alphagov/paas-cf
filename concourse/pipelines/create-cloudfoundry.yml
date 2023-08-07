@@ -3134,7 +3134,6 @@ jobs:
                 PAAS_PROMETHEUS_ENDPOINTS_AWS_ACCESS_KEY_ID=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_access_key_id cf-terraform-outputs.yml)
                 PAAS_PROMETHEUS_ENDPOINTS_AWS_SECRET_ACCESS_KEY=$($VAL_FROM_YAML terraform_outputs_paas_prometheus_endpoints_aws_secret_access_key cf-terraform-outputs.yml)
                 UAA_CLIENTS_CF_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_cf_exporter_secret")
-                UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET=$(credhub get -q -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret")
                 RDS_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_rds_broker_admin_password")
                 CDN_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_cdn_broker_admin_password")
                 AIVEN_BROKER_PASS=$(credhub get -q -n "${BOSH_NS}/secrets_aiven_broker_admin_password")
@@ -3170,7 +3169,6 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/paas_prometheus_endpoints_aws_access_key_id" --type password --password "${PAAS_PROMETHEUS_ENDPOINTS_AWS_ACCESS_KEY_ID}"
                 credhub set --name="${PIPELINE_NS}/paas_prometheus_endpoints_aws_secret_access_key" --type password --password "${PAAS_PROMETHEUS_ENDPOINTS_AWS_SECRET_ACCESS_KEY}"
                 credhub set --name="${PIPELINE_NS}/uaa_clients_cf_exporter_secret" --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
-                credhub set --name="${PIPELINE_NS}/uaa_clients_firehose_exporter_secret" --type password --password "${UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET}"
                 credhub set --name="${PIPELINE_NS}/secrets_rds_broker_admin_password" --type password --password "${RDS_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/secrets_cdn_broker_admin_password" --type password --password "${CDN_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/secrets_aiven_broker_admin_password" --type password --password "${AIVEN_BROKER_PASS}"
@@ -3250,7 +3248,6 @@ jobs:
             GRAFANA_AUTH_GOOGLE_CLIENT_ID: ((grafana_auth_google_client_id))
             GRAFANA_AUTH_GOOGLE_CLIENT_SECRET: ((grafana_auth_google_client_secret))
             UAA_CLIENTS_CF_EXPORTER_SECRET: ((uaa_clients_cf_exporter_secret))
-            UAA_CLIENTS_FIREHOSE_EXPORTER_SECRET: ((uaa_clients_firehose_exporter_secret))
             BOSH_CA_CERT: ((bosh-ca-cert))
             BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password))
             VCAP_PASSWORD: ((vcap-password))
@@ -6697,7 +6694,6 @@ jobs:
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_cdn_broker_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_cf_exporter_secret" -t password
               credhub generate -n "${BOSH_NS}/uaa_clients_cf_smoke_tests_secret" -t password
-              credhub generate -n "${BOSH_NS}/uaa_clients_firehose_exporter_secret" -t password
 
               credhub get -n "${BOSH_NS}/uaa_jwt_signing_key" -k private_key | sed '/^$/d' > old_key
               credhub get -n "${BOSH_NS}/uaa_jwt_signing_key" -k public_key | sed '/^$/d' > old_pub
