@@ -1,0 +1,18 @@
+# Source: yet-another-cloudwatch-exporter
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: WafThrottlingIPsMaxRate
+    rules:
+      - alert: WafThrottlingIPsMaxRate
+        # the cloudwatch exporter should already restrict the metrics available
+        # to those of our deploy_env
+        expr: (aws_wafv2_blocked_requests_maximum{dimension_WebACL=~".+-rtr-lbs-web-acl$", dimension_Rule=~".+-rtr-lbs-max-request-rate-xff-blocked$"} > 0) or (aws_wafv2_blocked_requests_maximum{dimension_WebACL=~".+-rtr-lbs-web-acl$", dimension_Rule=~".+-rtr-lbs-max-request-rate-direct-blocked$"} > 0)
+        labels:
+          severity: warning
+          service: elb
+        annotations:
+          summary: "WAFv2 throttling some IPs due to excessive request rate"
+          description: "At least 1 IP has hit its per-IP request-rate limit for the gorouter-bound load balancer(s) and is having some of its requests blocked. The AWS console can show a sample of these blocked requests."
