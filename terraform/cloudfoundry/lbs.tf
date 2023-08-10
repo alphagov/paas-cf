@@ -10,6 +10,10 @@ resource "aws_lb" "cf_loggregator" {
     prefix  = "cf-loggregator"
     enabled = true
   }
+
+  tags = {
+    deploy_env = var.env
+  }
 }
 
 resource "aws_lb_target_group" "cf_loggregator_rlp" {
@@ -48,6 +52,10 @@ resource "aws_lb_listener" "cf_loggregator" {
       status_code  = "404"
     }
   }
+
+  tags = {
+    deploy_env = var.env
+  }
 }
 
 resource "aws_lb_listener_rule" "cf_loggregator_rlp_log_api" {
@@ -63,6 +71,10 @@ resource "aws_lb_listener_rule" "cf_loggregator_rlp_log_api" {
     host_header {
       values = ["log-api.*"]
     }
+  }
+
+  tags = {
+    deploy_env = var.env
   }
 }
 
@@ -80,6 +92,10 @@ resource "aws_lb_listener_rule" "cf_loggregator_rlp_log_stream" {
       values = ["log-stream.*"]
     }
   }
+
+  tags = {
+    deploy_env = var.env
+  }
 }
 
 resource "aws_lb_listener_rule" "cf_doppler" {
@@ -95,6 +111,10 @@ resource "aws_lb_listener_rule" "cf_doppler" {
     host_header {
       values = ["doppler.*"]
     }
+  }
+
+  tags = {
+    deploy_env = var.env
   }
 }
 
@@ -131,6 +151,10 @@ resource "aws_lb" "cf_router_app_domain" {
     prefix  = "cf-rtr-apps"
     enabled = true
   }
+
+  tags = {
+    deploy_env = var.env
+  }
 }
 
 resource "aws_lb_listener" "cf_router_app_domain_http" {
@@ -149,6 +173,10 @@ resource "aws_lb_listener" "cf_router_app_domain_http" {
       query       = ""
     }
   }
+
+  tags = {
+    deploy_env = var.env
+  }
 }
 
 resource "aws_lb_listener" "cf_router_app_domain_https" {
@@ -161,6 +189,10 @@ resource "aws_lb_listener" "cf_router_app_domain_https" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.cf_router_app_domain_https.arn
+  }
+
+  tags = {
+    deploy_env = var.env
   }
 }
 
@@ -224,6 +256,10 @@ resource "aws_lb" "cf_router_system_domain" {
     prefix  = "cf-rtr-sys"
     enabled = true
   }
+
+  tags = {
+    deploy_env = var.env
+  }
 }
 
 resource "aws_lb_listener" "cf_router_system_domain_https" {
@@ -236,6 +272,10 @@ resource "aws_lb_listener" "cf_router_system_domain_https" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.cf_router_system_domain_https.arn
+  }
+
+  tags = {
+    deploy_env = var.env
   }
 }
 
