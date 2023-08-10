@@ -148,10 +148,12 @@ variable "router_cidrs" {
 
 variable "secrets_cdn_db_master_password" {
   description = "Master password for CDN database"
+  sensitive = true
 }
 
 variable "secrets_cf_db_master_password" {
   description = "Master password for CF database"
+  sensitive = true
 }
 
 variable "system_dns_zone_id" {
@@ -165,4 +167,15 @@ variable "system_dns_zone_name" {
 variable "bucket_force_destroy" {
   description = "Force destroy aws s3 buckets"
   default = false
+}
+
+variable "waf_per_ip_rate_limit_5m" {
+  description = "Number of requests per 5m for waf to allow per client IP"
+  default = 600000
+}
+
+variable "waf_xff_auth_key" {
+  description = "Secret value to expect after x-paas-xff-auth- to enable interpretation of x-forwarded-for."
+  type = string
+  sensitive = true
 }

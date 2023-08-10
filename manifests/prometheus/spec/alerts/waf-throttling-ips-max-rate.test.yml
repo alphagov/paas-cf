@@ -1,0 +1,58 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - fixtures/rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 5m
+    input_series:
+      - series: 'aws_wafv2_blocked_requests_maximum{dimension_WebACL="foo-rtr-lbs-web-acl",dimension_Rule="foo-rtr-lbs-max-request-rate-xff-blocked"}'
+        values: 123
+      - series: 'aws_wafv2_blocked_requests_maximum{dimension_WebACL="foo-rtr-lbs-web-acl",dimension_Rule="foo-rtr-lbs-max-request-rate-direct-blocked"}'
+        values: _
+
+    alert_rule_test:
+      - alertname: WafThrottlingIPsMaxRate
+        eval_time: 5m
+        exp_alerts:
+          - exp_annotations:
+              summary: "WAFv2 throttling some IPs due to excessive request rate"
+              description: "At least 1 IP has hit its per-IP request-rate limit for the gorouter-bound load balancer(s) and is having some of its requests blocked. The AWS console can show a sample of these blocked requests."
+            exp_labels:
+              severity: warning
+              service: elb
+              dimension_WebACL: "foo-rtr-lbs-web-acl"
+              dimension_Rule: "foo-rtr-lbs-max-request-rate-xff-blocked"
+
+  - interval: 5m
+    input_series:
+      - series: 'aws_wafv2_blocked_requests_maximum{dimension_WebACL="foo-rtr-lbs-web-acl",dimension_Rule="foo-rtr-lbs-max-request-rate-xff-blocked"}'
+        values: _
+      - series: 'aws_wafv2_blocked_requests_maximum{dimension_WebACL="foo-rtr-lbs-web-acl",dimension_Rule="foo-rtr-lbs-max-request-rate-direct-blocked"}'
+        values: 123
+
+    alert_rule_test:
+      - alertname: WafThrottlingIPsMaxRate
+        eval_time: 5m
+        exp_alerts:
+          - exp_annotations:
+              summary: "WAFv2 throttling some IPs due to excessive request rate"
+              description: "At least 1 IP has hit its per-IP request-rate limit for the gorouter-bound load balancer(s) and is having some of its requests blocked. The AWS console can show a sample of these blocked requests."
+            exp_labels:
+              severity: warning
+              service: elb
+              dimension_WebACL: "foo-rtr-lbs-web-acl"
+              dimension_Rule: "foo-rtr-lbs-max-request-rate-direct-blocked"
+
+  - interval: 5m
+    input_series:
+      - series: 'aws_wafv2_blocked_requests_maximum{dimension_WebACL="foo-rtr-lbs-web-acl",dimension_Rule="foo-rtr-lbs-max-request-rate-xff-blocked"}'
+        values: 0
+      - series: 'aws_wafv2_blocked_requests_maximum{dimension_WebACL="foo-rtr-lbs-web-acl",dimension_Rule="foo-rtr-lbs-max-request-rate-direct-blocked"}'
+        values: _
+      - series: 'aws_wafv2_blocked_requests_maximum{dimension_WebACL="foo-rtr-lbs-web-acl-bar",dimension_Rule="foo-rtr-lbs-max-request-rate-direct-blocked"}'
+        values: 111
+
+    alert_rule_test: []

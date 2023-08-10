@@ -40,3 +40,27 @@ discovery:
       dimensionNameRequirements:
       - DBInstanceIdentifier
       addCloudwatchTimestamp: true
+    - type: "AWS/WAFV2"
+      regions:
+        - (( grab $AWS_REGION ))
+      searchTags:
+        - key: deploy_env
+          value: (( concat "^" $DEPLOY_ENV "$" ))
+      metrics:
+        - name: AllowedRequests
+          statistics:
+            - Average
+            - Maximum
+          period: 60
+          length: 600
+        - name: BlockedRequests
+          statistics:
+            - Average
+            - Maximum
+          period: 60
+          length: 600
+      dimensionNameRequirements:
+      - WebACL
+      - Rule
+      - Region
+      addCloudwatchTimestamp: true
