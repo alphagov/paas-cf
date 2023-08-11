@@ -7,9 +7,7 @@
     name: WafThrottlingIPsMaxRate
     rules:
       - alert: WafThrottlingIPsMaxRate
-        # the cloudwatch exporter should already restrict the metrics available
-        # to those of our deploy_env
-        expr: (aws_wafv2_blocked_requests_maximum{dimension_WebACL=~".+-rtr-lbs-web-acl$", dimension_Rule=~".+-rtr-lbs-max-request-rate-xff-blocked$"} > 0) or (aws_wafv2_blocked_requests_maximum{dimension_WebACL=~".+-rtr-lbs-web-acl$", dimension_Rule=~".+-rtr-lbs-max-request-rate-direct-blocked$"} > 0)
+        expr: (aws_wafv2_blocked_requests_maximum{dimension_WebACL="((metrics_environment))-rtr-lbs-web-acl", dimension_Rule="((metrics_environment))-rtr-lbs-max-request-rate-xff-blocked"} > 0) or (aws_wafv2_blocked_requests_maximum{dimension_WebACL="((metrics_environment))-rtr-lbs-web-acl", dimension_Rule="((metrics_environment))-rtr-lbs-max-request-rate-direct-blocked"} > 0)
         labels:
           severity: warning
           service: elb
