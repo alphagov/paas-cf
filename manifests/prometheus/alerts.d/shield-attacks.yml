@@ -1,15 +1,37 @@
 # Source: paas-metrics
+# Source: yet-another-cloudwatch-exporter
 ---
 
 - type: replace
   path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
   value:
-    name: ShieldOngoingAttacks
+    name: ShieldAttacks
     rules:
       - alert: ShieldAnyOngoingAttacks
         expr: paas_aws_shield_ongoing_attacks > 0
         labels:
           severity: warning
+          service: elb
         annotations:
           summary: "AWS Shield reporting an ongoing attack"
           description: "An ongoing attack being reported by AWS Shield could be indicative of a large traffic spike. Is a tenant load testing?"
+
+      - alert: DDoSDetected
+        # weird metric name comes from yet-another-cloudwatch-exporter's
+        # capitalization-based auto-snake-case-conversion
+        expr: aws_ddosprotection_ddo_sdetected_maximum{dimension_ResourceArn=~".*/((metrics_environment))-cf-rtr-.*"} > 0
+        labels:
+          severity: warning
+          service: elb
+        annotations:
+          summary: "AWS has detected a DDoS attack"
+          description: "AWS has detected a DDoS attack affecting {{$labels.dimension_ResourceArn}}"
+
+      - alert: DDoSBeingMitigated
+        expr: aws_ddosprotection_volume_packets_per_second_average{dimension_ResourceArn=~".*/((metrics_environment))-cf-rtr-.*", dimension_MitigationAction="Drop"} > 0
+        labels:
+          severity: critical
+          service: elb
+        annotations:
+          summary: "AWS is mitigating a DDoS attack"
+          description: "AWS is mitigating a DDoS attack affecting {{$labels.dimension_ResourceArn}} - you should probably check it isn't preventing genuine traffic getting through."

@@ -1,0 +1,58 @@
+---
+rule_files:
+  # See alerts_validation_spec.rb for details of how stdin gets set:
+  - fixtures/rules.yml
+
+evaluation_interval: 1m
+
+tests:
+  - interval: 5m
+    input_series:
+      - series: 'paas_aws_shield_ongoing_attacks'
+        values: 1
+
+    alert_rule_test:
+      - alertname: ShieldAnyOngoingAttacks
+        eval_time: 5m
+        exp_alerts:
+          - exp_annotations:
+              summary: "AWS Shield reporting an ongoing attack"
+              description: "An ongoing attack being reported by AWS Shield could be indicative of a large traffic spike. Is a tenant load testing?"
+            exp_labels:
+              severity: warning
+              service: elb
+
+  - interval: 5m
+    input_series:
+      - series: 'aws_ddosprotection_ddo_sdetected_maximum{dimension_ResourceArn="arn:aws:elasticloadbalancing:eu-west-1:999999999999:loadbalancer/app/test-cf-rtr-sys/fefefefefefefefe"}'
+        values: 123
+
+    alert_rule_test:
+      - alertname: DDoSDetected
+        eval_time: 5m
+        exp_alerts:
+          - exp_annotations:
+              summary: "AWS has detected a DDoS attack"
+              description: "AWS has detected a DDoS attack affecting arn:aws:elasticloadbalancing:eu-west-1:999999999999:loadbalancer/app/test-cf-rtr-sys/fefefefefefefefe"
+            exp_labels:
+              severity: warning
+              service: elb
+              dimension_ResourceArn: "arn:aws:elasticloadbalancing:eu-west-1:999999999999:loadbalancer/app/test-cf-rtr-sys/fefefefefefefefe"
+
+  - interval: 5m
+    input_series:
+      - series: 'aws_ddosprotection_volume_packets_per_second_average{dimension_ResourceArn="arn:aws:elasticloadbalancing:eu-west-1:999999999999:loadbalancer/app/test-cf-rtr-sys/fefefefefefefefe", dimension_MitigationAction="Drop"}'
+        values: 123
+
+    alert_rule_test:
+      - alertname: DDoSBeingMitigated
+        eval_time: 5m
+        exp_alerts:
+          - exp_annotations:
+              summary: "AWS is mitigating a DDoS attack"
+              description: "AWS is mitigating a DDoS attack affecting arn:aws:elasticloadbalancing:eu-west-1:999999999999:loadbalancer/app/test-cf-rtr-sys/fefefefefefefefe - you should probably check it isn't preventing genuine traffic getting through."
+            exp_labels:
+              severity: critical
+              service: elb
+              dimension_ResourceArn: "arn:aws:elasticloadbalancing:eu-west-1:999999999999:loadbalancer/app/test-cf-rtr-sys/fefefefefefefefe"
+              dimension_MitigationAction: "Drop"
