@@ -64,3 +64,33 @@ discovery:
       - Rule
       - Region
       addCloudwatchTimestamp: true
+    - type: "AWS/DDoSProtection"
+      regions:
+        - (( grab $AWS_REGION ))
+      # can't currently filter DDoSProtection by tag, region
+      # will have to do
+      metrics:
+        - name: DDoSDetected
+          statistics:
+            - Maximum
+          period: 60
+          length: 600
+      dimensionNameRequirements:
+      - ResourceArn
+      addCloudwatchTimestamp: true
+    - type: "AWS/DDoSProtection"
+      regions:
+        - (( grab $AWS_REGION ))
+      # can't currently filter DDoSProtection by tag, region
+      # will have to do
+      metrics:
+        - name: VolumePacketsPerSecond
+          statistics:
+            - Average
+            - Maximum
+          period: 60
+          length: 600
+      dimensionNameRequirements:
+      - ResourceArn
+      - MitigationAction
+      addCloudwatchTimestamp: true
