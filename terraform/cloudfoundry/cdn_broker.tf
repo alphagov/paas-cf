@@ -128,7 +128,7 @@ resource "aws_db_instance" "cdn" {
   allocated_storage    = 10
   engine               = "postgres"
   engine_version       = "12"
-  instance_class       = "db.t2.small"
+  instance_class       = "db.t3.small"
   db_name              = "cdn"
   username             = "dbadmin"
   password             = var.secrets_cdn_db_master_password
