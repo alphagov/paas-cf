@@ -4246,6 +4246,7 @@ jobs:
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
 
                 ./paas-cf/concourse/scripts/set_security_groups_from_manifest.rb cf-manifest/cf-manifest.yml
+                ./paas-cf/concourse/scripts/apply_security_group_bindings_from_vpc_peering_json.rb "./paas-cf/terraform/((deploy_env)).vpc_peering.json"
 
                 # TODO Remove below after 09/03/2023. This is not needed after it has been run once in each environment.
                 cf delete-security-group secret_manager_endpoint -f || true
