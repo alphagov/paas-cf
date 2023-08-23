@@ -102,7 +102,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: 540813b98e23f9865b33c206a840a8d5633287e9
+              tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
           inputs:
             - name: paas-cf
           params:
@@ -166,7 +166,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/fast-startup-and-shutdown
-              tag: 6e1f473dd3902fddd6f74bbcd788fb1ec5390ce3
+              tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
           run:
             path: bash
             args:
@@ -207,7 +207,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/fast-startup-and-shutdown
-              tag: 6e1f473dd3902fddd6f74bbcd788fb1ec5390ce3
+              tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
           run:
             path: bash
             args:
