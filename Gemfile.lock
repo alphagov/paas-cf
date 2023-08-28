@@ -6,7 +6,7 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
-    addressable (2.8.1)
+    addressable (2.8.5)
       public_suffix (>= 2.0.2, < 6.0)
     ast (2.4.2)
     aws-eventstream (1.2.0)
@@ -1338,7 +1338,7 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
-    public_suffix (5.0.0)
+    public_suffix (5.0.3)
     rack (3.0.6.1)
     rainbow (3.1.1)
     rake (12.3.3)
@@ -1348,7 +1348,7 @@ GEM
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    rexml (3.2.5)
+    rexml (3.2.6)
     rspec (3.12.0)
       rspec-core (~> 3.12.0)
       rspec-expectations (~> 3.12.0)
@@ -1401,10 +1401,10 @@ GEM
       unf_ext
     unf_ext (0.0.8.2)
     unicode-display_width (2.3.0)
-    webmock (2.3.2)
-      addressable (>= 2.3.6)
+    webmock (3.19.0)
+      addressable (>= 2.8.0)
       crack (>= 0.3.2)
-      hashdiff
+      hashdiff (>= 0.4.0, < 2.0.0)
 
 PLATFORMS
   arm64-darwin-21
@@ -1423,7 +1423,7 @@ DEPENDENCIES
   rspec (~> 3)
   rubocop-govuk (~> 4.8)
   simplecov
-  webmock (~> 2)
+  webmock (~> 3)
 
 BUNDLED WITH
    2.3.3
