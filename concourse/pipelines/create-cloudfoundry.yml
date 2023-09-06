@@ -3377,7 +3377,7 @@ jobs:
               - name: config
               - name: yet-another-cloudwatch-exporter
             run:
-              path: sh
+              path: bash
               args:
                 - -e
                 - -c
@@ -3392,24 +3392,43 @@ jobs:
 
                   cd yet-another-cloudwatch-exporter/
 
-                  cat << EOF > manifest.yml
+                  # The golang compile of yet-another-cloudwatch-exporter needs 3GB of RAM, however
+                  # the application once compiled only needs 128MB of RAM. We therefore create a
+                  # staging application with 3GB of RAM, and then download the droplet and push it
+                  # to the production application with 128MB of RAM. This is to work around the
+                  # fact that cloud foundry does not have a seperate buildpack memory limit.
+
+                  cat << EOF > staging-manifest.yml
                   ---
                   applications:
-                    - name: cloudwatch-exporter
+                    - name: cloudwatch-exporter-staging
                       memory: 3072M
                       disk_quota: 256M
                       instances: 1
                       buildpacks: [go_buildpack]
+                      stack: cflinuxfs4
+                      services:
+                        - logit-syslog-drain
+                      env:
+                        GO_INSTALL_PACKAGE_SPEC: github.com/nerdswords/yet-another-cloudwatch-exporter/cmd/yace
+                        GOVERSION: go1.20
+                  EOF
+
+                  cat << EOF > manifest.yml
+                  ---
+                  applications:
+                    - name: cloudwatch-exporter
+                      memory: 128M
+                      disk_quota: 100M
+                      instances: 1
                       health-check-type: http
                       health-check-http-endpoint: /
                       stack: cflinuxfs4
                       services:
                         - logit-syslog-drain
                       env:
-                        GO_INSTALL_PACKAGE_SPEC: github.com/nerdswords/yet-another-cloudwatch-exporter/cmd/yace
                         AWS_ACCESS_KEY_ID: "${YACE_AWS_ACCESS_KEY_ID}"
                         AWS_SECRET_ACCESS_KEY: "${YACE_AWS_SECRET_ACCESS_KEY}"
-                        GOVERSION: go1.20
                       command: "yace --listen-address=0.0.0.0:\$PORT"
                   EOF
 
@@ -3424,7 +3443,17 @@ jobs:
                   fi
 
                   cf cancel-deployment cloudwatch-exporter || true
-                  cf push --strategy=rolling cloudwatch-exporter
+                  cf push cloudwatch-exporter-staging -f staging-manifest.yml --no-start  --no-route
+                  cf stage cloudwatch-exporter-staging
+
+                  DROPLET=$(cf droplets cloudwatch-exporter-staging | tail -n +4 | awk '{print $1}' | head -n 1)
+
+                  cf download-droplet cloudwatch-exporter-staging --droplet "${DROPLET}" --path droplet.tgz
+
+                  set -o pipefail
+                  # mask the aws secret in the concourse output
+                  cf push cloudwatch-exporter -f manifest.yml --droplet droplet.tgz --strategy rolling 2>&1 | \
+                    sed -r "s/AWS_SECRET_ACCESS_KEY: .+/AWS_SECRET_ACCESS_KEY: ********/g"
 
         - task: upload-grafana-dashboards
           tags: [colocated-with-web]
