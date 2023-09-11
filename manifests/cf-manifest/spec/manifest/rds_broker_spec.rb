@@ -78,9 +78,9 @@ RSpec.describe "RDS broker properties" do
       end
     end
 
-    shared_examples "plans using t2 and m4 instances" do
+    shared_examples "plans using t3 and m5 instances" do
       it { expect(rds_properties).to have_key("db_instance_class") }
-      it { expect(rds_properties["db_instance_class"]).to match(/^db\.t2\.[a-z]+$/).or match(/^db\.m4\.[a-z0-9]+$/) }
+      it { expect(rds_properties["db_instance_class"]).to match(/^db\.t3\.[a-z]+$/).or match(/^db\.m5\.[a-z0-9]+$/) }
     end
 
     shared_examples "plans using t3 and m5 instances" do
@@ -336,7 +336,7 @@ RSpec.describe "RDS broker properties" do
             expect(rds_properties["engine_version"]).to eq("10")
           end
 
-          include_examples "plans using t2 and m4 instances"
+          include_examples "plans using t3 and m5 instances"
         end
 
         shared_examples "postgres 10 high iops plans" do
@@ -1352,7 +1352,7 @@ RSpec.describe "RDS broker properties" do
             )
           end
 
-          include_examples "plans using t2 and m4 instances"
+          include_examples "plans using t3 and m5 instances"
         end
 
         shared_examples "mysql 5.7 high iops plans" do
