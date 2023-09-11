@@ -2,8 +2,15 @@
 
 require "json"
 
-if ARGV.empty? || !File.file?(ARGV[0])
-  abort "Usage: #{$PROGRAM_NAME} /path/to/env_vpc_peering_file.json [--dry-run]"
+if ARGV.empty?
+  puts "Error: missing peering json file in arg 1"
+  puts "Usage: #{$PROGRAM_NAME} /path/to/env_vpc_peering_file.json [--dry-run]"
+  exit(1)
+end
+
+unless File.file?(ARGV[0])
+  puts "Skipping as peering json file does not exist"
+  exit(0)
 end
 
 if ARGV[1] == "--dry-run"
