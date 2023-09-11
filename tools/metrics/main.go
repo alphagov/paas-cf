@@ -10,8 +10,6 @@ import (
 	"strings"
 	"time"
 
-	logit "github.com/alphagov/paas-cf/common-go/basic_logit_client"
-
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/health"
 	"github.com/alphagov/paas-cf/tools/metrics/pkg/shield"
 
@@ -148,15 +146,6 @@ func Main() error {
 
 	rdsService := rds.NewService(sess)
 
-	logitClient, err := logit.NewService(
-		logger,
-		os.Getenv("LOGIT_ELASTICSEARCH_URL"),
-		os.Getenv("LOGIT_ELASTICSEARCH_API_KEY"),
-	)
-	if err != nil {
-		return errors.Wrap(err, "failed to create logit client")
-	}
-
 	healthService := health.NewService(sess)
 	shieldService := shield.NewService(sess)
 
@@ -182,9 +171,6 @@ func Main() error {
 		CustomDomainCDNMetricsCollector(logger, cfs, cloudWatch, 10*time.Minute),
 		AWSCostExplorerGauge(logger, awsRegion, costExplorer, 6*time.Hour),
 		UAAGauges(logger, &uaaCfg, 5*time.Minute),
-		BillingCostsGauge(logger, os.Getenv("BILLING_ENDPOINT"), 15*time.Minute),
-		BillingCollectorPerformanceGauge(logger, 15*time.Minute, logitClient),
-		BillingApiPerformanceGauge(logger, 15*time.Minute, logitClient),
 		RDSDBInstancesGauge(logger, rdsService, serviceQuotas, 15*time.Minute),
 		RDSDBManualSnapshotsGauge(logger, rdsService, serviceQuotas, 15*time.Minute),
 		AWSHealthEventsGauge(logger, awsRegion, healthService, 15*time.Minute),

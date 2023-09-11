@@ -4,13 +4,11 @@ go 1.20
 
 require (
 	code.cloudfoundry.org/lager v2.0.0+incompatible
-	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000
 	github.com/alphagov/paas-elasticache-broker v0.18.0
 	github.com/aws/aws-sdk-go v1.34.0
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20190808214049-35bcce23fc5f
 	github.com/cloudfoundry-community/go-uaa v0.2.2
 	github.com/hashicorp/go-multierror v1.0.0
-	github.com/jarcoal/httpmock v1.0.4
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.5.0
 	github.com/miekg/dns v1.1.25
 	github.com/onsi/ginkgo/v2 v2.1.4
@@ -51,5 +49,3 @@ require (
 	google.golang.org/protobuf v1.26.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
-
-replace github.com/alphagov/paas-cf/common-go/basic_logit_client => ../../common-go/basic_logit_client

@@ -5984,8 +5984,6 @@ jobs:
 
             LOGIT_ADDRESS: ((logit_syslog_address))
             LOGIT_PORT: ((logit_syslog_port))
-            LOGIT_ELASTICSEARCH_URL: ((logit_elasticsearch_url))
-            LOGIT_ELASTICSEARCH_API_KEY: ((logit_elasticsearch_api_key))
           inputs:
             - name: paas-cf
           run:
@@ -6031,9 +6029,7 @@ jobs:
                     'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
                     'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
                     'AIVEN_API_TOKEN' => '${AIVEN_API_TOKEN}',
-                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}',
-                    'LOGIT_ELASTICSEARCH_URL' => '${LOGIT_ELASTICSEARCH_URL}',
-                    'LOGIT_ELASTICSEARCH_API_KEY' => '${LOGIT_ELASTICSEARCH_API_KEY}'
+                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}'
                   }
                   manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|

@@ -27,8 +27,6 @@ stack_target = case ENV.fetch("MAKEFILE_ENV_TARGET")
 logit_syslog_address = ENV["LOGIT_SYSLOG_ADDRESS"] || get_secret("logit/#{stack_target}/syslog_address")
 logit_syslog_port = ENV["LOGIT_SYSLOG_PORT"] || get_secret("logit/#{stack_target}/syslog_port")
 logit_ca_cert = ENV["LOGIT_CA_CERT"] || get_secret("logit/#{stack_target}/ca_cert")
-logit_elasticsearch_url = ENV["LOGIT_ELASTICSEARCH_URL"] || get_secret("logit/#{stack_target}/elasticsearch_url")
-logit_elasticsearch_api_key = ENV["LOGIT_ELASTICSEARCH_API_KEY"] || get_secret("logit/#{stack_target}/elasticsearch_api_key")
 
 logit_dummy_tenant_config_endpoint = ENV["LOGIT_DUMMY_TENANT_CONFIG_ENDPOINT"] || get_secret("logit/common/dummy_tenant_config_endpoint")
 logit_dummy_tenant_config_tcp_ssl_port = ENV["LOGIT_DUMMY_TENANT_CONFIG_TCP_SSL_PORT"] || get_secret("logit/common/dummy_tenant_config_tcp_ssl_port")
@@ -40,11 +38,33 @@ upload_secrets(
   "logit_syslog_address" => logit_syslog_address,
   "logit_syslog_port" => logit_syslog_port,
   "logit_ca_cert" => logit_ca_cert,
-  "logit_elasticsearch_url" => logit_elasticsearch_url,
-  "logit_elasticsearch_api_key" => logit_elasticsearch_api_key,
 
   "logit_dummy_tenant_config_endpoint" => logit_dummy_tenant_config_endpoint,
   "logit_dummy_tenant_config_tcp_ssl_port" => logit_dummy_tenant_config_tcp_ssl_port,
   "logit_dummy_tenant_config_opensearch_url" => logit_dummy_tenant_config_opensearch_url,
   "logit_dummy_tenant_config_opensearch_api_key" => logit_dummy_tenant_config_opensearch_api_key,
 )
+
+def exec(cmd, fail_on_error)
+  puts "Running: #{cmd}"
+  out = `bash -c '#{cmd}' 2>&1`
+  rc = $CHILD_STATUS.success?
+  if fail_on_error && !rc
+    raise "Failed to run: #{cmd}, output: #{out}"
+  end
+
+  rc
+end
+
+def delete_secrets(credhub_namespaces, secret)
+  credhub_namespaces.map do |namespace|
+    if exec("credhub get -n #{namespace}/#{secret}", false)
+      puts "Deleting secret #{namespace}/#{secret}"
+      exec("credhub delete -n #{namespace}/#{secret}", true)
+    end
+  end
+end
+
+# TODO: remove this after we have run against all environments
+delete_secrets(credhub_namespaces, "logit_elasticsearch_url")
+delete_secrets(credhub_namespaces, "logit_elasticsearch_api_key")
