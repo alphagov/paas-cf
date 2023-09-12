@@ -3450,8 +3450,20 @@ jobs:
                     AZ_COUNT=1
                   fi
 
-                  for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
-                    for az in $(seq 1 $AZ_COUNT); do
+                  for az in $(seq 1 $AZ_COUNT); do
+    
+                    # iterate through dashboards to remove.
+                    for dashboard in "billing-slis" "billing-compared-to-spending"; do
+                      echo "Removing ${dashboard} from grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
+
+                      curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/uid/${dashboard}" \
+                        --user "admin:$GRAFANA_PASS" \
+                        --fail \
+                        --include \
+                        --request DELETE || true
+                    done;
+
+                    for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
                       echo "Uploading ${f} to grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
 
                       sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
