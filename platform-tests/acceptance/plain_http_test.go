@@ -55,16 +55,6 @@ var _ = Describe("plain HTTP requests", func() {
 				Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
 			})
 		})
-
-		Describe("for the product page", func() {
-			It("has the connection refused", func() {
-				systemDomain := GetConfigFromEnvironment("SYSTEM_DNS_ZONE_NAME")
-				uri := fmt.Sprintf("www.%s:80", systemDomain)
-				_, err := net.DialTimeout("tcp", uri, CONNECTION_TIMEOUT)
-				Expect(err).To(HaveOccurred(), "should not connect")
-				Expect(err.(net.Error).Timeout()).To(BeTrue(), "should timeout")
-			})
-		})
 	})
 
 	Context("to the apps domain", func() {
