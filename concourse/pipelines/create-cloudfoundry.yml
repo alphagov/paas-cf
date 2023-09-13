@@ -11,72 +11,72 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     psql: &psql-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     node: &node-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     node-chromium: &node-chromium-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     awscli: &awscli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     cf-cli: &cf-cli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     cf-uaac: &cf-uaac-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     git-ssh: &git-ssh-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     ruby-slim: &ruby-slim-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     golang: &golang-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     terraform: &terraform-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
     curl-ssl: &curl-ssl-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
 
 
   tasks:
@@ -272,7 +272,7 @@ resource_types:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+    tag: b5568301ae03da8220c5ea2f907088dfa38e963d
 
 - name: s3-iam
   type: registry-image
@@ -822,7 +822,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
 
           inputs:
             - name: paas-cf
@@ -5386,7 +5386,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
 
           inputs:
             - name: paas-cf
@@ -6647,7 +6647,7 @@ jobs:
           type: registry-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+            tag: b5568301ae03da8220c5ea2f907088dfa38e963d
 
         inputs:
           - name: passwords
