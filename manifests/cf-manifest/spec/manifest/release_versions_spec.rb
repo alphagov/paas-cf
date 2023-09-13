@@ -76,7 +76,7 @@ RSpec.describe "release versions" do
     # - attempted login using an unknown/unrelated Google account
     #
     # these are tricky to automate due to their reliance on SSO and/or email.
-    tested_uaa_version = "76.18.0"
+    tested_uaa_version = "76.20.0"
     manifest_releases = get_manifest_releases
 
     expect(manifest_releases).to have_key("uaa"), "expected release for uaa to be found in manifest"
