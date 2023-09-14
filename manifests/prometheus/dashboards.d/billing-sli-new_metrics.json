@@ -103,7 +103,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "histogram_quantile(\n  0.9,\n  sum by (job, url, le) (rate(echo_request_duration_seconds_bucket{job=~\"billing\", url!=\"/\"}[5m]))\n)",
+          "expr": "sum(echo_request_duration_seconds_sum{app_name!=\"\", url=~\"/(usage|billable)_events\"})/sum(echo_request_duration_seconds_count{url=~\"/(usage|billable)_events\", app_name!=\"\"})",
           "format": "time_series",
           "instant": false,
           "intervalFactor": 1,
@@ -647,7 +647,7 @@
     ]
   },
   "timezone": "",
-  "title": "Billing SLIs (Self-produced-metrics)",
+  "title": "Billing SLIs",
   "uid": "billing-sli--new-metrics",
   "version": 14,
   "weekStart": ""

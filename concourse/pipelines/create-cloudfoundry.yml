@@ -3450,8 +3450,20 @@ jobs:
                     AZ_COUNT=1
                   fi
 
-                  for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
-                    for az in $(seq 1 $AZ_COUNT); do
+                  for az in $(seq 1 $AZ_COUNT); do
+    
+                    # iterate through dashboards to remove.
+                    for dashboard in "billing-slis" "billing-compared-to-spending"; do
+                      echo "Removing ${dashboard} from grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
+
+                      curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/uid/${dashboard}" \
+                        --user "admin:$GRAFANA_PASS" \
+                        --fail \
+                        --include \
+                        --request DELETE || true
+                    done;
+
+                    for f in "$(pwd)/paas-cf/manifests/prometheus/dashboards.d/"*.json; do
                       echo "Uploading ${f} to grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
 
                       sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
@@ -5984,8 +5996,6 @@ jobs:
 
             LOGIT_ADDRESS: ((logit_syslog_address))
             LOGIT_PORT: ((logit_syslog_port))
-            LOGIT_ELASTICSEARCH_URL: ((logit_elasticsearch_url))
-            LOGIT_ELASTICSEARCH_API_KEY: ((logit_elasticsearch_api_key))
           inputs:
             - name: paas-cf
           run:
@@ -6031,9 +6041,7 @@ jobs:
                     'AWS_ACCESS_KEY_ID' => '${METRICS_AWS_ACCESS_KEY_ID}',
                     'AWS_SECRET_ACCESS_KEY' => '${METRICS_AWS_SECRET_ACCESS_KEY}',
                     'AIVEN_API_TOKEN' => '${AIVEN_API_TOKEN}',
-                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}',
-                    'LOGIT_ELASTICSEARCH_URL' => '${LOGIT_ELASTICSEARCH_URL}',
-                    'LOGIT_ELASTICSEARCH_API_KEY' => '${LOGIT_ELASTICSEARCH_API_KEY}'
+                    'AIVEN_PROJECT' => '${AIVEN_PROJECT}'
                   }
                   manifest = YAML.load_file('manifest.yml', aliases: true)
                   manifest['applications'].each { |app|
