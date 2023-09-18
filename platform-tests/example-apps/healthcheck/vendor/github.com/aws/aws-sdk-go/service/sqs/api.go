@@ -28,14 +28,13 @@ const opAddPermission = "AddPermission"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the AddPermissionRequest method.
+//	req, resp := client.AddPermissionRequest(params)
 //
-//    // Example sending a request using the AddPermissionRequest method.
-//    req, resp := client.AddPermissionRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/AddPermission
 func (c *SQS) AddPermissionRequest(input *AddPermissionInput) (req *request.Request, output *AddPermissionOutput) {
@@ -66,27 +65,21 @@ func (c *SQS) AddPermissionRequest(input *AddPermissionInput) (req *request.Requ
 // Messages to a Shared Queue (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-writing-an-sqs-policy.html#write-messages-to-shared-queue)
 // in the Amazon SQS Developer Guide.
 //
-//    * AddPermission generates a policy for you. You can use SetQueueAttributes
-//    to upload your policy. For more information, see Using Custom Policies
-//    with the Amazon SQS Access Policy Language (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-creating-custom-policies.html)
-//    in the Amazon SQS Developer Guide.
+//   - AddPermission generates a policy for you. You can use SetQueueAttributes
+//     to upload your policy. For more information, see Using Custom Policies
+//     with the Amazon SQS Access Policy Language (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-creating-custom-policies.html)
+//     in the Amazon SQS Developer Guide.
 //
-//    * An Amazon SQS policy can have a maximum of 7 actions.
+//   - An Amazon SQS policy can have a maximum of seven actions per statement.
 //
-//    * To remove the ability to change queue permissions, you must deny permission
-//    to the AddPermission, RemovePermission, and SetQueueAttributes actions
-//    in your IAM policy.
+//   - To remove the ability to change queue permissions, you must deny permission
+//     to the AddPermission, RemovePermission, and SetQueueAttributes actions
+//     in your IAM policy.
 //
-// Some actions take lists of parameters. These lists are specified using the
-// param.n notation. Values of n are integers starting from 1. For example,
-// a parameter list with two elements looks like this:
-//
-// &AttributeName.1=first
-//
-// &AttributeName.2=second
+//   - Amazon SQS AddPermission does not support adding a non-account principal.
 //
 // Cross-account permissions don't apply to this action. For more information,
-// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 // in the Amazon SQS Developer Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -97,11 +90,11 @@ func (c *SQS) AddPermissionRequest(input *AddPermissionInput) (req *request.Requ
 // API operation AddPermission for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeOverLimit "OverLimit"
-//   The specified action violates a limit. For example, ReceiveMessage returns
-//   this error if the maximum number of inflight messages is reached and AddPermission
-//   returns this error if the maximum number of permissions for the queue is
-//   reached.
+//   - ErrCodeOverLimit "OverLimit"
+//     The specified action violates a limit. For example, ReceiveMessage returns
+//     this error if the maximum number of in flight messages is reached and AddPermission
+//     returns this error if the maximum number of permissions for the queue is
+//     reached.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/AddPermission
 func (c *SQS) AddPermission(input *AddPermissionInput) (*AddPermissionOutput, error) {
@@ -125,6 +118,103 @@ func (c *SQS) AddPermissionWithContext(ctx aws.Context, input *AddPermissionInpu
 	return out, req.Send()
 }
 
+const opCancelMessageMoveTask = "CancelMessageMoveTask"
+
+// CancelMessageMoveTaskRequest generates a "aws/request.Request" representing the
+// client's request for the CancelMessageMoveTask operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CancelMessageMoveTask for more information on using the CancelMessageMoveTask
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//	// Example sending a request using the CancelMessageMoveTaskRequest method.
+//	req, resp := client.CancelMessageMoveTaskRequest(params)
+//
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/CancelMessageMoveTask
+func (c *SQS) CancelMessageMoveTaskRequest(input *CancelMessageMoveTaskInput) (req *request.Request, output *CancelMessageMoveTaskOutput) {
+	op := &request.Operation{
+		Name:       opCancelMessageMoveTask,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CancelMessageMoveTaskInput{}
+	}
+
+	output = &CancelMessageMoveTaskOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CancelMessageMoveTask API operation for Amazon Simple Queue Service.
+//
+// Cancels a specified message movement task. A message movement can only be
+// cancelled when the current status is RUNNING. Cancelling a message movement
+// task does not revert the messages that have already been moved. It can only
+// stop the messages that have not been moved yet.
+//
+//   - This action is currently limited to supporting message redrive from
+//     dead-letter queues (DLQs) (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
+//     only. In this context, the source queue is the dead-letter queue (DLQ),
+//     while the destination queue can be the original source queue (from which
+//     the messages were driven to the dead-letter-queue), or a custom destination
+//     queue.
+//
+//   - Currently, only standard queues are supported.
+//
+//   - Only one active message movement task is supported per queue at any
+//     given time.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Simple Queue Service's
+// API operation CancelMessageMoveTask for usage and error information.
+//
+// Returned Error Codes:
+//
+//   - ErrCodeResourceNotFoundException "ResourceNotFoundException"
+//     One or more specified resources don't exist.
+//
+//   - ErrCodeUnsupportedOperation "AWS.SimpleQueueService.UnsupportedOperation"
+//     Error code 400. Unsupported operation.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/CancelMessageMoveTask
+func (c *SQS) CancelMessageMoveTask(input *CancelMessageMoveTaskInput) (*CancelMessageMoveTaskOutput, error) {
+	req, out := c.CancelMessageMoveTaskRequest(input)
+	return out, req.Send()
+}
+
+// CancelMessageMoveTaskWithContext is the same as CancelMessageMoveTask with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CancelMessageMoveTask for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *SQS) CancelMessageMoveTaskWithContext(ctx aws.Context, input *CancelMessageMoveTaskInput, opts ...request.Option) (*CancelMessageMoveTaskOutput, error) {
+	req, out := c.CancelMessageMoveTaskRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opChangeMessageVisibility = "ChangeMessageVisibility"
 
 // ChangeMessageVisibilityRequest generates a "aws/request.Request" representing the
@@ -141,14 +231,13 @@ const opChangeMessageVisibility = "ChangeMessageVisibility"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the ChangeMessageVisibilityRequest method.
+//	req, resp := client.ChangeMessageVisibilityRequest(params)
 //
-//    // Example sending a request using the ChangeMessageVisibilityRequest method.
-//    req, resp := client.ChangeMessageVisibilityRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ChangeMessageVisibility
 func (c *SQS) ChangeMessageVisibilityRequest(input *ChangeMessageVisibilityInput) (req *request.Request, output *ChangeMessageVisibilityOutput) {
@@ -176,11 +265,13 @@ func (c *SQS) ChangeMessageVisibilityRequest(input *ChangeMessageVisibilityInput
 // Timeout (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)
 // in the Amazon SQS Developer Guide.
 //
-// For example, you have a message with a visibility timeout of 5 minutes. After
-// 3 minutes, you call ChangeMessageVisibility with a timeout of 10 minutes.
-// You can continue to call ChangeMessageVisibility to extend the visibility
-// timeout to the maximum allowed time. If you try to extend the visibility
-// timeout beyond the maximum, your request is rejected.
+// For example, if the default timeout for a queue is 60 seconds, 15 seconds
+// have elapsed since you received the message, and you send a ChangeMessageVisibility
+// call with VisibilityTimeout set to 10 seconds, the 10 seconds begin to count
+// from the time that you make the ChangeMessageVisibility call. Thus, any attempt
+// to change the visibility timeout or to delete that message 10 seconds after
+// you initially change the visibility timeout (a total of 25 seconds) might
+// result in an error.
 //
 // An Amazon SQS message has three basic states:
 //
@@ -195,20 +286,20 @@ func (c *SQS) ChangeMessageVisibilityRequest(input *ChangeMessageVisibilityInput
 // 1 and 2). There is no limit to the number of stored messages. A message is
 // considered to be in flight after it is received from a queue by a consumer,
 // but not yet deleted from the queue (that is, between states 2 and 3). There
-// is a limit to the number of inflight messages.
+// is a limit to the number of in flight messages.
 //
-// Limits that apply to inflight messages are unrelated to the unlimited number
+// Limits that apply to in flight messages are unrelated to the unlimited number
 // of stored messages.
 //
 // For most standard queues (depending on queue traffic and message backlog),
-// there can be a maximum of approximately 120,000 inflight messages (received
+// there can be a maximum of approximately 120,000 in flight messages (received
 // from a queue by a consumer, but not yet deleted from the queue). If you reach
 // this limit, Amazon SQS returns the OverLimit error message. To avoid reaching
 // the limit, you should delete messages from the queue after they're processed.
 // You can also increase the number of queues you use to process your messages.
 // To request a limit increase, file a support request (https://console.aws.amazon.com/support/home#/case/create?issueType=service-limit-increase&limitType=service-code-sqs).
 //
-// For FIFO queues, there can be a maximum of 20,000 inflight messages (received
+// For FIFO queues, there can be a maximum of 20,000 in flight messages (received
 // from a queue by a consumer, but not yet deleted from the queue). If you reach
 // this limit, Amazon SQS returns no error messages.
 //
@@ -231,11 +322,12 @@ func (c *SQS) ChangeMessageVisibilityRequest(input *ChangeMessageVisibilityInput
 // API operation ChangeMessageVisibility for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeMessageNotInflight "AWS.SimpleQueueService.MessageNotInflight"
-//   The specified message isn't in flight.
 //
-//   * ErrCodeReceiptHandleIsInvalid "ReceiptHandleIsInvalid"
-//   The specified receipt handle isn't valid.
+//   - ErrCodeMessageNotInflight "AWS.SimpleQueueService.MessageNotInflight"
+//     The specified message isn't in flight.
+//
+//   - ErrCodeReceiptHandleIsInvalid "ReceiptHandleIsInvalid"
+//     The specified receipt handle isn't valid.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ChangeMessageVisibility
 func (c *SQS) ChangeMessageVisibility(input *ChangeMessageVisibilityInput) (*ChangeMessageVisibilityOutput, error) {
@@ -275,14 +367,13 @@ const opChangeMessageVisibilityBatch = "ChangeMessageVisibilityBatch"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the ChangeMessageVisibilityBatchRequest method.
+//	req, resp := client.ChangeMessageVisibilityBatchRequest(params)
 //
-//    // Example sending a request using the ChangeMessageVisibilityBatchRequest method.
-//    req, resp := client.ChangeMessageVisibilityBatchRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ChangeMessageVisibilityBatch
 func (c *SQS) ChangeMessageVisibilityBatchRequest(input *ChangeMessageVisibilityBatchInput) (req *request.Request, output *ChangeMessageVisibilityBatchOutput) {
@@ -312,14 +403,6 @@ func (c *SQS) ChangeMessageVisibilityBatchRequest(input *ChangeMessageVisibility
 // actions, you should check for batch errors even when the call returns an
 // HTTP status code of 200.
 //
-// Some actions take lists of parameters. These lists are specified using the
-// param.n notation. Values of n are integers starting from 1. For example,
-// a parameter list with two elements looks like this:
-//
-// &AttributeName.1=first
-//
-// &AttributeName.2=second
-//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -328,17 +411,18 @@ func (c *SQS) ChangeMessageVisibilityBatchRequest(input *ChangeMessageVisibility
 // API operation ChangeMessageVisibilityBatch for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeTooManyEntriesInBatchRequest "AWS.SimpleQueueService.TooManyEntriesInBatchRequest"
-//   The batch request contains more entries than permissible.
 //
-//   * ErrCodeEmptyBatchRequest "AWS.SimpleQueueService.EmptyBatchRequest"
-//   The batch request doesn't contain any entries.
+//   - ErrCodeTooManyEntriesInBatchRequest "AWS.SimpleQueueService.TooManyEntriesInBatchRequest"
+//     The batch request contains more entries than permissible.
 //
-//   * ErrCodeBatchEntryIdsNotDistinct "AWS.SimpleQueueService.BatchEntryIdsNotDistinct"
-//   Two or more batch entries in the request have the same Id.
+//   - ErrCodeEmptyBatchRequest "AWS.SimpleQueueService.EmptyBatchRequest"
+//     The batch request doesn't contain any entries.
 //
-//   * ErrCodeInvalidBatchEntryId "AWS.SimpleQueueService.InvalidBatchEntryId"
-//   The Id of a batch entry in a batch request doesn't abide by the specification.
+//   - ErrCodeBatchEntryIdsNotDistinct "AWS.SimpleQueueService.BatchEntryIdsNotDistinct"
+//     Two or more batch entries in the request have the same Id.
+//
+//   - ErrCodeInvalidBatchEntryId "AWS.SimpleQueueService.InvalidBatchEntryId"
+//     The Id of a batch entry in a batch request doesn't abide by the specification.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ChangeMessageVisibilityBatch
 func (c *SQS) ChangeMessageVisibilityBatch(input *ChangeMessageVisibilityBatchInput) (*ChangeMessageVisibilityBatchOutput, error) {
@@ -378,14 +462,13 @@ const opCreateQueue = "CreateQueue"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the CreateQueueRequest method.
+//	req, resp := client.CreateQueueRequest(params)
 //
-//    // Example sending a request using the CreateQueueRequest method.
-//    req, resp := client.CreateQueueRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/CreateQueue
 func (c *SQS) CreateQueueRequest(input *CreateQueueInput) (req *request.Request, output *CreateQueueOutput) {
@@ -409,19 +492,19 @@ func (c *SQS) CreateQueueRequest(input *CreateQueueInput) (req *request.Request,
 // Creates a new standard or FIFO queue. You can pass one or more attributes
 // in the request. Keep the following in mind:
 //
-//    * If you don't specify the FifoQueue attribute, Amazon SQS creates a standard
-//    queue. You can't change the queue type after you create it and you can't
-//    convert an existing standard queue into a FIFO queue. You must either
-//    create a new FIFO queue for your application or delete your existing standard
-//    queue and recreate it as a FIFO queue. For more information, see Moving
-//    From a Standard Queue to a FIFO Queue (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html#FIFO-queues-moving)
-//    in the Amazon SQS Developer Guide.
+//   - If you don't specify the FifoQueue attribute, Amazon SQS creates a standard
+//     queue. You can't change the queue type after you create it and you can't
+//     convert an existing standard queue into a FIFO queue. You must either
+//     create a new FIFO queue for your application or delete your existing standard
+//     queue and recreate it as a FIFO queue. For more information, see Moving
+//     From a Standard Queue to a FIFO Queue (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html#FIFO-queues-moving)
+//     in the Amazon SQS Developer Guide.
 //
-//    * If you don't provide a value for an attribute, the queue is created
-//    with the default value for the attribute.
+//   - If you don't provide a value for an attribute, the queue is created
+//     with the default value for the attribute.
 //
-//    * If you delete a queue, you must wait at least 60 seconds before creating
-//    a queue with the same name.
+//   - If you delete a queue, you must wait at least 60 seconds before creating
+//     a queue with the same name.
 //
 // To successfully create a new queue, you must provide a queue name that adheres
 // to the limits related to queues (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/limits-queues.html)
@@ -433,23 +516,15 @@ func (c *SQS) CreateQueueRequest(input *CreateQueueInput) (req *request.Request,
 // To get the queue URL, use the GetQueueUrl action. GetQueueUrl requires only
 // the QueueName parameter. be aware of existing queue names:
 //
-//    * If you provide the name of an existing queue along with the exact names
-//    and values of all the queue's attributes, CreateQueue returns the queue
-//    URL for the existing queue.
+//   - If you provide the name of an existing queue along with the exact names
+//     and values of all the queue's attributes, CreateQueue returns the queue
+//     URL for the existing queue.
 //
-//    * If the queue name, attribute names, or attribute values don't match
-//    an existing queue, CreateQueue returns an error.
-//
-// Some actions take lists of parameters. These lists are specified using the
-// param.n notation. Values of n are integers starting from 1. For example,
-// a parameter list with two elements looks like this:
-//
-// &AttributeName.1=first
-//
-// &AttributeName.2=second
+//   - If the queue name, attribute names, or attribute values don't match
+//     an existing queue, CreateQueue returns an error.
 //
 // Cross-account permissions don't apply to this action. For more information,
-// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 // in the Amazon SQS Developer Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -460,14 +535,15 @@ func (c *SQS) CreateQueueRequest(input *CreateQueueInput) (req *request.Request,
 // API operation CreateQueue for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeQueueDeletedRecently "AWS.SimpleQueueService.QueueDeletedRecently"
-//   You must wait 60 seconds after deleting a queue before you can create another
-//   queue with the same name.
 //
-//   * ErrCodeQueueNameExists "QueueAlreadyExists"
-//   A queue with this name already exists. Amazon SQS returns this error only
-//   if the request includes attributes whose values differ from those of the
-//   existing queue.
+//   - ErrCodeQueueDeletedRecently "AWS.SimpleQueueService.QueueDeletedRecently"
+//     You must wait 60 seconds after deleting a queue before you can create another
+//     queue with the same name.
+//
+//   - ErrCodeQueueNameExists "QueueAlreadyExists"
+//     A queue with this name already exists. Amazon SQS returns this error only
+//     if the request includes attributes whose values differ from those of the
+//     existing queue.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/CreateQueue
 func (c *SQS) CreateQueue(input *CreateQueueInput) (*CreateQueueOutput, error) {
@@ -507,14 +583,13 @@ const opDeleteMessage = "DeleteMessage"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DeleteMessageRequest method.
+//	req, resp := client.DeleteMessageRequest(params)
 //
-//    // Example sending a request using the DeleteMessageRequest method.
-//    req, resp := client.DeleteMessageRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/DeleteMessage
 func (c *SQS) DeleteMessageRequest(input *DeleteMessageInput) (req *request.Request, output *DeleteMessageOutput) {
@@ -547,7 +622,7 @@ func (c *SQS) DeleteMessageRequest(input *DeleteMessageInput) (req *request.Requ
 // If you receive a message more than once, the ReceiptHandle is different each
 // time you receive a message. When you use the DeleteMessage action, you must
 // provide the most recently received ReceiptHandle for the message (otherwise,
-// the request succeeds, but the message might not be deleted).
+// the request succeeds, but the message will not be deleted).
 //
 // For standard queues, it is possible to receive a message even after you delete
 // it. This might happen on rare occasions if one of the servers which stores
@@ -565,11 +640,12 @@ func (c *SQS) DeleteMessageRequest(input *DeleteMessageInput) (req *request.Requ
 // API operation DeleteMessage for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeInvalidIdFormat "InvalidIdFormat"
-//   The specified receipt handle isn't valid for the current version.
 //
-//   * ErrCodeReceiptHandleIsInvalid "ReceiptHandleIsInvalid"
-//   The specified receipt handle isn't valid.
+//   - ErrCodeInvalidIdFormat "InvalidIdFormat"
+//     The specified receipt handle isn't valid for the current version.
+//
+//   - ErrCodeReceiptHandleIsInvalid "ReceiptHandleIsInvalid"
+//     The specified receipt handle isn't valid.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/DeleteMessage
 func (c *SQS) DeleteMessage(input *DeleteMessageInput) (*DeleteMessageOutput, error) {
@@ -609,14 +685,13 @@ const opDeleteMessageBatch = "DeleteMessageBatch"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DeleteMessageBatchRequest method.
+//	req, resp := client.DeleteMessageBatchRequest(params)
 //
-//    // Example sending a request using the DeleteMessageBatchRequest method.
-//    req, resp := client.DeleteMessageBatchRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/DeleteMessageBatch
 func (c *SQS) DeleteMessageBatchRequest(input *DeleteMessageBatchInput) (req *request.Request, output *DeleteMessageBatchOutput) {
@@ -645,14 +720,6 @@ func (c *SQS) DeleteMessageBatchRequest(input *DeleteMessageBatchInput) (req *re
 // actions, you should check for batch errors even when the call returns an
 // HTTP status code of 200.
 //
-// Some actions take lists of parameters. These lists are specified using the
-// param.n notation. Values of n are integers starting from 1. For example,
-// a parameter list with two elements looks like this:
-//
-// &AttributeName.1=first
-//
-// &AttributeName.2=second
-//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -661,17 +728,18 @@ func (c *SQS) DeleteMessageBatchRequest(input *DeleteMessageBatchInput) (req *re
 // API operation DeleteMessageBatch for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeTooManyEntriesInBatchRequest "AWS.SimpleQueueService.TooManyEntriesInBatchRequest"
-//   The batch request contains more entries than permissible.
 //
-//   * ErrCodeEmptyBatchRequest "AWS.SimpleQueueService.EmptyBatchRequest"
-//   The batch request doesn't contain any entries.
+//   - ErrCodeTooManyEntriesInBatchRequest "AWS.SimpleQueueService.TooManyEntriesInBatchRequest"
+//     The batch request contains more entries than permissible.
 //
-//   * ErrCodeBatchEntryIdsNotDistinct "AWS.SimpleQueueService.BatchEntryIdsNotDistinct"
-//   Two or more batch entries in the request have the same Id.
+//   - ErrCodeEmptyBatchRequest "AWS.SimpleQueueService.EmptyBatchRequest"
+//     The batch request doesn't contain any entries.
 //
-//   * ErrCodeInvalidBatchEntryId "AWS.SimpleQueueService.InvalidBatchEntryId"
-//   The Id of a batch entry in a batch request doesn't abide by the specification.
+//   - ErrCodeBatchEntryIdsNotDistinct "AWS.SimpleQueueService.BatchEntryIdsNotDistinct"
+//     Two or more batch entries in the request have the same Id.
+//
+//   - ErrCodeInvalidBatchEntryId "AWS.SimpleQueueService.InvalidBatchEntryId"
+//     The Id of a batch entry in a batch request doesn't abide by the specification.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/DeleteMessageBatch
 func (c *SQS) DeleteMessageBatch(input *DeleteMessageBatchInput) (*DeleteMessageBatchOutput, error) {
@@ -711,14 +779,13 @@ const opDeleteQueue = "DeleteQueue"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the DeleteQueueRequest method.
+//	req, resp := client.DeleteQueueRequest(params)
 //
-//    // Example sending a request using the DeleteQueueRequest method.
-//    req, resp := client.DeleteQueueRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/DeleteQueue
 func (c *SQS) DeleteQueueRequest(input *DeleteQueueInput) (req *request.Request, output *DeleteQueueOutput) {
@@ -754,8 +821,10 @@ func (c *SQS) DeleteQueueRequest(input *DeleteQueueInput) (req *request.Request,
 // a queue with the same name.
 //
 // Cross-account permissions don't apply to this action. For more information,
-// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 // in the Amazon SQS Developer Guide.
+//
+// The delete operation uses the HTTP GET verb.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -801,14 +870,13 @@ const opGetQueueAttributes = "GetQueueAttributes"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the GetQueueAttributesRequest method.
+//	req, resp := client.GetQueueAttributesRequest(params)
 //
-//    // Example sending a request using the GetQueueAttributesRequest method.
-//    req, resp := client.GetQueueAttributesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/GetQueueAttributes
 func (c *SQS) GetQueueAttributesRequest(input *GetQueueAttributesInput) (req *request.Request, output *GetQueueAttributesOutput) {
@@ -842,8 +910,8 @@ func (c *SQS) GetQueueAttributesRequest(input *GetQueueAttributesInput) (req *re
 // API operation GetQueueAttributes for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeInvalidAttributeName "InvalidAttributeName"
-//   The specified attribute doesn't exist.
+//   - ErrCodeInvalidAttributeName "InvalidAttributeName"
+//     The specified attribute doesn't exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/GetQueueAttributes
 func (c *SQS) GetQueueAttributes(input *GetQueueAttributesInput) (*GetQueueAttributesOutput, error) {
@@ -883,14 +951,13 @@ const opGetQueueUrl = "GetQueueUrl"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the GetQueueUrlRequest method.
+//	req, resp := client.GetQueueUrlRequest(params)
 //
-//    // Example sending a request using the GetQueueUrlRequest method.
-//    req, resp := client.GetQueueUrlRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/GetQueueUrl
 func (c *SQS) GetQueueUrlRequest(input *GetQueueUrlInput) (req *request.Request, output *GetQueueUrlOutput) {
@@ -928,8 +995,8 @@ func (c *SQS) GetQueueUrlRequest(input *GetQueueUrlInput) (req *request.Request,
 // API operation GetQueueUrl for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeQueueDoesNotExist "AWS.SimpleQueueService.NonExistentQueue"
-//   The specified queue doesn't exist.
+//   - ErrCodeQueueDoesNotExist "AWS.SimpleQueueService.NonExistentQueue"
+//     The specified queue doesn't exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/GetQueueUrl
 func (c *SQS) GetQueueUrl(input *GetQueueUrlInput) (*GetQueueUrlOutput, error) {
@@ -969,14 +1036,13 @@ const opListDeadLetterSourceQueues = "ListDeadLetterSourceQueues"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the ListDeadLetterSourceQueuesRequest method.
+//	req, resp := client.ListDeadLetterSourceQueuesRequest(params)
 //
-//    // Example sending a request using the ListDeadLetterSourceQueuesRequest method.
-//    req, resp := client.ListDeadLetterSourceQueuesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ListDeadLetterSourceQueues
 func (c *SQS) ListDeadLetterSourceQueuesRequest(input *ListDeadLetterSourceQueuesInput) (req *request.Request, output *ListDeadLetterSourceQueuesOutput) {
@@ -1026,8 +1092,8 @@ func (c *SQS) ListDeadLetterSourceQueuesRequest(input *ListDeadLetterSourceQueue
 // API operation ListDeadLetterSourceQueues for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeQueueDoesNotExist "AWS.SimpleQueueService.NonExistentQueue"
-//   The specified queue doesn't exist.
+//   - ErrCodeQueueDoesNotExist "AWS.SimpleQueueService.NonExistentQueue"
+//     The specified queue doesn't exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ListDeadLetterSourceQueues
 func (c *SQS) ListDeadLetterSourceQueues(input *ListDeadLetterSourceQueuesInput) (*ListDeadLetterSourceQueuesOutput, error) {
@@ -1059,15 +1125,14 @@ func (c *SQS) ListDeadLetterSourceQueuesWithContext(ctx aws.Context, input *List
 //
 // Note: This operation can generate multiple requests to a service.
 //
-//    // Example iterating over at most 3 pages of a ListDeadLetterSourceQueues operation.
-//    pageNum := 0
-//    err := client.ListDeadLetterSourceQueuesPages(params,
-//        func(page *sqs.ListDeadLetterSourceQueuesOutput, lastPage bool) bool {
-//            pageNum++
-//            fmt.Println(page)
-//            return pageNum <= 3
-//        })
-//
+//	// Example iterating over at most 3 pages of a ListDeadLetterSourceQueues operation.
+//	pageNum := 0
+//	err := client.ListDeadLetterSourceQueuesPages(params,
+//	    func(page *sqs.ListDeadLetterSourceQueuesOutput, lastPage bool) bool {
+//	        pageNum++
+//	        fmt.Println(page)
+//	        return pageNum <= 3
+//	    })
 func (c *SQS) ListDeadLetterSourceQueuesPages(input *ListDeadLetterSourceQueuesInput, fn func(*ListDeadLetterSourceQueuesOutput, bool) bool) error {
 	return c.ListDeadLetterSourceQueuesPagesWithContext(aws.BackgroundContext(), input, fn)
 }
@@ -1103,6 +1168,101 @@ func (c *SQS) ListDeadLetterSourceQueuesPagesWithContext(ctx aws.Context, input 
 	return p.Err()
 }
 
+const opListMessageMoveTasks = "ListMessageMoveTasks"
+
+// ListMessageMoveTasksRequest generates a "aws/request.Request" representing the
+// client's request for the ListMessageMoveTasks operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListMessageMoveTasks for more information on using the ListMessageMoveTasks
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//	// Example sending a request using the ListMessageMoveTasksRequest method.
+//	req, resp := client.ListMessageMoveTasksRequest(params)
+//
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ListMessageMoveTasks
+func (c *SQS) ListMessageMoveTasksRequest(input *ListMessageMoveTasksInput) (req *request.Request, output *ListMessageMoveTasksOutput) {
+	op := &request.Operation{
+		Name:       opListMessageMoveTasks,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &ListMessageMoveTasksInput{}
+	}
+
+	output = &ListMessageMoveTasksOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListMessageMoveTasks API operation for Amazon Simple Queue Service.
+//
+// Gets the most recent message movement tasks (up to 10) under a specific source
+// queue.
+//
+//   - This action is currently limited to supporting message redrive from
+//     dead-letter queues (DLQs) (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
+//     only. In this context, the source queue is the dead-letter queue (DLQ),
+//     while the destination queue can be the original source queue (from which
+//     the messages were driven to the dead-letter-queue), or a custom destination
+//     queue.
+//
+//   - Currently, only standard queues are supported.
+//
+//   - Only one active message movement task is supported per queue at any
+//     given time.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Simple Queue Service's
+// API operation ListMessageMoveTasks for usage and error information.
+//
+// Returned Error Codes:
+//
+//   - ErrCodeResourceNotFoundException "ResourceNotFoundException"
+//     One or more specified resources don't exist.
+//
+//   - ErrCodeUnsupportedOperation "AWS.SimpleQueueService.UnsupportedOperation"
+//     Error code 400. Unsupported operation.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ListMessageMoveTasks
+func (c *SQS) ListMessageMoveTasks(input *ListMessageMoveTasksInput) (*ListMessageMoveTasksOutput, error) {
+	req, out := c.ListMessageMoveTasksRequest(input)
+	return out, req.Send()
+}
+
+// ListMessageMoveTasksWithContext is the same as ListMessageMoveTasks with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListMessageMoveTasks for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *SQS) ListMessageMoveTasksWithContext(ctx aws.Context, input *ListMessageMoveTasksInput, opts ...request.Option) (*ListMessageMoveTasksOutput, error) {
+	req, out := c.ListMessageMoveTasksRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opListQueueTags = "ListQueueTags"
 
 // ListQueueTagsRequest generates a "aws/request.Request" representing the
@@ -1119,14 +1279,13 @@ const opListQueueTags = "ListQueueTags"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the ListQueueTagsRequest method.
+//	req, resp := client.ListQueueTagsRequest(params)
 //
-//    // Example sending a request using the ListQueueTagsRequest method.
-//    req, resp := client.ListQueueTagsRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ListQueueTags
 func (c *SQS) ListQueueTagsRequest(input *ListQueueTagsInput) (req *request.Request, output *ListQueueTagsOutput) {
@@ -1152,7 +1311,7 @@ func (c *SQS) ListQueueTagsRequest(input *ListQueueTagsInput) (req *request.Requ
 // in the Amazon SQS Developer Guide.
 //
 // Cross-account permissions don't apply to this action. For more information,
-// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 // in the Amazon SQS Developer Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -1199,14 +1358,13 @@ const opListQueues = "ListQueues"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the ListQueuesRequest method.
+//	req, resp := client.ListQueuesRequest(params)
 //
-//    // Example sending a request using the ListQueuesRequest method.
-//    req, resp := client.ListQueuesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ListQueues
 func (c *SQS) ListQueuesRequest(input *ListQueuesInput) (req *request.Request, output *ListQueuesOutput) {
@@ -1246,7 +1404,7 @@ func (c *SQS) ListQueuesRequest(input *ListQueuesInput) (req *request.Request, o
 // request to listQueues to receive the next page of results.
 //
 // Cross-account permissions don't apply to this action. For more information,
-// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 // in the Amazon SQS Developer Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -1285,15 +1443,14 @@ func (c *SQS) ListQueuesWithContext(ctx aws.Context, input *ListQueuesInput, opt
 //
 // Note: This operation can generate multiple requests to a service.
 //
-//    // Example iterating over at most 3 pages of a ListQueues operation.
-//    pageNum := 0
-//    err := client.ListQueuesPages(params,
-//        func(page *sqs.ListQueuesOutput, lastPage bool) bool {
-//            pageNum++
-//            fmt.Println(page)
-//            return pageNum <= 3
-//        })
-//
+//	// Example iterating over at most 3 pages of a ListQueues operation.
+//	pageNum := 0
+//	err := client.ListQueuesPages(params,
+//	    func(page *sqs.ListQueuesOutput, lastPage bool) bool {
+//	        pageNum++
+//	        fmt.Println(page)
+//	        return pageNum <= 3
+//	    })
 func (c *SQS) ListQueuesPages(input *ListQueuesInput, fn func(*ListQueuesOutput, bool) bool) error {
 	return c.ListQueuesPagesWithContext(aws.BackgroundContext(), input, fn)
 }
@@ -1345,14 +1502,13 @@ const opPurgeQueue = "PurgeQueue"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the PurgeQueueRequest method.
+//	req, resp := client.PurgeQueueRequest(params)
 //
-//    // Example sending a request using the PurgeQueueRequest method.
-//    req, resp := client.PurgeQueueRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/PurgeQueue
 func (c *SQS) PurgeQueueRequest(input *PurgeQueueInput) (req *request.Request, output *PurgeQueueOutput) {
@@ -1374,7 +1530,8 @@ func (c *SQS) PurgeQueueRequest(input *PurgeQueueInput) (req *request.Request, o
 
 // PurgeQueue API operation for Amazon Simple Queue Service.
 //
-// Deletes the messages in a queue specified by the QueueURL parameter.
+// Deletes available messages in a queue (including in-flight messages) specified
+// by the QueueURL parameter.
 //
 // When you use the PurgeQueue action, you can't retrieve any messages deleted
 // from a queue.
@@ -1396,13 +1553,14 @@ func (c *SQS) PurgeQueueRequest(input *PurgeQueueInput) (req *request.Request, o
 // API operation PurgeQueue for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeQueueDoesNotExist "AWS.SimpleQueueService.NonExistentQueue"
-//   The specified queue doesn't exist.
 //
-//   * ErrCodePurgeQueueInProgress "AWS.SimpleQueueService.PurgeQueueInProgress"
-//   Indicates that the specified queue previously received a PurgeQueue request
-//   within the last 60 seconds (the time it can take to delete the messages in
-//   the queue).
+//   - ErrCodeQueueDoesNotExist "AWS.SimpleQueueService.NonExistentQueue"
+//     The specified queue doesn't exist.
+//
+//   - ErrCodePurgeQueueInProgress "AWS.SimpleQueueService.PurgeQueueInProgress"
+//     Indicates that the specified queue previously received a PurgeQueue request
+//     within the last 60 seconds (the time it can take to delete the messages in
+//     the queue).
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/PurgeQueue
 func (c *SQS) PurgeQueue(input *PurgeQueueInput) (*PurgeQueueOutput, error) {
@@ -1442,14 +1600,13 @@ const opReceiveMessage = "ReceiveMessage"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the ReceiveMessageRequest method.
+//	req, resp := client.ReceiveMessageRequest(params)
 //
-//    // Example sending a request using the ReceiveMessageRequest method.
-//    req, resp := client.ReceiveMessageRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ReceiveMessage
 func (c *SQS) ReceiveMessageRequest(input *ReceiveMessageInput) (req *request.Request, output *ReceiveMessageOutput) {
@@ -1485,18 +1642,18 @@ func (c *SQS) ReceiveMessageRequest(input *ReceiveMessageInput) (req *request.Re
 //
 // For each message returned, the response includes the following:
 //
-//    * The message body.
+//   - The message body.
 //
-//    * An MD5 digest of the message body. For information about MD5, see RFC1321
-//    (https://www.ietf.org/rfc/rfc1321.txt).
+//   - An MD5 digest of the message body. For information about MD5, see RFC1321
+//     (https://www.ietf.org/rfc/rfc1321.txt).
 //
-//    * The MessageId you received when you sent the message to the queue.
+//   - The MessageId you received when you sent the message to the queue.
 //
-//    * The receipt handle.
+//   - The receipt handle.
 //
-//    * The message attributes.
+//   - The message attributes.
 //
-//    * An MD5 digest of the message attributes.
+//   - An MD5 digest of the message attributes.
 //
 // The receipt handle is the identifier you must provide when deleting the message.
 // For more information, see Queue and Message Identifiers (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-queue-message-identifiers.html)
@@ -1526,11 +1683,11 @@ func (c *SQS) ReceiveMessageRequest(input *ReceiveMessageInput) (req *request.Re
 // API operation ReceiveMessage for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeOverLimit "OverLimit"
-//   The specified action violates a limit. For example, ReceiveMessage returns
-//   this error if the maximum number of inflight messages is reached and AddPermission
-//   returns this error if the maximum number of permissions for the queue is
-//   reached.
+//   - ErrCodeOverLimit "OverLimit"
+//     The specified action violates a limit. For example, ReceiveMessage returns
+//     this error if the maximum number of in flight messages is reached and AddPermission
+//     returns this error if the maximum number of permissions for the queue is
+//     reached.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/ReceiveMessage
 func (c *SQS) ReceiveMessage(input *ReceiveMessageInput) (*ReceiveMessageOutput, error) {
@@ -1570,14 +1727,13 @@ const opRemovePermission = "RemovePermission"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the RemovePermissionRequest method.
+//	req, resp := client.RemovePermissionRequest(params)
 //
-//    // Example sending a request using the RemovePermissionRequest method.
-//    req, resp := client.RemovePermissionRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/RemovePermission
 func (c *SQS) RemovePermissionRequest(input *RemovePermissionInput) (req *request.Request, output *RemovePermissionOutput) {
@@ -1602,15 +1758,15 @@ func (c *SQS) RemovePermissionRequest(input *RemovePermissionInput) (req *reques
 // Revokes any permissions in the queue policy that matches the specified Label
 // parameter.
 //
-//    * Only the owner of a queue can remove permissions from it.
+//   - Only the owner of a queue can remove permissions from it.
 //
-//    * Cross-account permissions don't apply to this action. For more information,
-//    see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
-//    in the Amazon SQS Developer Guide.
+//   - Cross-account permissions don't apply to this action. For more information,
+//     see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+//     in the Amazon SQS Developer Guide.
 //
-//    * To remove the ability to change queue permissions, you must deny permission
-//    to the AddPermission, RemovePermission, and SetQueueAttributes actions
-//    in your IAM policy.
+//   - To remove the ability to change queue permissions, you must deny permission
+//     to the AddPermission, RemovePermission, and SetQueueAttributes actions
+//     in your IAM policy.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1656,14 +1812,13 @@ const opSendMessage = "SendMessage"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the SendMessageRequest method.
+//	req, resp := client.SendMessageRequest(params)
 //
-//    // Example sending a request using the SendMessageRequest method.
-//    req, resp := client.SendMessageRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/SendMessage
 func (c *SQS) SendMessageRequest(input *SendMessageInput) (req *request.Request, output *SendMessageOutput) {
@@ -1702,11 +1857,12 @@ func (c *SQS) SendMessageRequest(input *SendMessageInput) (req *request.Request,
 // API operation SendMessage for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeInvalidMessageContents "InvalidMessageContents"
-//   The message contains characters outside the allowed set.
 //
-//   * ErrCodeUnsupportedOperation "AWS.SimpleQueueService.UnsupportedOperation"
-//   Error code 400. Unsupported operation.
+//   - ErrCodeInvalidMessageContents "InvalidMessageContents"
+//     The message contains characters outside the allowed set.
+//
+//   - ErrCodeUnsupportedOperation "AWS.SimpleQueueService.UnsupportedOperation"
+//     Error code 400. Unsupported operation.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/SendMessage
 func (c *SQS) SendMessage(input *SendMessageInput) (*SendMessageOutput, error) {
@@ -1746,14 +1902,13 @@ const opSendMessageBatch = "SendMessageBatch"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the SendMessageBatchRequest method.
+//	req, resp := client.SendMessageBatchRequest(params)
 //
-//    // Example sending a request using the SendMessageBatchRequest method.
-//    req, resp := client.SendMessageBatchRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/SendMessageBatch
 func (c *SQS) SendMessageBatchRequest(input *SendMessageBatchInput) (req *request.Request, output *SendMessageBatchOutput) {
@@ -1774,9 +1929,11 @@ func (c *SQS) SendMessageBatchRequest(input *SendMessageBatchInput) (req *reques
 
 // SendMessageBatch API operation for Amazon Simple Queue Service.
 //
-// Delivers up to ten messages to the specified queue. This is a batch version
-// of SendMessage. For a FIFO queue, multiple messages within a single batch
-// are enqueued in the order they are sent.
+// You can use SendMessageBatch to send up to 10 messages to the specified queue
+// by assigning either identical or different values to each message (or by
+// not assigning values at all). This is a batch version of SendMessage. For
+// a FIFO queue, multiple messages within a single batch are enqueued in the
+// order they are sent.
 //
 // The result of sending each message is reported individually in the response.
 // Because the batch request can result in a combination of successful and unsuccessful
@@ -1785,7 +1942,7 @@ func (c *SQS) SendMessageBatchRequest(input *SendMessageBatchInput) (req *reques
 //
 // The maximum allowed individual message size and the maximum total payload
 // size (the sum of the individual lengths of all of the batched messages) are
-// both 256 KB (262,144 bytes).
+// both 256 KiB (262,144 bytes).
 //
 // A message can include only XML, JSON, and unformatted text. The following
 // Unicode characters are allowed:
@@ -1798,14 +1955,6 @@ func (c *SQS) SendMessageBatchRequest(input *SendMessageBatchInput) (req *reques
 // If you don't specify the DelaySeconds parameter for an entry, Amazon SQS
 // uses the default value for the queue.
 //
-// Some actions take lists of parameters. These lists are specified using the
-// param.n notation. Values of n are integers starting from 1. For example,
-// a parameter list with two elements looks like this:
-//
-// &AttributeName.1=first
-//
-// &AttributeName.2=second
-//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -1814,23 +1963,24 @@ func (c *SQS) SendMessageBatchRequest(input *SendMessageBatchInput) (req *reques
 // API operation SendMessageBatch for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeTooManyEntriesInBatchRequest "AWS.SimpleQueueService.TooManyEntriesInBatchRequest"
-//   The batch request contains more entries than permissible.
 //
-//   * ErrCodeEmptyBatchRequest "AWS.SimpleQueueService.EmptyBatchRequest"
-//   The batch request doesn't contain any entries.
+//   - ErrCodeTooManyEntriesInBatchRequest "AWS.SimpleQueueService.TooManyEntriesInBatchRequest"
+//     The batch request contains more entries than permissible.
 //
-//   * ErrCodeBatchEntryIdsNotDistinct "AWS.SimpleQueueService.BatchEntryIdsNotDistinct"
-//   Two or more batch entries in the request have the same Id.
+//   - ErrCodeEmptyBatchRequest "AWS.SimpleQueueService.EmptyBatchRequest"
+//     The batch request doesn't contain any entries.
 //
-//   * ErrCodeBatchRequestTooLong "AWS.SimpleQueueService.BatchRequestTooLong"
-//   The length of all the messages put together is more than the limit.
+//   - ErrCodeBatchEntryIdsNotDistinct "AWS.SimpleQueueService.BatchEntryIdsNotDistinct"
+//     Two or more batch entries in the request have the same Id.
 //
-//   * ErrCodeInvalidBatchEntryId "AWS.SimpleQueueService.InvalidBatchEntryId"
-//   The Id of a batch entry in a batch request doesn't abide by the specification.
+//   - ErrCodeBatchRequestTooLong "AWS.SimpleQueueService.BatchRequestTooLong"
+//     The length of all the messages put together is more than the limit.
 //
-//   * ErrCodeUnsupportedOperation "AWS.SimpleQueueService.UnsupportedOperation"
-//   Error code 400. Unsupported operation.
+//   - ErrCodeInvalidBatchEntryId "AWS.SimpleQueueService.InvalidBatchEntryId"
+//     The Id of a batch entry in a batch request doesn't abide by the specification.
+//
+//   - ErrCodeUnsupportedOperation "AWS.SimpleQueueService.UnsupportedOperation"
+//     Error code 400. Unsupported operation.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/SendMessageBatch
 func (c *SQS) SendMessageBatch(input *SendMessageBatchInput) (*SendMessageBatchOutput, error) {
@@ -1870,14 +2020,13 @@ const opSetQueueAttributes = "SetQueueAttributes"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the SetQueueAttributesRequest method.
+//	req, resp := client.SetQueueAttributesRequest(params)
 //
-//    // Example sending a request using the SetQueueAttributesRequest method.
-//    req, resp := client.SetQueueAttributesRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/SetQueueAttributes
 func (c *SQS) SetQueueAttributesRequest(input *SetQueueAttributesInput) (req *request.Request, output *SetQueueAttributesOutput) {
@@ -1902,19 +2051,21 @@ func (c *SQS) SetQueueAttributesRequest(input *SetQueueAttributesInput) (req *re
 // Sets the value of one or more queue attributes. When you change a queue's
 // attributes, the change can take up to 60 seconds for most of the attributes
 // to propagate throughout the Amazon SQS system. Changes made to the MessageRetentionPeriod
-// attribute can take up to 15 minutes.
+// attribute can take up to 15 minutes and will impact existing messages in
+// the queue potentially causing them to be expired and deleted if the MessageRetentionPeriod
+// is reduced below the age of existing messages.
 //
-//    * In the future, new attributes might be added. If you write code that
-//    calls this action, we recommend that you structure your code so that it
-//    can handle new attributes gracefully.
+//   - In the future, new attributes might be added. If you write code that
+//     calls this action, we recommend that you structure your code so that it
+//     can handle new attributes gracefully.
 //
-//    * Cross-account permissions don't apply to this action. For more information,
-//    see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
-//    in the Amazon SQS Developer Guide.
+//   - Cross-account permissions don't apply to this action. For more information,
+//     see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+//     in the Amazon SQS Developer Guide.
 //
-//    * To remove the ability to change queue permissions, you must deny permission
-//    to the AddPermission, RemovePermission, and SetQueueAttributes actions
-//    in your IAM policy.
+//   - To remove the ability to change queue permissions, you must deny permission
+//     to the AddPermission, RemovePermission, and SetQueueAttributes actions
+//     in your IAM policy.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1924,8 +2075,8 @@ func (c *SQS) SetQueueAttributesRequest(input *SetQueueAttributesInput) (req *re
 // API operation SetQueueAttributes for usage and error information.
 //
 // Returned Error Codes:
-//   * ErrCodeInvalidAttributeName "InvalidAttributeName"
-//   The specified attribute doesn't exist.
+//   - ErrCodeInvalidAttributeName "InvalidAttributeName"
+//     The specified attribute doesn't exist.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/SetQueueAttributes
 func (c *SQS) SetQueueAttributes(input *SetQueueAttributesInput) (*SetQueueAttributesOutput, error) {
@@ -1949,6 +2100,105 @@ func (c *SQS) SetQueueAttributesWithContext(ctx aws.Context, input *SetQueueAttr
 	return out, req.Send()
 }
 
+const opStartMessageMoveTask = "StartMessageMoveTask"
+
+// StartMessageMoveTaskRequest generates a "aws/request.Request" representing the
+// client's request for the StartMessageMoveTask operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See StartMessageMoveTask for more information on using the StartMessageMoveTask
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//	// Example sending a request using the StartMessageMoveTaskRequest method.
+//	req, resp := client.StartMessageMoveTaskRequest(params)
+//
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/StartMessageMoveTask
+func (c *SQS) StartMessageMoveTaskRequest(input *StartMessageMoveTaskInput) (req *request.Request, output *StartMessageMoveTaskOutput) {
+	op := &request.Operation{
+		Name:       opStartMessageMoveTask,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &StartMessageMoveTaskInput{}
+	}
+
+	output = &StartMessageMoveTaskOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// StartMessageMoveTask API operation for Amazon Simple Queue Service.
+//
+// Starts an asynchronous task to move messages from a specified source queue
+// to a specified destination queue.
+//
+//   - This action is currently limited to supporting message redrive from
+//     queues that are configured as dead-letter queues (DLQs) (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
+//     of other Amazon SQS queues only. Non-SQS queue sources of dead-letter
+//     queues, such as Lambda or Amazon SNS topics, are currently not supported.
+//
+//   - In dead-letter queues redrive context, the StartMessageMoveTask the
+//     source queue is the DLQ, while the destination queue can be the original
+//     source queue (from which the messages were driven to the dead-letter-queue),
+//     or a custom destination queue.
+//
+//   - Currently, only standard queues support redrive. FIFO queues don't support
+//     redrive.
+//
+//   - Only one active message movement task is supported per queue at any
+//     given time.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Simple Queue Service's
+// API operation StartMessageMoveTask for usage and error information.
+//
+// Returned Error Codes:
+//
+//   - ErrCodeResourceNotFoundException "ResourceNotFoundException"
+//     One or more specified resources don't exist.
+//
+//   - ErrCodeUnsupportedOperation "AWS.SimpleQueueService.UnsupportedOperation"
+//     Error code 400. Unsupported operation.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/StartMessageMoveTask
+func (c *SQS) StartMessageMoveTask(input *StartMessageMoveTaskInput) (*StartMessageMoveTaskOutput, error) {
+	req, out := c.StartMessageMoveTaskRequest(input)
+	return out, req.Send()
+}
+
+// StartMessageMoveTaskWithContext is the same as StartMessageMoveTask with the addition of
+// the ability to pass a context and additional request options.
+//
+// See StartMessageMoveTask for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *SQS) StartMessageMoveTaskWithContext(ctx aws.Context, input *StartMessageMoveTaskInput, opts ...request.Option) (*StartMessageMoveTaskOutput, error) {
+	req, out := c.StartMessageMoveTaskRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opTagQueue = "TagQueue"
 
 // TagQueueRequest generates a "aws/request.Request" representing the
@@ -1965,14 +2215,13 @@ const opTagQueue = "TagQueue"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the TagQueueRequest method.
+//	req, resp := client.TagQueueRequest(params)
 //
-//    // Example sending a request using the TagQueueRequest method.
-//    req, resp := client.TagQueueRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/TagQueue
 func (c *SQS) TagQueueRequest(input *TagQueueInput) (req *request.Request, output *TagQueueOutput) {
@@ -2000,21 +2249,21 @@ func (c *SQS) TagQueueRequest(input *TagQueueInput) (req *request.Request, outpu
 //
 // When you use queue tags, keep the following guidelines in mind:
 //
-//    * Adding more than 50 tags to a queue isn't recommended.
+//   - Adding more than 50 tags to a queue isn't recommended.
 //
-//    * Tags don't have any semantic meaning. Amazon SQS interprets tags as
-//    character strings.
+//   - Tags don't have any semantic meaning. Amazon SQS interprets tags as
+//     character strings.
 //
-//    * Tags are case-sensitive.
+//   - Tags are case-sensitive.
 //
-//    * A new tag with a key identical to that of an existing tag overwrites
-//    the existing tag.
+//   - A new tag with a key identical to that of an existing tag overwrites
+//     the existing tag.
 //
 // For a full list of tag restrictions, see Quotas related to queues (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-limits.html#limits-queues)
 // in the Amazon SQS Developer Guide.
 //
 // Cross-account permissions don't apply to this action. For more information,
-// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 // in the Amazon SQS Developer Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -2061,14 +2310,13 @@ const opUntagQueue = "UntagQueue"
 // This method is useful when you want to inject custom logic or configuration
 // into the SDK's request lifecycle. Such as custom headers, or retry logic.
 //
+//	// Example sending a request using the UntagQueueRequest method.
+//	req, resp := client.UntagQueueRequest(params)
 //
-//    // Example sending a request using the UntagQueueRequest method.
-//    req, resp := client.UntagQueueRequest(params)
-//
-//    err := req.Send()
-//    if err == nil { // resp is now filled
-//        fmt.Println(resp)
-//    }
+//	err := req.Send()
+//	if err == nil { // resp is now filled
+//	    fmt.Println(resp)
+//	}
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/sqs-2012-11-05/UntagQueue
 func (c *SQS) UntagQueueRequest(input *UntagQueueInput) (req *request.Request, output *UntagQueueOutput) {
@@ -2095,7 +2343,7 @@ func (c *SQS) UntagQueueRequest(input *UntagQueueInput) (req *request.Request, o
 // in the Amazon SQS Developer Guide.
 //
 // Cross-account permissions don't apply to this action. For more information,
-// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 // in the Amazon SQS Developer Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -2319,10 +2567,87 @@ func (s *BatchResultErrorEntry) SetSenderFault(v bool) *BatchResultErrorEntry {
 	return s
 }
 
+type CancelMessageMoveTaskInput struct {
+	_ struct{} `type:"structure"`
+
+	// An identifier associated with a message movement task.
+	//
+	// TaskHandle is a required field
+	TaskHandle *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CancelMessageMoveTaskInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CancelMessageMoveTaskInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CancelMessageMoveTaskInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CancelMessageMoveTaskInput"}
+	if s.TaskHandle == nil {
+		invalidParams.Add(request.NewErrParamRequired("TaskHandle"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetTaskHandle sets the TaskHandle field's value.
+func (s *CancelMessageMoveTaskInput) SetTaskHandle(v string) *CancelMessageMoveTaskInput {
+	s.TaskHandle = &v
+	return s
+}
+
+type CancelMessageMoveTaskOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The approximate number of messages already moved to the destination queue.
+	ApproximateNumberOfMessagesMoved *int64 `type:"long"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CancelMessageMoveTaskOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CancelMessageMoveTaskOutput) GoString() string {
+	return s.String()
+}
+
+// SetApproximateNumberOfMessagesMoved sets the ApproximateNumberOfMessagesMoved field's value.
+func (s *CancelMessageMoveTaskOutput) SetApproximateNumberOfMessagesMoved(v int64) *CancelMessageMoveTaskOutput {
+	s.ApproximateNumberOfMessagesMoved = &v
+	return s
+}
+
 type ChangeMessageVisibilityBatchInput struct {
 	_ struct{} `type:"structure"`
 
-	// A list of receipt handles of the messages for which the visibility timeout
+	// Lists the receipt handles of the messages for which the visibility timeout
 	// must be changed.
 	//
 	// Entries is a required field
@@ -2439,17 +2764,7 @@ func (s *ChangeMessageVisibilityBatchOutput) SetSuccessful(v []*ChangeMessageVis
 	return s
 }
 
-// Encloses a receipt handle and an entry id for each message in ChangeMessageVisibilityBatch.
-//
-// All of the following list parameters must be prefixed with ChangeMessageVisibilityBatchRequestEntry.n,
-// where n is an integer value starting with 1. For example, a parameter list
-// for this action might look like this:
-//
-// &ChangeMessageVisibilityBatchRequestEntry.1.Id=change_visibility_msg_2
-//
-// &ChangeMessageVisibilityBatchRequestEntry.1.ReceiptHandle=your_receipt_handle
-//
-// &ChangeMessageVisibilityBatchRequestEntry.1.VisibilityTimeout=45
+// Encloses a receipt handle and an entry ID for each message in ChangeMessageVisibilityBatch.
 type ChangeMessageVisibilityBatchRequestEntry struct {
 	_ struct{} `type:"structure"`
 
@@ -2569,8 +2884,8 @@ type ChangeMessageVisibilityInput struct {
 	// QueueUrl is a required field
 	QueueUrl *string `type:"string" required:"true"`
 
-	// The receipt handle associated with the message whose visibility timeout is
-	// changed. This parameter is returned by the ReceiveMessage action.
+	// The receipt handle associated with the message, whose visibility timeout
+	// is changed. This parameter is returned by the ReceiveMessage action.
 	//
 	// ReceiptHandle is a required field
 	ReceiptHandle *string `type:"string" required:"true"`
@@ -2678,35 +2993,59 @@ type CreateQueueInput struct {
 	//    * MessageRetentionPeriod – The length of time, in seconds, for which
 	//    Amazon SQS retains a message. Valid values: An integer from 60 seconds
 	//    (1 minute) to 1,209,600 seconds (14 days). Default: 345,600 (4 days).
+	//    When you change a queue's attributes, the change can take up to 60 seconds
+	//    for most of the attributes to propagate throughout the Amazon SQS system.
+	//    Changes made to the MessageRetentionPeriod attribute can take up to 15
+	//    minutes and will impact existing messages in the queue potentially causing
+	//    them to be expired and deleted if the MessageRetentionPeriod is reduced
+	//    below the age of existing messages.
 	//
 	//    * Policy – The queue's policy. A valid Amazon Web Services policy. For
 	//    more information about policy structure, see Overview of Amazon Web Services
 	//    IAM Policies (https://docs.aws.amazon.com/IAM/latest/UserGuide/PoliciesOverview.html)
-	//    in the Amazon IAM User Guide.
+	//    in the IAM User Guide.
 	//
 	//    * ReceiveMessageWaitTimeSeconds – The length of time, in seconds, for
 	//    which a ReceiveMessage action waits for a message to arrive. Valid values:
 	//    An integer from 0 to 20 (seconds). Default: 0.
-	//
-	//    * RedrivePolicy – The string that includes the parameters for the dead-letter
-	//    queue functionality of the source queue as a JSON object. For more information
-	//    about the redrive policy and dead-letter queues, see Using Amazon SQS
-	//    Dead-Letter Queues (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
-	//    in the Amazon SQS Developer Guide. deadLetterTargetArn – The Amazon
-	//    Resource Name (ARN) of the dead-letter queue to which Amazon SQS moves
-	//    messages after the value of maxReceiveCount is exceeded. maxReceiveCount
-	//    – The number of times a message is delivered to the source queue before
-	//    being moved to the dead-letter queue. When the ReceiveCount for a message
-	//    exceeds the maxReceiveCount for a queue, Amazon SQS moves the message
-	//    to the dead-letter-queue. The dead-letter queue of a FIFO queue must also
-	//    be a FIFO queue. Similarly, the dead-letter queue of a standard queue
-	//    must also be a standard queue.
 	//
 	//    * VisibilityTimeout – The visibility timeout for the queue, in seconds.
 	//    Valid values: An integer from 0 to 43,200 (12 hours). Default: 30. For
 	//    more information about the visibility timeout, see Visibility Timeout
 	//    (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)
 	//    in the Amazon SQS Developer Guide.
+	//
+	// The following attributes apply only to dead-letter queues: (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
+	//
+	//    * RedrivePolicy – The string that includes the parameters for the dead-letter
+	//    queue functionality of the source queue as a JSON object. The parameters
+	//    are as follows: deadLetterTargetArn – The Amazon Resource Name (ARN)
+	//    of the dead-letter queue to which Amazon SQS moves messages after the
+	//    value of maxReceiveCount is exceeded. maxReceiveCount – The number of
+	//    times a message is delivered to the source queue before being moved to
+	//    the dead-letter queue. Default: 10. When the ReceiveCount for a message
+	//    exceeds the maxReceiveCount for a queue, Amazon SQS moves the message
+	//    to the dead-letter-queue.
+	//
+	//    * RedriveAllowPolicy – The string that includes the parameters for the
+	//    permissions for the dead-letter queue redrive permission and which source
+	//    queues can specify dead-letter queues as a JSON object. The parameters
+	//    are as follows: redrivePermission – The permission type that defines
+	//    which source queues can specify the current queue as the dead-letter queue.
+	//    Valid values are: allowAll – (Default) Any source queues in this Amazon
+	//    Web Services account in the same Region can specify this queue as the
+	//    dead-letter queue. denyAll – No source queues can specify this queue
+	//    as the dead-letter queue. byQueue – Only queues specified by the sourceQueueArns
+	//    parameter can specify this queue as the dead-letter queue. sourceQueueArns
+	//    – The Amazon Resource Names (ARN)s of the source queues that can specify
+	//    this queue as the dead-letter queue and redrive messages. You can specify
+	//    this parameter only when the redrivePermission parameter is set to byQueue.
+	//    You can specify up to 10 source queue ARNs. To allow more than 10 source
+	//    queues to specify dead-letter queues, set the redrivePermission parameter
+	//    to allowAll.
+	//
+	// The dead-letter queue of a FIFO queue must also be a FIFO queue. Similarly,
+	// the dead-letter queue of a standard queue must also be a standard queue.
 	//
 	// The following attributes apply only to server-side-encryption (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html):
 	//
@@ -2725,11 +3064,11 @@ type CreateQueueInput struct {
 	//    Default: 300 (5 minutes). A shorter time period provides better security
 	//    but results in more calls to KMS which might incur charges after Free
 	//    Tier. For more information, see How Does the Data Key Reuse Period Work?
-	//    (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html#sqs-how-does-the-data-key-reuse-period-work).
+	//    (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html#sqs-how-does-the-data-key-reuse-period-work)
 	//
 	//    * SqsManagedSseEnabled – Enables server-side queue encryption using
 	//    SQS owned encryption keys. Only one server-side encryption option is supported
-	//    per queue (e.g. SSE-KMS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
+	//    per queue (for example, SSE-KMS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
 	//    or SSE-SQS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sqs-sse-queue.html)).
 	//
 	// The following attributes apply only to FIFO (first-in-first-out) queues (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html):
@@ -2823,7 +3162,7 @@ type CreateQueueInput struct {
 	// and sqs:TagQueue permissions.
 	//
 	// Cross-account permissions don't apply to this action. For more information,
-	// see Grant cross-account permissions to a role and a user name (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
+	// see Grant cross-account permissions to a role and a username (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-customer-managed-policy-examples.html#grant-cross-account-permissions-to-role-and-user-name)
 	// in the Amazon SQS Developer Guide.
 	Tags map[string]*string `locationName:"Tag" locationNameKey:"Key" locationNameValue:"Value" type:"map" flattened:"true"`
 }
@@ -2912,7 +3251,7 @@ func (s *CreateQueueOutput) SetQueueUrl(v string) *CreateQueueOutput {
 type DeleteMessageBatchInput struct {
 	_ struct{} `type:"structure"`
 
-	// A list of receipt handles for the messages to be deleted.
+	// Lists the receipt handles for the messages to be deleted.
 	//
 	// Entries is a required field
 	Entries []*DeleteMessageBatchRequestEntry `locationNameList:"DeleteMessageBatchRequestEntry" type:"list" flattened:"true" required:"true"`
@@ -3032,7 +3371,7 @@ func (s *DeleteMessageBatchOutput) SetSuccessful(v []*DeleteMessageBatchResultEn
 type DeleteMessageBatchRequestEntry struct {
 	_ struct{} `type:"structure"`
 
-	// An identifier for this particular receipt handle. This is used to communicate
+	// The identifier for this particular receipt handle. This is used to communicate
 	// the result.
 	//
 	// The Ids of a batch request need to be unique within a request.
@@ -3288,7 +3627,7 @@ type GetQueueAttributesInput struct {
 
 	// A list of attributes for which to retrieve information.
 	//
-	// The AttributeName.N parameter is optional, but if you don't specify values
+	// The AttributeNames parameter is optional, but if you don't specify values
 	// for this parameter, the request returns empty results.
 	//
 	// In the future, new attributes might be added. If you write code that calls
@@ -3298,8 +3637,8 @@ type GetQueueAttributesInput struct {
 	// The following attributes are supported:
 	//
 	// The ApproximateNumberOfMessagesDelayed, ApproximateNumberOfMessagesNotVisible,
-	// and ApproximateNumberOfMessagesVisible metrics may not achieve consistency
-	// until at least 1 minute after the producers stop sending messages. This period
+	// and ApproximateNumberOfMessages metrics may not achieve consistency until
+	// at least 1 minute after the producers stop sending messages. This period
 	// is required for the queue metadata to reach eventual consistency.
 	//
 	//    * All – Returns all values.
@@ -3329,7 +3668,12 @@ type GetQueueAttributesInput struct {
 	//    can contain before Amazon SQS rejects it.
 	//
 	//    * MessageRetentionPeriod – Returns the length of time, in seconds, for
-	//    which Amazon SQS retains a message.
+	//    which Amazon SQS retains a message. When you change a queue's attributes,
+	//    the change can take up to 60 seconds for most of the attributes to propagate
+	//    throughout the Amazon SQS system. Changes made to the MessageRetentionPeriod
+	//    attribute can take up to 15 minutes and will impact existing messages
+	//    in the queue potentially causing them to be expired and deleted if the
+	//    MessageRetentionPeriod is reduced below the age of existing messages.
 	//
 	//    * Policy – Returns the policy of the queue.
 	//
@@ -3338,22 +3682,42 @@ type GetQueueAttributesInput struct {
 	//    * ReceiveMessageWaitTimeSeconds – Returns the length of time, in seconds,
 	//    for which the ReceiveMessage action waits for a message to arrive.
 	//
-	//    * RedrivePolicy – The string that includes the parameters for the dead-letter
-	//    queue functionality of the source queue as a JSON object. For more information
-	//    about the redrive policy and dead-letter queues, see Using Amazon SQS
-	//    Dead-Letter Queues (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
-	//    in the Amazon SQS Developer Guide. deadLetterTargetArn – The Amazon
-	//    Resource Name (ARN) of the dead-letter queue to which Amazon SQS moves
-	//    messages after the value of maxReceiveCount is exceeded. maxReceiveCount
-	//    – The number of times a message is delivered to the source queue before
-	//    being moved to the dead-letter queue. When the ReceiveCount for a message
-	//    exceeds the maxReceiveCount for a queue, Amazon SQS moves the message
-	//    to the dead-letter-queue.
-	//
 	//    * VisibilityTimeout – Returns the visibility timeout for the queue.
 	//    For more information about the visibility timeout, see Visibility Timeout
 	//    (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)
 	//    in the Amazon SQS Developer Guide.
+	//
+	// The following attributes apply only to dead-letter queues: (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
+	//
+	//    * RedrivePolicy – The string that includes the parameters for the dead-letter
+	//    queue functionality of the source queue as a JSON object. The parameters
+	//    are as follows: deadLetterTargetArn – The Amazon Resource Name (ARN)
+	//    of the dead-letter queue to which Amazon SQS moves messages after the
+	//    value of maxReceiveCount is exceeded. maxReceiveCount – The number of
+	//    times a message is delivered to the source queue before being moved to
+	//    the dead-letter queue. Default: 10. When the ReceiveCount for a message
+	//    exceeds the maxReceiveCount for a queue, Amazon SQS moves the message
+	//    to the dead-letter-queue.
+	//
+	//    * RedriveAllowPolicy – The string that includes the parameters for the
+	//    permissions for the dead-letter queue redrive permission and which source
+	//    queues can specify dead-letter queues as a JSON object. The parameters
+	//    are as follows: redrivePermission – The permission type that defines
+	//    which source queues can specify the current queue as the dead-letter queue.
+	//    Valid values are: allowAll – (Default) Any source queues in this Amazon
+	//    Web Services account in the same Region can specify this queue as the
+	//    dead-letter queue. denyAll – No source queues can specify this queue
+	//    as the dead-letter queue. byQueue – Only queues specified by the sourceQueueArns
+	//    parameter can specify this queue as the dead-letter queue. sourceQueueArns
+	//    – The Amazon Resource Names (ARN)s of the source queues that can specify
+	//    this queue as the dead-letter queue and redrive messages. You can specify
+	//    this parameter only when the redrivePermission parameter is set to byQueue.
+	//    You can specify up to 10 source queue ARNs. To allow more than 10 source
+	//    queues to specify dead-letter queues, set the redrivePermission parameter
+	//    to allowAll.
+	//
+	// The dead-letter queue of a FIFO queue must also be a FIFO queue. Similarly,
+	// the dead-letter queue of a standard queue must also be a standard queue.
 	//
 	// The following attributes apply only to server-side-encryption (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html):
 	//
@@ -3368,7 +3732,8 @@ type GetQueueAttributesInput struct {
 	//
 	//    * SqsManagedSseEnabled – Returns information about whether the queue
 	//    is using SSE-SQS encryption using SQS owned encryption keys. Only one
-	//    server-side encryption option is supported per queue (e.g. SSE-KMS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
+	//    server-side encryption option is supported per queue (for example, SSE-KMS
+	//    (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
 	//    or SSE-SQS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sqs-sse-queue.html)).
 	//
 	// The following attributes apply only to FIFO (first-in-first-out) queues (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/FIFO-queues.html):
@@ -3696,6 +4061,207 @@ func (s *ListDeadLetterSourceQueuesOutput) SetQueueUrls(v []*string) *ListDeadLe
 	return s
 }
 
+type ListMessageMoveTasksInput struct {
+	_ struct{} `type:"structure"`
+
+	// The maximum number of results to include in the response. The default is
+	// 1, which provides the most recent message movement task. The upper limit
+	// is 10.
+	MaxResults *int64 `type:"integer"`
+
+	// The ARN of the queue whose message movement tasks are to be listed.
+	//
+	// SourceArn is a required field
+	SourceArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListMessageMoveTasksInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListMessageMoveTasksInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListMessageMoveTasksInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListMessageMoveTasksInput"}
+	if s.SourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("SourceArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListMessageMoveTasksInput) SetMaxResults(v int64) *ListMessageMoveTasksInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetSourceArn sets the SourceArn field's value.
+func (s *ListMessageMoveTasksInput) SetSourceArn(v string) *ListMessageMoveTasksInput {
+	s.SourceArn = &v
+	return s
+}
+
+type ListMessageMoveTasksOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A list of message movement tasks and their attributes.
+	Results []*ListMessageMoveTasksResultEntry `locationNameList:"ListMessageMoveTasksResultEntry" type:"list" flattened:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListMessageMoveTasksOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListMessageMoveTasksOutput) GoString() string {
+	return s.String()
+}
+
+// SetResults sets the Results field's value.
+func (s *ListMessageMoveTasksOutput) SetResults(v []*ListMessageMoveTasksResultEntry) *ListMessageMoveTasksOutput {
+	s.Results = v
+	return s
+}
+
+// Contains the details of a message movement task.
+type ListMessageMoveTasksResultEntry struct {
+	_ struct{} `type:"structure"`
+
+	// The approximate number of messages already moved to the destination queue.
+	ApproximateNumberOfMessagesMoved *int64 `type:"long"`
+
+	// The number of messages to be moved from the source queue. This number is
+	// obtained at the time of starting the message movement task.
+	ApproximateNumberOfMessagesToMove *int64 `type:"long"`
+
+	// The ARN of the destination queue if it has been specified in the StartMessageMoveTask
+	// request. If a DestinationArn has not been specified in the StartMessageMoveTask
+	// request, this field value will be NULL.
+	DestinationArn *string `type:"string"`
+
+	// The task failure reason (only included if the task status is FAILED).
+	FailureReason *string `type:"string"`
+
+	// The number of messages to be moved per second (the message movement rate),
+	// if it has been specified in the StartMessageMoveTask request. If a MaxNumberOfMessagesPerSecond
+	// has not been specified in the StartMessageMoveTask request, this field value
+	// will be NULL.
+	MaxNumberOfMessagesPerSecond *int64 `type:"integer"`
+
+	// The ARN of the queue that contains the messages to be moved to another queue.
+	SourceArn *string `type:"string"`
+
+	// The timestamp of starting the message movement task.
+	StartedTimestamp *int64 `type:"long"`
+
+	// The status of the message movement task. Possible values are: RUNNING, COMPLETED,
+	// CANCELLING, CANCELLED, and FAILED.
+	Status *string `type:"string"`
+
+	// An identifier associated with a message movement task. When this field is
+	// returned in the response of the ListMessageMoveTasks action, it is only populated
+	// for tasks that are in RUNNING status.
+	TaskHandle *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListMessageMoveTasksResultEntry) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListMessageMoveTasksResultEntry) GoString() string {
+	return s.String()
+}
+
+// SetApproximateNumberOfMessagesMoved sets the ApproximateNumberOfMessagesMoved field's value.
+func (s *ListMessageMoveTasksResultEntry) SetApproximateNumberOfMessagesMoved(v int64) *ListMessageMoveTasksResultEntry {
+	s.ApproximateNumberOfMessagesMoved = &v
+	return s
+}
+
+// SetApproximateNumberOfMessagesToMove sets the ApproximateNumberOfMessagesToMove field's value.
+func (s *ListMessageMoveTasksResultEntry) SetApproximateNumberOfMessagesToMove(v int64) *ListMessageMoveTasksResultEntry {
+	s.ApproximateNumberOfMessagesToMove = &v
+	return s
+}
+
+// SetDestinationArn sets the DestinationArn field's value.
+func (s *ListMessageMoveTasksResultEntry) SetDestinationArn(v string) *ListMessageMoveTasksResultEntry {
+	s.DestinationArn = &v
+	return s
+}
+
+// SetFailureReason sets the FailureReason field's value.
+func (s *ListMessageMoveTasksResultEntry) SetFailureReason(v string) *ListMessageMoveTasksResultEntry {
+	s.FailureReason = &v
+	return s
+}
+
+// SetMaxNumberOfMessagesPerSecond sets the MaxNumberOfMessagesPerSecond field's value.
+func (s *ListMessageMoveTasksResultEntry) SetMaxNumberOfMessagesPerSecond(v int64) *ListMessageMoveTasksResultEntry {
+	s.MaxNumberOfMessagesPerSecond = &v
+	return s
+}
+
+// SetSourceArn sets the SourceArn field's value.
+func (s *ListMessageMoveTasksResultEntry) SetSourceArn(v string) *ListMessageMoveTasksResultEntry {
+	s.SourceArn = &v
+	return s
+}
+
+// SetStartedTimestamp sets the StartedTimestamp field's value.
+func (s *ListMessageMoveTasksResultEntry) SetStartedTimestamp(v int64) *ListMessageMoveTasksResultEntry {
+	s.StartedTimestamp = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *ListMessageMoveTasksResultEntry) SetStatus(v string) *ListMessageMoveTasksResultEntry {
+	s.Status = &v
+	return s
+}
+
+// SetTaskHandle sets the TaskHandle field's value.
+func (s *ListMessageMoveTasksResultEntry) SetTaskHandle(v string) *ListMessageMoveTasksResultEntry {
+	s.TaskHandle = &v
+	return s
+}
+
 type ListQueueTagsInput struct {
 	_ struct{} `type:"structure"`
 
@@ -3989,7 +4555,7 @@ func (s *Message) SetReceiptHandle(v string) *Message {
 //
 // Name, type, value and the message body must not be empty or null. All parts
 // of the message attribute, including Name, Type, and Value, are part of the
-// message size restriction (256 KB or 262,144 bytes).
+// message size restriction (256 KiB or 262,144 bytes).
 type MessageAttributeValue struct {
 	_ struct{} `type:"structure"`
 
@@ -4262,7 +4828,7 @@ type ReceiveMessageInput struct {
 	//
 	//    * AWSTraceHeader – Returns the X-Ray trace header string.
 	//
-	//    * SenderId For an IAM user, returns the IAM user ID, for example ABCDEFGHI1JKLMNOPQ23R.
+	//    * SenderId For a user, returns the user ID, for example ABCDEFGHI1JKLMNOPQ23R.
 	//    For an IAM role, returns the IAM role ID, for example ABCDE1F2GH3I4JK5LMNOP:i-a123b456.
 	//
 	//    * SentTimestamp – Returns the time the message was sent to the queue
@@ -4270,7 +4836,7 @@ type ReceiveMessageInput struct {
 	//
 	//    * SqsManagedSseEnabled – Enables server-side queue encryption using
 	//    SQS owned encryption keys. Only one server-side encryption option is supported
-	//    per queue (e.g. SSE-KMS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
+	//    per queue (for example, SSE-KMS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
 	//    or SSE-SQS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sqs-sse-queue.html)).
 	//
 	//    * MessageDeduplicationId – Returns the value provided by the producer
@@ -5024,7 +5590,7 @@ type SendMessageInput struct {
 	MessageAttributes map[string]*MessageAttributeValue `locationName:"MessageAttribute" locationNameKey:"Name" locationNameValue:"Value" type:"map" flattened:"true"`
 
 	// The message to send. The minimum size is one character. The maximum size
-	// is 256 KB.
+	// is 256 KiB.
 	//
 	// A message can include only XML, JSON, and unformatted text. The following
 	// Unicode characters are allowed:
@@ -5327,6 +5893,12 @@ type SetQueueAttributesInput struct {
 	//    * MessageRetentionPeriod – The length of time, in seconds, for which
 	//    Amazon SQS retains a message. Valid values: An integer representing seconds,
 	//    from 60 (1 minute) to 1,209,600 (14 days). Default: 345,600 (4 days).
+	//    When you change a queue's attributes, the change can take up to 60 seconds
+	//    for most of the attributes to propagate throughout the Amazon SQS system.
+	//    Changes made to the MessageRetentionPeriod attribute can take up to 15
+	//    minutes and will impact existing messages in the queue potentially causing
+	//    them to be expired and deleted if the MessageRetentionPeriod is reduced
+	//    below the age of existing messages.
 	//
 	//    * Policy – The queue's policy. A valid Amazon Web Services policy. For
 	//    more information about policy structure, see Overview of Amazon Web Services
@@ -5337,25 +5909,43 @@ type SetQueueAttributesInput struct {
 	//    which a ReceiveMessage action waits for a message to arrive. Valid values:
 	//    An integer from 0 to 20 (seconds). Default: 0.
 	//
-	//    * RedrivePolicy – The string that includes the parameters for the dead-letter
-	//    queue functionality of the source queue as a JSON object. For more information
-	//    about the redrive policy and dead-letter queues, see Using Amazon SQS
-	//    Dead-Letter Queues (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
-	//    in the Amazon SQS Developer Guide. deadLetterTargetArn – The Amazon
-	//    Resource Name (ARN) of the dead-letter queue to which Amazon SQS moves
-	//    messages after the value of maxReceiveCount is exceeded. maxReceiveCount
-	//    – The number of times a message is delivered to the source queue before
-	//    being moved to the dead-letter queue. When the ReceiveCount for a message
-	//    exceeds the maxReceiveCount for a queue, Amazon SQS moves the message
-	//    to the dead-letter-queue. The dead-letter queue of a FIFO queue must also
-	//    be a FIFO queue. Similarly, the dead-letter queue of a standard queue
-	//    must also be a standard queue.
-	//
 	//    * VisibilityTimeout – The visibility timeout for the queue, in seconds.
 	//    Valid values: An integer from 0 to 43,200 (12 hours). Default: 30. For
 	//    more information about the visibility timeout, see Visibility Timeout
 	//    (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html)
 	//    in the Amazon SQS Developer Guide.
+	//
+	// The following attributes apply only to dead-letter queues: (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html)
+	//
+	//    * RedrivePolicy – The string that includes the parameters for the dead-letter
+	//    queue functionality of the source queue as a JSON object. The parameters
+	//    are as follows: deadLetterTargetArn – The Amazon Resource Name (ARN)
+	//    of the dead-letter queue to which Amazon SQS moves messages after the
+	//    value of maxReceiveCount is exceeded. maxReceiveCount – The number of
+	//    times a message is delivered to the source queue before being moved to
+	//    the dead-letter queue. Default: 10. When the ReceiveCount for a message
+	//    exceeds the maxReceiveCount for a queue, Amazon SQS moves the message
+	//    to the dead-letter-queue.
+	//
+	//    * RedriveAllowPolicy – The string that includes the parameters for the
+	//    permissions for the dead-letter queue redrive permission and which source
+	//    queues can specify dead-letter queues as a JSON object. The parameters
+	//    are as follows: redrivePermission – The permission type that defines
+	//    which source queues can specify the current queue as the dead-letter queue.
+	//    Valid values are: allowAll – (Default) Any source queues in this Amazon
+	//    Web Services account in the same Region can specify this queue as the
+	//    dead-letter queue. denyAll – No source queues can specify this queue
+	//    as the dead-letter queue. byQueue – Only queues specified by the sourceQueueArns
+	//    parameter can specify this queue as the dead-letter queue. sourceQueueArns
+	//    – The Amazon Resource Names (ARN)s of the source queues that can specify
+	//    this queue as the dead-letter queue and redrive messages. You can specify
+	//    this parameter only when the redrivePermission parameter is set to byQueue.
+	//    You can specify up to 10 source queue ARNs. To allow more than 10 source
+	//    queues to specify dead-letter queues, set the redrivePermission parameter
+	//    to allowAll.
+	//
+	// The dead-letter queue of a FIFO queue must also be a FIFO queue. Similarly,
+	// the dead-letter queue of a standard queue must also be a standard queue.
 	//
 	// The following attributes apply only to server-side-encryption (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-server-side-encryption.html):
 	//
@@ -5378,7 +5968,7 @@ type SetQueueAttributesInput struct {
 	//
 	//    * SqsManagedSseEnabled – Enables server-side queue encryption using
 	//    SQS owned encryption keys. Only one server-side encryption option is supported
-	//    per queue (e.g. SSE-KMS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
+	//    per queue (for example, SSE-KMS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sse-existing-queue.html)
 	//    or SSE-SQS (https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-configure-sqs-sse-queue.html)).
 	//
 	// The following attribute applies only to FIFO (first-in-first-out) queues
@@ -5503,6 +6093,113 @@ func (s SetQueueAttributesOutput) String() string {
 // value will be replaced with "sensitive".
 func (s SetQueueAttributesOutput) GoString() string {
 	return s.String()
+}
+
+type StartMessageMoveTaskInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the queue that receives the moved messages. You can use this field
+	// to specify the destination queue where you would like to redrive messages.
+	// If this field is left blank, the messages will be redriven back to their
+	// respective original source queues.
+	DestinationArn *string `type:"string"`
+
+	// The number of messages to be moved per second (the message movement rate).
+	// You can use this field to define a fixed message movement rate. The maximum
+	// value for messages per second is 500. If this field is left blank, the system
+	// will optimize the rate based on the queue message backlog size, which may
+	// vary throughout the duration of the message movement task.
+	MaxNumberOfMessagesPerSecond *int64 `type:"integer"`
+
+	// The ARN of the queue that contains the messages to be moved to another queue.
+	// Currently, only ARNs of dead-letter queues (DLQs) whose sources are other
+	// Amazon SQS queues are accepted. DLQs whose sources are non-SQS queues, such
+	// as Lambda or Amazon SNS topics, are not currently supported.
+	//
+	// SourceArn is a required field
+	SourceArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartMessageMoveTaskInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartMessageMoveTaskInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StartMessageMoveTaskInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StartMessageMoveTaskInput"}
+	if s.SourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("SourceArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestinationArn sets the DestinationArn field's value.
+func (s *StartMessageMoveTaskInput) SetDestinationArn(v string) *StartMessageMoveTaskInput {
+	s.DestinationArn = &v
+	return s
+}
+
+// SetMaxNumberOfMessagesPerSecond sets the MaxNumberOfMessagesPerSecond field's value.
+func (s *StartMessageMoveTaskInput) SetMaxNumberOfMessagesPerSecond(v int64) *StartMessageMoveTaskInput {
+	s.MaxNumberOfMessagesPerSecond = &v
+	return s
+}
+
+// SetSourceArn sets the SourceArn field's value.
+func (s *StartMessageMoveTaskInput) SetSourceArn(v string) *StartMessageMoveTaskInput {
+	s.SourceArn = &v
+	return s
+}
+
+type StartMessageMoveTaskOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An identifier associated with a message movement task. You can use this identifier
+	// to cancel a specified message movement task using the CancelMessageMoveTask
+	// action.
+	TaskHandle *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartMessageMoveTaskOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartMessageMoveTaskOutput) GoString() string {
+	return s.String()
+}
+
+// SetTaskHandle sets the TaskHandle field's value.
+func (s *StartMessageMoveTaskOutput) SetTaskHandle(v string) *StartMessageMoveTaskOutput {
+	s.TaskHandle = &v
+	return s
 }
 
 type TagQueueInput struct {
@@ -5693,6 +6390,9 @@ const (
 
 	// MessageSystemAttributeNameAwstraceHeader is a MessageSystemAttributeName enum value
 	MessageSystemAttributeNameAwstraceHeader = "AWSTraceHeader"
+
+	// MessageSystemAttributeNameDeadLetterQueueSourceArn is a MessageSystemAttributeName enum value
+	MessageSystemAttributeNameDeadLetterQueueSourceArn = "DeadLetterQueueSourceArn"
 )
 
 // MessageSystemAttributeName_Values returns all elements of the MessageSystemAttributeName enum
@@ -5706,6 +6406,7 @@ func MessageSystemAttributeName_Values() []string {
 		MessageSystemAttributeNameMessageDeduplicationId,
 		MessageSystemAttributeNameMessageGroupId,
 		MessageSystemAttributeNameAwstraceHeader,
+		MessageSystemAttributeNameDeadLetterQueueSourceArn,
 	}
 }
 
