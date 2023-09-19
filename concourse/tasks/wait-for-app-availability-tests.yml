@@ -13,7 +13,7 @@ image_resource:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/cf-cli
-    tag: acff07cc3f0d4f478f54a7dedd40d47c90ad62f7
+    tag: b5568301ae03da8220c5ea2f907088dfa38e963d
 run:
   path: sh
   args:

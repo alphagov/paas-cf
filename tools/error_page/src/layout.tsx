@@ -42,6 +42,7 @@ export async function render(content: ReactElement, config: renderConfig): Promi
       <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
       <meta name="theme-color" content="${cfg.themeColor}" />
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="for-acceptance-tests" content="{{ .Status }} {{ .StatusText }}" />
       <!--[if !IE 8]><!-->
         <style media="screen">${cssScreen.css}</style>
         <style media="print">${cssPrint.css}</style>
