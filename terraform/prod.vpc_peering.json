@@ -10,20 +10,44 @@
         "account_id": "302763885840",
         "vpc_id": "vpc-041c16b2b4cbb93bd",
         "subnet_cidr": "10.201.0.0/16",
-        "backing_service_routing": true
+        "backing_service_routing": true,
+        "bindings": [
+            {
+                "org_name": "govuk-notify",
+                "spaces": [
+                    "preview"
+                ]
+            }
+        ]
     },
     {
         "peer_name": "notify-staging",
         "account_id": "608850477283",
         "vpc_id": "vpc-0d11704be8c6202d5",
         "subnet_cidr": "10.202.0.0/16",
-        "backing_service_routing": true
+        "backing_service_routing": true,
+        "bindings": [
+            {
+                "org_name": "govuk-notify",
+                "spaces": [
+                    "staging"
+                ]
+            }
+        ]
     },
     {
         "peer_name": "notify-production",
         "account_id": "888450439860",
         "vpc_id": "vpc-02646a06ea82ddc8a",
         "subnet_cidr": "10.203.0.0/16",
-        "backing_service_routing": true
+        "backing_service_routing": true,
+        "bindings": [
+            {
+                "org_name": "govuk-notify",
+                "spaces": [
+                    "production"
+                ]
+            }
+        ]
     }
 ]
