@@ -5217,9 +5217,9 @@ jobs:
                 cf target -o admin -s billing
 
                 if grep -q '^(prod\|prod-lon\|stg-lon)$' <<< "$DEPLOY_ENV"; then
-                  plan="small-11"
+                  plan="small-13"
                 else
-                  plan="tiny-unencrypted-11"
+                  plan="tiny-unencrypted-13"
                 fi
 
                 if cf service auditor-db --guid; then
@@ -5232,6 +5232,8 @@ jobs:
                   echo "Waiting for create/update of service to complete..."
                   sleep 30
                 done
+                # for display
+                cf service auditor-db
 
                 cf push paas-auditor -f manifest.yml \
                   --var cf_client_id="$CF_CLIENT_ID" \
