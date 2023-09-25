@@ -6,8 +6,8 @@ resource "aws_lb" "cf_brokers" {
   subnets            = split(",", var.infra_subnet_ids)
 
   access_logs {
-    bucket  = aws_s3_bucket.elb_access_log.id
-    prefix  = "cf-brokers"
+    bucket  = data.aws_s3_bucket.account_region_wide_alb_access_logs.id
+    prefix  = "${var.env}/cf-brokers"
     enabled = true
   }
 }
@@ -247,4 +247,3 @@ resource "aws_lb_target_group" "cf_elasticache_broker" {
 output "cf_elasticache_broker_target_group_name" {
   value = aws_lb_target_group.cf_elasticache_broker.name
 }
-

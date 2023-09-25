@@ -290,3 +290,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "elb_access_log" {
     }
   }
 }
+
+data "aws_s3_bucket" "account_region_wide_alb_access_logs" {
+  bucket = "gds-paas-${var.aws_account}-account-wide-alb-access-logs-${var.region}"
+}
