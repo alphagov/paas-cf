@@ -108,7 +108,7 @@
             "uid": "P1809F7CD0C75ACF3"
           },
           "editorMode": "code",
-          "expr": "sum(cf_application_info{environment=\"$environment\",deployment=\"$bosh_deployment\",stack_id=\"$stack_id\", organization_name!~\"$test_orgs_nre\",state!~\"$stopped_apps_nre\"}) by (organization_id, organization_name)",
+          "expr": "sum(cf_application_info{detected_buildpack!=\"\",environment=\"$environment\",deployment=\"$bosh_deployment\",stack_id=\"$stack_id\", organization_name!~\"$test_orgs_nre\",state!~\"$stopped_apps_nre\"}) by (organization_id, organization_name)",
           "legendFormat": "{{organization_name}}",
           "range": true,
           "refId": "A"
