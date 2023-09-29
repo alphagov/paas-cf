@@ -3,6 +3,11 @@ variable "admin_cidrs" {
   description = "List of CIDR addresses with access to operator/admin endpoints"
 
   default = [
+    "217.196.229.80/32", # GDS BYOD VPN (Sep 2023)
+    "217.196.229.81/32",
+    "217.196.229.77/32", # GovWifi (Sep 2023)
+    "217.196.229.79/32", # Brattain (Sep 2023)
+    # Remove after 1 Oct 2023
     "213.86.153.211/32", # New BYOD VPN IP
     "213.86.153.212/32",
     "213.86.153.213/32",
@@ -11,8 +16,9 @@ variable "admin_cidrs" {
     "213.86.153.235/32",
     "213.86.153.236/32",
     "213.86.153.237/32",
-    "51.149.8.0/25",     # New DR VPN
-    "51.149.8.128/29",   # New DR BYOD VPN
+    "51.149.8.0/25",   # New DR VPN
+    "51.149.8.128/29", # New DR BYOD VPN
+    # Don't remove
     "90.155.48.192/26",  # ITHC 2023
     "81.2.127.144/28",   # ITHC 2023
     "81.187.169.170/32", # ITHC 2023
