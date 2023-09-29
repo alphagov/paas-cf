@@ -3095,6 +3095,7 @@ jobs:
             CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
             CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
             DEPLOY_ENV: ((deploy_env))
+            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password)) 
           run:
             path: sh
             args:
@@ -3170,7 +3171,8 @@ jobs:
                 credhub set --name="${PIPELINE_NS}/paas_admin_prometheus_password" --type password --password "${PAAS_ADMIN_PROMETHEUS_PASSWORD}"
                 credhub set --name="${PIPELINE_NS}/paas_prometheus_endpoints_aws_access_key_id" --type password --password "${PAAS_PROMETHEUS_ENDPOINTS_AWS_ACCESS_KEY_ID}"
                 credhub set --name="${PIPELINE_NS}/paas_prometheus_endpoints_aws_secret_access_key" --type password --password "${PAAS_PROMETHEUS_ENDPOINTS_AWS_SECRET_ACCESS_KEY}"
-                credhub set --name="${PIPELINE_NS}/uaa_clients_cf_exporter_secret" --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
+                credhub set --name="${DEPLOY_ENV}/prometheus/uaa_clients_cf_exporter_secret" --type password --password "${UAA_CLIENTS_CF_EXPORTER_SECRET}"
+                credhub set --name="${DEPLOY_ENV}/prometheus/uaa_bosh_exporter_client_secret" --type value --value "${BOSH_EXPORTER_PASSWORD}"
                 credhub set --name="${PIPELINE_NS}/secrets_rds_broker_admin_password" --type password --password "${RDS_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/secrets_cdn_broker_admin_password" --type password --password "${CDN_BROKER_PASS}"
                 credhub set --name="${PIPELINE_NS}/secrets_aiven_broker_admin_password" --type password --password "${AIVEN_BROKER_PASS}"
@@ -3247,11 +3249,7 @@ jobs:
             ENABLE_ALERT_NOTIFICATIONS: ((ENABLE_ALERT_NOTIFICATIONS))
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             ENV_SPECIFIC_BOSH_VARS_FILE: ((env_specific_bosh_vars_file))
-            GRAFANA_AUTH_GOOGLE_CLIENT_ID: ((grafana_auth_google_client_id))
-            GRAFANA_AUTH_GOOGLE_CLIENT_SECRET: ((grafana_auth_google_client_secret))
-            UAA_CLIENTS_CF_EXPORTER_SECRET: ((uaa_clients_cf_exporter_secret))
             BOSH_CA_CERT: ((bosh-ca-cert))
-            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password))
             VCAP_PASSWORD: ((vcap-password))
           run:
             path: bash
