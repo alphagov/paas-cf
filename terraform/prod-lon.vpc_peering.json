@@ -1,70 +1,63 @@
 [
-    {
-        "peer_name": "dit-services_tap",
-        "account_id": "588284153815",
-        "vpc_id": "vpc-03378ac5a1be3218d",
-        "subnet_cidr": "172.16.0.0/22"
-    },
-    {
-        "peer_name": "dit-staging_hmrc",
-        "account_id": "001221602192",
-        "vpc_id": "vpc-085373a9956d4aa79",
-        "subnet_cidr": "172.16.8.0/22"
-    },
-    {
-        "peer_name": "dit-services_activity-stream",
-        "account_id": "165562107270",
-        "vpc_id": "vpc-04290c3a77ac9036b",
-        "subnet_cidr": "172.16.12.0/22"
-    },
-    {
-      "peer_name": "dit-staging_lite",
-      "account_id": "165562107270",
-      "vpc_id": "vpc-0507169f4a9c61bdb",
-      "subnet_cidr": "172.16.16.0/22"
-    },
-    {
-        "peer_name": "dit-staging_datasci-dev",
-        "account_id": "165562107270",
-        "vpc_id": "vpc-074a7e7c7b4eccc8c",
-        "subnet_cidr": "172.18.0.0/22"
-    },
-    {
-        "peer_name": "dit-services_datasci",
-        "account_id": "165562107270",
-        "vpc_id": "vpc-0911316657ad779ee",
-        "subnet_cidr": "172.18.4.0/22"
-    },
-    {
-        "peer_name": "dit-staging_datasci-staging",
-        "account_id": "165562107270",
-        "vpc_id": "vpc-0edc26baacd344600",
-        "subnet_cidr": "172.18.8.0/22"
-    },
-    {
-        "peer_name": "dit-staging_platform-staging",
-        "account_id": "011755346992",
-        "vpc_id": "vpc-0e82d077854b512f3",
-        "subnet_cidr": "172.18.12.0/22"
-    },
-    {
-        "peer_name": "dit-services_lite-icms",
-        "account_id": "516242164884",
-        "vpc_id": "vpc-0d61ec34a97c33898",
-        "subnet_cidr": "172.18.16.0/22"
-    },
-    {
-        "peer_name": "dluhc-energy-performance-prod",
-        "account_id": "058191034505",
-        "vpc_id": "vpc-0e17f1882d87df50d",
-        "subnet_cidr": "172.18.64.0/22",
-        "backing_service_routing": true
-    },
-    {
-        "peer_name": "uk-space-agency-space-surveillance-and-tracking",
-        "account_id": "744996504263",
-        "vpc_id": "vpc-0d86d778df6c0b18c",
-        "subnet_cidr": "172.18.24.0/22",
-        "backing_service_routing": true
-    }
+  {
+    "peer_name": "dit-services_tap",
+    "account_id": "588284153815",
+    "vpc_id": "vpc-03378ac5a1be3218d",
+    "subnet_cidr": "172.16.0.0/22"
+  },
+  {
+    "peer_name": "dit-staging_hmrc",
+    "account_id": "001221602192",
+    "vpc_id": "vpc-085373a9956d4aa79",
+    "subnet_cidr": "172.16.8.0/22"
+  },
+  {
+    "peer_name": "dit-services_activity-stream",
+    "account_id": "165562107270",
+    "vpc_id": "vpc-04290c3a77ac9036b",
+    "subnet_cidr": "172.16.12.0/22"
+  },
+  {
+    "peer_name": "dit-staging_lite",
+    "account_id": "165562107270",
+    "vpc_id": "vpc-0507169f4a9c61bdb",
+    "subnet_cidr": "172.16.16.0/22"
+  },
+  {
+    "peer_name": "dit-staging_datasci-dev",
+    "account_id": "165562107270",
+    "vpc_id": "vpc-074a7e7c7b4eccc8c",
+    "subnet_cidr": "172.18.0.0/22"
+  },
+  {
+    "peer_name": "dit-services_datasci",
+    "account_id": "165562107270",
+    "vpc_id": "vpc-0911316657ad779ee",
+    "subnet_cidr": "172.18.4.0/22"
+  },
+  {
+    "peer_name": "dit-staging_datasci-staging",
+    "account_id": "165562107270",
+    "vpc_id": "vpc-0edc26baacd344600",
+    "subnet_cidr": "172.18.8.0/22"
+  },
+  {
+    "peer_name": "dit-staging_platform-staging",
+    "account_id": "011755346992",
+    "vpc_id": "vpc-0e82d077854b512f3",
+    "subnet_cidr": "172.18.12.0/22"
+  },
+  {
+    "peer_name": "dit-services_lite-icms",
+    "account_id": "516242164884",
+    "vpc_id": "vpc-0d61ec34a97c33898",
+    "subnet_cidr": "172.18.16.0/22"
+  },
+  {
+    "peer_name": "dluhc-energy-performance-prod",
+    "account_id": "058191034505",
+    "vpc_id": "vpc-0e17f1882d87df50d",
+    "subnet_cidr": "172.18.64.0/22",
+    "backing_service_routing": true
+  }
 ]
