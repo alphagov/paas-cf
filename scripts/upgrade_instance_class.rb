@@ -147,7 +147,7 @@ def process_instance(rds_client, instance, target_class, dry_run)
   end
 
   if compatible
-    MyLogger.instance.log_info("Updating instance #{instance.db_instance_identifier} from #{instance.db_instance_class} to #{target_class} db_instance_class during maintenance window...")
+    MyLogger.instance.log_warn("Updating instance #{instance.db_instance_identifier} from #{instance.db_instance_class} to #{target_class} db_instance_class during maintenance window...")
 
     state = manage_instance_state(rds_client, instance)
 
@@ -159,7 +159,7 @@ def process_instance(rds_client, instance, target_class, dry_run)
       modify_instance(rds_client, instance, target_class, instance.engine_version, dry_run)
     end
   else
-    MyLogger.instance.log_info("Target instance class #{target_class} is not compatible with the current engine version.")
+    MyLogger.instance.log_warn("Target instance class #{target_class} is not compatible with the current engine version.")
     MyLogger.instance.log_info("... trying to find a suitable engine upgrade.")
 
     engine_version_options = get_available_engine_version_options(rds_client, instance, target_class)
@@ -190,7 +190,7 @@ def process_instance(rds_client, instance, target_class, dry_run)
   end
 end
 
-def main(deploy_env, dry_run)
+def main(env, dry_run)
   instance_class_mapping = {
     "db.t2." => "db.t3.",
     "db.m4." => "db.m5.",
@@ -202,10 +202,17 @@ def main(deploy_env, dry_run)
 
   instances.each do |instance|
     instance.tag_list.each do |tag|
-      if tag[:key] == "deploy_env" && tag[:value] == deploy_env
+      if (tag[:key] == "deploy_env" || tag[:key] == "Broker Name") && tag[:value] == env
         # Is the instance class of interest?
         if instance_class_mapping.key? instance.db_instance_class[0..5]
+          # skip postgres 10 dbs
+          if instance.engine == "postgres" && instance.engine_version.start_with?("10.")
+            MyLogger.instance.log_warn("instance #{instance.db_instance_identifier} is postgres 10 and will not be processed.")
+            next
+          end
           target_class = instance.db_instance_class.sub(instance.db_instance_class[0..5], instance_class_mapping.fetch(instance.db_instance_class[0..5]))
+          MyLogger.instance.log_warn("Updating instance #{instance.db_instance_identifier} with class: #{target_class} and engine version: #{instance.engine_version}.")
+
           process_instance(rds_client, instance, target_class, dry_run)
         else
           MyLogger.instance.log_info("Instance #{instance.db_instance_identifier} doesn't have a db instance class that needs replacing.")
@@ -214,7 +221,7 @@ def main(deploy_env, dry_run)
     end
   end
 rescue Aws::RDS::Errors::ServiceError => e
-  MyLogger.instance.log_fatal("Caught #{e.class}, exiting")
+  MyLogger.instance.log_fatal("Caught exception: #{e.class}, message: #{e.message} ... exiting")
 end
 
 ARGV << "-h" if ARGV.empty?
