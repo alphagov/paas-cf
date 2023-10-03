@@ -11,72 +11,77 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     psql: &psql-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     node: &node-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     node-chromium: &node-chromium-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     awscli: &awscli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+    concourse-tools: &concourse-tools-image-resource
+      type: registry-image
+      source:
+        repository: ghcr.io/alphagov/paas/concourse-tools
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03 
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     cf-cli: &cf-cli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     cf-uaac: &cf-uaac-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     git-ssh: &git-ssh-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     ruby-slim: &ruby-slim-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     golang: &golang-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     terraform: &terraform-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
     curl-ssl: &curl-ssl-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
 
 
   tasks:
@@ -272,7 +277,7 @@ resource_types:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+    tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
 
 - name: s3-iam
   type: registry-image
@@ -822,7 +827,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+              tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
 
           inputs:
             - name: paas-cf
@@ -2689,7 +2694,6 @@ jobs:
             passed: ['cf-terraform']
           - get: az-healthcheck-tfstate
             passed: ['az-healthcheck-terraform']
-
       - in_parallel:
         - do:
           - task: extract-terraform-outputs
@@ -2718,119 +2722,7 @@ jobs:
                         < ${state}-tfstate/${state}.tfstate \
                         > terraform-outputs/${state}.tfvars.sh
                     done
-
-          - task: extract-terraform-outputs-psn
-            tags: [colocated-with-web]
-            config:
-              platform: linux
-              image_resource: *terraform-image-resource
-              inputs:
-                - name: psn-tfstate
-                - name: terraform-outputs
-              outputs:
-                - name: terraform-outputs
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -c
-                  - |
-                    terraform output \
-                      -raw \
-                      -state=./psn-tfstate/psn.tfstate \
-                      psn_security_group_seed_json > terraform-outputs/psn-peering.json
-
-                    ls -la terraform-outputs
-
-        - task: generate-peer-opsfile
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *ruby-slim-image-resource
-            inputs:
-              - name: paas-cf
-            outputs:
-              - name: vpc-peering-opsfile
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb "paas-cf/terraform/((deploy_env)).vpc_peering.json" \
-                  > vpc-peering-opsfile/vpc-peers.yml
-
-                  cat vpc-peering-opsfile/vpc-peers.yml
-
-        - task: generate-tenant-uaa-clients-opsfile
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *ruby-slim-image-resource
-            inputs:
-              - name: paas-cf
-            outputs:
-              - name: tenant-uaa-clients-opsfile
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ruby paas-cf/manifests/cf-manifest/scripts/generate-tenant-uaa-client-ops-file.rb \
-                    "paas-cf/manifests/cf-manifest/data/100-tenant-uaa-client-config.yml" \
-                    "((makefile_env_target))" \
-                  > tenant-uaa-clients-opsfile/tenant-uaa-opsfile.yml
-
-        - task: generate-microsoft-oauth-endpoints
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *cf-cli-image-resource
-            outputs:
-              - name: ms-oauth-endpoints
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  DISCOVERY_DOC=$(curl https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration)
-
-                  echo "$DISCOVERY_DOC" | jq '.authorization_endpoint' --raw-output \
-                    > ms-oauth-endpoints/authorization_endpoint
-
-                  echo "$DISCOVERY_DOC" | jq '.token_endpoint' --raw-output \
-                    > ms-oauth-endpoints/token_endpoint
-
-                  echo "$DISCOVERY_DOC" | jq '.jwks_uri' --raw-output \
-                    > ms-oauth-endpoints/token_key_endpoint
-
-                  echo "$DISCOVERY_DOC" | jq '.issuer' --raw-output \
-                    > ms-oauth-endpoints/issuer
-
       - do:
-        - task: generate-psn-peer-opsfile
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *ruby-slim-image-resource
-            inputs:
-              - name: paas-cf
-              - name: terraform-outputs
-            outputs:
-              - name: psn-peering-opsfile
-            run:
-              path: sh
-              args:
-                - -e
-                - -c
-                - |
-                  ruby paas-cf/terraform/scripts/generate_vpc_peering_opsfile.rb terraform-outputs/psn-peering.json \
-                  > psn-peering-opsfile/psn-peers.yml
-
-                  cat psn-peering-opsfile/psn-peers.yml
-
         - task: generate-paas-cf-cloud-config
           tags: [colocated-with-web]
           config:
@@ -2887,24 +2779,18 @@ jobs:
           tags: [colocated-with-web]
           config:
             platform: linux
-            image_resource: *gov-paas-bosh-cli-v2-image-resource
+            image_resource: *concourse-tools-image-resource
             inputs:
               - name: paas-cf
-              - name: terraform-outputs
-              - name: vpc-peering-opsfile
-              - name: psn-peering-opsfile
-              - name: tenant-uaa-clients-opsfile
-              - name: ms-oauth-endpoints
             outputs:
               - name: cf-manifest
               - name: cf-manifest-pre-vars
             params:
-              ENV_SPECIFIC_BOSH_VARS_FILE: paas-cf/manifests/cf-manifest/env-specific/((env_specific_bosh_vars_file))
-              ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR: paas-cf/manifests/cf-manifest/isolation-segments/((env_specific_isolation_segments_dir))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
               DISABLED_AZS: ((disabled_azs))
-              VCAP_PASSWORD: ((vcap-password))
               MAKEFILE_ENV_TARGET: ((makefile_env_target))
+              DEPLOY_ENV: ((deploy_env))
+              SKIP_AWS_CREDENTIAL_VALIDATION: "true"
             run:
               path: sh
               args:
@@ -2912,25 +2798,9 @@ jobs:
                 - -u
                 - -c
                 - |
-                  cat <<EOF > environment-variables.yml
-                  ---
-                  system_domain: ((system_dns_zone_name))
-                  app_domain: ((apps_dns_zone_name))
-                  environment: ((deploy_env))
-                  deployment_name: ((deploy_env))
-                  aws_account: ((aws_account))
-                  microsoft_oauth_auth_url: $(cat ms-oauth-endpoints/authorization_endpoint)
-                  microsoft_oauth_token_url: $(cat ms-oauth-endpoints/token_endpoint)
-                  microsoft_oauth_token_key_url: $(cat ms-oauth-endpoints/token_key_endpoint)
-                  microsoft_oauth_issuer: $(cat ms-oauth-endpoints/issuer)
-                  vcap_password: $VCAP_PASSWORD
-                  EOF
-
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
-                    > cf-manifest/cf-manifest.yml
-
-                  ./paas-cf/manifests/cf-manifest/scripts/generate-manifest.sh \
-                    > cf-manifest-pre-vars/cf-manifest-pre-vars.yml
+                  cd paas-cf
+                  make "${DEPLOY_ENV}" cf_manifest > ../cf-manifest/cf-manifest.yml
+                  cp ../cf-manifest/cf-manifest.yml ../cf-manifest-pre-vars/cf-manifest-pre-vars.yml
 
           on_success:
             in_parallel:
@@ -3232,7 +3102,7 @@ jobs:
         tags: [colocated-with-web]
         config:
           platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          image_resource: *concourse-tools-image-resource
           inputs:
             - name: paas-cf
             - name: terraform-outputs
@@ -3251,6 +3121,7 @@ jobs:
             ENV_SPECIFIC_BOSH_VARS_FILE: ((env_specific_bosh_vars_file))
             BOSH_CA_CERT: ((bosh-ca-cert))
             VCAP_PASSWORD: ((vcap-password))
+            SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
             path: bash
             args:
@@ -3258,15 +3129,9 @@ jobs:
               - -u
               - -c
               - |
-                BOSH_CA_CERT="$(awk -v ORS='\\n' '1' <(printenv BOSH_CA_CERT | tr -d '\r'))"
-                export BOSH_CA_CERT
-
-                ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
-                  > prometheus-manifest/prometheus-manifest.yml
-
-                ./paas-cf/manifests/prometheus/scripts/generate-manifest.sh \
-                  > prometheus-manifest-pre-vars/prometheus-manifest-pre-vars.yml
-
+                cd paas-cf
+                make "${DEPLOY_ENV}" prometheus_manifest > ../prometheus-manifest/prometheus-manifest.yml
+                cp ../prometheus-manifest/prometheus-manifest.yml ../prometheus-manifest-pre-vars/prometheus-manifest-pre-vars.yml
         on_success:
           put: prometheus-manifest-pre-vars
           params:
@@ -3554,7 +3419,7 @@ jobs:
         tags: [colocated-with-web]
         config:
           platform: linux
-          image_resource: *gov-paas-bosh-cli-v2-image-resource
+          image_resource: *concourse-tools-image-resource
           inputs:
             - name: paas-cf
             - name: terraform-outputs
@@ -3570,6 +3435,7 @@ jobs:
             SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
             BOSH_CA_CERT: ((bosh-ca-cert))
             VCAP_PASSWORD: ((vcap-password))
+            SKIP_AWS_CREDENTIAL_VALIDATION: true
           run:
             path: bash
             args:
@@ -3577,15 +3443,9 @@ jobs:
               - -u
               - -c
               - |
-                BOSH_CA_CERT="$(awk -v ORS='\\n' '1' <(printenv BOSH_CA_CERT | tr -d '\r'))"
-                export BOSH_CA_CERT
-
-                ./paas-cf/manifests/app-autoscaler/scripts/generate-manifest.sh \
-                  > app-autoscaler-manifest/app-autoscaler-manifest.yml
-
-                ./paas-cf/manifests/app-autoscaler/scripts/generate-manifest.sh \
-                  > app-autoscaler-manifest-pre-vars/app-autoscaler-manifest-pre-vars.yml
-
+                cd paas-cf
+                make "${DEPLOY_ENV}" app_autoscaler_manifest > ../app-autoscaler-manifest/app-autoscaler-manifest.yml
+                cp ../app-autoscaler-manifest/app-autoscaler-manifest.yml ../app-autoscaler-manifest-pre-vars/app-autoscaler-manifest-pre-vars.yml
         on_success:
           put: app-autoscaler-manifest-pre-vars
           params:
@@ -5420,7 +5280,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+              tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
 
           inputs:
             - name: paas-cf
@@ -6681,7 +6541,7 @@ jobs:
           type: registry-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
+            tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
 
         inputs:
           - name: passwords
