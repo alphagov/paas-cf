@@ -52,12 +52,5 @@
     "account_id": "516242164884",
     "vpc_id": "vpc-0d61ec34a97c33898",
     "subnet_cidr": "172.18.16.0/22"
-  },
-  {
-    "peer_name": "dluhc-energy-performance-prod",
-    "account_id": "058191034505",
-    "vpc_id": "vpc-0e17f1882d87df50d",
-    "subnet_cidr": "172.18.64.0/22",
-    "backing_service_routing": true
   }
 ]
