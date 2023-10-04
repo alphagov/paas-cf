@@ -7,6 +7,8 @@ variable "admin_cidrs" {
     "217.196.229.81/32", # GDS BYOD VPN 2 (Sep 2023)
     "217.196.229.77/32", # GovWifi (Sep 2023)
     "217.196.229.79/32", # Brattain (Sep 2023)
+    "51.149.8.0/25",     # GDS Managed VPN 1 (Sep 2023)
+    "51.149.8.128/29"    # GDS BYOD VPN 3 (Sep 2023)
   ]
 }
 
