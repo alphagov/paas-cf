@@ -5216,8 +5216,10 @@ jobs:
 
                 cf target -o admin -s billing
 
-                if grep -q '^(prod\|prod-lon\|stg-lon)$' <<< "$DEPLOY_ENV"; then
+                if [ "${DEPLOY_ENV}" = 'stg-lon' ] ; then
                   plan="small-13"
+                elif [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ] ; then
+                  plan="medium-ha-13"
                 else
                   plan="tiny-unencrypted-13"
                 fi
