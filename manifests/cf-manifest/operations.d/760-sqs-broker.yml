@@ -32,7 +32,7 @@
         release: sqs-broker
         properties:
           sqs-broker:
-            port: 80
+            port: 443
             basic_auth_username: sqs-broker
             basic_auth_password: ((secrets_sqs_broker_admin_password))
             log_level: INFO
