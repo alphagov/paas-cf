@@ -42,6 +42,7 @@
             additional_user_policy: "((terraform_outputs_restrict_to_local_ips_policy_arn))"
             permissions_boundary: "((terraform_outputs_sqs_broker_permissions_boundary_arn))"
             deploy_environment: "((environment))"
+            tls: ((secrets_sqs_broker_tls_cert))
             locket:
               api_location: "locket.service.cf.internal:8891"
               ca_cert: "((diego_locket_client.ca))"
@@ -96,3 +97,15 @@
   value:
     name: secrets_sqs_broker_admin_password
     type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_sqs_broker_tls_cert
+    type: certificate
+    update_mode: converge
+    options:
+    ca: broker_tls_ca
+    common_name: "sqs-broker.service.cf.internal"
+    alternative_names:
+      - "sqs-broker.service.cf.internal"
