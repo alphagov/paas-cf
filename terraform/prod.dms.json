@@ -21,7 +21,7 @@
             "migration_type": "full-load-and-cdc",
             "settings_overrides": {
                 "FullLoadSettings": {
-                    "TargetTablePrepMode": "DO_NOTHING"
+                    "TargetTablePrepMode": "TRUNCATE_BEFORE_LOAD"
                 }
             },
             "table_mappings": null
