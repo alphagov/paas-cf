@@ -52,7 +52,7 @@ func testS3BucketAccess() error {
 		Bucket: aws.String(vcapService.BucketName),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "ListObjects")
 	}
 
 	_, err = s3Client.PutObject(&s3.PutObjectInput{
@@ -61,7 +61,7 @@ func testS3BucketAccess() error {
 		Body:   strings.NewReader(testS3Content),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "PutObject")
 	}
 
 	getObjectOutput, err := s3Client.GetObject(&s3.GetObjectInput{
@@ -69,12 +69,12 @@ func testS3BucketAccess() error {
 		Key:    aws.String(testS3File),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "GetObject")
 	}
 
 	content, err := ioutil.ReadAll(getObjectOutput.Body)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "ioutil.ReadAll")
 	}
 	defer getObjectOutput.Body.Close()
 
@@ -87,7 +87,7 @@ func testS3BucketAccess() error {
 		Key:    aws.String(testS3File),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "DeleteObject")
 	}
 
 	return nil
