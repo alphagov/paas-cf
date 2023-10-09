@@ -92,10 +92,10 @@ resource "aws_lb_listener_rule" "cf_s3_broker" {
 }
 
 resource "aws_lb_target_group" "cf_s3_broker" {
-  name     = "${var.env}-cf-s3-broker"
-  port     = 443
-  protocol = "HTTPS"
-  vpc_id   = var.vpc_id
+  name_prefix = "${var.env}-cf-s3-broker"
+  port        = 443
+  protocol    = "HTTPS"
+  vpc_id      = var.vpc_id
 
   health_check {
     port                = 443
@@ -136,10 +136,10 @@ resource "aws_lb_listener_rule" "cf_sqs_broker" {
 }
 
 resource "aws_lb_target_group" "cf_sqs_broker" {
-  name     = "${var.env}-cf-sqs-broker"
-  port     = 443
-  protocol = "HTTPS"
-  vpc_id   = var.vpc_id
+  name_prefix = "${var.env}-cf-sqs-broker"
+  port        = 443
+  protocol    = "HTTPS"
+  vpc_id      = var.vpc_id
 
   health_check {
     port                = 443
