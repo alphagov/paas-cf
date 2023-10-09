@@ -105,7 +105,7 @@
     type: certificate
     update_mode: converge
     options:
-    ca: broker_tls_ca
-    common_name: "sqs-broker.service.cf.internal"
-    alternative_names:
-      - "sqs-broker.service.cf.internal"
+      ca: broker_tls_ca
+      common_name: "sqs-broker.service.cf.internal"
+      alternative_names:
+        - "sqs-broker.service.cf.internal"
