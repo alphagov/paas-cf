@@ -22,7 +22,7 @@ resource "aws_elb" "sqs_broker" {
 
   listener {
     instance_port      = 443
-    instance_protocol  = "http"
+    instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
     ssl_certificate_id = data.aws_acm_certificate.system.arn
