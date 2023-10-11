@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: sqs-broker
-    version: 0.0.1697015202
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/sqs-broker-0.0.1697015202.tgz
-    sha1: c7c9378260df19cb5c7e08c75b2be88aeb669c72
+    version: 0.0.1697033641
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/sqs-broker-0.0.1697033641.tgz
+    sha1: 2d8a9b842256e39d1def63ec552d7c7875b4721d
 
 
 - type: replace
