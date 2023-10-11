@@ -13,7 +13,7 @@ resource "aws_elb" "sqs_broker" {
   }
 
   health_check {
-    target              = "HTTP:80/healthcheck"
+    target              = "HTTPS:443/healthcheck"
     interval            = var.health_check_interval
     timeout             = var.health_check_timeout
     healthy_threshold   = var.health_check_healthy
@@ -21,7 +21,7 @@ resource "aws_elb" "sqs_broker" {
   }
 
   listener {
-    instance_port      = 80
+    instance_port      = 443
     instance_protocol  = "http"
     lb_port            = 443
     lb_protocol        = "https"
@@ -39,4 +39,3 @@ resource "aws_lb_ssl_negotiation_policy" "sqs_broker" {
     value = random_pet.elb_cipher.keepers.default_classic_load_balancer_security_policy
   }
 }
-
