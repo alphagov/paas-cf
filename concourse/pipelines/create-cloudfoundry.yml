@@ -11,72 +11,72 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     psql: &psql-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     node: &node-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     node-chromium: &node-chromium-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     awscli: &awscli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     cf-cli: &cf-cli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     cf-uaac: &cf-uaac-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     git-ssh: &git-ssh-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     ruby-slim: &ruby-slim-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     golang: &golang-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     terraform: &terraform-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
     curl-ssl: &curl-ssl-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+        tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
 
   tasks:
@@ -272,7 +272,7 @@ resource_types:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+    tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
 - name: s3-iam
   type: registry-image
@@ -822,7 +822,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+              tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
           inputs:
             - name: paas-cf
@@ -4561,7 +4561,6 @@ jobs:
               - -e
               - -c
               - |
-                apk add --quiet --no-progress --no-cache g++ musl-dev make
                 uaac target "${UAA_API_URL}"
                 uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
                 CF_TOKEN="bearer $(uaac contexts | awk '$1 ~ /access_token/ {print $2}')"
@@ -5419,7 +5418,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+              tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
           inputs:
             - name: paas-cf
@@ -6680,7 +6679,7 @@ jobs:
           type: registry-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+            tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
         inputs:
           - name: passwords

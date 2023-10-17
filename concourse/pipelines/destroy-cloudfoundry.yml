@@ -99,7 +99,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+              tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
           inputs:
             - name: paas-cf
@@ -144,7 +144,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/cf-cli
-              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+              tag: 11251948d5dd4867552f9b9836a9e02110304df5 
           inputs:
             - name: paas-cf
             - name: config
@@ -189,7 +189,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/bosh-cli-v2
-              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+              tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
           inputs:
             - name: bosh-vars-store
@@ -243,7 +243,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/ruby
-              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+              tag: 11251948d5dd4867552f9b9836a9e02110304df5 
           inputs:
             - name: paas-cf
             - name: cf-tfstate
@@ -287,7 +287,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/terraform
-              tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+              tag: 11251948d5dd4867552f9b9836a9e02110304df5 
 
           inputs:
             - name: terraform-variables
