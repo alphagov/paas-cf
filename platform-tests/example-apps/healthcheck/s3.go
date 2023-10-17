@@ -78,6 +78,17 @@ func testS3BucketAccess() error {
 	}
 	defer getObjectOutput.Body.Close()
 
+	taggingOutput, err := s3Client.GetObjectTagging(&s3.GetObjectTaggingInput{
+		Bucket: aws.String(vcapService.BucketName),
+		Key:    aws.String(testS3File),
+	})
+	if err != nil {
+		return errors.Wrap(err, "GetObjectTagging")
+	}
+	if len(taggingOutput.TagSet) != 0 {
+		return fmt.Errorf("expected empty TagSet for %q, but was %q", testS3File, taggingOutput.TagSet)
+	}
+
 	if string(content) != testS3Content {
 		return fmt.Errorf("content mismatch, was writing %q but read %q", testS3Content, string(content))
 	}
