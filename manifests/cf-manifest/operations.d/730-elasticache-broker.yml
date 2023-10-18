@@ -61,9 +61,9 @@
   path: /releases/-
   value:
     name: elasticache-broker
-    version: 0.1.22
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.22.tgz
-    sha1: 4b1c88aac9513cc5f9907c0efb79b50a4a0746a4
+    version: 0.0.1697719524
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.0.1697719524.tgz
+    sha1: 9684bc0251ca16ac562fd1c041d466f5a21eb947
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -95,6 +95,9 @@
             secrets_manager_path: elasticache-broker/((environment))
             region: "((terraform_outputs_region))"
             cache_subnet_group_name: ((terraform_outputs_elasticache_broker_subnet_group_name))
+            host: "0.0.0.0"
+            port: 443
+            tls: ((secrets_elasticache_broker_tls_cert))
             vpc_security_group_ids:
             - ((terraform_outputs_elasticache_broker_instances_security_group_id))
 
@@ -703,3 +706,15 @@
   value:
     name: secrets_elasticache_broker_admin_password
     type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_elasticache_broker_tls_cert
+    type: certificate
+    update_mode: converge
+    options:
+      ca: broker_tls_ca
+      common_name: "elasticache-broker.service.cf.internal"
+      alternative_names:
+        - "elasticache-broker.service.cf.internal"
