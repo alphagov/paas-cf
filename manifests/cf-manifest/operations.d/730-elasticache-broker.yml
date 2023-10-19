@@ -23,10 +23,10 @@
       instance_type: cache.t3.micro
 
     tiny_plan: &elasticache_tiny_plan
-      instance_type: cache.t2.small
+      instance_type: cache.t3.small
 
     small_plan: &elasticache_small_plan
-      instance_type: cache.t2.medium
+      instance_type: cache.t3.medium
 
     medium_plan: &elasticache_medium_plan
       instance_type: cache.m5.large
@@ -519,7 +519,7 @@
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
                 <<: *elasticache_redis_3_2 # yamllint disable-line
                 <<: *elasticache_non_ha_plan # yamllint disable-line
-                instance_type: cache.t2.micro
+                instance_type: cache.t3.micro
                 parameters:
                   cluster-enabled: 'yes'
 
@@ -527,7 +527,7 @@
                 <<: *elasticache_cache_cluster_config # yamllint disable-line
                 <<: *elasticache_redis_3_2 # yamllint disable-line
                 <<: *elasticache_non_ha_plan # yamllint disable-line
-                instance_type: cache.t2.micro
+                instance_type: cache.t3.micro
                 automatic_failover_enabled: false
 
               ea5c8cc3-74e6-4b15-bd61-bbe244cfe63d: #tiny-ha-3.2

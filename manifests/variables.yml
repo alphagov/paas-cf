@@ -4,7 +4,7 @@
 # instances of some types.
 #
 
-compilation_vm_instance_type: c5.large
+compilation_vm_instance_type: c6i.large
 
 nano_vm_instance_type: t3.nano
 
@@ -12,25 +12,25 @@ small_vm_instance_type: t3.small
 
 medium_vm_instance_type: t3.medium
 
-large_vm_instance_type: m5.large
+large_vm_instance_type: m6i.large
 
-xlarge_vm_instance_type: m5.xlarge
+xlarge_vm_instance_type: m6i.xlarge
 
-high_cpu_large_vm_instance_type: c5.large
+high_cpu_large_vm_instance_type: c6i.large
 
-high_mem_large_vm_instance_type: r5.large
+high_mem_large_vm_instance_type: r6i.large
 
-high_mem_xlarge_vm_instance_type: r5.xlarge
+high_mem_xlarge_vm_instance_type: r6i.xlarge
 
-high_cpu_xlarge_vm_instance_type: c5.xlarge
+high_cpu_xlarge_vm_instance_type: c6i.xlarge
 
-cell_instance_type: r5.xlarge
+cell_instance_type: r6i.xlarge
 
-high_cpu_cell_instance_type: m5.2xlarge
+high_cpu_cell_instance_type: m6i.2xlarge
 
-small_cell_instance_type: r5.large
+small_cell_instance_type: r6i.large
 
-router_instance_type: c5.large
+router_instance_type: c6i.large
 
 slim_router_instance_type: t3.medium
 
