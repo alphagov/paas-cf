@@ -11,7 +11,7 @@ require (
 	github.com/cloudfoundry/cf-test-helpers v1.0.1-0.20220603211108-d498b915ef74
 	github.com/concourse/atc v0.0.0-20160908214930-406261dbd768
 	github.com/concourse/go-concourse v0.0.0-20160910211037-b260442fef03
-	github.com/google/uuid v1.1.1
+	github.com/google/uuid v1.4.0
 	github.com/hashicorp/go-retryablehttp v0.5.2
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.8
