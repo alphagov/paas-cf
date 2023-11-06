@@ -4,7 +4,7 @@
         "source_secret_name": "dms-secrets/notify-staging/source",
         "source_extra_connection_attributes": "executeTimeout=3600;",
         "target_secret_name": "dms-secrets/notify-staging/destination",
-        "target_extra_connection_attributes": "executeTimeout=3600;",
+        "target_extra_connection_attributes": "executeTimeout=3600;unboundedVarcharMaxSize=400000;",
         "instance": {
             "allocated_storage": "6144",
             "allow_major_version_upgrade": false,
@@ -36,7 +36,7 @@
         "source_secret_name": "dms-secrets/notify-prod/source",
         "source_extra_connection_attributes": "executeTimeout=3600;",
         "target_secret_name": "dms-secrets/notify-prod/destination",
-        "target_extra_connection_attributes": "executeTimeout=3600;",
+        "target_extra_connection_attributes": "executeTimeout=3600;unboundedVarcharMaxSize=400000;",
         "instance": {
             "allocated_storage": "6144",
             "allow_major_version_upgrade": false,
