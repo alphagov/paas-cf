@@ -4,7 +4,7 @@ image_resource:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-    tag: b5568301ae03da8220c5ea2f907088dfa38e963d
+    tag: cb9acdf5752562c68781cdd358a9a6710219e3c7
 run:
   path: sh
   args:
