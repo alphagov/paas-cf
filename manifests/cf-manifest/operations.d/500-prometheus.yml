@@ -2,9 +2,9 @@
   path: /releases/-
   value:
     name: "prometheus"
-    version: "29.5.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=29.5.0"
-    sha1: "d6a43080c9f2ac342d11c0d9d13e55dc52d1fb3b"
+    version: "29.6.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry-community/prometheus-boshrelease?v=29.6.0"
+    sha1: "16b8f917f7b0966e492f40618b94e0a1f00a5634"
 
 - type: replace
   path: /releases/-
