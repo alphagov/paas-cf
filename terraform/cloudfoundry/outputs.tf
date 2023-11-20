@@ -145,6 +145,14 @@ output "s3_broker_ip_restriction_policy_arn" {
   value = aws_iam_policy.s3_broker_user_ip_restriction.arn
 }
 
+output "s3_broker_common_user_policy_arn" {
+  value = aws_iam_policy.s3_broker_user_common.arn
+}
+
+output "s3_broker_user_permissions_boundary_arn" {
+  value = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/S3BrokerUserPermissionsBoundary"
+}
+
 output "restrict_to_local_ips_policy_arn" {
   value = aws_iam_policy.restrict_to_local_ips.arn
 }

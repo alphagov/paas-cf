@@ -52,7 +52,7 @@ func testS3BucketAccess() error {
 		Bucket: aws.String(vcapService.BucketName),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "ListObjects")
 	}
 
 	_, err = s3Client.PutObject(&s3.PutObjectInput{
@@ -61,7 +61,7 @@ func testS3BucketAccess() error {
 		Body:   strings.NewReader(testS3Content),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "PutObject")
 	}
 
 	getObjectOutput, err := s3Client.GetObject(&s3.GetObjectInput{
@@ -69,14 +69,25 @@ func testS3BucketAccess() error {
 		Key:    aws.String(testS3File),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "GetObject")
 	}
 
 	content, err := ioutil.ReadAll(getObjectOutput.Body)
 	if err != nil {
-		return err
+		return errors.Wrap(err, "ioutil.ReadAll")
 	}
 	defer getObjectOutput.Body.Close()
+
+	taggingOutput, err := s3Client.GetObjectTagging(&s3.GetObjectTaggingInput{
+		Bucket: aws.String(vcapService.BucketName),
+		Key:    aws.String(testS3File),
+	})
+	if err != nil {
+		return errors.Wrap(err, "GetObjectTagging")
+	}
+	if len(taggingOutput.TagSet) != 0 {
+		return fmt.Errorf("expected empty TagSet for %q, but was %q", testS3File, taggingOutput.TagSet)
+	}
 
 	if string(content) != testS3Content {
 		return fmt.Errorf("content mismatch, was writing %q but read %q", testS3Content, string(content))
@@ -87,7 +98,7 @@ func testS3BucketAccess() error {
 		Key:    aws.String(testS3File),
 	})
 	if err != nil {
-		return err
+		return errors.Wrap(err, "DeleteObject")
 	}
 
 	return nil

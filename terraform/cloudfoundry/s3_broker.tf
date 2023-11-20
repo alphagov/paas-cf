@@ -47,3 +47,11 @@ resource "aws_iam_policy" "s3_broker_user_ip_restriction" {
   name        = "${var.env}S3BrokerUserIpRestriction"
   description = "Restricts S3 API Access to just the NAT Gateway IPs"
 }
+
+resource "aws_iam_policy" "s3_broker_user_common" {
+  policy = templatefile("${path.module}/policies/s3_broker_user_common.json.tpl", {
+    platform_aws_account_id = jsonencode(tostring(data.aws_caller_identity.current.account_id))
+  })
+  name        = "${var.env}S3BrokerUserCommon"
+  description = "Common policy for all S3 broker IAM users: allows access to all S3 resources not owned by our AWS account"
+}

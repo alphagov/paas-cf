@@ -1,8 +1,18 @@
 package broker_acceptance_test
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"strings"
 	"time"
+
+	"github.com/aws/aws-sdk-go/aws/credentials"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/cloudfoundry/cf-test-helpers/cf"
 	"github.com/cloudfoundry/cf-test-helpers/generator"
@@ -19,6 +29,16 @@ var _ = Describe("S3 broker", func() {
 		testPlanName = "default"
 	)
 
+	type ServiceKeyCredentials struct {
+		BucketName         string `json:"bucket_name"`
+		AWSAccessKeyID     string `json:"aws_access_key_id"`
+		AWSSecretAccessKey string `json:"aws_secret_access_key"`
+		AWSRegion          string `json:"aws_region"`
+	}
+	type ServiceKeyData struct {
+		Credentials ServiceKeyCredentials `json:"credentials"`
+	}
+
 	It("is registered in the marketplace", func() {
 		plans := cf.Cf("marketplace").Wait(testConfig.DefaultTimeoutDuration())
 		Expect(plans).To(Exit(0))
@@ -33,24 +53,31 @@ var _ = Describe("S3 broker", func() {
 
 	Context("creating an S3 bucket", func() {
 		var (
-			appName             string
 			serviceInstanceName string
 		)
 
-		It("is accessible from the healthcheck app", func() {
+		createBucketWithCleanup := func(siName string) {
+			By("creating the service: "+siName, func() {
+				Expect(cf.Cf("create-service", serviceName, testPlanName, siName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				pollForServiceCreationCompletion(siName)
+			})
 
-			appName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
+			DeferCleanup(func() {
+				By("deleting the service", func() {
+					Expect(cf.Cf("delete-service", siName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+					pollForServiceDeletionCompletion(siName)
+				})
+			})
+		}
+
+		BeforeEach(func () {
 			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-s3-bucket")
 
-			By("creating the service: "+serviceInstanceName, func() {
-				Expect(cf.Cf("create-service", serviceName, testPlanName, serviceInstanceName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceCreationCompletion(serviceInstanceName)
-			})
+			createBucketWithCleanup(serviceInstanceName)
+		})
 
-			defer By("deleting the service", func() {
-				Expect(cf.Cf("delete-service", serviceInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
-				pollForServiceDeletionCompletion(serviceInstanceName)
-			})
+		It("is accessible from the healthcheck app", func() {
+			appName := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "APP")
 
 			By("pushing the healthcheck app", func() {
 				Expect(cf.Cf(
@@ -82,7 +109,213 @@ var _ = Describe("S3 broker", func() {
 				resp.Body.Close()
 				Expect(resp.StatusCode).To(Equal(200), "Got %d response from healthcheck app. Response body:\n%s\n", resp.StatusCode, string(body))
 			})
+		})
 
+		Context("external access", func() {
+			var s3Client *s3.S3
+			var bucketName string
+			var serviceKeyName string
+
+			createServiceKeyWithCleanup := func(
+				siName string,
+				skName string,
+				allowExternalAccessJSON string,
+			) {
+				By("creating the service key: "+skName, func() {
+					Expect(cf.Cf(
+						"create-service-key",
+						siName,
+						skName,
+						"-c",
+						fmt.Sprintf(
+							`{"allow_external_access": %s, "permissions": "read-write"}`,
+							allowExternalAccessJSON,
+						),
+					).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+				})
+
+				DeferCleanup(func() {
+					By("deleting the service key", func() {
+						cf.Cf("delete-service-key", siName, skName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+					})
+				})
+			}
+
+			s3ClientFromServiceKey := func(siName string, skName string) (*s3.S3, string) {
+				var serviceKeyData ServiceKeyData
+				cfSess := cf.Cf(
+					"service-key",
+					siName,
+					skName,
+				)
+				Expect(cfSess.Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
+
+				outContents := cfSess.Out.Contents()
+				err := json.Unmarshal(
+					outContents[bytes.IndexByte(outContents, byte('{')):],
+					&serviceKeyData,
+				)
+				Expect(err).ToNot(HaveOccurred())
+
+				Expect(serviceKeyData.Credentials.BucketName).ToNot(Equal(""))
+				Expect(serviceKeyData.Credentials.AWSAccessKeyID).ToNot(Equal(""))
+				Expect(serviceKeyData.Credentials.AWSSecretAccessKey).ToNot(Equal(""))
+				Expect(serviceKeyData.Credentials.AWSRegion).ToNot(Equal(""))
+
+				sess := session.Must(session.NewSession(&aws.Config{
+					Region:      aws.String(serviceKeyData.Credentials.AWSRegion),
+					Credentials: credentials.NewStaticCredentials(
+						serviceKeyData.Credentials.AWSAccessKeyID,
+						serviceKeyData.Credentials.AWSSecretAccessKey,
+						"",
+					),
+				}))
+				return s3.New(sess), serviceKeyData.Credentials.BucketName
+			}
+
+			assertNoBucketAccess := func(bName string) {
+				_, err := s3Client.PutObject(&s3.PutObjectInput{
+					Bucket: aws.String(bName),
+					Key:    aws.String("test-key"),
+					Body:   strings.NewReader("test-content"),
+				})
+				Expect(err).To(MatchError(ContainSubstring("AccessDenied")))
+
+				_, err = s3Client.ListObjects(&s3.ListObjectsInput{
+					Bucket: aws.String(bName),
+				})
+				Expect(err).To(MatchError(ContainSubstring("AccessDenied")))
+
+				_, err = s3Client.GetObject(&s3.GetObjectInput{
+					Bucket: aws.String(bName),
+					Key:    aws.String("test-key"),
+				})
+				Expect(err).To(MatchError(ContainSubstring("AccessDenied")))
+
+				_, err = s3Client.GetObjectTagging(&s3.GetObjectTaggingInput{
+					Bucket: aws.String(bName),
+					Key:    aws.String("test-key"),
+				})
+				Expect(err).To(MatchError(ContainSubstring("AccessDenied")))
+
+				_, err = s3Client.DeleteObject(&s3.DeleteObjectInput{
+					Bucket: aws.String(bName),
+					Key:    aws.String("test-key"),
+				})
+				Expect(err).To(MatchError(ContainSubstring("AccessDenied")))
+			}
+
+			BeforeEach(func() {
+				serviceKeyName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-service-key")
+			})
+
+			Context("with a non-allow_external_access service key", func() {
+				BeforeEach(func() {
+					createServiceKeyWithCleanup(
+						serviceInstanceName,
+						serviceKeyName,
+						`false`,
+					)
+				})
+
+				It("is not externally accessible", func() {
+					By("retrieving the service key credentials", func() {
+						s3Client, bucketName = s3ClientFromServiceKey(
+							serviceInstanceName,
+							serviceKeyName,
+						)
+					})
+
+					By("failing to access the bucket from the test host", func() {
+						assertNoBucketAccess(bucketName)
+					})
+				})
+			})
+
+			Context("with an allow_external_access service key", func() {
+				BeforeEach(func() {
+					createServiceKeyWithCleanup(
+						serviceInstanceName,
+						serviceKeyName,
+						`true`,
+					)
+					s3Client, bucketName = s3ClientFromServiceKey(
+						serviceInstanceName,
+						serviceKeyName,
+					)
+				})
+
+				It("is externally accessible", func() {
+					By("accessing the bucket from the test host", func() {
+						_, err := s3Client.PutObject(&s3.PutObjectInput{
+							Bucket: aws.String(bucketName),
+							Key:    aws.String("test-key"),
+							Body:   strings.NewReader("test-content"),
+						})
+						Expect(err).ToNot(HaveOccurred())
+
+						defer func() {
+							_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
+								Bucket: aws.String(bucketName),
+								Key:    aws.String("test-key"),
+							})
+							Expect(err).ToNot(HaveOccurred())
+						}()
+
+						listObjectsResult, err := s3Client.ListObjects(&s3.ListObjectsInput{
+							Bucket: aws.String(bucketName),
+						})
+						Expect(err).ToNot(HaveOccurred())
+						Expect(len(listObjectsResult.Contents)).To(Equal(1))
+						Expect(listObjectsResult.Contents[0].Key).To(Equal(aws.String("test-key")))
+
+						_, err = s3Client.GetObject(&s3.GetObjectInput{
+							Bucket: aws.String(bucketName),
+							Key:    aws.String("test-key"),
+						})
+						Expect(err).ToNot(HaveOccurred())
+
+						_, err = s3Client.GetObjectTagging(&s3.GetObjectTaggingInput{
+							Bucket: aws.String(bucketName),
+							Key:    aws.String("test-key"),
+						})
+						Expect(err).ToNot(HaveOccurred())
+					})
+				})
+
+				Context("and a second s3 service instance", func() {
+					var serviceInstance2Name string
+					var serviceKey2Name string
+
+					BeforeEach(func() {
+						serviceInstance2Name = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-s3-bucket-2")
+
+						serviceKey2Name = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-service-key-2")
+
+						createBucketWithCleanup(serviceInstance2Name)
+						createServiceKeyWithCleanup(
+							serviceInstance2Name,
+							serviceKey2Name,
+							`true`,
+						)
+					})
+
+					It("is not able to use the first key to access the second bucket", func() {
+						var bucket2Name string
+
+						By("retrieving the other bucket name", func() {
+							_, bucket2Name = s3ClientFromServiceKey(
+								serviceInstance2Name,
+								serviceKey2Name,
+							)
+						})
+
+						By("failing to access the other bucket", func() {
+							assertNoBucketAccess(bucket2Name)
+						})
+					})
+				})
+			})
 		})
 	})
 

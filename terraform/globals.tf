@@ -25,6 +25,7 @@ variable "assets_prefix" {
 
 variable "aws_account" {
   description = "the AWS account being deployed to"
+  type        = string
 }
 
 # See https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html#tls-security-policies
@@ -58,6 +59,7 @@ variable "elb_account_ids" {
     us-gov-west-1  = "048591011584"
     cn-north-1     = "638102146993"
   }
+  type = map(string)
 }
 
 variable "env" {

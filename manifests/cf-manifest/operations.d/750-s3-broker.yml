@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: s3-broker
-    version: 0.1.21 
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.21.tgz
-    sha1: 31818e98cd5b420a64c9c695f866a97d7d8497f7
+    version: 0.1.25
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/s3-broker-0.1.25.tgz
+    sha1: 3a9f71131b7f37c8b0c74d795e652823c8de13df
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -39,6 +39,8 @@
             resource_prefix: "paas-s3-broker-((environment))-"
             iam_user_path: "/paas-s3-broker/"
             iam_ip_restriction_policy_arn: "((terraform_outputs_s3_broker_ip_restriction_policy_arn))"
+            iam_common_user_policy_arn: "((terraform_outputs_s3_broker_common_user_policy_arn))"
+            iam_user_permissions_boundary_arn: "((terraform_outputs_s3_broker_user_permissions_boundary_arn))"
             deploy_environment: "((environment))"
             tls: ((secrets_s3_broker_tls_cert))
             locket:
