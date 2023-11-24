@@ -5281,6 +5281,9 @@ jobs:
               - -c
               - |
                 DB_PLAN="tiny-unencrypted-12"
+                if [ "${DEPLOY_ENV}" = "stg-lon" ] || [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ]; then
+                  DB_PLAN="small-ha-12"
+                fi
 
                 cf api "${API_ENDPOINT}"
                 cf auth "${CF_ADMIN}" "${CF_PASS}"
