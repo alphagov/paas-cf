@@ -34,18 +34,14 @@ cat <<EOF > "${variables_file}"
 ---
 metrics_environment: $DEPLOY_ENV
 bosh_url: $BOSH_URL
-uaa_bosh_exporter_client_secret: $BOSH_EXPORTER_PASSWORD
 system_domain: $SYSTEM_DNS_ZONE_NAME
 app_domain: $APPS_DNS_ZONE_NAME
 metron_deployment_name: $DEPLOY_ENV
 skip_ssl_verify: false
 traffic_controller_external_port: 443
 loggregator_ca_name: /$DEPLOY_ENV/$DEPLOY_ENV/loggregator_ca
-uaa_clients_cf_exporter_secret: $UAA_CLIENTS_CF_EXPORTER_SECRET
 aws_account: $AWS_ACCOUNT
 aws_region: $AWS_REGION
-grafana_auth_google_client_id: $GRAFANA_AUTH_GOOGLE_CLIENT_ID
-grafana_auth_google_client_secret: $GRAFANA_AUTH_GOOGLE_CLIENT_SECRET
 bosh_ca_cert: "$BOSH_CA_CERT"
 vcap_password: $VCAP_PASSWORD
 EOF

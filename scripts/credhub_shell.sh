@@ -72,6 +72,6 @@ PATHS
 EOF
 
 unset CREDHUB_SERVER # otherwise CLI does not recognise SSO logins
-credhub api "https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api"
+credhub api "https://bosh.${SYSTEM_DNS_ZONE_NAME}:8844/api" >/dev/null
 
 PS1="CREDHUB ($DEPLOY_ENV) $ " bash --login --norc --noprofile

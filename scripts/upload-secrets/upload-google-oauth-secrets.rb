@@ -11,6 +11,7 @@ deploy_env = ENV.fetch("DEPLOY_ENV")
 credhub_namespaces = [
   "/concourse/main/create-cloudfoundry",
   "/#{deploy_env}/#{deploy_env}",
+  "/#{deploy_env}/prometheus",
 ]
 
 google_oauth_client_id = ENV["GOOGLE_OAUTH_CLIENT_ID"] || get_secret("google/#{ENV['MAKEFILE_ENV_TARGET']}/oauth/client_id")
