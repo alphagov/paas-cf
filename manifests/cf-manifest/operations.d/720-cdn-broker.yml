@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: cdn-broker
-    version: 0.1.54
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.54.tgz
-    sha1: e97a99e35400160fb09ed4129b57d129040d27ae
+    version: 0.0.1703150653
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.0.1703150653.tgz
+    sha1: 443c27ff4f6b2eca1b0449a18f05744a1ae6a9dd
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -32,9 +32,6 @@
             broker_username: "cdn-broker"
             broker_password: ((secrets_cdn_broker_admin_password))
             database_url: ((terraform_outputs_cdn_db_connection_string))
-            email: "the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
-            acme_url: "https://acme-v01.api.letsencrypt.org/directory"
-            bucket: gds-paas-((environment))-cdn-broker-challenge
             iam_path_prefix: ((environment))-letsencrypt
             cloudfront_prefix: ((environment))-cdn
             aws_access_key_id: ""
@@ -45,6 +42,10 @@
             default_origin: ((terraform_outputs_cf_apps_domain))
             aws_region: "((terraform_outputs_region))"
             extra_request_headers: "x-cf-instanceid:x-paas-xff-auth-((waf_xff_auth_key))"
+            host: "0.0.0.0"
+            port: "443"
+            tls: ((secrets_cdn_broker_tls_cert))
+
       - name: cdn-cron
         release: cdn-broker
         properties: *cdn-broker-properties
@@ -56,3 +57,14 @@
   value:
     name: secrets_cdn_broker_admin_password
     type: password
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_cdn_broker_tls_cert
+    type: certificate
+    update_mode: converge
+    options:
+      ca: broker_tls_ca
+      common_name: "cdn-broker.service.cf.internal"
+      alternative_names:
+        - "cdn-broker.service.cf.internal"
