@@ -29,6 +29,7 @@ var _ = Describe("cf push", func() {
 				// The contents of this directory are pushed, but not served
 				// See the buildpack for details.
 				"-p", "../example-apps/static-app/",
+				"-s", "cflinuxfs4",
 				"--no-start",
 				"--no-manifest",
 			).Wait(testConfig.CfPushTimeoutDuration())).To(Exit(0))
