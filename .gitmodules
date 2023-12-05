@@ -6,4 +6,4 @@
 	url = https://github.com/bosh-prometheus/prometheus-boshrelease
 [submodule "app-autoscaler-release"]
 	path = manifests/app-autoscaler/upstream
-	url = https://github.com/alphagov/paas-app-autoscaler-release
+	url = https://github.com/cloudfoundry/app-autoscaler-release

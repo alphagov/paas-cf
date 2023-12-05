@@ -3,7 +3,7 @@
 - type: replace
   path: /releases/name=app-autoscaler?
   value:
-    name: app-autoscaler
-    version: "10.0.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/app-autoscaler-release?v=10.0.0"
-    sha1: "f691986b6f14e5bc1974e8c0b02996e9e2497a61"
+    name: "app-autoscaler"
+    version: "11.4.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/app-autoscaler-release?v=11.4.0"
+    sha1: "76539b4fb0a36ad1c27bcaf520d41cd2d3c8e4dd"
