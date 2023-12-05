@@ -66,5 +66,8 @@ run:
       cd paas-cf/manifests/app-autoscaler/upstream
       PATH=$(go env GOPATH)/bin:${PATH}
       export PATH
-      cd src/acceptance
+      cd src/acceptance/assets/app/go_app
+      echo "Building tests"
+      make build
+      cd ../../..
       ./bin/test_default -procs 4 --compilers 4 --poll-progress-after=120s --poll-progress-interval=30s
