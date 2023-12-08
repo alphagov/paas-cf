@@ -19,6 +19,7 @@
       - instance
       - schedule
       - rules
+      - app-autoscaler
     metadata:
       displayName: Autoscaler
       longDescription: Apps can be configured to dynamically increase or decrease the number of running instances using autoscaling.
