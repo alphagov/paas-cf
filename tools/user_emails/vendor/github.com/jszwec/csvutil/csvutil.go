@@ -9,9 +9,14 @@ import (
 
 const defaultTag = "csv"
 
-// Unmarshal parses the CSV-encoded data and stores the result in the slice
-// pointed to by v. If v is nil or not a pointer to a slice, Unmarshal returns
-// an InvalidUnmarshalError.
+var (
+	_bytes = reflect.TypeOf(([]byte)(nil))
+	_error = reflect.TypeOf((*error)(nil)).Elem()
+)
+
+// Unmarshal parses the CSV-encoded data and stores the result in the slice or
+// the array pointed to by v. If v is nil or not a pointer to a struct slice or
+// struct array, Unmarshal returns an InvalidUnmarshalError.
 //
 // Unmarshal uses the std encoding/csv.Reader for parsing and csvutil.Decoder
 // for populating the struct elements in the provided slice. For exact decoding
@@ -22,21 +27,24 @@ const defaultTag = "csv"
 //
 // In case of success the provided slice will be reinitialized and its content
 // fully replaced with decoded data.
-func Unmarshal(data []byte, v interface{}) error {
-	vv := reflect.ValueOf(v)
+func Unmarshal(data []byte, v any) error {
+	val := reflect.ValueOf(v)
 
-	if vv.Kind() != reflect.Ptr || vv.IsNil() {
+	if val.Kind() != reflect.Ptr || val.IsNil() {
 		return &InvalidUnmarshalError{Type: reflect.TypeOf(v)}
 	}
 
-	if vv.Type().Elem().Kind() != reflect.Slice {
-		return &InvalidUnmarshalError{Type: vv.Type()}
+	switch val.Type().Elem().Kind() {
+	case reflect.Slice, reflect.Array:
+	default:
+		return &InvalidUnmarshalError{Type: val.Type()}
 	}
 
-	typ := vv.Type().Elem()
+	typ := val.Type().Elem()
 
-	c := countRecords(data)
-	slice := reflect.MakeSlice(typ, c, c)
+	if walkType(typ.Elem()).Kind() != reflect.Struct {
+		return &InvalidUnmarshalError{Type: val.Type()}
+	}
 
 	dec, err := NewDecoder(newCSVReader(bytes.NewReader(data)))
 	if err == io.EOF {
@@ -44,6 +52,16 @@ func Unmarshal(data []byte, v interface{}) error {
 	} else if err != nil {
 		return err
 	}
+
+	// for the array just call decodeArray directly; for slice values call the
+	// optimized code for better performance.
+
+	if typ.Kind() == reflect.Array {
+		return dec.decodeArray(val.Elem())
+	}
+
+	c := countRecords(data)
+	slice := reflect.MakeSlice(typ, c, c)
 
 	var i int
 	for ; ; i++ {
@@ -59,12 +77,12 @@ func Unmarshal(data []byte, v interface{}) error {
 		}
 	}
 
-	vv.Elem().Set(slice.Slice3(0, i, i))
+	val.Elem().Set(slice.Slice3(0, i, i))
 	return nil
 }
 
-// Marshal returns the CSV encoding of slice v. If v is not a slice or elements
-// are not structs then Marshal returns InvalidMarshalError.
+// Marshal returns the CSV encoding of slice or array v. If v is not a slice or
+// elements are not structs then Marshal returns InvalidMarshalError.
 //
 // Marshal uses the std encoding/csv.Writer with its default settings for csv
 // encoding.
@@ -72,20 +90,22 @@ func Unmarshal(data []byte, v interface{}) error {
 // Marshal will always encode the CSV header even for the empty slice.
 //
 // For the exact encoding rules look at Encoder.Encode method.
-func Marshal(v interface{}) ([]byte, error) {
+func Marshal(v any) ([]byte, error) {
 	val := walkValue(reflect.ValueOf(v))
 
 	if !val.IsValid() {
 		return nil, &InvalidMarshalError{}
 	}
 
-	if val.Kind() != reflect.Slice {
-		return nil, &InvalidMarshalError{Type: val.Type()}
+	switch val.Kind() {
+	case reflect.Array, reflect.Slice:
+	default:
+		return nil, &InvalidMarshalError{Type: reflect.ValueOf(v).Type()}
 	}
 
 	typ := walkType(val.Type().Elem())
 	if typ.Kind() != reflect.Struct {
-		return nil, &InvalidMarshalError{Type: val.Type()}
+		return nil, &InvalidMarshalError{Type: reflect.ValueOf(v).Type()}
 	}
 
 	var buf bytes.Buffer
@@ -96,11 +116,8 @@ func Marshal(v interface{}) ([]byte, error) {
 		return nil, err
 	}
 
-	l := val.Len()
-	for i := 0; i < l; i++ {
-		if err := enc.encode(val.Index(i)); err != nil {
-			return nil, err
-		}
+	if err := enc.encodeArray(val); err != nil {
+		return nil, err
 	}
 
 	w.Flush()
@@ -160,7 +177,7 @@ func countRecords(s []byte) (n int) {
 //
 // Header will return UnsupportedTypeError if the provided value is nil or is
 // not a struct.
-func Header(v interface{}, tag string) ([]string, error) {
+func Header(v any, tag string) ([]string, error) {
 	typ, err := valueType(v)
 	if err != nil {
 		return nil, err
@@ -173,12 +190,12 @@ func Header(v interface{}, tag string) ([]string, error) {
 	fields := cachedFields(typeKey{tag, typ})
 	h := make([]string, len(fields))
 	for i, f := range fields {
-		h[i] = f.tag.name
+		h[i] = f.name
 	}
 	return h, nil
 }
 
-func valueType(v interface{}) (reflect.Type, error) {
+func valueType(v any) (reflect.Type, error) {
 	val := reflect.ValueOf(v)
 	if !val.IsValid() {
 		return nil, &UnsupportedTypeError{}
@@ -203,4 +220,10 @@ loop:
 		return nil, &UnsupportedTypeError{Type: typ}
 	}
 	return typ, nil
+}
+
+func newCSVReader(r io.Reader) *csv.Reader {
+	rr := csv.NewReader(r)
+	rr.ReuseRecord = true
+	return rr
 }
