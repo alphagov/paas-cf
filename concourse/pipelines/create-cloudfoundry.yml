@@ -11,77 +11,77 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/alpine
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     psql: &psql-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/psql
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     node: &node-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     node-chromium: &node-chromium-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/node-chromium
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     awscli: &awscli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     concourse-tools: &concourse-tools-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/concourse-tools
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03 
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     cf-cli: &cf-cli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     cf-uaac: &cf-uaac-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-uaac
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     git-ssh: &git-ssh-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/git-ssh
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     ruby-slim: &ruby-slim-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/ruby
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     golang: &golang-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     terraform: &terraform-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/terraform
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
     curl-ssl: &curl-ssl-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/curl-ssl
-        tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
 
 
   tasks:
@@ -263,6 +263,7 @@ groups:
       - rotate-prometheus-credentials
       - expire-aws-keys
       - rotate-cf-admin-password
+
 resource_types:
   # FIX ME: The server certificate verification fails when using the concourse
   # version of the resource_type `git`. As a temporary fix we have docker image
@@ -827,7 +828,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/self-update-pipelines
-              tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+              tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
 
           inputs:
             - name: paas-cf
@@ -2965,7 +2966,7 @@ jobs:
             CREDHUB_CLIENT_SECRET: ((bosh-credhub-admin))
             CREDHUB_CA_CERT: ((bosh-credhub-ca-cert))
             DEPLOY_ENV: ((deploy_env))
-            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password)) 
+            BOSH_EXPORTER_PASSWORD: ((bosh-exporter-password))
           run:
             path: sh
             args:
@@ -3343,7 +3344,7 @@ jobs:
                   fi
 
                   for az in $(seq 1 $AZ_COUNT); do
-    
+
                     # iterate through dashboards to remove.
                     for dashboard in "billing-slis" "billing-compared-to-spending"; do
                       echo "Removing ${dashboard} from grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
@@ -4419,7 +4420,6 @@ jobs:
               - -e
               - -c
               - |
-                apk add --quiet --no-progress --no-cache g++ musl-dev make
                 uaac target "${UAA_API_URL}"
                 uaac token client get admin -s "${UAA_ADMIN_CLIENT_SECRET}"
                 CF_TOKEN="bearer $(uaac contexts | awk '$1 ~ /access_token/ {print $2}')"
@@ -4620,7 +4620,7 @@ jobs:
       - *add-grafana-job-annotation
       - in_parallel:
         - get: pipeline-trigger
-          passed: 
+          passed:
             - post-cf-deploy
             - prometheus-deploy
             - app-autoscaler-deploy
@@ -4683,8 +4683,8 @@ jobs:
 
                   delete_unused_keys ses_smtp_aws_access_key_id "ses-smtp-${DEPLOY_ENV}"
                   delete_unused_keys metrics_exporter_aws_access_key_id "metrics-exporter-${DEPLOY_ENV}"
-                  delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"          
-      
+                  delete_unused_keys yace_aws_access_key_id "yace-${DEPLOY_ENV}"
+
       - *end-grafana-job-annotation
 
   - name: smoke-tests
@@ -4817,7 +4817,7 @@ jobs:
             trigger: true
           - <<: *get-paas-cf
             passed: *smoke-tests-resource-passed
-          - get: cf-manifest            
+          - get: cf-manifest
           - get: cf-acceptance-tests
 
       - do:
@@ -5280,7 +5280,7 @@ jobs:
             type: registry-image
             source:
               repository: ghcr.io/alphagov/paas/spruce
-              tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+              tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
 
           inputs:
             - name: paas-cf
@@ -5487,12 +5487,6 @@ jobs:
 
                 cp "paas-cf/config/billing/output/${AWS_REGION}.json" ./src/github.com/alphagov/paas-billing/config.json
                 cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
-
-                wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
-                echo "deb http://apt.postgresql.org/pub/repos/apt/ jammy-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list
-
-                apt-get -q update
-                apt-get -q -y install postgresql-12 postgresql-client-12
 
                 cat > /etc/postgresql/12/main/pg_hba.conf <<-EOF
                 local   all   postgres   trust
@@ -6541,7 +6535,7 @@ jobs:
           type: registry-image
           source:
             repository: ghcr.io/alphagov/paas/cf-uaac
-            tag: c95d8a764a2784fd2707ac631ecc27ad66cd2c03
+            tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
 
         inputs:
           - name: passwords
