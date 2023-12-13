@@ -3,9 +3,9 @@
   path: /releases/-
   value:
     name: rds-broker
-    version: 1.55.0
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-1.55.0.tgz
-    sha1: b58a7376431595e20ff2a3aa3acff9fff422dc57
+    version: 1.56.0
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/rds-broker-1.56.0.tgz
+    sha1: ce6bb398a79a8e59346db739ef1a858a7c44a5d4
 
 - type: replace
   path: /instance_groups/-
@@ -64,6 +64,9 @@
         broker_name: "((terraform_outputs_environment))"
         cron_schedule: "0 12 * * *"
         keep_snapshots_for_days: 35
+        host: "0.0.0.0"
+        port: 443
+        tls: ((secrets_rds_broker_tls_cert))
 
 - type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/security_group_definitions/-
@@ -114,3 +117,15 @@
         - server_auth
       alternative_names:
         - loggregator_rds_metrics_collector
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_rds_broker_tls_cert
+    type: certificate
+    update_mode: converge
+    options:
+      ca: broker_tls_ca
+      common_name: "rds-broker.service.cf.internal"
+      alternative_names:
+        - "rds-broker.service.cf.internal"
