@@ -61,9 +61,9 @@
   path: /releases/-
   value:
     name: elasticache-broker
-    version: 0.1.22
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.1.22.tgz
-    sha1: 4b1c88aac9513cc5f9907c0efb79b50a4a0746a4
+    version: 0.0.1702551628
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/elasticache-broker-0.0.1702551628.tgz
+    sha1: f209d0c8eb90c1b1d96b491645af54b1838b67a1
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -106,7 +106,7 @@
                   metadata:
                     displayName: AWS ElastiCache Redis
                     longDescription: |
-                      Redis is an in-memory data structure project implementing a distributed, in-memory key-value 
+                      Redis is an in-memory data structure project implementing a distributed, in-memory key-value
                       database with optional durability. Redis supports different kinds of abstract data structures,
                       such as strings, lists, maps, sets, sorted sets, HyperLogLogs, bitmaps, streams, and spatial
                       indexes.
