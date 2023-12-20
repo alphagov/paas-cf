@@ -18,8 +18,8 @@ def add_permissions_boundary_to_user(iam_client, username, permissions_boundary_
   if current_permissions_boundary.nil? || current_permissions_boundary != permissions_boundary_arn
     unless dry_run
       iam_client.put_user_permissions_boundary(
-          user_name: username,
-          permissions_boundary: permissions_boundary_arn
+        user_name:            username,
+        permissions_boundary: permissions_boundary_arn,
       )
     end
     puts "Permissions_boundary added successfully to user #{username}."
