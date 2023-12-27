@@ -1,9 +1,17 @@
 ---
 
+# UPGRADE WARNING!
+# The 11.4.2 release of app-autscaler-release has been patched to fix the acceptance tests.
+# See this issue: https://github.com/cloudfoundry/app-autoscaler-release/issues/2434
+# The patch file can be found here:
+# paas-cf/manifests/app-autoscaler/diffs/patch_dynamic_policy_test.patch
+# This patch is applied as part of the concourse task. See:
+# concourse/tasks/app-autoscaler-acceptance-tests-run.yml
+
 - type: replace
   path: /releases/name=app-autoscaler?
   value:
     name: "app-autoscaler"
-    version: "11.4.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/app-autoscaler-release?v=11.4.0"
-    sha1: "76539b4fb0a36ad1c27bcaf520d41cd2d3c8e4dd"
+    version: "11.4.2"
+    url: "https://bosh.io/d/github.com/cloudfoundry-incubator/app-autoscaler-release?v=11.4.2"
+    sha1: "e3e3c292122acd8f14b825f24051ad4b7330ffd5"
