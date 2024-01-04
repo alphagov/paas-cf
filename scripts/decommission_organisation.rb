@@ -82,7 +82,7 @@ def lookup_users(user_guids)
   user_guids.each_slice(20) do |batch|
     guids_csv = batch.join(",")
     batch_users = cf_api_get("/v3/users?guids=#{guids_csv}&per_page=5000")
-    users.merge! batch_users["resources"].to_h { |usr| [usr["guid"], usr["username"]] }
+    users.merge! (batch_users["resources"].to_h { |usr| [usr["guid"], usr["username"]] })
   end
   users
 end
