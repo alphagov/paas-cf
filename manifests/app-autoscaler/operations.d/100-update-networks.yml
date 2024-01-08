@@ -1,21 +1,41 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=asactors/networks
+  path: /instance_groups/name=scalingengine/networks
   value:
     - name: cf
 
 - type: replace
-  path: /instance_groups/name=asmetrics/networks
+  path: /instance_groups/name=scheduler/networks
   value:
     - name: cf
 
 - type: replace
-  path: /instance_groups/name=asapi/networks
+  path: /instance_groups/name=operator/networks
   value:
     - name: cf
 
 - type: replace
-  path: /instance_groups/name=asnozzle/networks
+  path: /instance_groups/name=metricsforwarder/networks
+  value:
+    - name: cf
+
+- type: replace
+  path: /instance_groups/name=metricsserver/networks
+  value:
+    - name: cf
+
+- type: replace
+  path: /instance_groups/name=eventgenerator/networks
+  value:
+    - name: cf
+
+- type: replace
+  path: /instance_groups/name=apiserver/networks
+  value:
+    - name: cf
+
+- type: replace
+  path: /instance_groups/name=metricsgateway/networks
   value:
     - name: cf
