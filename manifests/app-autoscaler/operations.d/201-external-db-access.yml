@@ -1,33 +1,17 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=scalingengine/vm_extensions?/-
+  path: /instance_groups/name=asactors/vm_extensions?/-
   value: cf_rds_client_sg
 
 - type: replace
-  path: /instance_groups/name=operator/vm_extensions?/-
+  path: /instance_groups/name=asapi/vm_extensions?/-
   value: cf_rds_client_sg
 
 - type: replace
-  path: /instance_groups/name=scheduler/vm_extensions?/-
+  path: /instance_groups/name=asmetrics/vm_extensions?/-
   value: cf_rds_client_sg
 
 - type: replace
-  path: /instance_groups/name=apiserver/vm_extensions?/-
-  value: cf_rds_client_sg
-
-- type: replace
-  path: /instance_groups/name=metricsforwarder/vm_extensions?/-
-  value: cf_rds_client_sg
-
-- type: replace
-  path: /instance_groups/name=eventgenerator/vm_extensions?/-
-  value: cf_rds_client_sg
-
-- type: replace
-  path: /instance_groups/name=metricsserver/vm_extensions?/-
-  value: cf_rds_client_sg
-
-- type: replace
-  path: /instance_groups/name=metricsgateway/vm_extensions?/-
+  path: /instance_groups/name=asnozzle/vm_extensions?/-
   value: cf_rds_client_sg

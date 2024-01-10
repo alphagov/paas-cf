@@ -1,14 +1,12 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=apiserver/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=((deployment_name))
+  path: /instance_groups/name=asapi/jobs/name=golangapiserver/properties/autoscaler/apiserver/broker/server/catalog/services/name=autoscaler
   value:
     id: 656a9276-a1f6-4646-aade-08f0a51b29ed
     name: autoscaler
     description: App instances autoscaler
     bindable: true
-    instances_retrievable: true
-    bindings_retrievable: true
     AdditionalMetadata:
       usecase:
         - Scaling at peak times
@@ -19,7 +17,6 @@
       - instance
       - schedule
       - rules
-      - app-autoscaler
     metadata:
       displayName: Autoscaler
       longDescription: Apps can be configured to dynamically increase or decrease the number of running instances using autoscaling.
