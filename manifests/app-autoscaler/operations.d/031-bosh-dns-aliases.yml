@@ -1,25 +1,25 @@
 ---
 - type: remove
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).autoscalerpostgres.service.cf.internal
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=autoscalerpostgres.service.cf.internal
 
 - type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).apiserver.service.cf.internal/targets/0/network
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=apiserver.service.cf.internal/targets/0/network
   value: cf
 
 - type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).autoscalerscheduler.service.cf.internal/targets/0/network
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=autoscalerscheduler.service.cf.internal/targets/0/network
   value: cf
 
 - type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).servicebroker.service.cf.internal/targets/0/network
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=servicebroker.service.cf.internal/targets/0/network
   value: cf
 
 - type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).eventgenerator.service.cf.internal/targets/0/network
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=eventgenerator.service.cf.internal/targets/0/network
   value: cf
 
 - type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).scalingengine.service.cf.internal/targets/0/network
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=scalingengine.service.cf.internal/targets/0/network
   value: cf
 
 - type: replace
@@ -27,19 +27,11 @@
   value: cf
 
 - type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=log-cache.service.cf.internal/targets/0/network
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=metricsgateway.service.cf.internal/targets/0/network
   value: cf
 
 - type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=logcache/targets/0/network
-  value: cf
-
-- type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).metricsgateway.service.cf.internal/targets/0/network
-  value: cf
-
-- type: replace
-  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=((deployment_name)).metricsserver.service.cf.internal/targets/0/network
+  path: /addons/name=bosh-dns-aliases/jobs/name=bosh-dns-aliases/properties/aliases/domain=metricsserver.service.cf.internal/targets/0/network
   value: cf
 
 - type: replace
@@ -51,13 +43,7 @@
   value: cf
 
 - type: replace
-  path: /variables/name=eventgenerator_server_cert/options/alternative_names
+  path: /variables/name=metricsserver_server/options/alternative_names
   value:
-    - "((deployment_name)).eventgenerator.service.cf.internal"
-    - "*.eventgenerator.cf.((deployment_name)).bosh"
-
-- type: replace
-  path: /variables/name=metricsserver_server_cert/options/alternative_names
-  value:
-    - "((deployment_name)).metricsserver.service.cf.internal"
-    - "*.metricsserver.cf.((deployment_name)).bosh"
+    - "metricsserver.service.cf.internal"
+    - "*.asmetrics.cf.app-autoscaler.bosh"

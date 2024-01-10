@@ -1,32 +1,16 @@
 ---
 - type: replace
-  path: /instance_groups/name=scalingengine/jobs/name=route_registrar/consumes/nats-tls/deployment?
+  path: /instance_groups/name=asactors/jobs/name=route_registrar/consumes/nats-tls/deployment?
   value: ((deploy_env))
 
 - type: replace
-  path: /instance_groups/name=scheduler/jobs/name=route_registrar/consumes/nats-tls/deployment?
+  path: /instance_groups/name=asapi/jobs/name=route_registrar/consumes/nats-tls/deployment?
   value: ((deploy_env))
 
 - type: replace
-  path: /instance_groups/name=operator/jobs/name=route_registrar/consumes/nats-tls/deployment?
+  path: /instance_groups/name=asnozzle/jobs/name=route_registrar/consumes/nats-tls/deployment?
   value: ((deploy_env))
 
 - type: replace
-  path: /instance_groups/name=apiserver/jobs/name=route_registrar/consumes/nats-tls/deployment?
-  value: ((deploy_env))
-
-- type: replace
-  path: /instance_groups/name=metricsforwarder/jobs/name=route_registrar/consumes/nats-tls/deployment?
-  value: ((deploy_env))
-
-- type: replace
-  path: /instance_groups/name=metricsgateway/jobs/name=route_registrar/consumes/nats-tls/deployment?
-  value: ((deploy_env))
-
-- type: replace
-  path: /instance_groups/name=eventgenerator/jobs/name=route_registrar/consumes/nats-tls/deployment?
-  value: ((deploy_env))
-
-- type: replace
-  path: /instance_groups/name=metricsserver/jobs/name=route_registrar/consumes/nats-tls/deployment?
+  path: /instance_groups/name=asmetrics/jobs/name=route_registrar/consumes/nats-tls/deployment?
   value: ((deploy_env))

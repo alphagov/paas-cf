@@ -1,65 +1,33 @@
 ---
 
 - type: replace
-  path: /instance_groups/name=scalingengine/vm_type
+  path: /instance_groups/name=asactors/vm_type
   value: nano
 
 - type: replace
-  path: /instance_groups/name=scalingengine/instances
+  path: /instance_groups/name=asactors/instances
   value: 1
 
 - type: replace
-  path: /instance_groups/name=operator/vm_type
+  path: /instance_groups/name=asmetrics/vm_type
   value: nano
 
 - type: replace
-  path: /instance_groups/name=operator/instances
+  path: /instance_groups/name=asmetrics/instances
   value: 1
 
 - type: replace
-  path: /instance_groups/name=scheduler/vm_type
+  path: /instance_groups/name=asapi/vm_type
   value: nano
 
 - type: replace
-  path: /instance_groups/name=scheduler/instances
+  path: /instance_groups/name=asapi/instances
   value: 1
 
 - type: replace
-  path: /instance_groups/name=eventgenerator/vm_type
+  path: /instance_groups/name=asnozzle/vm_type
   value: nano
 
 - type: replace
-  path: /instance_groups/name=eventgenerator/instances
-  value: 1
-
-- type: replace
-  path: /instance_groups/name=metricsserver/vm_type
-  value: nano
-
-- type: replace
-  path: /instance_groups/name=metricsserver/instances
-  value: 1
-
-- type: replace
-  path: /instance_groups/name=metricsforwarder/vm_type
-  value: nano
-
-- type: replace
-  path: /instance_groups/name=metricsforwarder/instances
-  value: 1
-
-- type: replace
-  path: /instance_groups/name=apiserver/vm_type
-  value: nano
-
-- type: replace
-  path: /instance_groups/name=apiserver/instances
-  value: 1
-
-- type: replace
-  path: /instance_groups/name=metricsgateway/vm_type
-  value: nano
-
-- type: replace
-  path: /instance_groups/name=metricsgateway/instances
+  path: /instance_groups/name=asnozzle/instances
   value: 1
