@@ -32,10 +32,6 @@
             broker_username: "cdn-broker"
             broker_password: ((secrets_cdn_broker_admin_password))
             database_url: ((terraform_outputs_cdn_db_connection_string))
-            email: "the-multi-cloud-paas-team@digital.cabinet-office.gov.uk"
-            acme_url: "https://acme-v01.api.letsencrypt.org/directory"
-            bucket: gds-paas-((environment))-cdn-broker-challenge
-            iam_path_prefix: ((environment))-letsencrypt
             cloudfront_prefix: ((environment))-cdn
             aws_access_key_id: ""
             aws_secret_access_key: ""
