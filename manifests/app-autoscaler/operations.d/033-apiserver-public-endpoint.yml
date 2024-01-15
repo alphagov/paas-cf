@@ -1,0 +1,8 @@
+---
+
+# autoscaler.((system_domain)) remains the cf cli autoscaler plugin's
+# default presumed endpoint.
+- type: replace
+  path: /instance_groups/name=apiserver/jobs/name=route_registrar/properties/route_registrar/routes/name=api_server/uris
+  value:
+  - autoscaler.((system_domain))
