@@ -1,36 +1,3 @@
-resource "aws_lb" "cf_brokers" {
-  name               = "${var.env}-cf-brokers"
-  internal           = true
-  load_balancer_type = "application"
-  security_groups    = [aws_security_group.service_brokers.id]
-  subnets            = split(",", var.infra_subnet_ids)
-
-  access_logs {
-    bucket  = data.aws_s3_bucket.account_region_wide_alb_access_logs.id
-    prefix  = "${var.env}/cf-brokers"
-    enabled = true
-  }
-}
-
-resource "aws_lb_listener" "cf_brokers" {
-  load_balancer_arn = aws_lb.cf_brokers.arn
-  port              = "443"
-  protocol          = "HTTPS"
-  ssl_policy        = var.default_load_balancer_security_policy
-  certificate_arn   = data.aws_acm_certificate.system.arn
-
-  default_action {
-    type = "fixed-response"
-
-    fixed_response {
-      content_type = "text/plain"
-      message_body = "Hostname not known"
-      status_code  = "404"
-    }
-  }
-}
-
-#RDS Broker
 resource "aws_lb_listener_rule" "cf_rds_broker" {
   listener_arn = aws_lb_listener.cf_brokers.arn
   priority     = "111"

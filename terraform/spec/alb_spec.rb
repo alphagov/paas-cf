@@ -73,7 +73,7 @@ describe "alb" do
       ).to be_empty
     end
 
-    it "is have terraform files describing albs" do
+    it "has terraform files describing albs" do
       expect(terraform_files).not_to be_empty
     end
 
@@ -118,7 +118,7 @@ describe "alb" do
 
     terraform = hcl2json(terraform_contents)
 
-    it "is have terraform files describing albs" do
+    it "has terraform files describing albs" do
       expect(terraform_files).not_to be_empty
     end
 
