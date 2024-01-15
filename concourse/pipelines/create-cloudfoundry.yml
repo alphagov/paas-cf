@@ -709,6 +709,15 @@ resources:
       # v0.53.0
       ref: 2fd8cd322931aeb5a39c457ede31022e67f479b9
 
+  - name: pingdom-exporter
+    type: git
+    source:
+      uri: https://github.com/jusbrasil/pingdom-exporter
+      fetch_tags: true
+    version:
+      # v1.4.0
+      ref: 162b570480a101ae9697658faae57dc42ff3c5db
+
   - name: grafana-overview-annotation-id
     type: s3-iam
     source:
@@ -3078,6 +3087,7 @@ jobs:
           - get: cf-tfstate
           - get: yet-another-cloudwatch-exporter
           - get: paas-trusted-people
+          - get: pingdom-exporter
 
       - task: extract-terraform-outputs
         tags: [colocated-with-web]
@@ -3319,6 +3329,58 @@ jobs:
                   cf push cloudwatch-exporter -f manifest.yml --droplet droplet.tgz --strategy rolling 2>&1 | \
                     sed -r "s/AWS_SECRET_ACCESS_KEY: .+/AWS_SECRET_ACCESS_KEY: ********/g"
 
+        - task: deploy-pingdom-exporter
+          tags: [colocated-with-web]
+          config:
+            platform: linux
+            image_resource: *cf-cli-image-resource
+            params:
+              DEPLOY_ENV: ((deploy_env))
+              AWS_REGION: ((aws_region))
+              API_ENDPOINT: ((api_endpoint))
+              CF_ADMIN: ((cf_admin))
+              CF_PASS: ((cf_pass))
+            inputs:
+              - name: paas-cf
+              - name: config
+              - name: pingdom-exporter
+            run:
+              path: bash
+              args:
+                - -e
+                - -c
+                - |
+                  if [[ "${DEPLOY_ENV}" == dev* ]]; then
+                    echo "pingdom exporter is not deployed in dev because dev urls are not configured in pingdom"
+                    exit 0
+                  fi
+
+                  . ./config/config.sh
+                  cf api "${API_ENDPOINT}"
+                  cf auth "${CF_ADMIN}" "${CF_PASS}"
+
+                  cf target -o admin -s monitoring
+
+                  cd pingdom-exporter
+
+                  cat << EOF > manifest.yml
+                  ---
+                  applications:
+                  - name: pingdom-exporter
+                    env:
+                      GO_INSTALL_PACKAGE_SPEC: github.com/jusbrasil/pingdom-exporter/cmd/pingdom-exporter
+                      PINGDOM_API_TOKEN: ((pingdom_api_token))
+                    readiness-health-check-type: http
+                    readiness-health-check-http-endpoint: /healthz
+                    buildpacks: [go_buildpack]
+                    stack: cflinuxfs4
+                    command: ./bin/pingdom-exporter -port 8080
+                  EOF
+
+                  cf cancel-deployment pingdom-exporter || true
+                  cf push pingdom-exporter --strategy rolling 2>&1  | \
+                    sed -r "s/PINGDOM_API_TOKEN: .+/PINGDOM_API_TOKEN: ********/g"
+
         - task: upload-grafana-dashboards
           tags: [colocated-with-web]
           config:
@@ -3326,6 +3388,7 @@ jobs:
             image_resource: *curl-ssl-image-resource
             params:
               SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+              APPS_DNS_ZONE_NAME: ((apps_dns_zone_name))
               DEPLOY_ENV: ((deploy_env))
               SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
               GRAFANA_PASS: ((grafana_password))
@@ -3360,6 +3423,7 @@ jobs:
                       echo "Uploading ${f} to grafana-${az}.${SYSTEM_DNS_ZONE_NAME}"
 
                       sed "s/__SYSTEM_DNS_ZONE_NAME__/${SYSTEM_DNS_ZONE_NAME}/g" "${f}" \
+                      | sed "s/__APPS_DNS_ZONE_NAME__/${APPS_DNS_ZONE_NAME}/g" \
                       | sed "s/__DEPLOY_ENV__/${DEPLOY_ENV}/g" \
                       | jq '{"dashboard": ., "overwrite": true, "folderId": 0}' \
                       | curl "https://grafana-${az}.${SYSTEM_DNS_ZONE_NAME}/api/dashboards/db" \
