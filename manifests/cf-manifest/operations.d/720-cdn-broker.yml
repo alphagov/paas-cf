@@ -42,9 +42,6 @@
             default_origin: ((terraform_outputs_cf_apps_domain))
             aws_region: "((terraform_outputs_region))"
             extra_request_headers: "x-cf-instanceid:x-paas-xff-auth-((waf_xff_auth_key))"
-            host: "0.0.0.0"
-            port: "443"
-            tls: ((secrets_cdn_broker_tls_cert))
 
       - name: cdn-cron
         release: cdn-broker
@@ -57,14 +54,3 @@
   value:
     name: secrets_cdn_broker_admin_password
     type: password
-- type: replace
-  path: /variables/-
-  value:
-    name: secrets_cdn_broker_tls_cert
-    type: certificate
-    update_mode: converge
-    options:
-      ca: broker_tls_ca
-      common_name: "cdn-broker.service.cf.internal"
-      alternative_names:
-        - "cdn-broker.service.cf.internal"
