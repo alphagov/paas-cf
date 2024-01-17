@@ -47,6 +47,12 @@ run:
         "admin_user": "$(cat admin-creds/username)",
         "admin_password": "$(cat admin-creds/password)",
 
+        "eventgenerator_health_endpoint": "app-autoscaler-eventgenerator.$SYSTEM_DOMAIN/health",
+        "scalingengine_health_endpoint": "app-autoscaler-scalingengine.$SYSTEM_DOMAIN/health",
+        "operator_health_endpoint": "app-autoscaler-operator.$SYSTEM_DOMAIN/health",
+        "metricsforwarder_health_endpoint": "app-autoscaler-metricsforwarder.$SYSTEM_DOMAIN/health",
+        "scheduler_health_endpoint": "app-autoscaler-scheduler.$SYSTEM_DOMAIN/health",
+
         "enable_service_access": false
       }
       EOF
