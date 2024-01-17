@@ -28,6 +28,7 @@ app_domain: $APPS_DNS_ZONE_NAME
 aws_account: $AWS_ACCOUNT
 bosh_ca_cert: $BOSH_CA_CERT
 vcap_password: $VCAP_PASSWORD
+deployment_name: app-autoscaler
 
 cf_client_id: app_autoscaler
 database:
@@ -53,7 +54,7 @@ bosh interpolate \
   ${opsfile_args} \
   --vars-file="${variables_file}" \
   --vars-file="${WORKDIR}/terraform-outputs/cf.yml" \
-  "${APP_AUTOSCALER_BOSHRELEASE_DIR}/templates/app-autoscaler-deployment.yml" \
+  "${APP_AUTOSCALER_BOSHRELEASE_DIR}/templates/app-autoscaler.yml" \
 | sed "s@dns_api_client_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_client_tls.@g" \
 | sed "s@dns_api_server_tls[.]@/$DEPLOY_ENV/$DEPLOY_ENV/dns_api_server_tls.@g" \
 | sed "s@/bosh-autoscaler/cf/nats_client_cert[.]@/$DEPLOY_ENV/$DEPLOY_ENV/nats_client_cert.@g" \

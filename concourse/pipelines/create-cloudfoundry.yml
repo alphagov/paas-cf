@@ -3545,7 +3545,7 @@ jobs:
 
                 echo 'Getting variables'
                 APP_AUTOSCALER_NS="/${DEPLOY_ENV}/app-autoscaler"
-                APP_AUTOSCALER_SERVICE_BROKER_PASSWORD="$(credhub get -q -n "${APP_AUTOSCALER_NS}/autoscaler_service_broker_password")"
+                APP_AUTOSCALER_SERVICE_BROKER_PASSWORD="$(credhub get -q -n "${APP_AUTOSCALER_NS}/service_broker_password")"
 
                 echo 'Setting secrets'
                 TEAM_NS="/concourse/main"
@@ -3567,9 +3567,9 @@ jobs:
             CF_ADMIN: ((cf_admin))
             CF_PASS: ((cf_pass))
             DEPLOY_ENV: ((deploy_env))
-            APP_AUTOSCALER_SERVICE_BROKER_USERNAME: autoscaler_service_broker_user
+            APP_AUTOSCALER_SERVICE_BROKER_USERNAME: autoscaler-broker-user
             APP_AUTOSCALER_SERVICE_BROKER_PASSWORD: ((autoscaler_service_broker_password))
-            APP_AUTOSCALER_SERVICE_BROKER_URL: https://autoscalerservicebroker.((system_dns_zone_name))
+            APP_AUTOSCALER_SERVICE_BROKER_URL: https://app-autoscalerservicebroker.((system_dns_zone_name))
           run:
             path: bash
             args:

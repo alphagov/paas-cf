@@ -47,6 +47,12 @@ run:
         "admin_user": "$(cat admin-creds/username)",
         "admin_password": "$(cat admin-creds/password)",
 
+        "eventgenerator_health_endpoint": "app-autoscaler-eventgenerator.$SYSTEM_DOMAIN/health",
+        "scalingengine_health_endpoint": "app-autoscaler-scalingengine.$SYSTEM_DOMAIN/health",
+        "operator_health_endpoint": "app-autoscaler-operator.$SYSTEM_DOMAIN/health",
+        "metricsforwarder_health_endpoint": "app-autoscaler-metricsforwarder.$SYSTEM_DOMAIN/health",
+        "scheduler_health_endpoint": "app-autoscaler-scheduler.$SYSTEM_DOMAIN/health",
+
         "enable_service_access": false
       }
       EOF
@@ -58,7 +64,11 @@ run:
 
       echo "Running tests"
       cd paas-cf/manifests/app-autoscaler/upstream
+      git apply ../diffs/patch_dynamic_policy_test.patch
       PATH=$(go env GOPATH)/bin:${PATH}
       export PATH
-      cd src/acceptance
+      cd src/acceptance/assets/app/go_app
+      echo "Building tests"
+      make build
+      cd ../../..
       ./bin/test_default -procs 4 --compilers 4 --poll-progress-after=120s --poll-progress-interval=30s
