@@ -3,6 +3,6 @@
   path: /releases/-
   value:
     name: awslogs
-    version: 0.1.8
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/awslogs-0.1.8.tgz
-    sha1: f2a5fc665b8d6581c302bc90aaa49a7ccd72efb9
+    version: 0.1.9
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/awslogs-0.1.9.tgz
+    sha1: 754a07fee3bd30646b24099c1a6648375cf2b128
