@@ -170,7 +170,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "code",
-            "expr": "min(cf_application_instances{environment=~\"dev05\",deployment=~\"dev05[-0-9a-f]*\"})",
+            "expr": "min(cf_application_instances{environment=~\"$environment\",deployment=~\"$bosh_deployment\"})",
             "format": "time_series",
             "interval": "",
             "intervalFactor": 2,
@@ -185,7 +185,7 @@
               "uid": "P1809F7CD0C75ACF3"
             },
             "editorMode": "code",
-            "expr": "min(cf_application_instances_running{environment=~\"dev05\",deployment=~\"dev05[-0-9a-f]*\"})",
+            "expr": "min(cf_application_instances_running{environment=~\"$environment\",deployment=~\"$bosh_deployment\"})",
             "format": "time_series",
             "hide": false,
             "interval": "",
