@@ -13,7 +13,7 @@ resource "aws_elb" "cdn_broker" {
   }
 
   health_check {
-    target              = "HTTP:3000/healthcheck/http"
+    target              = "HTTPS:443/healthcheck/https"
     interval            = var.health_check_interval
     timeout             = var.health_check_timeout
     healthy_threshold   = var.health_check_healthy
@@ -21,8 +21,8 @@ resource "aws_elb" "cdn_broker" {
   }
 
   listener {
-    instance_port      = 3000
-    instance_protocol  = "http"
+    instance_port      = 443
+    instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
     ssl_certificate_id = data.aws_acm_certificate.system.arn
@@ -38,52 +38,6 @@ resource "aws_lb_ssl_negotiation_policy" "cdn_broker" {
     name  = "Reference-Security-Policy"
     value = random_pet.elb_cipher.keepers.default_classic_load_balancer_security_policy
   }
-}
-
-resource "aws_s3_bucket" "cdn_broker_bucket" {
-  bucket        = "gds-paas-${var.env}-cdn-broker-challenge"
-  force_destroy = "true"
-}
-
-resource "aws_s3_bucket_public_access_block" "cdn_broker_bucket" {
-  bucket = aws_s3_bucket.cdn_broker_bucket.id
-
-  block_public_policy = false
-}
-
-resource "aws_s3_bucket_ownership_controls" "cdn_broker_bucket" {
-  bucket = aws_s3_bucket.cdn_broker_bucket.id
-  rule {
-    object_ownership = "BucketOwnerPreferred"
-  }
-}
-
-resource "aws_s3_bucket_acl" "cdn_broker_bucket" {
-  bucket = aws_s3_bucket.cdn_broker_bucket.id
-  acl    = "private"
-
-  depends_on = [aws_s3_bucket_ownership_controls.cdn_broker_bucket]
-}
-
-resource "aws_s3_bucket_policy" "cdn_broker_bucket" {
-  bucket = aws_s3_bucket.cdn_broker_bucket.id
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": [
-        "s3:GetObject"
-      ],
-      "Effect": "Allow",
-	  "Resource": "arn:aws:s3:::gds-paas-${var.env}-cdn-broker-challenge/*",
-      "Principal": "*"
-    }
-  ]
-}
-POLICY
-
-  depends_on = [aws_s3_bucket_public_access_block.cdn_broker_bucket]
 }
 
 resource "aws_db_subnet_group" "cdn_rds" {
