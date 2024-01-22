@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: sqs-broker
-    version: 0.1.15
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/sqs-broker-0.1.15.tgz
-    sha1: 076c8eed7777bbc821304a492c7da112cd7d256c
+    version: 0.0.1697033641
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/sqs-broker-0.0.1697033641.tgz
+    sha1: 2d8a9b842256e39d1def63ec552d7c7875b4721d
 
 
 - type: replace
@@ -32,7 +32,7 @@
         release: sqs-broker
         properties:
           sqs-broker:
-            port: 80
+            port: 443
             basic_auth_username: sqs-broker
             basic_auth_password: ((secrets_sqs_broker_admin_password))
             log_level: INFO
@@ -42,6 +42,7 @@
             additional_user_policy: "((terraform_outputs_restrict_to_local_ips_policy_arn))"
             permissions_boundary: "((terraform_outputs_sqs_broker_permissions_boundary_arn))"
             deploy_environment: "((environment))"
+            tls: ((secrets_sqs_broker_tls_cert))
             locket:
               api_location: "locket.service.cf.internal:8891"
               ca_cert: "((diego_locket_client.ca))"
@@ -96,3 +97,15 @@
   value:
     name: secrets_sqs_broker_admin_password
     type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_sqs_broker_tls_cert
+    type: certificate
+    update_mode: converge
+    options:
+      ca: broker_tls_ca
+      common_name: "sqs-broker.service.cf.internal"
+      alternative_names:
+        - "sqs-broker.service.cf.internal"

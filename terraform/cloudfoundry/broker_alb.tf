@@ -92,13 +92,13 @@ resource "aws_lb_listener_rule" "cf_s3_broker" {
 }
 
 resource "aws_lb_target_group" "cf_s3_broker" {
-  name     = "${var.env}-cf-s3-broker"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name  = "${substr(format("%s-%s", "${var.env}-cf-s3-broker", replace(uuid(), "-", "")), 0, 32)}"
+  port        = 443
+  protocol    = "HTTPS"
+  vpc_id      = var.vpc_id
 
   health_check {
-    port                = 80
+    port                = 443
     path                = "/healthcheck"
     protocol            = "HTTP"
     interval            = var.health_check_interval
@@ -136,13 +136,13 @@ resource "aws_lb_listener_rule" "cf_sqs_broker" {
 }
 
 resource "aws_lb_target_group" "cf_sqs_broker" {
-  name     = "${var.env}-cf-sqs-broker"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = var.vpc_id
+  name  = "${substr(format("%s-%s", "${var.env}-cf-sqs-broker", replace(uuid(), "-", "")), 0, 32)}"
+  port        = 443
+  protocol    = "HTTPS"
+  vpc_id      = var.vpc_id
 
   health_check {
-    port                = 80
+    port                = 443
     path                = "/healthcheck"
     protocol            = "HTTP"
     interval            = var.health_check_interval
