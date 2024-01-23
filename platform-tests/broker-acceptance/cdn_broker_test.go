@@ -88,14 +88,16 @@ var _ = Describe("CDN broker", func() {
 		})
 
 		It("refuses to create a CDN for a domain without a cf create-domain", func() {
-			orgName := testContext.TestSpace.OrganizationName()
 			domainName := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "cdn-broker") + ".net"
 			domainNameList := fmt.Sprintf(`{"domain": "%s"}`, domainName)
 
 			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-cdn")
 
-			// purge as service-instance has not been successfully provisioned
-			defer serviceInstancePurge(serviceInstanceName, orgName)
+			// best effort tidyup - we don't really care if these pass or fail.
+			// currently this kind of failure doesn't actually stop the service
+			// being "created".
+			defer pollForServiceDeletionCompletion(serviceInstanceName)
+			defer cf.Cf("delete-service", serviceInstanceName, "-f")
 
 			By("attempting to create a CDN instance: "+serviceInstanceName, func() {
 				cf_create_service := cf.Cf("create-service", serviceName, serviceName, serviceInstanceName, "-c", domainNameList).Wait(testConfig.DefaultTimeoutDuration())
@@ -105,15 +107,17 @@ var _ = Describe("CDN broker", func() {
 		})
 
 		It("refuses to create a CDN for a domain with wrong ownership", func() {
-			orgName := testContext.TestSpace.OrganizationName()
 			domainName := generator.PrefixedRandomName(testConfig.GetNamePrefix(), "cdn-broker") + ".net"
 			domainNameList := fmt.Sprintf(`{"domain": "%s"}`, domainName)
 
 			serviceInstanceName = generator.PrefixedRandomName(testConfig.GetNamePrefix(), "test-cdn")
 
-			defer cf.Cf("delete-domain", altOrgName, domainName, "-f")
-			// purge as service-instance has not been successfully provisioned
-			defer serviceInstancePurge(serviceInstanceName, orgName)
+			// best effort tidyup - we don't really care if these pass or fail.
+			// currently this kind of failure doesn't actually stop the service
+			// being "created".
+			defer pollForServiceDeletionCompletion(serviceInstanceName)
+			defer cf.Cf("delete-domain", domainName, "-f")
+			defer cf.Cf("delete-service", serviceInstanceName, "-f")
 
 			By("attempting to create a CDN instance: "+serviceInstanceName, func() {
 				Expect(cf.Cf("create-domain", altOrgName, domainName).Wait(testConfig.DefaultTimeoutDuration())).To(Exit(0))
