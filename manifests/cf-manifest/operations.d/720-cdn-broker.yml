@@ -4,9 +4,9 @@
   path: /releases/-
   value:
     name: cdn-broker
-    version: 0.1.54
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.54.tgz
-    sha1: e97a99e35400160fb09ed4129b57d129040d27ae
+    version: 0.1.58
+    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/cdn-broker-0.1.58.tgz
+    sha1: a31418452bf4834b17c66f0126f21daecd0f2fb9
 
 - type: replace
   path: /addons/name=loggregator_agent/exclude/jobs/-
@@ -45,6 +45,9 @@
             default_origin: ((terraform_outputs_cf_apps_domain))
             aws_region: "((terraform_outputs_region))"
             extra_request_headers: "x-cf-instanceid:x-paas-xff-auth-((waf_xff_auth_key))"
+            host: "0.0.0.0"
+            port: "443"
+            tls: ((secrets_cdn_broker_tls_cert))
       - name: cdn-cron
         release: cdn-broker
         properties: *cdn-broker-properties
@@ -56,3 +59,15 @@
   value:
     name: secrets_cdn_broker_admin_password
     type: password
+
+- type: replace
+  path: /variables/-
+  value:
+    name: secrets_cdn_broker_tls_cert
+    type: certificate
+    update_mode: converge
+    options:
+      ca: broker_tls_ca
+      common_name: "cdn-broker.service.cf.internal"
+      alternative_names:
+        - "cdn-broker.service.cf.internal"

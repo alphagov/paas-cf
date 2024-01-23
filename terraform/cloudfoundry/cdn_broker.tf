@@ -13,7 +13,7 @@ resource "aws_elb" "cdn_broker" {
   }
 
   health_check {
-    target              = "HTTP:3000/healthcheck/http"
+    target              = "HTTPS:443/healthcheck/https"
     interval            = var.health_check_interval
     timeout             = var.health_check_timeout
     healthy_threshold   = var.health_check_healthy
@@ -21,8 +21,8 @@ resource "aws_elb" "cdn_broker" {
   }
 
   listener {
-    instance_port      = 3000
-    instance_protocol  = "http"
+    instance_port      = 443
+    instance_protocol  = "https"
     lb_port            = 443
     lb_protocol        = "https"
     ssl_certificate_id = data.aws_acm_certificate.system.arn
@@ -163,4 +163,3 @@ resource "aws_security_group" "cdn_rds_client" {
     Name = "${var.env}-cdn-rds-client"
   }
 }
-

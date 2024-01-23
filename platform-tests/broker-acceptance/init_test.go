@@ -181,6 +181,15 @@ func pollForServiceUnbound(dbInstanceName, boundAppName string) {
 	fmt.Fprint(GinkgoWriter, "done\n")
 }
 
+func serviceInstancePurge(serviceInstanceName string, orgName string) {
+	workflowhelpers.AsUser(testContext.AdminUserContext(), testContext.ShortTimeout(), func() {
+		command := cf.Cf("target", "-o", orgName).Wait(testConfig.DefaultTimeoutDuration())
+		Expect(command).To(Exit(0))
+		command = cf.Cf("purge-service-instance", serviceInstanceName, "-f").Wait(testConfig.DefaultTimeoutDuration())
+		Expect(command).To(Exit(0))
+	})
+}
+
 type basicAuthRoundTripper struct {
 	username string
 	password string
