@@ -3807,31 +3807,6 @@ jobs:
                   cf create-service-broker rds-broker rds-broker "${RDS_BROKER_PASS}" "https://${RDS_BROKER_SERVER}"
                 fi
 
-                # Enable supported plans
-                cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
-                tiny-unencrypted-5.7
-                small-5.7
-                small-ha-5.7
-                medium-ha-5.7
-                medium-5.7
-                large-ha-5.7
-                large-5.7
-                xlarge-ha-5.7
-                xlarge-5.7
-                EOF
-
-                cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
-                tiny-unencrypted-5.7-high-iops
-                small-5.7-high-iops
-                small-ha-5.7-high-iops
-                medium-ha-5.7-high-iops
-                medium-5.7-high-iops
-                large-ha-5.7-high-iops
-                large-5.7-high-iops
-                xlarge-ha-5.7-high-iops
-                xlarge-5.7-high-iops
-                EOF
-
                 cat <<EOF | xargs -n1 cf enable-service-access mysql -b rds-broker -p
                 tiny-unencrypted-8.0
                 small-8.0
@@ -3854,30 +3829,6 @@ jobs:
                 large-8.0-high-iops
                 xlarge-ha-8.0-high-iops
                 xlarge-8.0-high-iops
-                EOF
-
-                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
-                tiny-unencrypted-11
-                small-11
-                small-ha-11
-                medium-11
-                medium-ha-11
-                large-11
-                large-ha-11
-                xlarge-11
-                xlarge-ha-11
-                EOF
-
-                cat <<EOF | xargs -n1 cf enable-service-access postgres -b rds-broker -p
-                tiny-unencrypted-11-high-iops
-                small-11-high-iops
-                small-ha-11-high-iops
-                medium-11-high-iops
-                medium-ha-11-high-iops
-                large-11-high-iops
-                large-ha-11-high-iops
-                xlarge-11-high-iops
-                xlarge-ha-11-high-iops
                 EOF
 
                 # Enable Postgres 12 plans
@@ -3975,6 +3926,55 @@ jobs:
                 large-ha-10-high-iops
                 xlarge-10-high-iops
                 xlarge-ha-10-high-iops
+                EOF
+
+                # Enable supported plans
+                cat <<EOF | xargs -n1 cf disable-service-access mysql -b rds-broker -p
+                tiny-unencrypted-5.7
+                small-5.7
+                small-ha-5.7
+                medium-ha-5.7
+                medium-5.7
+                large-ha-5.7
+                large-5.7
+                xlarge-ha-5.7
+                xlarge-5.7
+                EOF
+
+                cat <<EOF | xargs -n1 cf disable-service-access mysql -b rds-broker -p
+                tiny-unencrypted-5.7-high-iops
+                small-5.7-high-iops
+                small-ha-5.7-high-iops
+                medium-ha-5.7-high-iops
+                medium-5.7-high-iops
+                large-ha-5.7-high-iops
+                large-5.7-high-iops
+                xlarge-ha-5.7-high-iops
+                xlarge-5.7-high-iops
+                EOF
+
+                cat <<EOF | xargs -n1 cf disable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-11
+                small-11
+                small-ha-11
+                medium-11
+                medium-ha-11
+                large-11
+                large-ha-11
+                xlarge-11
+                xlarge-ha-11
+                EOF
+
+                cat <<EOF | xargs -n1 cf disable-service-access postgres -b rds-broker -p
+                tiny-unencrypted-11-high-iops
+                small-11-high-iops
+                small-ha-11-high-iops
+                medium-11-high-iops
+                medium-ha-11-high-iops
+                large-11-high-iops
+                large-ha-11-high-iops
+                xlarge-11-high-iops
+                xlarge-ha-11-high-iops
                 EOF
 
       - task: register-cdn-broker
