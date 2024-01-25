@@ -27,6 +27,7 @@ It does not include the AWS IAM roles which are assumed by different system comp
 1. [Cloud Foundry deployment configuration options](#cloud-foundry-deployment-configuration-options)
 1. [Accessing Concourse](#accessing-concourse)
 1. [Finding configuration](#finding-configuration)
+1. [Utility Scripts](#utility-scripts)
 
 ## What does `paas-cf` contain?
 `paas-cf` separates the responsibility for configuring, deploying, running, and monitoring Cloud Foundry, from those responsibilities held by [`paas-bootstrap`](https://github.com/alphagov/paas-bootstrap).
@@ -133,3 +134,29 @@ The following table outlines some important directories in the repository, their
 | `terraform/vpc-peering` | Terraform configuration for VPC peering between the Cloud Foundry VPC and others | I want to change a property of our existing VPC peers, and future ones |
 | `tools/buildpacks` | Golang implementation of our regular buildpack update emails | I want to make a change to the email we send to tenants about buildpack updates |
 | `tools/metrics` | A Prometheus exporter which exposes a variety of platform-level metrics collected from different sources | <ul><li>I want to add a new metrics</li><li>I want to change the frequency of the measurement of an existing metric</li></ul>|
+
+## Utility Scripts
+
+### Add a permissions boundary policy to paas-s3-broker users
+
+Configure the POLICY_NAME variable within the Makefile with the name of the Permissions Boundary policy that you wish to add to the paas-s3-broker users.
+
+Run this command to add a permissions boundary to paas-s3-broker users:
+
+```
+gds aws paas-<ENV-ROLE> -- make <BUILD_ENV> add_permissions_boundary_to_existing_s3_broker_users ARGS="<--dry-run>"
+```
+
+Replace:
+
+* `<ENV-ROLE>` with the environment and role that you want to use e.g. prod-admin.
+* `<BUILD_ENV>` with the environment that you want to update e.g. prod-lon.
+* Only use the --dry-run flag if you would like the script to run but not change anything.
+
+If the command is successful, the output will look similar to this:
+
+```
+Dry run? false
+Policy attached to user: paas-s3-broker-dev05-0a094c73-7ae7-42cc-b028-6c78b93985d7
+Policy attached to user: paas-s3-broker-dev05-dad332ff-3557-4f13-a768-5dc0e8421cd4
+```
