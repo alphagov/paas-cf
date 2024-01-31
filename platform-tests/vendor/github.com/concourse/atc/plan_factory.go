@@ -35,6 +35,8 @@ func (factory PlanFactory) NewPlan(step Step) Plan {
 		plan.Put = &t
 	case TaskPlan:
 		plan.Task = &t
+	case OnAbortPlan:
+		plan.OnAbort = &t
 	case EnsurePlan:
 		plan.Ensure = &t
 	case OnSuccessPlan:
@@ -43,12 +45,14 @@ func (factory PlanFactory) NewPlan(step Step) Plan {
 		plan.OnFailure = &t
 	case TryPlan:
 		plan.Try = &t
-	case DependentGetPlan:
-		plan.DependentGet = &t
 	case TimeoutPlan:
 		plan.Timeout = &t
 	case RetryPlan:
 		plan.Retry = &t
+	case UserArtifactPlan:
+		plan.UserArtifact = &t
+	case ArtifactOutputPlan:
+		plan.ArtifactOutput = &t
 	default:
 		panic(fmt.Sprintf("don't know how to construct plan from %T", step))
 	}
