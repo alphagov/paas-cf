@@ -8,12 +8,12 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/concourse/atc"
 	"github.com/concourse/go-concourse/concourse/internal"
 	"github.com/tedsuo/rata"
-	"gopkg.in/yaml.v2"
 )
 
 func (team *team) PipelineConfig(pipelineName string) (atc.Config, atc.RawConfig, string, bool, error) {
@@ -68,24 +68,25 @@ type setConfigResponse struct {
 	Warnings []ConfigWarning `json:"warnings"`
 }
 
-func (team *team) CreateOrUpdatePipelineConfig(pipelineName string, configVersion string, passedConfig atc.Config) (bool, bool, []ConfigWarning, error) {
+func (team *team) CreateOrUpdatePipelineConfig(pipelineName string, configVersion string, passedConfig []byte, checkCredentials bool) (bool, bool, []ConfigWarning, error) {
 	params := rata.Params{
 		"pipeline_name": pipelineName,
 		"team_name":     team.name,
 	}
 
-	response := internal.Response{}
-
-	yamlConfig, err := yaml.Marshal(passedConfig)
-	if err != nil {
-		return false, false, []ConfigWarning{}, err
+	queryParams := url.Values{}
+	if checkCredentials {
+		queryParams.Add(atc.SaveConfigCheckCreds, "")
 	}
 
-	err = team.connection.Send(internal.Request{
+	response := internal.Response{}
+
+	err := team.connection.Send(internal.Request{
 		ReturnResponseBody: true,
 		RequestName:        atc.SaveConfig,
 		Params:             params,
-		Body:               bytes.NewBuffer(yamlConfig),
+		Query:              queryParams,
+		Body:               bytes.NewBuffer(passedConfig),
 		Header: http.Header{
 			"Content-Type":          {"application/x-yaml"},
 			atc.ConfigVersionHeader: {configVersion},
@@ -93,6 +94,7 @@ func (team *team) CreateOrUpdatePipelineConfig(pipelineName string, configVersio
 	},
 		&response,
 	)
+
 	if err != nil {
 		if unexpectedResponseError, ok := err.(internal.UnexpectedResponseError); ok {
 			if unexpectedResponseError.StatusCode == http.StatusBadRequest {
