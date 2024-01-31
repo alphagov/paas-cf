@@ -51,20 +51,37 @@ func (groups GroupConfigs) Lookup(name string) (GroupConfig, bool) {
 }
 
 type ResourceConfig struct {
-	Name string `yaml:"name" json:"name" mapstructure:"name"`
-
-	Type       string `yaml:"type" json:"type" mapstructure:"type"`
-	Source     Source `yaml:"source" json:"source" mapstructure:"source"`
-	CheckEvery string `yaml:"check_every,omitempty" json:"check_every" mapstructure:"check_every"`
+	Name         string  `yaml:"name" json:"name" mapstructure:"name"`
+	WebhookToken string  `yaml:"webhook_token,omitempty" json:"webhook_token" mapstructure:"webhook_token"`
+	Type         string  `yaml:"type" json:"type" mapstructure:"type"`
+	Source       Source  `yaml:"source" json:"source" mapstructure:"source"`
+	CheckEvery   string  `yaml:"check_every,omitempty" json:"check_every" mapstructure:"check_every"`
+	CheckTimeout string  `yaml:"check_timeout,omitempty" json:"check_timeout" mapstructure:"check_timeout"`
+	Tags         Tags    `yaml:"tags,omitempty" json:"tags" mapstructure:"tags"`
+	Version      Version `yaml:"version,omitempty" json:"version" mapstructure:"version"`
 }
 
 type ResourceType struct {
-	Name   string `yaml:"name" json:"name" mapstructure:"name"`
-	Type   string `yaml:"type" json:"type" mapstructure:"type"`
-	Source Source `yaml:"source" json:"source" mapstructure:"source"`
+	Name       string `yaml:"name" json:"name" mapstructure:"name"`
+	Type       string `yaml:"type" json:"type" mapstructure:"type"`
+	Source     Source `yaml:"source" json:"source" mapstructure:"source"`
+	Privileged bool   `yaml:"privileged,omitempty" json:"privileged" mapstructure:"privileged"`
+	CheckEvery string `yaml:"check_every,omitempty" json:"check_every" mapstructure:"check_every"`
+	Tags       Tags   `yaml:"tags,omitempty" json:"tags" mapstructure:"tags"`
+	Params     Params `yaml:"params,omitempty" json:"params" mapstructure:"params"`
 }
 
 type ResourceTypes []ResourceType
+
+func (types ResourceTypes) Lookup(name string) (ResourceType, bool) {
+	for _, t := range types {
+		if t.Name == name {
+			return t, true
+		}
+	}
+
+	return ResourceType{}, false
+}
 
 func (types ResourceTypes) Without(name string) ResourceTypes {
 	newTypes := ResourceTypes{}
@@ -77,51 +94,11 @@ func (types ResourceTypes) Without(name string) ResourceTypes {
 	return newTypes
 }
 
-func (types ResourceTypes) Lookup(name string) (ResourceType, bool) {
-	for _, t := range types {
-		if t.Name == name {
-			return t, true
-		}
-	}
-
-	return ResourceType{}, false
-}
-
-type JobConfig struct {
-	Name   string `yaml:"name" json:"name" mapstructure:"name"`
-	Public bool   `yaml:"public,omitempty" json:"public,omitempty" mapstructure:"public"`
-
-	DisableManualTrigger bool     `yaml:"disable_manual_trigger,omitempty" json:"disable_manual_trigger,omitempty" mapstructure:"disable_manual_trigger"`
-	Serial               bool     `yaml:"serial,omitempty" json:"serial,omitempty" mapstructure:"serial"`
-	SerialGroups         []string `yaml:"serial_groups,omitempty" json:"serial_groups,omitempty" mapstructure:"serial_groups"`
-	RawMaxInFlight       int      `yaml:"max_in_flight,omitempty" json:"max_in_flight,omitempty" mapstructure:"max_in_flight"`
-	BuildLogsToRetain    int      `yaml:"build_logs_to_retain,omitempty" json:"build_logs_to_retain,omitempty" mapstructure:"build_logs_to_retain"`
-
-	Plan PlanSequence `yaml:"plan,omitempty" json:"plan,omitempty" mapstructure:"plan"`
-}
-
-func (config JobConfig) MaxInFlight() int {
-	if config.Serial || len(config.SerialGroups) > 0 {
-		return 1
-	}
-
-	if config.RawMaxInFlight != 0 {
-		return config.RawMaxInFlight
-	}
-
-	return 0
-}
-
-func (config JobConfig) GetSerialGroups() []string {
-	if len(config.SerialGroups) > 0 {
-		return config.SerialGroups
-	}
-
-	if config.Serial || config.RawMaxInFlight > 0 {
-		return []string{config.Name}
-	}
-
-	return []string{}
+type Hooks struct {
+	Abort   *PlanConfig
+	Failure *PlanConfig
+	Ensure  *PlanConfig
+	Success *PlanConfig
 }
 
 // A PlanSequence corresponds to a chain of Compose plan, with an implicit
@@ -177,12 +154,14 @@ func (c *VersionConfig) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	case string:
 		c.Every = actual == "every"
 		c.Latest = actual == "latest"
-	case map[string]interface{}:
+	case map[interface{}]interface{}:
 		version := Version{}
 
 		for k, v := range actual {
-			if s, ok := v.(string); ok {
-				version[k] = strings.TrimSpace(s)
+			if ks, ok := k.(string); ok {
+				if vs, ok := v.(string); ok {
+					version[ks] = strings.TrimSpace(vs)
+				}
 			}
 		}
 
@@ -282,6 +261,9 @@ type PlanConfig struct {
 	// used by any step to specify which workers are eligible to run the step
 	Tags Tags `yaml:"tags,omitempty" json:"tags,omitempty" mapstructure:"tags"`
 
+	// used by any step to run something when the build is aborted during execution of the step
+	Abort *PlanConfig `yaml:"on_abort,omitempty" json:"on_abort,omitempty" mapstructure:"on_abort"`
+
 	// used by any step to run something when the step reports a failure
 	Failure *PlanConfig `yaml:"on_failure,omitempty" json:"on_failure,omitempty" mapstructure:"on_failure"`
 
@@ -343,6 +325,10 @@ func (config PlanConfig) ResourceName() string {
 	}
 
 	panic("no resource name!")
+}
+
+func (config PlanConfig) Hooks() Hooks {
+	return Hooks{Abort: config.Abort, Failure: config.Failure, Ensure: config.Ensure, Success: config.Success}
 }
 
 type ResourceConfigs []ResourceConfig

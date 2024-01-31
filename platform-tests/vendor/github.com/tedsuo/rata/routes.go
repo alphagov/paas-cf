@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"path"
 	"runtime"
 	"strings"
 )
@@ -24,7 +25,7 @@ type Params map[string]string
 // Currently, the properties used for matching are Method and Path.
 //
 // Method can be one of the following:
-//  GET PUT POST DELETE
+//  GET HEAD POST PUT PATCH DELETE CONNECT OPTIONS TRACE
 //
 // Path conforms to Pat-style pattern matching. The following docs are taken from
 // http://godoc.org/github.com/bmizerany/pat#PatternServeMux
@@ -61,7 +62,7 @@ type Route struct {
 	// Name is a key specifying which HTTP handler the router
 	// should associate with the endpoint at runtime.
 	Name string
-	// Method is one of the following: GET,PUT,POST,DELETE
+	// Method is any valid HTTP method
 	Method string
 	// Path contains a path pattern
 	Path string
@@ -80,7 +81,7 @@ func (r Route) CreatePath(params Params) (string, error) {
 			if !ok {
 				return "", fmt.Errorf("missing param %s", c)
 			}
-			components[i] = val
+			components[i] = url.PathEscape(val)
 		}
 	}
 
@@ -89,6 +90,42 @@ func (r Route) CreatePath(params Params) (string, error) {
 		return "", err
 	}
 	return u.String(), nil
+}
+
+// CreateURL combines the route's path pattern with a Host
+// and a Params map to produce a valid URL.
+func (r Route) createURL(host string, params Params) (*url.URL, error) {
+	u, err := url.Parse(host)
+	if err != nil {
+		return nil, err
+	}
+
+	path := path.Join(u.Path, r.Path)
+	components := strings.Split(path, "/")
+	rawComponents := make([]string, len(components))
+	copy(rawComponents, components)
+
+	for i, c := range components {
+		if len(c) == 0 {
+			continue
+		}
+
+		val := c
+		if c[0] == ':' {
+			var ok bool
+			val, ok = params[c[1:]]
+			if !ok {
+				return nil, fmt.Errorf("missing param %s", c)
+			}
+			components[i] = val
+			rawComponents[i] = url.PathEscape(val)
+		}
+	}
+
+	u.Path = strings.Join(components, "/")
+	u.RawPath = strings.Join(rawComponents, "/")
+
+	return u, nil
 }
 
 // Routes is a Route collection.
