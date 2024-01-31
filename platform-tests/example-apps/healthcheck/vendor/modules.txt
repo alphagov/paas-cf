@@ -54,8 +54,8 @@ github.com/aws/aws-sdk-go/service/sts/stsiface
 ## explicit; go 1.17
 github.com/garyburd/redigo/internal
 github.com/garyburd/redigo/redis
-# github.com/go-sql-driver/mysql v1.6.0
-## explicit; go 1.10
+# github.com/go-sql-driver/mysql v1.7.1
+## explicit; go 1.13
 github.com/go-sql-driver/mysql
 # github.com/influxdata/influxdb1-client v0.0.0-20220302092344-a9ab5670611c
 ## explicit
