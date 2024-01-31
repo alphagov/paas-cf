@@ -14,24 +14,10 @@ import (
 	"strings"
 	"time"
 
-	"golang.org/x/net/context"
+	"context"
+
 	"golang.org/x/oauth2"
 )
-
-// tokenFromInternal maps an *internal.Token struct into
-// an *oauth2.Token struct.
-func tokenFromInternal(t *internalToken) *oauth2.Token {
-	if t == nil {
-		return nil
-	}
-	tk := &oauth2.Token{
-		AccessToken:  t.AccessToken,
-		TokenType:    t.TokenType,
-		RefreshToken: t.RefreshToken,
-		Expiry:       t.Expiry,
-	}
-	return tk.WithExtra(t.Raw)
-}
 
 func retrieveToken(ctx context.Context, ClientID, ClientSecret, TokenURL string, v url.Values) (*oauth2.Token, error) {
 	hc := ContextClient(ctx)
@@ -46,13 +32,16 @@ func retrieveToken(ctx context.Context, ClientID, ClientSecret, TokenURL string,
 	if err != nil {
 		return nil, err
 	}
-	defer r.Body.Close()
 	body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1<<20))
+	r.Body.Close()
 	if err != nil {
 		return nil, fmt.Errorf("oauth2: cannot fetch token: %v", err)
 	}
 	if code := r.StatusCode; code < 200 || code > 299 {
-		return nil, fmt.Errorf("oauth2: cannot fetch token: %v\nResponse: %s", r.Status, body)
+		return nil, &oauth2.RetrieveError{
+			Response: r,
+			Body:     body,
+		}
 	}
 
 	var token *internalToken
@@ -92,7 +81,10 @@ func retrieveToken(ctx context.Context, ClientID, ClientSecret, TokenURL string,
 			Expiry:       tj.expiry(),
 			Raw:          make(map[string]interface{}),
 		}
-		json.Unmarshal(body, &token.Raw) // no error checks for optional fields
+		err = json.Unmarshal(body, &token.Raw) // no error checks for optional fields
+		if err != nil {
+			return nil, err
+		}
 	}
 	// Don't overwrite `RefreshToken` with an empty value
 	// if this was a token refreshing request.
@@ -262,11 +254,4 @@ func (c *tokenSource) Token() (*oauth2.Token, error) {
 		v[k] = p
 	}
 	return retrieveToken(c.ctx, c.conf.ClientID, c.conf.ClientSecret, c.conf.Endpoint.TokenURL, v)
-}
-
-func condVal(v string) []string {
-	if v == "" {
-		return nil
-	}
-	return []string{v}
 }
