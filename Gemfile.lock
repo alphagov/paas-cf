@@ -1389,7 +1389,7 @@ GEM
     rubocop-rspec (2.14.1)
       rubocop (~> 1.33)
     ruby-progressbar (1.11.0)
-    simplecov (0.21.2)
+    simplecov (0.22.0)
       docile (~> 1.1)
       simplecov-html (~> 0.11)
       simplecov_json_formatter (~> 0.1)
