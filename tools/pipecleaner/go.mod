@@ -8,7 +8,7 @@ require (
 	github.com/onsi/ginkgo/v2 v2.9.2
 	github.com/onsi/gomega v1.27.4
 	golang.org/x/crypto v0.1.0
-	sigs.k8s.io/yaml v1.1.0
+	sigs.k8s.io/yaml v1.4.0
 )
 
 require (
