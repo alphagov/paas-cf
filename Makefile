@@ -592,7 +592,8 @@ update-concourse-gpg-keys: .download-gpg-keys ## Update vars file for concourse 
 enable_vpc_peer_db_access: ## Update vars file for concourse with the latest GPG keys
 	@ruby scripts/enable_vpc_peer_db_access.rb
 
-POLICY_NAME := S3BrokerUserPermissionsBoundary
+BOUNDARY_POLICY_NAME := S3BrokerUserPermissionsBoundary
+IDENTITY_POLICY_NAME := S3BrokerUserCommon
 .PHONY: add_permissions_boundary_to_existing_s3_broker_users
 add_permissions_boundary_to_existing_s3_broker_users:
-	@ruby ./scripts/add_permissions_boundary_to_existing_s3_broker_users.rb --env=$(DEPLOY_ENV) --policy_name=${POLICY_NAME} $(ARGS)
+	@ruby ./scripts/add_permissions_boundary_to_existing_s3_broker_users.rb --env=$(DEPLOY_ENV) --identity_policy_name=${IDENTITY_POLICY_NAME} --boundary_policy_name=${BOUNDARY_POLICY_NAME} $(ARGS)
