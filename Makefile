@@ -243,7 +243,7 @@ dev: ## Set Environment to DEV
 	$(eval export ENV_SPECIFIC_ISOLATION_SEGMENTS_DIR=default)
 	$(eval export DISABLE_HEALTHCHECK_DB=true)
 	$(eval export CONCOURSE_AUTH_DURATION=48h)
-	$(eval export DISABLE_PIPELINE_LOCKING=true)
+	$(eval export DISABLE_PIPELINE_LOCKING=false)
 	$(eval export TEST_HEAVY_LOAD=true)
 	$(eval export PAAS_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
 	$(eval export PAAS_HIGH_PASSWORD_STORE_DIR?=${HOME}/.paas-pass)
