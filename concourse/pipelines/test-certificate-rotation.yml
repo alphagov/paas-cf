@@ -5,25 +5,25 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/awscli
-        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+        tag: 8251126ac29d3a16bbee0b8cd020ae6c9bc7c234
 
     bosh-cli-v2: &gov-paas-bosh-cli-v2-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/bosh-cli-v2
-        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+        tag: 8251126ac29d3a16bbee0b8cd020ae6c9bc7c234
 
     cf-acceptance-tests: &cf-acceptance-tests-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-acceptance-tests
-        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+        tag: 8251126ac29d3a16bbee0b8cd020ae6c9bc7c234
 
     cf-cli: &cf-cli-image-resource
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/cf-cli
-        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+        tag: 8251126ac29d3a16bbee0b8cd020ae6c9bc7c234
 
 
 resource_types:

@@ -4,7 +4,7 @@ image_resource:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/curl-ssl
-    tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+    tag: 8251126ac29d3a16bbee0b8cd020ae6c9bc7c234
 params:
   AVAILABILITY_ZONE:
   ENABLE_AZ_HEALTHCHECK:

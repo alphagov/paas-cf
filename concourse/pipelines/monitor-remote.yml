@@ -57,7 +57,7 @@ jobs:
         type: registry-image
         source:
           repository: ghcr.io/alphagov/paas/self-update-pipelines
-          tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+          tag: 8251126ac29d3a16bbee0b8cd020ae6c9bc7c234
 
       inputs:
       - name: paas-cf
