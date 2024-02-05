@@ -3,12 +3,26 @@ package csvutil
 import (
 	"reflect"
 	"sort"
+	"sync"
 )
 
+var fieldCache sync.Map // map[typeKey][]field
+
+func cachedFields(k typeKey) fields {
+	if v, ok := fieldCache.Load(k); ok {
+		return v.(fields)
+	}
+
+	v, _ := fieldCache.LoadOrStore(k, buildFields(k))
+	return v.(fields)
+}
+
 type field struct {
-	typ   reflect.Type
-	tag   tag
-	index []int
+	name     string
+	baseType reflect.Type
+	typ      reflect.Type
+	tag      tag
+	index    []int
 }
 
 type fields []field
@@ -34,9 +48,9 @@ type typeKey struct {
 type fieldMap map[string]fields
 
 func (m fieldMap) insert(f field) {
-	fs, ok := m[f.tag.name]
+	fs, ok := m[f.name]
 	if !ok {
-		m[f.tag.name] = append(fs, f)
+		m[f.name] = append(fs, f)
 		return
 	}
 
@@ -47,11 +61,11 @@ func (m fieldMap) insert(f field) {
 
 	// fields that are tagged have priority.
 	if !f.tag.empty {
-		m[f.tag.name] = append([]field{f}, fs...)
+		m[f.name] = append([]field{f}, fs...)
 		return
 	}
 
-	m[f.tag.name] = append(fs, f)
+	m[f.name] = append(fs, f)
 }
 
 func (m fieldMap) fields() fields {
@@ -73,18 +87,24 @@ func (m fieldMap) fields() fields {
 }
 
 func buildFields(k typeKey) fields {
+	type key struct {
+		reflect.Type
+		tag
+	}
+
 	q := fields{{typ: k.Type}}
-	visited := make(map[reflect.Type]bool)
+	visited := make(map[key]struct{})
 	fm := make(fieldMap)
 
 	for len(q) > 0 {
 		f := q[0]
 		q = q[1:]
 
-		if visited[f.typ] {
+		key := key{f.typ, f.tag}
+		if _, ok := visited[key]; ok {
 			continue
 		}
-		visited[f.typ] = true
+		visited[key] = struct{}{}
 
 		depth := len(f.index)
 
@@ -112,6 +132,9 @@ func buildFields(k typeKey) fields {
 			if tag.ignore {
 				continue
 			}
+			if f.tag.prefix != "" {
+				tag.prefix = f.tag.prefix + tag.prefix
+			}
 
 			ft := sf.Type
 			if ft.Kind() == reflect.Ptr {
@@ -119,12 +142,19 @@ func buildFields(k typeKey) fields {
 			}
 
 			newf := field{
-				typ:   ft,
-				tag:   tag,
-				index: makeIndex(f.index, i),
+				name:     tag.prefix + tag.name,
+				baseType: sf.Type,
+				typ:      ft,
+				tag:      tag,
+				index:    makeIndex(f.index, i),
 			}
 
 			if sf.Anonymous && ft.Kind() == reflect.Struct && tag.empty {
+				q = append(q, newf)
+				continue
+			}
+
+			if tag.inline && ft.Kind() == reflect.Struct {
 				q = append(q, newf)
 				continue
 			}
@@ -137,12 +167,14 @@ func buildFields(k typeKey) fields {
 				if len(v.index) != depth {
 					break
 				}
-				if v.typ == f.typ {
+				if v.typ == f.typ && v.tag.prefix == tag.prefix {
 					// other nodes can have different path.
 					fm.insert(field{
-						typ:   ft,
-						tag:   tag,
-						index: makeIndex(v.index, i),
+						name:     tag.prefix + tag.name,
+						baseType: sf.Type,
+						typ:      ft,
+						tag:      tag,
+						index:    makeIndex(v.index, i),
 					})
 				}
 			}

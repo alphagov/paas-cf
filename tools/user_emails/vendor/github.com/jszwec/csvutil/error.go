@@ -1,13 +1,17 @@
 package csvutil
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"reflect"
+	"strconv"
 )
 
 // ErrFieldCount is returned when header's length doesn't match the length of
 // the read record.
+//
+// This Error can be disabled with Decoder.AlignRecord = true.
 var ErrFieldCount = errors.New("wrong number of fields in record")
 
 // An UnmarshalTypeError describes a string value that was not appropriate for
@@ -18,7 +22,7 @@ type UnmarshalTypeError struct {
 }
 
 func (e *UnmarshalTypeError) Error() string {
-	return "csvutil: cannot unmarshal " + e.Value + " into Go value of type " + e.Type.String()
+	return "csvutil: cannot unmarshal " + strconv.Quote(e.Value) + " into Go value of type " + e.Type.String()
 }
 
 // An UnsupportedTypeError is returned when attempting to encode or decode
@@ -49,8 +53,15 @@ func (e *InvalidDecodeError) Error() string {
 		return "csvutil: Decode(non-pointer " + e.Type.String() + ")"
 	}
 
-	if indirect(reflect.New(e.Type)).Type().Kind() != reflect.Struct {
-		return "csvutil: Decode(non-struct pointer)"
+	typ := walkType(e.Type)
+	switch typ.Kind() {
+	case reflect.Struct:
+	case reflect.Slice, reflect.Array:
+		if typ.Elem().Kind() != reflect.Struct {
+			return "csvutil: Decode(invalid type " + e.Type.String() + ")"
+		}
+	default:
+		return "csvutil: Decode(invalid type " + e.Type.String() + ")"
 	}
 
 	return "csvutil: Decode(nil " + e.Type.String() + ")"
@@ -71,7 +82,7 @@ func (e *InvalidUnmarshalError) Error() string {
 		return "csvutil: Unmarshal(non-pointer " + e.Type.String() + ")"
 	}
 
-	return "csvutil: Unmarshal(non-slice pointer)"
+	return "csvutil: Unmarshal(invalid type " + e.Type.String() + ")"
 }
 
 // InvalidEncodeError is returned by Encode when the provided value was invalid.
@@ -96,11 +107,15 @@ func (e *InvalidMarshalError) Error() string {
 		return "csvutil: Marshal(nil)"
 	}
 
-	if e.Type.Kind() == reflect.Slice {
+	if walkType(e.Type).Kind() == reflect.Slice {
 		return "csvutil: Marshal(non struct slice " + e.Type.String() + ")"
 	}
 
-	return "csvutil: Marshal(non-slice " + e.Type.String() + ")"
+	if walkType(e.Type).Kind() == reflect.Array {
+		return "csvutil: Marshal(non struct array " + e.Type.String() + ")"
+	}
+
+	return "csvutil: Marshal(invalid type " + e.Type.String() + ")"
 }
 
 // MarshalerError is returned by Encoder when MarshalCSV or MarshalText returned
@@ -115,6 +130,66 @@ func (e *MarshalerError) Error() string {
 	return "csvutil: error calling " + e.MarshalerType + " for type " + e.Type.String() + ": " + e.Err.Error()
 }
 
+// Unwrap implements Unwrap interface for errors package in Go1.13+.
+func (e *MarshalerError) Unwrap() error {
+	return e.Err
+}
+
 func errPtrUnexportedStruct(typ reflect.Type) error {
 	return fmt.Errorf("csvutil: cannot decode into a pointer to unexported struct: %s", typ)
+}
+
+// MissingColumnsError is returned by Decoder only when DisallowMissingColumns
+// option was set to true. It contains a list of all missing columns.
+type MissingColumnsError struct {
+	Columns []string
+}
+
+func (e *MissingColumnsError) Error() string {
+	var b bytes.Buffer
+	b.WriteString("csvutil: missing columns: ")
+	for i, c := range e.Columns {
+		if i > 0 {
+			b.WriteString(", ")
+		}
+		fmt.Fprintf(&b, "%q", c)
+	}
+	return b.String()
+}
+
+// DecodeError provides context to decoding errors if available.
+//
+// The caller should use errors.As in order to fetch the underlying error if
+// needed.
+//
+// Some of the DecodeError's fields are only populated if the Reader supports
+// PosField method. Specifically Line and Column. FieldPos is available in
+// csv.Reader since Go1.17.
+type DecodeError struct {
+	// Field describes the struct's tag or field name on which the error happened.
+	Field string
+
+	// Line is 1-indexed line number taken from FieldPost method. It is only
+	// available if the used Reader supports FieldPos method.
+	Line int
+
+	// Column is 1-indexed column index taken from FieldPost method. It is only
+	// available if the used Reader supports FieldPos method.
+	Column int
+
+	// Error is the actual error that was returned while attempting to decode
+	// a field.
+	Err error
+}
+
+func (e *DecodeError) Error() string {
+	if e.Line > 0 && e.Column > 0 {
+		// Lines and Columns are 1-indexed so this check is fine.
+		return fmt.Sprintf("%s: field %q line %d column %d", e.Err, e.Field, e.Line, e.Column)
+	}
+	return fmt.Sprintf("%s: field %q", e.Err, e.Field)
+}
+
+func (e *DecodeError) Unwrap() error {
+	return e.Err
 }
