@@ -278,7 +278,7 @@ resource_types:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-pool-resource
-    tag: 05f3541fa9f4b64f766dddc9103617c9a3ba767d
+    tag: 272908a4012b68c01301d9af9270d3fdf2b1d978
 
 - name: s3-iam
   type: registry-image
