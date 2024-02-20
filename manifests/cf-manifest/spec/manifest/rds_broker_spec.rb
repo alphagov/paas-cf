@@ -83,11 +83,6 @@ RSpec.describe "RDS broker properties" do
       it { expect(rds_properties["db_instance_class"]).to match(/^db\.t3\.[a-z]+$/).or match(/^db\.m5\.[a-z0-9]+$/) }
     end
 
-    shared_examples "plans using t3 and m5 instances" do
-      it { expect(rds_properties).to have_key("db_instance_class") }
-      it { expect(rds_properties["db_instance_class"]).to match(/^db\.t3\.[a-z]+$/).or match(/^db\.m5\.[a-z0-9]+$/) }
-    end
-
     shared_examples "tiny sized plans" do
       let(:rds_properties) { plan.fetch("rds_properties") }
 
