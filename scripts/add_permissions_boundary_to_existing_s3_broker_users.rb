@@ -60,6 +60,25 @@ def add_identity_policy(iam_client, user, identity_policy_arn, dry_run)
   end
 end
 
+def get_users(iam_client, env)
+  paas_s3_broker_users = []
+  next_token = nil
+
+  loop do
+    response = iam_client.list_users({ marker: next_token, max_items: 1000 })
+    paas_s3_broker_batch = response.users.select do |user|
+      guid_regex = /\b[a-f0-9]{8}\b-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-\b[a-f0-9]{12}\b/
+      env_regex = /paas-s3-broker-#{env}-#{guid_regex}/
+      user.user_name.match?(env_regex)
+    end
+    paas_s3_broker_users += paas_s3_broker_batch
+    next_token = response.marker
+    break unless next_token
+  end
+
+  paas_s3_broker_users
+end
+
 def main(env, identity_policy_name, boundary_policy_name, dry_run)
   iam_client = Aws::IAM::Client.new
 
@@ -68,11 +87,7 @@ def main(env, identity_policy_name, boundary_policy_name, dry_run)
   permissions_boundary_arn = get_permissions_boundary_arn(iam_client, boundary_policy_name)
   identity_policy_arn = get_identity_policy_arn(iam_client, identity_policy_name)
 
-  paas_s3_broker_users = iam_client.list_users.users.select do |user|
-    guid_regex = /\b[a-f0-9]{8}\b-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-\b[a-f0-9]{12}\b/
-    env_regex = /paas-s3-broker-#{env}-#{guid_regex}/
-    user.user_name.match?(env_regex)
-  end
+  paas_s3_broker_users = get_users(iam_client, env)
 
   paas_s3_broker_users.each do |user|
     detailed_user = iam_client.get_user({ user_name: user.user_name }).user
