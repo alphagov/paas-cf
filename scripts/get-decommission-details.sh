@@ -1,4 +1,19 @@
 #!/usr/bin/env bash
+#
+# This script gathers information on all orgs in the current CF environment.
+# Use it to find orgs that are ready for decommissioning, and orgs that already are.
+# It will output a CSV with the following columns:
+#
+# - organization_name
+# - running_app_count
+# - non_running_app_count
+# - service_count
+# - owner
+# - ready_for_decommission
+# - suspended
+#
+# The ready_for_decommission column will be "yes" if there are no running or non-running apps, and no services.
+# The suspended column will be "true" if the org is suspended, and "false" if it is not.
 
 set -e
 
