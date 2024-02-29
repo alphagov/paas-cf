@@ -6,6 +6,8 @@ require "cli/ui/prompt"
 require "json"
 require "optparse"
 
+@errors = []
+
 # Helpers
 def puts_ok(msg)
   puts "✅ #{msg}"
@@ -13,6 +15,7 @@ end
 
 def puts_err(msg)
   puts "❌ #{msg}"
+  @errors << msg
 end
 
 def puts_dry_run(msg)
@@ -100,7 +103,7 @@ parser = OptionParser.new { |opts|
   end
 
   opts.on("--dry-run", TrueClass) do |dry_run|
-    puts "Dry run? #{dry_run}"
+    puts CLI::UI.fmt "Dry run? #{dry_run ? '{{green:Yes}}' : '{{red:No}}}'}"
     options[:dry_run] = dry_run
   end
 
@@ -173,11 +176,14 @@ end
 
 unless can_decommission
   puts "\n"
-  puts "Cannot decommission org '#{options[:org]}'. It may have one or more apps, service instances, and spaces, or it may not be suspended"
+  puts CLI::UI.fmt "{{red:BLOCKED:}} Cannot decommission org '#{options[:org]}'."
+  @errors.each do |err|
+    puts CLI::UI.fmt "  -> {{red:#{err}}}"
+  end
   exit 1
 end
 
-continue = CLI::UI::Prompt.confirm("Continue to decomission org '#{options[:org]}'?")
+continue = CLI::UI::Prompt.confirm(CLI::UI.fmt("Continue to decommission org '{{bold:#{options[:org]}}}'?"))
 unless continue
   exit 1
 end
