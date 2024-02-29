@@ -14,6 +14,13 @@
 #
 # The ready_for_decommission column will be "yes" if there are no running or non-running apps, and no services.
 # The suspended column will be "true" if the org is suspended, and "false" if it is not.
+#
+# I run it like this:
+#
+# cf login -a api.london.cloud.service.gov.uk --sso
+# ./scripts/get-decommission-details.sh > ~/Desktop/status.csv
+# cf login -a api.cloud.service.gov.uk --sso
+# ./scripts/get-decommission-details.sh >> ~/Desktop/status.csv
 
 set -e
 
