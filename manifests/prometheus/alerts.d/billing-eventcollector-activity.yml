@@ -20,10 +20,10 @@
     name: BillingEventCollectorServiceEvents
     rules:
       - alert: BillingEventCollectorServiceEvents
-        expr: sum by(app_name) (rate(paas_billing_eventcollector_events_collected_total{kind="service"}[1d])) == 0
-        for: 3d
+        expr: sum by(app_name) (increase(paas_billing_eventcollector_events_collected_total{kind="service"}[7d])) == 0
+        for: 1d
         labels:
           severity: critical
         annotations:
           summary: "Billing EventCollector is not collecting any service events"
-          description: "Billing EventCollector has not collected any service events for 3 days. This is unexpected and implies a problem with the collector and/or the billing app"
+          description: "Billing EventCollector has not collected any service events for 8+ days. This is unexpected and implies a problem with the collector and/or the billing app. You can check the cf events with `cf curl '/v2/service_usage_events?results-per-page=10'` and see if there are recent events that have not been collected"
