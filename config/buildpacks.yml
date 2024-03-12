@@ -1043,7 +1043,7 @@ buildpacks:
     repo_name: go-buildpack
     stack: cflinuxfs3
     version: v1.10.16
-    sha: 0648b5a2f291e8b9a9a34de8166cbc5f74110ee8bb6ca892bb58a1bc26d9652a
+    sha: 3b5d11daf9a442cee776beab3f4449d73b665755d399bce67a4360beb4b01027
     filename: go-buildpack-cflinuxfs3-v1.10.16.zip
     url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.10.16/go-buildpack-cflinuxfs3-v1.10.16.zip
     dependencies:
@@ -1099,7 +1099,7 @@ buildpacks:
     repo_name: go-buildpack
     stack: cflinuxfs4
     version: v1.10.16
-    sha: 3b5d11daf9a442cee776beab3f4449d73b665755d399bce67a4360beb4b01027
+    sha: 0648b5a2f291e8b9a9a34de8166cbc5f74110ee8bb6ca892bb58a1bc26d9652a
     filename: go-buildpack-cflinuxfs4-v1.10.16.zip
     url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.10.16/go-buildpack-cflinuxfs4-v1.10.16.zip
     dependencies:
