@@ -91,54 +91,6 @@ buildpacks:
         version: 20.11.1
         cf_stacks:
           - cflinuxfs4
-  - name: go_buildpack
-    repo_name: go-buildpack
-    stack: cflinuxfs3
-    version: v1.10.17
-    sha: 4fdacd447c3400171f5b976b0e6cdb05bb5ddb41b8b4e113a6df34aab5d372b8
-    filename: go-buildpack-cflinuxfs3-v1.10.17.zip
-    url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.10.17/go-buildpack-cflinuxfs3-v1.10.17.zip
-    dependencies:
-      - name: dep
-        version: 0.5.4
-        cf_stacks:
-          - cflinuxfs3
-      - name: dep
-        version: 0.5.4
-        cf_stacks:
-          - cflinuxfs4
-      - name: glide
-        version: 0.13.3
-        cf_stacks:
-          - cflinuxfs3
-      - name: glide
-        version: 0.13.3
-        cf_stacks:
-          - cflinuxfs4
-      - name: go
-        version: 1.21.8
-        cf_stacks:
-          - cflinuxfs3
-      - name: go
-        version: 1.21.8
-        cf_stacks:
-          - cflinuxfs4
-      - name: go
-        version: 1.22.1
-        cf_stacks:
-          - cflinuxfs3
-      - name: go
-        version: 1.22.1
-        cf_stacks:
-          - cflinuxfs4
-      - name: godep
-        version: "80"
-        cf_stacks:
-          - cflinuxfs3
-      - name: godep
-        version: "80"
-        cf_stacks:
-          - cflinuxfs4
   - name: java_buildpack
     repo_name: java-buildpack
     stack: cflinuxfs3
@@ -658,54 +610,6 @@ buildpacks:
         version: 20.11.1
         cf_stacks:
           - cflinuxfs4
-  - name: go_buildpack
-    repo_name: go-buildpack
-    stack: cflinuxfs4
-    version: v1.10.17
-    sha: 0044eae1e42504ae00c21b3f5ae5d7cbdda2a475b91a5d3e0e90d7700af025b5
-    filename: go-buildpack-cflinuxfs4-v1.10.17.zip
-    url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.10.17/go-buildpack-cflinuxfs4-v1.10.17.zip
-    dependencies:
-      - name: dep
-        version: 0.5.4
-        cf_stacks:
-          - cflinuxfs3
-      - name: dep
-        version: 0.5.4
-        cf_stacks:
-          - cflinuxfs4
-      - name: glide
-        version: 0.13.3
-        cf_stacks:
-          - cflinuxfs3
-      - name: glide
-        version: 0.13.3
-        cf_stacks:
-          - cflinuxfs4
-      - name: go
-        version: 1.21.8
-        cf_stacks:
-          - cflinuxfs3
-      - name: go
-        version: 1.21.8
-        cf_stacks:
-          - cflinuxfs4
-      - name: go
-        version: 1.22.1
-        cf_stacks:
-          - cflinuxfs3
-      - name: go
-        version: 1.22.1
-        cf_stacks:
-          - cflinuxfs4
-      - name: godep
-        version: "80"
-        cf_stacks:
-          - cflinuxfs3
-      - name: godep
-        version: "80"
-        cf_stacks:
-          - cflinuxfs4
   - name: java_buildpack
     repo_name: java-buildpack
     stack: cflinuxfs4
@@ -1133,5 +1037,117 @@ buildpacks:
           - cflinuxfs3
       - name: r
         version: 4.3.2
+        cf_stacks:
+          - cflinuxfs4
+  - name: go_buildpack
+    repo_name: go-buildpack
+    stack: cflinuxfs3
+    version: v1.10.16
+    sha: 0648b5a2f291e8b9a9a34de8166cbc5f74110ee8bb6ca892bb58a1bc26d9652a
+    filename: go-buildpack-cflinuxfs3-v1.10.16.zip
+    url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.10.16/go-buildpack-cflinuxfs3-v1.10.16.zip
+    dependencies:
+      - name: dep
+        version: 0.5.4
+        cf_stacks:
+          - cflinuxfs3
+      - name: dep
+        version: 0.5.4
+        cf_stacks:
+          - cflinuxfs4
+      - name: glide
+        version: 0.13.3
+        cf_stacks:
+          - cflinuxfs3
+      - name: glide
+        version: 0.13.3
+        cf_stacks:
+          - cflinuxfs4
+      - name: go
+        version: 1.20.14
+        cf_stacks:
+          - cflinuxfs3
+      - name: go
+        version: 1.20.14
+        cf_stacks:
+          - cflinuxfs4
+      - name: go
+        version: 1.21.7
+        cf_stacks:
+          - cflinuxfs3
+      - name: go
+        version: 1.21.7
+        cf_stacks:
+          - cflinuxfs4
+      - name: go
+        version: 1.22.0
+        cf_stacks:
+          - cflinuxfs3
+      - name: go
+        version: 1.22.0
+        cf_stacks:
+          - cflinuxfs4
+      - name: godep
+        version: "80"
+        cf_stacks:
+          - cflinuxfs3
+      - name: godep
+        version: "80"
+        cf_stacks:
+          - cflinuxfs4
+  - name: go_buildpack
+    repo_name: go-buildpack
+    stack: cflinuxfs4
+    version: v1.10.16
+    sha: 3b5d11daf9a442cee776beab3f4449d73b665755d399bce67a4360beb4b01027
+    filename: go-buildpack-cflinuxfs4-v1.10.16.zip
+    url: https://github.com/cloudfoundry/go-buildpack/releases/download/v1.10.16/go-buildpack-cflinuxfs4-v1.10.16.zip
+    dependencies:
+      - name: dep
+        version: 0.5.4
+        cf_stacks:
+          - cflinuxfs3
+      - name: dep
+        version: 0.5.4
+        cf_stacks:
+          - cflinuxfs4
+      - name: glide
+        version: 0.13.3
+        cf_stacks:
+          - cflinuxfs3
+      - name: glide
+        version: 0.13.3
+        cf_stacks:
+          - cflinuxfs4
+      - name: go
+        version: 1.20.14
+        cf_stacks:
+          - cflinuxfs3
+      - name: go
+        version: 1.20.14
+        cf_stacks:
+          - cflinuxfs4
+      - name: go
+        version: 1.21.7
+        cf_stacks:
+          - cflinuxfs3
+      - name: go
+        version: 1.21.7
+        cf_stacks:
+          - cflinuxfs4
+      - name: go
+        version: 1.22.0
+        cf_stacks:
+          - cflinuxfs3
+      - name: go
+        version: 1.22.0
+        cf_stacks:
+          - cflinuxfs4
+      - name: godep
+        version: "80"
+        cf_stacks:
+          - cflinuxfs3
+      - name: godep
+        version: "80"
         cf_stacks:
           - cflinuxfs4
