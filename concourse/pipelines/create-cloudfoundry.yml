@@ -645,8 +645,8 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker.git
-      branch: main
-      tag_filter: ((deploy_env_tag_prefix))
+      branch: 187200424-update-to-go-1-21
+      # tag_filter: ((deploy_env_tag_prefix))
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-billing
