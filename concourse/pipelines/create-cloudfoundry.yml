@@ -316,8 +316,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-cf.git
-      branch: ((branch_name))
-      tag_filter: ((paas_cf_tag_filter))
+      branch: 187200424-update-to-go-1-21
       commit_verification_keys: ((gpg_public_keys))
 
   - name: vpc-tfstate
@@ -645,31 +644,27 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker.git
-      branch: main
-      tag_filter: ((deploy_env_tag_prefix))
+      branch: 187200424-update-to-go-1-21
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-billing
     type: git
     source:
       uri: https://github.com/alphagov/paas-billing.git
-      branch: main
-      tag_filter: ((deploy_env_tag_prefix))
+      branch: 187200424-update-to-go-1-21
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-accounts
     type: git
     source:
       uri: https://github.com/alphagov/paas-accounts.git
-      branch: main
-      tag_filter: v0.25.0
+      branch: 187200424-update-to-go-1-21
 
   - name: paas-auditor
     type: git
     source:
       uri: https://github.com/alphagov/paas-auditor.git
-      branch: main
-      tag_filter: v0.75.0
+      branch: 187200424-update-to-go-1-21
 
   - name: paas-admin
     type: git
@@ -683,8 +678,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-prometheus-endpoints.git
-      branch: main
-      tag_filter: v0.19.0
+      branch: 187200424-update-to-go-1-21
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
