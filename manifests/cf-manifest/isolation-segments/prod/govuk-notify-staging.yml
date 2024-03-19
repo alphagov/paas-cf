@@ -1,4 +1,4 @@
 ---
-number_of_cells: 18
+number_of_cells: 0
 isolation_segment_name: govuk-notify-staging
 vm_type: high_cpu_cell

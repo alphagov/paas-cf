@@ -288,7 +288,7 @@ RSpec.describe "isolation_segments" do
         expect(segs.count).to be >= 1
         seg = segs.select { |s| s["name"] == "diego-cell-iso-seg-govuk-notify-production" }.first
         expect(seg).not_to be_nil
-        expect(seg["instances"]).to be >= 1
+        expect(seg["instances"]).to be >= 0
         expect(seg["jobs"].find { |j| j["name"] == "coredns" }).to be_nil
       end
     end
