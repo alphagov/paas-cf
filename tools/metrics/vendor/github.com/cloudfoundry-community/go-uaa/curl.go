@@ -12,28 +12,24 @@ import (
 
 // Curl makes a request to the UAA API with the given path, method, data, and
 // headers.
-func (a *API) Curl(path string, method string, data string, headers []string) (string, string, error) {
+func (a *API) Curl(path string, method string, data string, headers []string) (string, string, int, error) {
 	u := urlWithPath(*a.TargetURL, path)
 	req, err := http.NewRequest(method, u.String(), strings.NewReader(data))
 	if err != nil {
-		return "", "", err
+		return "", "", -1, err
 	}
 	err = mergeHeaders(req.Header, strings.Join(headers, "\n"))
 	if err != nil {
-		return "", "", err
+		return "", "", -1, err
 	}
 
-	if a.Verbose {
-		logRequest(req)
-	}
-
-	a.ensureTransport(a.AuthenticatedClient.Transport)
-	resp, err := a.AuthenticatedClient.Do(req)
+	a.ensureTransport(a.Client.Transport)
+	resp, err := a.Client.Do(req)
 	if err != nil {
-		if a.Verbose {
+		if a.verbose {
 			fmt.Printf("%v\n\n", err)
 		}
-		return "", "", err
+		return "", "", -1, err
 	}
 	defer resp.Body.Close()
 
@@ -41,16 +37,12 @@ func (a *API) Curl(path string, method string, data string, headers []string) (s
 	resHeaders := string(headerBytes)
 
 	bytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil && a.Verbose {
+	if err != nil && a.verbose {
 		fmt.Printf("%v\n\n", err)
 	}
 	resBody := string(bytes)
 
-	if a.Verbose {
-		logResponse(resp)
-	}
-
-	return resHeaders, resBody, nil
+	return resHeaders, resBody, resp.StatusCode, nil
 }
 
 func mergeHeaders(destination http.Header, headerString string) (err error) {
