@@ -675,8 +675,8 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin.git
-      branch: main
-      tag_filter: ((deploy_env_tag_prefix))
+      branch: replace-jest-nock-with-vitest-msw
+      # tag_filter: ((deploy_env_tag_prefix))
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-prometheus-endpoints
