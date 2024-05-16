@@ -52,5 +52,17 @@
     "account_id": "516242164884",
     "vpc_id": "vpc-0d61ec34a97c33898",
     "subnet_cidr": "172.18.16.0/22"
+  },
+  {
+    "peer_name": "dit-staging_data-workspace-datasets-dev_staging",
+    "account_id": "975050272242",
+    "vpc_id": "vpc-04e0079233f6cebcf",
+    "subnet_cidr": "172.18.20.0/22"
+  },
+  {
+    "peer_name": "dit-services_data-workspace-datasets",
+    "account_id": "211125506341",
+    "vpc_id": "vpc-088a4e5fe96e434fb",
+    "subnet_cidr": "172.18.24.0/22"
   }
 ]
