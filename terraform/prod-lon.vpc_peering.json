@@ -57,12 +57,31 @@
     "peer_name": "dit-staging_data-workspace-datasets-dev_staging",
     "account_id": "975050272242",
     "vpc_id": "vpc-04e0079233f6cebcf",
-    "subnet_cidr": "172.18.20.0/22"
+    "subnet_cidr": "172.18.20.0/22",
+    "backing_service_routing": true,
+    "bindings": [
+      {
+        "org_name": "dit-staging",
+        "spaces": [
+          "data-workspace-datasets-dev",
+          "data-workspace-datasets-staging"
+        ]
+      }
+    ]
   },
   {
     "peer_name": "dit-services_data-workspace-datasets",
     "account_id": "211125506341",
     "vpc_id": "vpc-088a4e5fe96e434fb",
-    "subnet_cidr": "172.18.24.0/22"
+    "subnet_cidr": "172.18.24.0/22",
+    "backing_service_routing": true,
+    "bindings": [
+      {
+        "org_name": "dit-services",
+        "spaces": [
+          "data-workspace-datasets"
+        ]
+      }
+    ]
   }
 ]
