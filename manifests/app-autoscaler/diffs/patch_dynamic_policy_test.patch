@@ -2,12 +2,13 @@ diff --git a/src/acceptance/app/dynamic_policy_test.go b/src/acceptance/app/dyna
 index 1339ff514..ff0a2fe47 100644
 --- a/src/acceptance/app/dynamic_policy_test.go
 +++ b/src/acceptance/app/dynamic_policy_test.go
-@@ -50,7 +50,7 @@ var _ = Describe("AutoScaler dynamic policy", func() {
+@@ -52,7 +52,7 @@ var _ = Describe("AutoScaler dynamic policy", func() {
  
- 			It("should scale out and then back in.", Label(acceptance.LabelSmokeTests), func() {
- 				By(fmt.Sprintf("Use heap %d mb of heap on app", heapToUse))
+ 			It("should scale out and then back in.", func() {
+ 				By(fmt.Sprintf("Use heap %d MB of heap on app", heapToUse))
 -				CurlAppInstance(cfg, appName, 0, fmt.Sprintf("/memory/%d/5", heapToUse))
 +				CurlAppInstance(cfg, appName, 0, fmt.Sprintf("/memory/%d/5", heapToUse+20))
- 
+
  				By("wait for scale to 2")
  				WaitForNInstancesRunning(appGUID, 2, 5*time.Minute)
+
