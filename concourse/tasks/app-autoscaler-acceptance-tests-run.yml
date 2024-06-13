@@ -64,6 +64,7 @@ run:
 
       echo "Running tests"
       cd paas-cf/manifests/app-autoscaler/upstream
+      git apply ../diffs/patch_dynamic_policy_test.patch
       PATH=$(go env GOPATH)/bin:${PATH}
       export PATH
       cd src/acceptance/assets/app/go_app
