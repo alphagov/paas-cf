@@ -8,10 +8,7 @@ variable "pingdom_user" { type = string }
 variable "system_dns_zone_name" { type = string }
 
 provider "pingdom" {
-  user          = var.pingdom_user
-  password      = var.pingdom_password
-  api_key       = var.pingdom_api_key
-  account_email = var.pingdom_account_email
+  api_token = var.pingdom_api_key
 }
 
 resource "pingdom_check" "paas_http_healthcheck" {
