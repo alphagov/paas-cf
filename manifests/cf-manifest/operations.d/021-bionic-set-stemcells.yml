@@ -20,11 +20,6 @@
     - os: ubuntu-jammy
 
 - type: replace
-  path: /addons/name=metrics-agent/include/stemcell
-  value:
-    - os: ubuntu-jammy
-
-- type: replace
   path: /addons/name=bpm/include/stemcell
   value:
     - os: ubuntu-jammy
