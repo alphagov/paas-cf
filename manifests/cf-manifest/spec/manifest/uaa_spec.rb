@@ -6,7 +6,7 @@ RSpec.describe "uaa properties" do
 
     it "has a certificate for jwt policy signing keys" do
       jwt_keys = properties.fetch("uaa").fetch("jwt").fetch("policy").fetch("keys")
-      expect(jwt_keys.keys.count).to eq(2)
+      expect(jwt_keys.keys.count).to eq(3)
       jwt_active_key_id = properties.fetch("uaa").fetch("jwt").fetch("policy").fetch("active_key_id")
       default_key = jwt_keys.fetch(jwt_active_key_id)
       expect(default_key.fetch("signingKey")).not_to be_empty
