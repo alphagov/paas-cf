@@ -360,14 +360,6 @@
     - "'sha256-0EjrOAFUD7PfcL1fVdExK2Tcc2sR9IOEEu9But6mW7A='"
 
 - type: replace
-  path: /releases/-
-  value:
-    name: uaa-customized
-    version: 0.1.39
-    url: https://s3-eu-west-1.amazonaws.com/gds-paas-build-releases/uaa-customized-0.1.39.tgz
-    sha1: 719493879dd0d4e8ad4b9fb65db10c02ecb99d06
-
-- type: replace
   path: /instance_groups/name=uaa/jobs/-
   value:
     name: uaa-customized
