@@ -25,6 +25,7 @@ resource_types:
   type: registry-image
   source:
     repository: ghcr.io/alphagov/paas/concourse-keyval-resource
+    tag: latest
 
 groups:
   - name: fast-startup-cf-env
