@@ -1,0 +1,153 @@
+{
+   "total_results": 5,
+   "total_pages": 1,
+   "prev_url": null,
+   "next_url": null,
+   "resources": [
+      {
+         "metadata": {
+            "guid": "8ae7944c-2f34-4a31-9fd0-f483c4c0318e",
+            "url": "/v2/security_groups/8ae7944c-2f34-4a31-9fd0-f483c4c0318e",
+            "created_at": "2018-06-21T14:21:04Z",
+            "updated_at": "2024-08-08T12:24:02Z"
+         },
+         "entity": {
+            "name": "public_networks",
+            "rules": [
+               {
+                  "destination": "0.0.0.0-9.255.255.255",
+                  "protocol": "all"
+               },
+               {
+                  "destination": "11.0.0.0-169.253.255.255",
+                  "protocol": "all"
+               },
+               {
+                  "destination": "169.255.0.0-172.15.255.255",
+                  "protocol": "all"
+               },
+               {
+                  "destination": "172.32.0.0-192.167.255.255",
+                  "protocol": "all"
+               },
+               {
+                  "destination": "192.169.0.0-255.255.255.255",
+                  "protocol": "all"
+               }
+            ],
+            "running_default": true,
+            "staging_default": true,
+            "spaces_url": "/v2/security_groups/8ae7944c-2f34-4a31-9fd0-f483c4c0318e/spaces",
+            "staging_spaces_url": "/v2/security_groups/8ae7944c-2f34-4a31-9fd0-f483c4c0318e/staging_spaces"
+         }
+      },
+      {
+         "metadata": {
+            "guid": "758eedd6-14dc-490a-b989-a837ba17c9b5",
+            "url": "/v2/security_groups/758eedd6-14dc-490a-b989-a837ba17c9b5",
+            "created_at": "2018-06-21T14:21:04Z",
+            "updated_at": "2024-08-08T12:24:02Z"
+         },
+         "entity": {
+            "name": "dns",
+            "rules": [
+               {
+                  "destination": "0.0.0.0/0",
+                  "ports": "53",
+                  "protocol": "tcp"
+               },
+               {
+                  "destination": "0.0.0.0/0",
+                  "ports": "53",
+                  "protocol": "udp"
+               }
+            ],
+            "running_default": true,
+            "staging_default": true,
+            "spaces_url": "/v2/security_groups/758eedd6-14dc-490a-b989-a837ba17c9b5/spaces",
+            "staging_spaces_url": "/v2/security_groups/758eedd6-14dc-490a-b989-a837ba17c9b5/staging_spaces"
+         }
+      },
+      {
+         "metadata": {
+            "guid": "311e189f-dd93-4dd7-aeff-d06a1c918138",
+            "url": "/v2/security_groups/311e189f-dd93-4dd7-aeff-d06a1c918138",
+            "created_at": "2018-06-21T14:21:04Z",
+            "updated_at": "2024-08-08T12:24:02Z"
+         },
+         "entity": {
+            "name": "rds_broker_instances",
+            "rules": [
+               {
+                  "destination": "10.0.52.0-10.0.63.255",
+                  "ports": "5432",
+                  "protocol": "tcp"
+               },
+               {
+                  "destination": "10.0.52.0-10.0.63.255",
+                  "ports": "3306",
+                  "protocol": "tcp"
+               }
+            ],
+            "running_default": true,
+            "staging_default": true,
+            "spaces_url": "/v2/security_groups/311e189f-dd93-4dd7-aeff-d06a1c918138/spaces",
+            "staging_spaces_url": "/v2/security_groups/311e189f-dd93-4dd7-aeff-d06a1c918138/staging_spaces"
+         }
+      },
+      {
+         "metadata": {
+            "guid": "2d50c525-0867-4cfb-a467-e612a34a76c7",
+            "url": "/v2/security_groups/2d50c525-0867-4cfb-a467-e612a34a76c7",
+            "created_at": "2018-06-21T14:21:04Z",
+            "updated_at": "2024-08-08T12:24:02Z"
+         },
+         "entity": {
+            "name": "elasticache_broker_instances",
+            "rules": [
+               {
+                  "destination": "10.0.52.0-10.0.63.255",
+                  "ports": "6379",
+                  "protocol": "tcp"
+               }
+            ],
+            "running_default": true,
+            "staging_default": true,
+            "spaces_url": "/v2/security_groups/2d50c525-0867-4cfb-a467-e612a34a76c7/spaces",
+            "staging_spaces_url": "/v2/security_groups/2d50c525-0867-4cfb-a467-e612a34a76c7/staging_spaces"
+         }
+      },
+      {
+         "metadata": {
+            "guid": "4d218a1e-3328-4bc5-84e7-4b00c3a1878c",
+            "url": "/v2/security_groups/4d218a1e-3328-4bc5-84e7-4b00c3a1878c",
+            "created_at": "2023-02-14T12:51:28Z",
+            "updated_at": "2024-08-08T12:24:02Z"
+         },
+         "entity": {
+            "name": "aws_endpoints",
+            "rules": [
+               {
+                  "destination": "10.0.79.0-10.0.79.15",
+                  "ports": "443",
+                  "protocol": "tcp"
+               },
+               {
+                  "destination": "10.0.79.16-10.0.79.31",
+                  "ports": "443",
+                  "protocol": "tcp"
+               },
+               {
+                  "destination": "10.0.79.32-10.0.79.47",
+                  "ports": "443",
+                  "protocol": "tcp"
+               }
+            ],
+            "running_default": true,
+            "staging_default": true,
+            "spaces_url": "/v2/security_groups/4d218a1e-3328-4bc5-84e7-4b00c3a1878c/spaces",
+            "staging_spaces_url": "/v2/security_groups/4d218a1e-3328-4bc5-84e7-4b00c3a1878c/staging_spaces"
+         }
+      }
+   ]
+}
