@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 #
-# This script gathers information on all spaces in a CF environment.
+# This script gathers information on all non-test spaces in a CF environment.
+# It will gather information on all spaces if the $TEST_ORGS env var is set.
+# Test orgs are ones whose name begin with either "ASATS" or "SMOKE"
+#
 # It will output a CSV with the following columns:
 #
 # - space_name
@@ -16,27 +19,27 @@
 set -e
 
 if [ "${BASH_VERSION%%.*}" -lt 4 ]; then
-   echo "Error: This script requires Bash version 4 or later."
-   echo "Simple solution on MacOS: brew install bash"
+   echo "Error: This script requires Bash version 4 or later." >&2
+   echo "Simple solution on MacOS: brew install bash" >&2
    exit 1
 fi
 
 # Check if logged in:
 if ! cf target > /dev/null 2>&1; then
-    echo "Not logged into CF, please log in and retry"
+    echo "Not logged into CF, please log in and retry" >&2
     exit 1
 fi
 
 optional_orgs=$1
 
 if [ "$optional_orgs" = "help" ] || [ "$optional_orgs" = "--help" ] || [ "$optional_orgs" = "-h" ]; then
-  echo "Usage: $0 [comma separated list of org names]"
-  echo "If no orgs are specified, all orgs will be checked"
+  echo "Usage: $0 [comma separated list of org names]" >&2
+  echo "If no orgs are specified, all orgs will be checked" >&2
   exit 0
 fi
 
 if [ -n "$optional_orgs" ]; then
-  echo "Filtering to a comma separated list of orgs: $optional_orgs"
+  echo "Filtering to a comma separated list of orgs: $optional_orgs" >&2
 fi
 
 # Prepare output:
@@ -58,7 +61,12 @@ while IFS= read -r line; do
 
   # Check for empty or invalid values
   if [ -z "$org_guid" ] || [ -z "$org_name" ]; then
-    echo "Warning: Encountered an org with no GUID or name, skipping."
+    echo "Warning: Encountered an org with no GUID or name, skipping." >&2
+    continue
+  fi
+
+  if [[ -z "${TEST_ORGS}" && ( "$org_name" == ASATS* || "$org_name" == SMOKE*) ]]; then
+    echo "Warning: Skipping test org $org_name" >&2
     continue
   fi
 
@@ -77,7 +85,7 @@ for org_guid in "${!orgs[@]}"; do
 
     # Ensure that space_guid and space_name are not empty
     if [ -z "$space_guid" ] || [ -z "$space_name" ]; then
-      echo "Warning: Encountered a space with no GUID or name, skipping."
+      echo "Warning: Encountered a space with no GUID or name, skipping." >&2
       continue
     fi
 
