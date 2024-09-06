@@ -2,7 +2,7 @@
 #
 # This script gathers information on all non-test spaces in a CF environment.
 # It will gather information on all spaces if the $TEST_ORGS env var is set.
-# Test orgs are ones whose name begin with either "ASATS" or "SMOKE"
+# Test orgs are ones whose name begin with either "ASATS", "SMOKE" or "BACC"
 #
 # It will output a CSV with the following columns:
 #
@@ -65,7 +65,7 @@ while IFS= read -r line; do
     continue
   fi
 
-  if [[ -z "${TEST_ORGS}" && ( "$org_name" == ASATS* || "$org_name" == SMOKE*) ]]; then
+  if [[ -z "${TEST_ORGS}" && ( "$org_name" == ASATS* || "$org_name" == SMOKE* || "$org_name" == BACC* ) ]]; then
     echo "Warning: Skipping test org $org_name" >&2
     continue
   fi
