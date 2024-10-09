@@ -48,7 +48,7 @@ github.com/hashicorp/go-multierror
 # github.com/jessevdk/go-flags v1.4.0
 ## explicit
 github.com/jessevdk/go-flags
-# github.com/logrusorgru/aurora v0.0.0-20191116043053-66b7ad493a23
+# github.com/logrusorgru/aurora v2.0.3+incompatible
 ## explicit
 github.com/logrusorgru/aurora
 # github.com/mattn/go-colorable v0.1.6
