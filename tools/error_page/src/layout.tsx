@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { promisify } from 'util';
 
-import sass from 'node-sass';
+import sass, { LegacyOptions } from 'sass';
 import React, { ReactElement } from 'react';
 import { renderToStaticMarkup } from 'react-dom/server';
 
@@ -25,7 +25,7 @@ export async function render(content: ReactElement, config: renderConfig): Promi
 
     ...config,
   };
-  const sassConfig = (location: string): object => ({
+  const sassConfig = (location: string): LegacyOptions<"async"> => ({
     file: location,
     includePaths: [ `${__dirname}/../node_modules` ],
     outputStyle,
@@ -44,8 +44,8 @@ export async function render(content: ReactElement, config: renderConfig): Promi
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       <meta name="for-acceptance-tests" content="{{ .Status }} {{ .StatusText }}" />
       <!--[if !IE 8]><!-->
-        <style media="screen">${cssScreen.css}</style>
-        <style media="print">${cssPrint.css}</style>
+        <style media="screen">${cssScreen!.css}</style>
+        <style media="print">${cssPrint!.css}</style>
       <!--<![endif]-->
     </head>
     ${renderToStaticMarkup(
