@@ -6,6 +6,7 @@
     version: "30.4.0"
     url: "https://github.com/cloudfoundry/prometheus-boshrelease/releases/download/v30.4.0/prometheus-30.4.0.tgz"
     sha1: "c06ed70a72153575dabdc1ff67b785cc06bb3225"
+
 - type: replace
   path: /addons?/-
   value:
