@@ -4,7 +4,7 @@
     name: "prometheus"
     version: "30.4.0"
     url: "https://github.com/cloudfoundry/prometheus-boshrelease/releases/download/v30.4.0/prometheus-30.4.0.tgz"
-    sha1: "8bf23e5fc727003ca0a37ad8ecdafc63937fc92a9a6374e0360fe56e0dd39649"
+    sha1: "c06ed70a72153575dabdc1ff67b785cc06bb3225"
 
 - type: replace
   path: /releases/-
