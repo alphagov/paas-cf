@@ -1,6 +1,6 @@
 RSpec.describe "Environment specific configuration" do
   let(:default_manifest) { manifest_without_vars_store }
-  let(:prod_manifest) { manifest_for_env("prod") }
+  let(:prod_manifest) { manifest_for_env("prod-lon") }
 
   def get_instance_group_instances(manifest, instance_group_name)
     manifest["instance_groups"].select { |i| i["name"] == instance_group_name }.first["instances"]
