@@ -114,14 +114,14 @@ github.com/google/uuid
 # github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce
 ## explicit
 github.com/hashicorp/errwrap
-# github.com/hashicorp/go-cleanhttp v0.5.0
-## explicit
+# github.com/hashicorp/go-cleanhttp v0.5.2
+## explicit; go 1.13
 github.com/hashicorp/go-cleanhttp
 # github.com/hashicorp/go-multierror v0.0.0-20160811015721-8c5f0ad93604
 ## explicit
 github.com/hashicorp/go-multierror
-# github.com/hashicorp/go-retryablehttp v0.5.2
-## explicit
+# github.com/hashicorp/go-retryablehttp v0.7.7
+## explicit; go 1.19
 github.com/hashicorp/go-retryablehttp
 # github.com/jackc/pgx v3.6.2+incompatible
 ## explicit
@@ -204,7 +204,7 @@ golang.org/x/net/idna
 golang.org/x/oauth2
 golang.org/x/oauth2/clientcredentials
 golang.org/x/oauth2/internal
-# golang.org/x/sys v0.18.0
+# golang.org/x/sys v0.20.0
 ## explicit; go 1.18
 golang.org/x/sys/unix
 # golang.org/x/text v0.14.0
