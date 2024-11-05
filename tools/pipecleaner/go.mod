@@ -4,7 +4,7 @@ go 1.21
 
 require (
 	github.com/concourse/concourse v1.6.1-0.20201028190452-248606d42c17
-	github.com/logrusorgru/aurora v0.0.0-20191116043053-66b7ad493a23
+	github.com/logrusorgru/aurora v2.0.3+incompatible
 	github.com/onsi/ginkgo/v2 v2.9.2
 	github.com/onsi/gomega v1.27.4
 	golang.org/x/crypto v0.21.0
