@@ -51,7 +51,7 @@ RSpec.describe "cloud controller" do
     end
 
     context("when the environment is prod") do
-      let(:manifest) { manifest_for_env("prod") }
+      let(:manifest) { manifest_for_env("prod-lon") }
       let(:cc_worker) { manifest.fetch("instance_groups.cc-worker") }
 
       it "has more instances" do
