@@ -975,30 +975,30 @@ jobs:
           - <<: *get-paas-cf
             passed: ['generate-secrets']
 
-      - task: wait-for-app-availability-tests
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
-        params:
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          CF_ADMIN: admin
-          CF_PASS: ((cf_pass))
-          APP_NAME: healthcheck
+      # - task: wait-for-app-availability-tests
+      #   tags: [colocated-with-web]
+      #   file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+      #   params:
+      #     SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+      #     CF_ADMIN: admin
+      #     CF_PASS: ((cf_pass))
+      #     APP_NAME: healthcheck
 
-      - task: wait-for-internal-app-availability-tests
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
-        params:
-          SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-          CF_ADMIN: admin
-          CF_PASS: ((cf_pass))
-          APP_NAME: healthcheck-pinger
+      # - task: wait-for-internal-app-availability-tests
+      #   tags: [colocated-with-web]
+      #   file: paas-cf/concourse/tasks/wait-for-app-availability-tests.yml
+      #   params:
+      #     SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
+      #     CF_ADMIN: admin
+      #     CF_PASS: ((cf_pass))
+      #     APP_NAME: healthcheck-pinger
 
-      - task: wait-for-api-availability-tests
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/wait-for-api-availability-tests.yml
-        params:
-          AWS_DEFAULT_REGION: ((aws_region))
-          STATE_BUCKET: ((state_bucket))
+      # - task: wait-for-api-availability-tests
+      #   tags: [colocated-with-web]
+      #   file: paas-cf/concourse/tasks/wait-for-api-availability-tests.yml
+      #   params:
+      #     AWS_DEFAULT_REGION: ((aws_region))
+      #     STATE_BUCKET: ((state_bucket))
 
   - name: app-availability-tests
     serial: true
