@@ -27,7 +27,7 @@ jobs:
           # for envsubst
 
       - name: "Install Go ${{env.GO_VERSION}}"
-        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe
+        uses: actions/setup-go@41dfa10bad2bb2ae585af6ee5bb4d7d973ad74ed
         with:
           go-version: "${{env.GO_VERSION}}"
 
