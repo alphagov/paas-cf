@@ -12,7 +12,7 @@ import (
 
 var (
 	appName        string
-	pushTimeout    = 2 * time.Minute
+	pushTimeout    = 4 * time.Minute
 	defaultTimeout = 30 * time.Second
 )
 
