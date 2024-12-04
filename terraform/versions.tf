@@ -10,7 +10,7 @@ terraform {
     }
     pingdom = {
       source  = "russellcardullo/pingdom"
-      version = "1.1.2"
+      version = "1.1.3"
     }
   }
   required_version = ">= 1.5.2"
