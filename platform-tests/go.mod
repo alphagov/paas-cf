@@ -7,7 +7,7 @@ require (
 	github.com/alphagov/paas-cf/common-go/basic_logit_client v0.0.0-00010101000000-000000000000
 	github.com/aws/aws-sdk-go v1.34.0
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20220701174305-34d8f2860a20
-	github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20230622231030-594a914bd4f9
+	github.com/cloudfoundry/cf-acceptance-tests v2.16.0+incompatible
 	github.com/cloudfoundry/cf-test-helpers v1.0.1-0.20220603211108-d498b915ef74
 	github.com/concourse/atc v0.0.0-20160908214930-406261dbd768
 	github.com/concourse/go-concourse v0.0.0-20160910211037-b260442fef03
