@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-sdk-go v1.34.0
 	github.com/cloudfoundry-community/go-cfclient v0.0.0-20190808214049-35bcce23fc5f
 	github.com/cloudfoundry-community/go-uaa v0.2.2
-	github.com/hashicorp/go-multierror v1.0.0
+	github.com/hashicorp/go-multierror v1.1.1
 	github.com/maxbrunsfeld/counterfeiter/v6 v6.5.0
 	github.com/miekg/dns v1.1.25
 	github.com/onsi/ginkgo/v2 v2.1.4
