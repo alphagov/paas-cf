@@ -5,14 +5,17 @@ import (
 )
 
 type CatsConfig interface {
-	GetIncludeAppSyslogTcp() bool
 	GetIncludeApps() bool
+	GetIncludeBackendCompatiblity() bool
+	GetIncludeCapiExperimental() bool
+	GetIncludeCapiNoBridge() bool
 	GetIncludeContainerNetworking() bool
 	GetIncludeCredhubAssisted() bool
 	GetIncludeCredhubNonAssisted() bool
 	GetIncludeDetect() bool
 	GetIncludeDocker() bool
 	GetIncludeInternetDependent() bool
+	GetIncludeInternetless() bool
 	GetIncludePrivateDockerRegistry() bool
 	GetIncludeRouteServices() bool
 	GetIncludeRouting() bool
@@ -20,7 +23,6 @@ type CatsConfig interface {
 	GetIncludeSSO() bool
 	GetIncludeSecurityGroups() bool
 	GetIncludeServices() bool
-	GetIncludeUserProvidedServices() bool
 	GetIncludeServiceDiscovery() bool
 	GetIncludeSsh() bool
 	GetIncludeTasks() bool
@@ -28,20 +30,18 @@ type CatsConfig interface {
 	GetIncludeDeployments() bool
 	GetIncludeIsolationSegments() bool
 	GetIncludeRoutingIsolationSegments() bool
+	GetIncludeLoggingIsolationSegments() bool
 	GetIncludeServiceInstanceSharing() bool
-	GetIncludeTCPIsolationSegments() bool
-	GetIncludeHTTP2Routing() bool
 	GetIncludeTCPRouting() bool
 	GetIncludeWindows() bool
 	GetIncludeVolumeServices() bool
+	GetUseLogCache() bool
 	GetShouldKeepUser() bool
 	GetSkipSSLValidation() bool
 	GetUseExistingUser() bool
 
-	GetAddExistingUserToExistingSpace() bool
 	GetAdminPassword() string
 	GetAdminUser() string
-	GetAdminOrigin() string
 	GetAdminClient() string
 	GetAdminClientSecret() string
 	GetApiEndpoint() string
@@ -59,7 +59,6 @@ type CatsConfig interface {
 	GetUseExistingSpace() bool
 	GetExistingUser() string
 	GetExistingUserPassword() string
-	GetUserOrigin() string
 	GetExistingClient() string
 	GetExistingClientSecret() string
 	GetGoBuildpackName() string
@@ -68,16 +67,13 @@ type CatsConfig interface {
 	GetIsolationSegmentDomain() string
 	GetJavaBuildpackName() string
 	GetNamePrefix() string
-	GetNginxBuildpackName() string
 	GetNodejsBuildpackName() string
 	GetPrivateDockerRegistryImage() string
 	GetPrivateDockerRegistryUsername() string
 	GetPrivateDockerRegistryPassword() string
-	GetRBuildpackName() string
 	GetRubyBuildpackName() string
 	GetUnallocatedIPForSecurityGroup() string
 	GetRequireProxiedAppTraffic() bool
-	GetDynamicASGsEnabled() bool
 	Protocol() string
 
 	GetStacks() []string
@@ -89,6 +85,7 @@ type CatsConfig interface {
 	GetVolumeServiceName() string
 	GetVolumeServicePlanName() string
 	GetVolumeServiceCreateConfig() string
+	GetVolumeServiceBindConfig() string
 
 	GetReporterConfig() reporterConfig
 
@@ -102,8 +99,6 @@ type CatsConfig interface {
 	SleepTimeoutDuration() time.Duration
 
 	GetPublicDockerAppImage() string
-
-	RunningOnK8s() bool
 }
 
 func NewCatsConfig(path string) (CatsConfig, error) {

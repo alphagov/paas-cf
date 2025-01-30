@@ -64,9 +64,10 @@ github.com/bmizerany/pat
 # github.com/cloudfoundry-community/go-cfclient v0.0.0-20220701174305-34d8f2860a20
 ## explicit; go 1.15
 github.com/cloudfoundry-community/go-cfclient
-# github.com/cloudfoundry/cf-acceptance-tests v1.9.1-0.20230622231030-594a914bd4f9
-## explicit; go 1.20
+# github.com/cloudfoundry/cf-acceptance-tests v2.16.0+incompatible
+## explicit
 github.com/cloudfoundry/cf-acceptance-tests/helpers/config
+github.com/cloudfoundry/cf-acceptance-tests/helpers/validationerrors
 # github.com/cloudfoundry/cf-test-helpers v1.0.1-0.20220603211108-d498b915ef74
 ## explicit; go 1.17
 github.com/cloudfoundry/cf-test-helpers/cf
