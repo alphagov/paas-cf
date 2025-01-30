@@ -10,7 +10,7 @@ jobs:
     outputs:
       key_ids: ${{ steps.extract-key-ids.outputs.key_ids }}
     steps:
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Extract key ids from .gpg-id and output as a json list
         id: extract-key-ids
         run: echo "key_ids=$(jq -c --raw-input --slurp 'split("\n") | map(select(. != ""))' .gpg-id)" >> $GITHUB_OUTPUT
@@ -25,6 +25,6 @@ jobs:
     env:
       GPG_KEY_ID: ${{ matrix.key_id }}
     steps:
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
       - name: Import key from keyserver
         run: make .download-gpg-key
