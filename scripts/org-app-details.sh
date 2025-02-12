@@ -4,6 +4,7 @@
 # It will output a CSV with the following columns:
 #
 # - space_name
+# - organization_id
 # - organization_name
 # - app_names
 # - service_count_within_space
@@ -11,9 +12,9 @@
 # I run it like this:
 #
 # cf login -a api.london.cloud.service.gov.uk --sso
-# ./scripts/get-space-app-service-details.sh > ~/Desktop/space_app_service_status.csv
+# ./scripts/org-app-details.sh > ~/Desktop/org-app-details.csv
 # cf login -a api.cloud.service.gov.uk --sso
-# ./scripts/get-space-app-service-details.sh >> ~/Desktop/space_app_service_status.csv
+# ./scripts/org-app-details.sh > ~/Desktop/org-app-details.csv
 
 set -e
 
@@ -37,15 +38,10 @@ if [ "$optional_orgs" = "help" ] || [ "$optional_orgs" = "--help" ] || [ "$optio
   exit 0
 fi
 
-if [ -n "$optional_orgs" ]; then
-  echo "Filtering to a comma separated list of orgs: $optional_orgs"
-fi
-
 # Prepare output:
-echo "space_name,organization_name,app_names,service_count_within_space"
+echo "space_name,organization_id,organization_name,app_names,service_count_within_space"
 
 declare -A orgs
-declare -A org_names
 declare -A spaces
 
 # Get organizations:
@@ -64,12 +60,11 @@ done <<< "$orgs_query"
 # Get spaces for each organization:
 for org_guid in "${!orgs[@]}"; do
   org_name=${orgs["$org_guid"]}
-
   spaces_query=$(cf curl "/v3/spaces?organization_guids=$org_guid&per_page=5000" | jq -rc '.resources[] | {guid: .guid, name: .name, org_name: "'"${org_name}"'"}')
   while IFS= read -r space; do
     space_guid=$(echo "$space" | jq -r '.guid')
     space_name=$(echo "$space" | jq -r '.name')
-    spaces["$space_guid"]="$space_name,$org_name"
+    spaces["$space_guid"]="$space_name,$org_name,$org_guid"
   done <<< "$spaces_query"
 done
 
@@ -78,6 +73,7 @@ for space_guid in "${!spaces[@]}"; do
   space_info=${spaces["$space_guid"]}
   space_name=$(echo "$space_info" | cut -d ',' -f 1)
   org_name=$(echo "$space_info" | cut -d ',' -f 2)
+  org_guid=$(echo "$space_info" | cut -d ',' -f 3)
 
   # Retrieve apps in the space
   apps=$(cf curl "/v3/apps?space_guids=$space_guid&per_page=5000")
@@ -88,5 +84,5 @@ for space_guid in "${!spaces[@]}"; do
   service_count=$(echo "$services" | jq '.pagination.total_results')
 
   # Append result:
-  echo "$space_name,$org_name,\"$app_names\",$service_count"
+  echo "$space_name,$org_guid,$org_name,\"$app_names\",$service_count"
 done
