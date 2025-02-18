@@ -63,8 +63,7 @@
         "org_name": "dit-staging",
         "spaces": [
           "directory-dev",
-          "directory-staging",
-          "directory-uat"
+          "directory-staging"
         ]
       }
     ]
