@@ -39,7 +39,7 @@ if [ "$optional_orgs" = "help" ] || [ "$optional_orgs" = "--help" ] || [ "$optio
 fi
 
 # Prepare output:
-echo "space_name,organization_id,organization_name,app_names,service_count_within_space"
+echo "space_id,space_name,organization_id,organization_name,app_names,service_count_within_space"
 
 declare -A orgs
 declare -A spaces
@@ -84,5 +84,5 @@ for space_guid in "${!spaces[@]}"; do
   service_count=$(echo "$services" | jq '.pagination.total_results')
 
   # Append result:
-  echo "$space_name,$org_guid,$org_name,\"$app_names\",$service_count"
+  echo "$space_guid,$space_name,$org_guid,$org_name,\"$app_names\",$service_count"
 done
