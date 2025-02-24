@@ -1,3 +1,7 @@
+# filippo.io/edwards25519 v1.1.0
+## explicit; go 1.20
+filippo.io/edwards25519
+filippo.io/edwards25519/field
 # github.com/aws/aws-sdk-go v1.43.37
 ## explicit; go 1.11
 github.com/aws/aws-sdk-go/aws
@@ -54,8 +58,8 @@ github.com/aws/aws-sdk-go/service/sts/stsiface
 ## explicit; go 1.17
 github.com/garyburd/redigo/internal
 github.com/garyburd/redigo/redis
-# github.com/go-sql-driver/mysql v1.6.0
-## explicit; go 1.10
+# github.com/go-sql-driver/mysql v1.9.0
+## explicit; go 1.21
 github.com/go-sql-driver/mysql
 # github.com/influxdata/influxdb1-client v0.0.0-20220302092344-a9ab5670611c
 ## explicit
