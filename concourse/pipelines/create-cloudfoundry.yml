@@ -4526,7 +4526,7 @@ jobs:
                   timeout_per_iteration_in_seconds=30
 
                   if ! cf service healthcheck-db > /dev/null; then
-                    cf create-service postgres tiny-unencrypted-12 healthcheck-db -c '{"preferred_backup_window":"03:00-03:30","preferred_maintenance_window":"wed:11:00-wed:11:30"}'
+                    cf create-service postgres tiny-unencrypted-13 healthcheck-db -c '{"preferred_backup_window":"03:00-03:30","preferred_maintenance_window":"wed:11:00-wed:11:30"}'
                     loop_iterations=1
                     while ! cf service healthcheck-db | grep -q 'create succeeded'; do
                       if  [ $loop_iterations -gt $max_iterations ] ; then
@@ -5202,9 +5202,9 @@ jobs:
               - -u
               - -c
               - |
-                DB_PLAN="tiny-unencrypted-12"
+                DB_PLAN="tiny-unencrypted-13"
                 if [ "${DEPLOY_ENV}" = "stg-lon" ] || [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ]; then
-                  DB_PLAN="small-ha-12"
+                  DB_PLAN="small-ha-13"
                 fi
 
                 cf api "${API_ENDPOINT}"
@@ -5592,11 +5592,11 @@ jobs:
               - -u
               - -c
               - |
-                BILLING_DB_PLAN="tiny-unencrypted-12"
+                BILLING_DB_PLAN="tiny-unencrypted-13"
                 if [ "${DEPLOY_ENV}" = "stg-lon" ]; then
-                  BILLING_DB_PLAN="medium-12"
+                  BILLING_DB_PLAN="medium-13"
                 elif [ "${DEPLOY_ENV}" = "prod" ] || [ "${DEPLOY_ENV}" = "prod-lon" ]; then
-                  BILLING_DB_PLAN="large-12"
+                  BILLING_DB_PLAN="large-13"
                 fi
 
                 cf api "${API_ENDPOINT}"
