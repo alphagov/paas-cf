@@ -5,7 +5,7 @@ diego_api_instances: 3
 cell_instances: 15
 router_instances: 6
 api_instances: 6
-doppler_instances: 15
+doppler_instances: 12
 log_cache_instances: 10
 log_api_instances: 6
 scheduler_instances: 8
