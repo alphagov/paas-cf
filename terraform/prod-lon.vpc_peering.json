@@ -54,21 +54,6 @@
     "subnet_cidr": "172.18.16.0/22"
   },
   {
-    "peer_name": "dit-staging_directory-non_prod",
-    "account_id": "025066243076",
-    "vpc_id": "vpc-0bd0c13a496d0aba5",
-    "subnet_cidr": "172.18.36.0/22",
-    "bindings": [
-      {
-        "org_name": "dit-staging",
-        "spaces": [
-          "directory-dev",
-          "directory-staging"
-        ]
-      }
-    ]
-  },
-  {
     "peer_name": "dit-services_directory-prod",
     "account_id": "025066249157",
     "vpc_id": "vpc-06bb691b46d1308c9",
