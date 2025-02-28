@@ -24,62 +24,9 @@
     "subnet_cidr": "172.16.16.0/22"
   },
   {
-    "peer_name": "dit-staging_datasci-dev",
-    "account_id": "165562107270",
-    "vpc_id": "vpc-074a7e7c7b4eccc8c",
-    "subnet_cidr": "172.18.0.0/22"
-  },
-  {
-    "peer_name": "dit-services_datasci",
-    "account_id": "165562107270",
-    "vpc_id": "vpc-0911316657ad779ee",
-    "subnet_cidr": "172.18.4.0/22"
-  },
-  {
-    "peer_name": "dit-staging_datasci-staging",
-    "account_id": "165562107270",
-    "vpc_id": "vpc-0edc26baacd344600",
-    "subnet_cidr": "172.18.8.0/22"
-  },
-  {
     "peer_name": "dit-staging_platform-staging",
     "account_id": "011755346992",
     "vpc_id": "vpc-0e82d077854b512f3",
     "subnet_cidr": "172.18.12.0/22"
-  },
-  {
-    "peer_name": "dit-services_lite-icms",
-    "account_id": "516242164884",
-    "vpc_id": "vpc-0d61ec34a97c33898",
-    "subnet_cidr": "172.18.16.0/22"
-  },
-  {
-    "peer_name": "dit-staging_directory-non_prod",
-    "account_id": "025066243076",
-    "vpc_id": "vpc-0bd0c13a496d0aba5",
-    "subnet_cidr": "172.18.36.0/22",
-    "bindings": [
-      {
-        "org_name": "dit-staging",
-        "spaces": [
-          "directory-dev",
-          "directory-staging"
-        ]
-      }
-    ]
-  },
-  {
-    "peer_name": "dit-services_directory-prod",
-    "account_id": "025066249157",
-    "vpc_id": "vpc-06bb691b46d1308c9",
-    "subnet_cidr": "172.18.40.0/22",
-    "bindings": [
-      {
-        "org_name": "dit-services",
-        "spaces": [
-          "directory"
-        ]
-      }
-    ]
   }
 ]
