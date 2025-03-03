@@ -70,11 +70,6 @@ resource "aws_security_group" "cdn_rds" {
     Name = "${var.env}-cdn"
   }
 }
-resource "aws_db_parameter_group" "cdn_pg_12" {
-  name        = "${var.env}-pg12-cdn"
-  family      = "postgres12"
-  description = "CDN Postgres 12 parameter group"
-}
 
 resource "aws_db_parameter_group" "cdn_pg_13" {
   name        = "${var.env}-pg13-cdn"
