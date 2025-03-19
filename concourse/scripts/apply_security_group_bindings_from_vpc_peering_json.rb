@@ -46,7 +46,7 @@ config.each_with_index do |peer, peer_index|
       exit(1)
     end
     if all_spaces == true
-      command = "cf bind-security-group #{sec_group_name} #{org_name}"
+      command = "cf bind-security-group #{sec_group_name} #{org_name} --lifecycle running && cf bind-security-group #{sec_group_name} #{org_name} --lifecycle staging"
       if dry_run
         puts "dry-run: #{command}"
       else
