@@ -470,7 +470,7 @@ upload-pingdom-secrets: check-env ## Decrypt and upload Pingdom Credentials to C
 upload-psn-secrets: check-env ## Decrypt and upload PSN secrets to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	$(if $(findstring prod, $(DEPLOY_ENV)),@scripts/upload-secrets/upload-psn-secrets.rb,$(info upload-psn-secrets only runs in prod))
+	@scripts/upload-secrets/upload-psn-secrets.rb
 
 .PHONY: upload-slack-secrets
 upload-slack-secrets: check-env ## Decrypt and upload Slack credentials to Credhub
