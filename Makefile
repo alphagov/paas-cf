@@ -412,7 +412,7 @@ upload-splunk-secrets: check-env ## Decrypt and upload Splunk HEC Tokens to Cred
 upload-mailchimp-secrets: check-env ## Decrypt and upload MailChimp Credentials to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	$(if $(findstring prod, $(DEPLOY_ENV)),@scripts/upload-secrets/upload-mailchimp-secrets.rb,$(info upload-mailchimp-secrets only runs in prod or prod-lon))
+	@scripts/upload-secrets/upload-mailchimp-secrets.rb
 
 .PHONY: upload-cronitor-secrets
 upload-cronitor-secrets: check-env ## Decrypt and upload Cronitor secrets to Credhub
@@ -470,7 +470,7 @@ upload-pingdom-secrets: check-env ## Decrypt and upload Pingdom Credentials to C
 upload-psn-secrets: check-env ## Decrypt and upload PSN secrets to Credhub
 	$(if $(wildcard ${PAAS_PASSWORD_STORE_DIR}),,$(error Password store ${PAAS_PASSWORD_STORE_DIR} (PAAS_PASSWORD_STORE_DIR) does not exist))
 	$(eval export PASSWORD_STORE_DIR=${PAAS_PASSWORD_STORE_DIR})
-	$(if $(findstring prod, $(DEPLOY_ENV)),@scripts/upload-secrets/upload-psn-secrets.rb,$(info upload-psn-secrets only runs in prod))
+	@scripts/upload-secrets/upload-psn-secrets.rb
 
 .PHONY: upload-slack-secrets
 upload-slack-secrets: check-env ## Decrypt and upload Slack credentials to Credhub
