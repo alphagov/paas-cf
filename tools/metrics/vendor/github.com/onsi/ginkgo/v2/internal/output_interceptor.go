@@ -69,7 +69,7 @@ type pipePair struct {
 	writer *os.File
 }
 
-func startPipeFactory(pipeChannel chan pipePair, shutdown chan interface{}) {
+func startPipeFactory(pipeChannel chan pipePair, shutdown chan any) {
 	for {
 		//make the next pipe...
 		pair := pipePair{}
@@ -101,8 +101,8 @@ type genericOutputInterceptor struct {
 	stderrClone *os.File
 	pipe        pipePair
 
-	shutdown           chan interface{}
-	emergencyBailout   chan interface{}
+	shutdown           chan any
+	emergencyBailout   chan any
 	pipeChannel        chan pipePair
 	interceptedContent chan string
 
@@ -139,21 +139,21 @@ func (interceptor *genericOutputInterceptor) ResumeIntercepting() {
 	interceptor.intercepting = true
 	if interceptor.stdoutClone == nil {
 		interceptor.stdoutClone, interceptor.stderrClone = interceptor.implementation.CreateStdoutStderrClones()
-		interceptor.shutdown = make(chan interface{})
+		interceptor.shutdown = make(chan any)
 		go startPipeFactory(interceptor.pipeChannel, interceptor.shutdown)
 	}
 
-	// Now we make a pipe, we'll use this to redirect the input to the 1 and 2 file descriptors (this is how everything else in the world is tring to log to stdout and stderr)
+	// Now we make a pipe, we'll use this to redirect the input to the 1 and 2 file descriptors (this is how everything else in the world is string to log to stdout and stderr)
 	// we get the pipe from our pipe factory.  it runs in the background so we can request the next pipe while the spec being intercepted is running
 	interceptor.pipe = <-interceptor.pipeChannel
 
-	interceptor.emergencyBailout = make(chan interface{})
+	interceptor.emergencyBailout = make(chan any)
 
 	//Spin up a goroutine to copy data from the pipe into a buffer, this is how we capture any output the user is emitting
 	go func() {
 		buffer := &bytes.Buffer{}
 		destination := io.MultiWriter(buffer, interceptor.forwardTo)
-		copyFinished := make(chan interface{})
+		copyFinished := make(chan any)
 		reader := interceptor.pipe.reader
 		go func() {
 			io.Copy(destination, reader)
@@ -224,7 +224,7 @@ func NewOSGlobalReassigningOutputInterceptor() OutputInterceptor {
 	return &genericOutputInterceptor{
 		interceptedContent: make(chan string),
 		pipeChannel:        make(chan pipePair),
-		shutdown:           make(chan interface{}),
+		shutdown:           make(chan any),
 		implementation:     &osGlobalReassigningOutputInterceptorImpl{},
 	}
 }
