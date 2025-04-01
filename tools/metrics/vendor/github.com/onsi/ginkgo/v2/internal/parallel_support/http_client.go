@@ -34,7 +34,7 @@ func (client *httpClient) Close() error {
 	return nil
 }
 
-func (client *httpClient) post(path string, data interface{}) error {
+func (client *httpClient) post(path string, data any) error {
 	var body io.Reader
 	if data != nil {
 		encoded, err := json.Marshal(data)
@@ -54,7 +54,7 @@ func (client *httpClient) post(path string, data interface{}) error {
 	return nil
 }
 
-func (client *httpClient) poll(path string, data interface{}) error {
+func (client *httpClient) poll(path string, data any) error {
 	for {
 		resp, err := http.Get(client.serverHost + path)
 		if err != nil {
@@ -92,6 +92,23 @@ func (client *httpClient) PostDidRun(report types.SpecReport) error {
 
 func (client *httpClient) PostSuiteDidEnd(report types.Report) error {
 	return client.post("/suite-did-end", report)
+}
+
+func (client *httpClient) PostEmitProgressReport(report types.ProgressReport) error {
+	return client.post("/progress-report", report)
+}
+
+func (client *httpClient) PostReportBeforeSuiteCompleted(state types.SpecState) error {
+	return client.post("/report-before-suite-completed", state)
+}
+
+func (client *httpClient) BlockUntilReportBeforeSuiteCompleted() (types.SpecState, error) {
+	var state types.SpecState
+	err := client.poll("/report-before-suite-state", &state)
+	if err == ErrorGone {
+		return types.SpecStateFailed, nil
+	}
+	return state, err
 }
 
 func (client *httpClient) PostSynchronizedBeforeSuiteCompleted(state types.SpecState, data []byte) error {
@@ -136,10 +153,7 @@ func (client *httpClient) PostAbort() error {
 
 func (client *httpClient) ShouldAbort() bool {
 	err := client.poll("/abort", nil)
-	if err == ErrorGone {
-		return true
-	}
-	return false
+	return err == ErrorGone
 }
 
 func (client *httpClient) Write(p []byte) (int, error) {

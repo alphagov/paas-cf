@@ -4,7 +4,7 @@ package uaa
 // an error if there is an issue making a request to the /healthz endpoint.
 func (a *API) IsHealthy() (bool, error) {
 	u := urlWithPath(*a.TargetURL, "/healthz")
-	resp, err := a.UnauthenticatedClient.Get(u.String())
+	resp, err := a.Client.Get(u.String())
 	if err != nil {
 		return false, err
 	}

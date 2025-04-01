@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -21,28 +22,41 @@ type paginatedClientList struct {
 // Client is a UAA client
 // http://docs.cloudfoundry.org/api/uaa/version/4.19.0/index.html#clients.
 type Client struct {
-	ClientID             string   `json:"client_id,omitempty" generator:"id"`
-	AuthorizedGrantTypes []string `json:"authorized_grant_types,omitempty"`
-	RedirectURI          []string `json:"redirect_uri,omitempty"`
-	Scope                []string `json:"scope,omitempty"`
-	ResourceIDs          []string `json:"resource_ids,omitempty"`
-	Authorities          []string `json:"authorities,omitempty"`
-	AutoApprove          []string `json:"autoapprove,omitempty"`
-	AccessTokenValidity  int64    `json:"access_token_validity,omitempty"`
-	RefreshTokenValidity int64    `json:"refresh_token_validity,omitempty"`
-	AllowedProviders     []string `json:"allowedproviders,omitempty"`
-	DisplayName          string   `json:"name,omitempty"`
-	TokenSalt            string   `json:"token_salt,omitempty"`
-	CreatedWith          string   `json:"createdwith,omitempty"`
-	ApprovalsDeleted     bool     `json:"approvals_deleted,omitempty"`
-	RequiredUserGroups   []string `json:"required_user_groups,omitempty"`
-	ClientSecret         string   `json:"client_secret,omitempty"`
-	LastModified         int64    `json:"lastModified,omitempty"`
+	ClientID             string      `json:"client_id,omitempty" generator:"id"`
+	AuthorizedGrantTypes []string    `json:"authorized_grant_types,omitempty"`
+	RedirectURI          []string    `json:"redirect_uri,omitempty"`
+	Scope                []string    `json:"scope,omitempty"`
+	ResourceIDs          []string    `json:"resource_ids,omitempty"`
+	Authorities          []string    `json:"authorities,omitempty"`
+	AutoApproveRaw       interface{} `json:"autoapprove,omitempty"`
+	AccessTokenValidity  int64       `json:"access_token_validity,omitempty"`
+	RefreshTokenValidity int64       `json:"refresh_token_validity,omitempty"`
+	AllowedProviders     []string    `json:"allowedproviders,omitempty"`
+	DisplayName          string      `json:"name,omitempty"`
+	TokenSalt            string      `json:"token_salt,omitempty"`
+	CreatedWith          string      `json:"createdwith,omitempty"`
+	ApprovalsDeleted     bool        `json:"approvals_deleted,omitempty"`
+	RequiredUserGroups   []string    `json:"required_user_groups,omitempty"`
+	ClientSecret         string      `json:"client_secret,omitempty"`
+	LastModified         int64       `json:"lastModified,omitempty"`
+	AllowPublic          bool        `json:"allowpublic,omitempty"`
 }
 
 // Identifier returns the field used to uniquely identify a Client.
 func (c Client) Identifier() string {
 	return c.ClientID
+}
+
+func (c Client) AutoApprove() []string {
+	switch t := c.AutoApproveRaw.(type) {
+	case bool:
+		return []string{strconv.FormatBool(t)}
+	case string:
+		return []string{t}
+	case []string:
+		return t
+	}
+	return []string{}
 }
 
 // GrantType is a type of oauth2 grant.
@@ -107,10 +121,6 @@ func (c *Client) Validate() error {
 		return err
 	}
 	if err := requireClientSecretForGrantType(c, AUTHCODE); err != nil {
-		return err
-	}
-
-	if err := requireClientSecretForGrantType(c, PASSWORD); err != nil {
 		return err
 	}
 
