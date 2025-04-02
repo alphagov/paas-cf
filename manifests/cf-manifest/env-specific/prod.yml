@@ -4,7 +4,7 @@ nats_instances: 3
 diego_api_instances: 3
 cell_instances: 3
 router_instances: 3
-api_instances: 3
+api_instances: 2
 doppler_instances: 3
 log_cache_instances: 3
 log_api_instances: 3
