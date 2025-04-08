@@ -349,20 +349,6 @@ run_health_checks() {
   else
     print_error 'failed healthchecks'
   fi
-  local http_response=''
-  retry_count='1'
-  local good_response='{"ok":true}'
-  while [[ "${http_response}" != "${good_response}" && ${retry_count} -le ${max_retries} ]]; do
-    echo "attempting to connect to billing-api ${retry_count}/${max_retries}"
-    sleep 3
-    http_response=$(curl -s --max-time 3 https://billing."${env_arg}".dev.cloudpipeline.digital | jq -c . 2>/dev/null || true)
-    ((retry_count=retry_count+1))
-  done
-  if [[ "${http_response}" = "${good_response}" ]]; then
-    echo 'billing-api healthcheck passed'
-  else
-    print_error 'failed healthchecks'
-  fi
 }
 
 # enable/disable bosh resurrector
