@@ -71,8 +71,8 @@ resources:
       # This is hardcoded to main to deal with the situation where the branch is merged
       # into main and we fail to shutdown as the branch doesn't exist anymore.
       # Set this to the below when you want to work on this pipeline.
-      branch: ((branch_name))
-      # branch: main
+      # branch: ((branch_name))
+      branch: main
       tag_filter: ((paas_cf_tag_filter))
       commit_verification_keys: ((gpg_public_keys))
 
