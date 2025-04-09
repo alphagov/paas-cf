@@ -675,7 +675,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-admin.git
-      branch: kill-billing
+      branch: kill-billing-quick
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-prometheus-endpoints
