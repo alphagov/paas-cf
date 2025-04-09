@@ -13,7 +13,7 @@
     "eslint-plugin-functional": "^3.0.2",
     "eslint-plugin-import": "^2.22.0",
     "govuk-frontend": "^3.9.0",
-    "koa": "^2.13.0",
+    "koa": "^2.16.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "sass": "^1.79.5",
