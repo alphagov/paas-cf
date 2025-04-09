@@ -615,15 +615,6 @@ resources:
     source:
       interval: 10m
 
-  - name: billing-smoke-tests-timer
-    type: time
-    source:
-      interval: 5m
-      location: Europe/London
-      start: 9:00 AM
-      stop: 5:00 PM
-      days: [Monday, Tuesday, Wednesday, Thursday, Friday]
-
   - name: leaked-aws-key-check-timer
     type: time
     source:
