@@ -332,7 +332,7 @@ trigger_db_instances_state_update() {
   done
 }
 
-# ensure that the cf api and billing apps are responding correctly after a startup
+# ensure that the cf api are responding correctly after a startup
 run_health_checks() {
   local retry_count=1
   local max_retries=200
@@ -346,20 +346,6 @@ run_health_checks() {
   done
   if [[ "${http_response_code}" = "200" ]]; then
     echo 'cf-api healthcheck passed'
-  else
-    print_error 'failed healthchecks'
-  fi
-  local http_response=''
-  retry_count='1'
-  local good_response='{"ok":true}'
-  while [[ "${http_response}" != "${good_response}" && ${retry_count} -le ${max_retries} ]]; do
-    echo "attempting to connect to billing-api ${retry_count}/${max_retries}"
-    sleep 3
-    http_response=$(curl -s --max-time 3 https://billing."${env_arg}".dev.cloudpipeline.digital | jq -c . 2>/dev/null || true)
-    ((retry_count=retry_count+1))
-  done
-  if [[ "${http_response}" = "${good_response}" ]]; then
-    echo 'billing-api healthcheck passed'
   else
     print_error 'failed healthchecks'
   fi
