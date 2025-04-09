@@ -912,16 +912,16 @@ jobs:
                     "${app_autoscaler_credentials[@]}"
                   )
 
-                  for secret_name in ${concourse_credentials[*]}; do
+                  for secret_name in "${concourse_credentials[@]}"; do
                     credhub generate --type password --no-overwrite --name "/concourse/main/$secret_name"
                   done
 
-                  for secret_name in ${bosh_credentials[*]}; do
+                  for secret_name in "${bosh_credentials[@]}"; do
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                   done
 
-                  for secret_name in ${app_autoscaler_credentials[*]}; do
+                  for secret_name in "${app_autoscaler_credentials[@]}"; do
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/app-autoscaler/$secret_name" --password "$value"
                   done
@@ -6996,7 +6996,7 @@ jobs:
 
                   for user in ${list_users}; do
 
-                    if test "${user#*$target_user_string}" != "$user"; then
+                    if test "${user#*"$target_user_string"}" != "$user"; then
                       ### Check s3 broker users, only
 
                       attached_policies=$(aws iam list-attached-user-policies --user-name "${user}" | grep PolicyName | awk -F '"' '{print $4}')
