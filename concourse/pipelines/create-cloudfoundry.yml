@@ -239,11 +239,9 @@ groups:
   - name: health
     jobs:
       - continuous-smoke-tests
-      - continuous-billing-smoke-tests
       - continuous-leaked-aws-key-check
       - check-certificates
       - resurrector-is-enabled
-      - check-billing-comparison-with-cf
       - az-a-is-enabled-in-manifest
       - az-b-is-enabled-in-manifest
       - az-c-is-enabled-in-manifest
@@ -617,15 +615,6 @@ resources:
     source:
       interval: 10m
 
-  - name: billing-smoke-tests-timer
-    type: time
-    source:
-      interval: 5m
-      location: Europe/London
-      start: 9:00 AM
-      stop: 5:00 PM
-      days: [Monday, Tuesday, Wednesday, Thursday, Friday]
-
   - name: leaked-aws-key-check-timer
     type: time
     source:
@@ -923,16 +912,16 @@ jobs:
                     "${app_autoscaler_credentials[@]}"
                   )
 
-                  for secret_name in ${concourse_credentials[*]}; do
+                  for secret_name in "${concourse_credentials[@]}"; do
                     credhub generate --type password --no-overwrite --name "/concourse/main/$secret_name"
                   done
 
-                  for secret_name in ${bosh_credentials[*]}; do
+                  for secret_name in "${bosh_credentials[@]}"; do
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/$DEPLOY_ENV/$secret_name" --password "$value"
                   done
 
-                  for secret_name in ${app_autoscaler_credentials[*]}; do
+                  for secret_name in "${app_autoscaler_credentials[@]}"; do
                     value=$(credhub get --name "/concourse/main/$secret_name" --quiet)
                     credhub set --type password --name "/$DEPLOY_ENV/app-autoscaler/$secret_name" --password "$value"
                   done
@@ -5525,46 +5514,6 @@ jobs:
 
         - get: cf-manifest
 
-      # this tests the "integration" of this paas-billing revision with the
-      # configuration in this paas-cf revision, performed before deployment
-      # to give us a chance to avoid deploying a broken combination.
-      - task: paas-billing-integration-tests
-        tags: [colocated-with-web]
-        config:
-          platform: linux
-          image_resource: *cf-acceptance-tests-image-resource
-          params:
-            AWS_REGION: ((aws_region))
-            DEPLOY_ENV: ((deploy_env))
-          inputs:
-            - name: paas-cf
-            - name: paas-billing
-              path: src/github.com/alphagov/paas-billing
-          run:
-            path: sh
-            args:
-              - -e
-              - -u
-              - -c
-              - |
-                mkdir ./src/github.com/alphagov/paas-billing/gherkin/features/
-
-                cp "paas-cf/config/billing/output/${AWS_REGION}.json" ./src/github.com/alphagov/paas-billing/config.json
-                cp "paas-cf/config/billing/tests/${AWS_REGION}_billing_rds_charges.feature" ./src/github.com/alphagov/paas-billing/gherkin/features/
-
-                cat > /etc/postgresql/12/main/pg_hba.conf <<-EOF
-                local   all   postgres   trust
-                host    all   postgres   127.0.0.1/32   trust
-                EOF
-
-                pg_ctlcluster 12 main start
-
-                export TEST_DATABASE_URL="postgres://postgres:@localhost:5432/?sslmode=disable"
-                cd src/github.com/alphagov/paas-billing
-                export APP_ROOT="$PWD"
-
-                make integration
-
       - task: create-database-and-config-files
         tags: [colocated-with-web]
         config:
@@ -5810,94 +5759,6 @@ jobs:
                   echo "Waiting for binding of billing-logit-ssl-drain service to billing apps to complete..."
                   sleep 10
                 done
-
-      - do:
-        - task: create-temp-admin
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: billing-acctests-admin
-            DISABLE_ADMIN_USER_CREATION: false
-            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
-        - do:
-          - task: create-temp-nonadmin
-            tags: [colocated-with-web]
-            file: paas-cf/concourse/tasks/create_nonadmin.yml
-            params:
-              PREFIX: billing-acctests-nonadmin
-              API_ENDPOINT: ((api_endpoint))
-              CF_ADMIN: ((cf_admin))
-              CF_PASS: ((cf_pass))
-              BILLING_MANAGER_ORG: admin  # we know this will exist
-          - task: paas-billing-acceptance-tests
-            tags: [colocated-with-web]
-            config:
-              platform: linux
-              image_resource: *cf-acceptance-tests-image-resource
-              params:
-                SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-                DEPLOY_ENV: ((deploy_env))
-                API_ENDPOINT: ((api_endpoint))
-                CF_ADMIN: ((cf_admin))
-                CF_PASS: ((cf_pass))
-              inputs:
-                - name: paas-cf
-                - name: admin-creds
-                - name: nonadmin-creds
-                - name: paas-billing
-                  path: src/github.com/alphagov/paas-billing
-              run:
-                path: sh
-                args:
-                  - -e
-                  - -u
-                  - -c
-                  - |
-                    cf api "${API_ENDPOINT}"
-
-                    cf auth "$(cat admin-creds/username)" "$(cat admin-creds/password)"
-                    # if we don't target a space with these creds we will run into
-                    # https://github.com/cloudfoundry/cli/issues/2086 and not be able to
-                    # delete the account
-                    cf target -o admin -s billing
-                    CF_ADMIN_BEARER_TOKEN="$(cf oauth-token | cut -d' ' -f2)"
-                    export CF_ADMIN_BEARER_TOKEN
-
-                    cf auth "$(cat nonadmin-creds/username)" "$(cat nonadmin-creds/password)"
-                    CF_NONADMIN_BEARER_TOKEN="$(cf oauth-token | cut -d' ' -f2)"
-                    export CF_NONADMIN_BEARER_TOKEN
-                    if [ -e nonadmin-creds/billing-manager-org-guid ] ; then
-                      CF_NONADMIN_BILLING_MANAGER_ORG_GUID="$(cat nonadmin-creds/billing-manager-org-guid)"
-                      export CF_NONADMIN_BILLING_MANAGER_ORG_GUID
-                    fi
-
-                    export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                    export METRICSPROXY_API_URL="https://billing-metrics-proxy.${SYSTEM_DNS_ZONE_NAME}"
-                    cd src/github.com/alphagov/paas-billing
-
-                    make acceptance
-          ensure:
-            task: remove-temp-nonadmin
-            tags: [colocated-with-web]
-            file: paas-cf/concourse/tasks/delete_user.yml
-            timeout: 5m
-            input_mapping:
-              user-creds: nonadmin-creds
-            params:
-              API_ENDPOINT: ((api_endpoint))
-              CF_ADMIN: ((cf_admin))
-              CF_PASS: ((cf_pass))
-        ensure:
-          task: remove-temp-admin
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_user.yml
-          timeout: 5m
-          input_mapping:
-            user-creds: admin-creds
-          params:
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
 
       - task: tag-repo
         tags: [colocated-with-web]
@@ -6956,20 +6817,6 @@ jobs:
             args:
             - release-version/number
 
-  - name: check-billing-comparison-with-cf
-    build_logs_to_retain: 100
-    plan:
-      - get: paas-billing
-      - get: paas-cf
-      - do:
-        - task: check-billing-comparison-with-cf
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/check-billing-comparison-with-cf.yml
-          params:
-            SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-            CF_ADMIN: admin
-            CF_PASS: ((cf_pass))
-
   - name: continuous-smoke-tests
     serial_groups: [smoke-tests]
     build_logs_to_retain: 10000
@@ -7112,130 +6959,6 @@ jobs:
           CCI_BUILD_NUMBER: $BUILD_NAME
           CRONITOR_PING_MESSAGE: "Continuous+smoke+tests+job+finished+with+errors"
 
-  - name: continuous-billing-smoke-tests
-    serial_groups: [smoke-tests]
-    build_logs_to_retain: 10000
-    plan:
-      - in_parallel:
-        - get: billing-smoke-tests-timer
-          trigger: true
-        - get: paas-billing
-          passed: ['deploy-paas-billing']
-        - <<: *get-paas-cf
-          passed: ['pipeline-lock']
-        - get: cf-manifest
-          passed: ['post-cf-deploy']
-
-      - try:
-          task: ping-cronitor-billing-test-start
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
-          params:
-            CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
-            CRONITOR_MONITOR_PING_ENDPOINT: "run"
-            DEPLOY_ENV: ((deploy_env))
-            CCI_BUILD_NUMBER: $BUILD_NAME
-            CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+has+started"
-
-      - do:
-        - task: create-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/create_admin.yml
-          params:
-            PREFIX: cont-billing-smoketest-user
-            UAA_ADMIN_CLIENT_PASS: ((uaa_admin_client_secret))
-
-        - task: run-billing-smoke-tests
-          tags: [colocated-with-web]
-          config:
-            platform: linux
-            image_resource: *cf-acceptance-tests-image-resource
-            params:
-              AWS_REGION: ((aws_region))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              DEPLOY_ENV: ((deploy_env))
-            inputs:
-              - name: paas-cf
-              - name: paas-billing
-                path: src/github.com/alphagov/paas-billing
-              - name: admin-creds
-            run:
-              path: sh
-              args:
-                - -e
-                - -u
-                - -c
-                - |
-                  cf api "https://api.${SYSTEM_DNS_ZONE_NAME}"
-                  cf auth  "$(cat admin-creds/username)" "$(cat admin-creds/password)"
-
-                  cf target -o admin -s billing
-
-                  export BILLING_API_URL="https://billing.${SYSTEM_DNS_ZONE_NAME}"
-                  cd src/github.com/alphagov/paas-billing
-                  make smoke
-
-        ensure:
-          in_parallel:
-            - task: remove-temp-user
-              tags: [colocated-with-web]
-              file: paas-cf/concourse/tasks/delete_user.yml
-              timeout: 5m
-              input_mapping:
-                user-creds: admin-creds
-              params:
-                API_ENDPOINT: ((api_endpoint))
-                CF_ADMIN: ((cf_admin))
-                CF_PASS: ((cf_pass))
-
-    on_success:
-      try:
-        task: ping-cronitor-continuous-billing-smoke-tests-completed
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
-        params:
-          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
-          CRONITOR_MONITOR_PING_ENDPOINT: "complete"
-          DEPLOY_ENV: ((deploy_env))
-          CCI_BUILD_NUMBER: $BUILD_NAME
-          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+has+completed+successfully"
-
-    on_failure:
-      try:
-        task: ping-cronitor-continuous-billing-smoke-tests-failed
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
-        params:
-          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
-          CRONITOR_MONITOR_PING_ENDPOINT: "fail"
-          DEPLOY_ENV: ((deploy_env))
-          CCI_BUILD_NUMBER: $BUILD_NAME
-          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+has+failed"
-
-    on_abort:
-      try:
-        task: ping-cronitor-continuous-billing-smoke-tests-aborted
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
-        params:
-          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
-          CRONITOR_MONITOR_PING_ENDPOINT: "fail"
-          DEPLOY_ENV: ((deploy_env))
-          CCI_BUILD_NUMBER: $BUILD_NAME
-          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+was+aborted"
-
-    on_error:
-      try:
-        task: ping-cronitor-continuous-billing-smoke-tests-errored
-        tags: [colocated-with-web]
-        file: paas-cf/concourse/tasks/cronitor-monitor-ping-action.yml
-        params:
-          CRONITOR_SMOKE_TEST_MONITOR_CODE: ((cronitor_billing_smoke_test_monitor_code))
-          CRONITOR_MONITOR_PING_ENDPOINT: "fail"
-          DEPLOY_ENV: ((deploy_env))
-          CCI_BUILD_NUMBER: $BUILD_NAME
-          CRONITOR_PING_MESSAGE: "Continuous+billing+smoke+tests+job+finished+with+errors"
-
   - name: continuous-leaked-aws-key-check
     serial_groups: [security-checks]
     build_logs_to_retain: 10000
@@ -7273,7 +6996,7 @@ jobs:
 
                   for user in ${list_users}; do
 
-                    if test "${user#*$target_user_string}" != "$user"; then
+                    if test "${user#*"$target_user_string"}" != "$user"; then
                       ### Check s3 broker users, only
 
                       attached_policies=$(aws iam list-attached-user-policies --user-name "${user}" | grep PolicyName | awk -F '"' '{print $4}')
