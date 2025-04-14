@@ -1,5 +1,5 @@
 module github.com/alphagov/paas-cf/common-go/basic_logit_client
 
-go 1.21
+go 1.23
 
 require code.cloudfoundry.org/lager v2.0.0+incompatible // indirect
