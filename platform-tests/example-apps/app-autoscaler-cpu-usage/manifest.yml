@@ -29,7 +29,7 @@ applications:
     no-route: true
 
     env:
-      GOVERSION: go1.21
+      GOVERSION: go1.23
       GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/app-autoscaler-cpu-usage
 
       DURATION: 13m
