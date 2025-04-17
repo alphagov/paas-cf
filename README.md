@@ -80,7 +80,7 @@ These instructions contain placeholders where the exact command may vary. The be
    ```
 1. Log in to Concourse. See the [Accessing Concourse](#accessing-concourse).
 
-1. Tun the `generate-paas-admin-git-keys`, `generate-paas-billing-git-keys` and `generate-paas-aiven-broker-git-keys` jobs in the job group `operator`. This will generate and store some SSH keys needed by other jobs.
+1. Tun the `generate-paas-admin-git-keys`and `generate-paas-aiven-broker-git-keys` jobs in the job group `operator`. This will generate and store some SSH keys needed by other jobs.
 
 1. Run the `create-cloudfoundry` pipeline, starting from the left-hand `pipeline-lock` job. This will configure and deploy Cloud Foundry. It might take a couple of hours to complete.
 
@@ -122,7 +122,6 @@ The following table outlines some important directories in the repository, their
 | Directory | Purpose | I will need this when .. |
 | -- | -- | -- |
 | `concourse/pipelines/` | YAML definitions of the Concourse pipelines | I want to make a change to how the platform is deployed, monitored, or torn down |
-| `config/billing/` | The scripts and static files used to generate configuration for the billing system.| <ul><li>I'm adding a new backing service, so that I can set how much it costs.</li><li>The VAT rate has changed </li><li>The cost of an AWS resource has changed</li></ul>|
 | `manifests/cf-manifest/` | The Bosh manifest configuration for Cloud Foundry | See specific directories below |
 | `manifests/cf-manifest/operations.d/` | Customisations applied to `cf-deployment`, applicable to all environments | <ul><li>I want to make a configuration change that will affect every environment</li><li>I want to deploy a new piece of software with a Bosh release</li></ul>
 | `manifests/cf-manifest/operations` | Customisations applied to `cf-deployment` [based on some condition](https://github.com/alphagov/paas-cf/blob/main/manifests/cf-manifest/scripts/generate-manifest.sh#L18) | I want to make a configuration change that will only be applied in certain circumstances |

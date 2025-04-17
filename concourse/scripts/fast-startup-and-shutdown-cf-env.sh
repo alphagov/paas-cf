@@ -332,7 +332,7 @@ trigger_db_instances_state_update() {
   done
 }
 
-# ensure that the cf api and billing apps are responding correctly after a startup
+# ensure that the cf api is responding correctly after a startup
 run_health_checks() {
   local retry_count=1
   local max_retries=200
