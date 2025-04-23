@@ -1,6 +1,6 @@
 module github.com/alphagov/paas-cf/tools/pipecleaner
 
-go 1.23
+go 1.22
 
 require (
 	github.com/concourse/concourse v1.6.1-0.20201028190452-248606d42c17

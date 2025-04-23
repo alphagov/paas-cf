@@ -3263,7 +3263,7 @@ jobs:
                         - logit-syslog-drain
                       env:
                         GO_INSTALL_PACKAGE_SPEC: github.com/nerdswords/yet-another-cloudwatch-exporter/cmd/yace
-                        GOVERSION: go1.23
+                        GOVERSION: go1.22
                   EOF
 
                   cat << EOF > manifest.yml
