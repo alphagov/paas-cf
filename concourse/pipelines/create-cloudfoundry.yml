@@ -3271,7 +3271,7 @@ jobs:
                   applications:
                     - name: cloudwatch-exporter
                       memory: 128M
-                      disk_quota: 100M
+                      disk_quota: 256M
                       instances: 1
                       health-check-type: http
                       health-check-http-endpoint: /
