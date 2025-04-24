@@ -2,12 +2,12 @@
 apiVersion: v1alpha1
 discovery:
   exportedTagsOnMetrics:
-    ec2:
+    AWS/EC2:
       - Name
-    rds:
+    AWS/RDS:
       - Name
   jobs:
-    - type: "ec2"
+    - type: "AWS/EC2"
       regions:
         - (( grab $AWS_REGION ))
       searchTags:
@@ -20,7 +20,7 @@ discovery:
           period: 60
           length: 600
       addCloudwatchTimestamp: true
-    - type: "rds"
+    - type: "AWS/RDS"
       regions:
         - (( grab $AWS_REGION ))
       searchTags:
