@@ -2974,6 +2974,7 @@ jobs:
                 BOSH_NS="/${DEPLOY_ENV}/${DEPLOY_ENV}"
                 CF_ADMIN='admin'
                 CF_PASS=$(credhub get -q -n "${BOSH_NS}/cf_admin_password")
+                CF_CLIENT_SECRET=$(credhub get -q -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret")
                 API_ENDPOINT="https://api.${SYSTEM_DNS_ZONE_NAME}"
                 UAA_ENDPOINT=$($VAL_FROM_YAML instance_groups.api.jobs.cloud_controller_ng.properties.uaa.url cf-manifest/cf-manifest.yml)
                 PAAS_ACCOUNTS_PASSWORD=$(credhub get -q -n "${BOSH_NS}/secrets_paas_accounts_admin_password")
@@ -6212,6 +6213,7 @@ jobs:
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_login_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_notifications_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_auditor_secret" -t password
+              credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_billing_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_metrics_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_paas_prometheus_endpoints_secret" -t password
               credhub generate -n "${BOSH_NS}/secrets_uaa_clients_cdn_broker_secret" -t password
