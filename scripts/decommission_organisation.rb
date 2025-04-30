@@ -85,18 +85,13 @@ def lookup_users(user_guids)
 
   user_guids.each_slice(50) do |batch|
     guids_csv = batch.join(",")
-    response = `cf curl "/v3/users?guids=#{guids_csv}&per_page=5000"`
-
-    if $CHILD_STATUS.exitstatus != 0
-      puts_err("Failed to fetch user data for batch: #{batch.join(',')}")
-      next
-    end
-
     begin
-      parsed = JSON.parse(response)
-      users.merge!(parsed["resources"].to_h { |usr| [usr["guid"], usr["username"]] })
+      response = cf_api_get("/v3/users?guids=#{guids_csv}&per_page=5000")
+      users.merge!(response["resources"].to_h { |usr| [usr["guid"], usr["username"]] })
     rescue JSON::ParserError
-      puts_err("Invalid JSON response for batch: #{batch.join(',')}")
+      puts_err("Invalid JSON in response for batch: #{batch.join(',')}")
+    rescue RuntimeError => e
+      puts_err("Failed to fetch user data for batch: #{batch.join(',')} - #{e.message}")
     end
   end
 
