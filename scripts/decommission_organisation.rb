@@ -81,11 +81,22 @@ def roles_in_org(org_guid)
 end
 
 def lookup_users(user_guids)
-  guids_csv = user_guids.join(",")
-  users = cf_api_get("/v3/users?guids=#{guids_csv}&per_page=5000")
+  users = {}
 
-  users["resources"].to_h { |usr| [usr["guid"], usr["username"]] }
+  # CloudFoundry API can choke on long URLs; batch requests
+  user_guids.each_slice(50) do |batch|
+    guids_csv = batch.join(",")
+    begin
+      response = cf_api_get("/v3/users?guids=#{guids_csv}&per_page=5000")
+      users.merge!(response["resources"].to_h { |usr| [usr["guid"], usr["username"]] })
+    rescue => e
+      puts_err("Failed to fetch user data for batch: #{batch.join(',')}")
+    end
+  end
+
+  users
 end
+
 
 def try_remove_role(role_guid)
   cf_api_delete("/v3/roles/#{role_guid}")
