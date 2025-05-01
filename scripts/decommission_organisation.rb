@@ -86,7 +86,7 @@ def lookup_users(user_guids)
   user_guids.each_slice(50) do |batch|
     guids_csv = batch.join(",")
     begin
-      response = cf_api_get("/v3/users?guids=#{guids_csv}&per_page=5000")
+      response = cf_api_get("/v3/users?guids=#{guids_csv}")
       users.merge!(response["resources"].to_h { |usr| [usr["guid"], usr["username"]] })
     rescue JSON::ParserError
       puts_err("Invalid JSON in response for batch: #{batch.join(',')}")
