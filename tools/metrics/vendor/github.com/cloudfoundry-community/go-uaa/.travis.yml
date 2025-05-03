@@ -1,8 +1,8 @@
 language: go
 sudo: false
 go:
-  - "1.11"
   - "1.12"
+  - "1.13"
 
 before_install:
   - go get -u golang.org/x/tools/cmd/goimports
@@ -10,7 +10,6 @@ before_install:
 script:
   - FILES=`find . -iname '*.go' -type f -not -path "./vendor/*"`
   # linting
-  - env GO111MODULE=on go vet ./...
   - env GO111MODULE=on goimports -d $FILES
   # testing
   - env GO111MODULE=on go test -v -race -covermode=atomic -cover ./...

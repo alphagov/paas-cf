@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"reflect"
 
 	pc "github.com/cloudfoundry-community/go-uaa/passwordcredentials"
 	"golang.org/x/oauth2"
@@ -16,13 +17,15 @@ import (
 
 // API is a client to the UAA API.
 type API struct {
-	AuthenticatedClient       *http.Client
-	UnauthenticatedClient     *http.Client
+	Client                    *http.Client
+	baseClient                *http.Client
+	baseTransport             http.RoundTripper
 	TargetURL                 *url.URL
+	redirectURL               *url.URL
 	skipSSLValidation         bool
-	Verbose                   bool
-	ZoneID                    string
-	UserAgent                 string
+	verbose                   bool
+	zoneID                    string
+	userAgent                 string
 	token                     *oauth2.Token
 	target                    string
 	mode                      mode
@@ -68,200 +71,40 @@ const (
 	refreshtoken
 )
 
-func New(target string, zoneID string) *API {
+type Option interface {
+	Apply(a *API)
+}
+
+type AuthenticationOption interface {
+	ApplyAuthentication(a *API)
+}
+
+func New(target string, authOpt AuthenticationOption, opts ...Option) (*API, error) {
 	a := &API{
-		ZoneID:    zoneID,
-		UserAgent: "go-uaa",
-		target:    target,
-		mode:      custom,
+		target: target,
+		mode:   custom,
 	}
-	return a.WithClient(defaultClient())
-}
-
-func defaultClient() *http.Client {
-	return &http.Client{Transport: http.DefaultTransport}
-}
-
-func (a *API) validateTarget() error {
-	if a.TargetURL != nil {
-		return nil
+	authOpt.ApplyAuthentication(a)
+	defaultClient := &http.Client{Transport: http.DefaultTransport}
+	defaultClientOption := WithClient(defaultClient)
+	defaultUserAgentOption := WithUserAgent("go-uaa")
+	opts = append([]Option{defaultClientOption, defaultUserAgentOption}, opts...)
+	for _, option := range opts {
+		option.Apply(a)
 	}
-	if a.target == "" && a.TargetURL == nil {
-		return errors.New("the target is missing")
-	}
-	u, err := BuildTargetURL(a.target)
-	if err != nil {
-		return err
-	}
-	a.TargetURL = u
-	return nil
-}
-
-func (a *API) Validate() error {
-	err := a.validateTarget()
-	if err != nil {
-		return err
-	}
-	switch a.mode {
-	case token:
-		err = a.validateToken()
-	case clientcredentials:
-		err = a.validateClientCredentials()
-	case passwordcredentials:
-		err = a.validatePasswordCredentials()
-	case authorizationcode:
-		err = a.validateAuthorizationCode()
-	case refreshtoken:
-		err = a.validateRefreshToken()
-	}
-	if err != nil {
-		return err
-	}
-	return a.ensureTransports()
-}
-
-func (a *API) WithClient(client *http.Client) *API {
-	a.UnauthenticatedClient = client
-	_ = a.Validate()
-	return a
-}
-
-func (a *API) WithSkipSSLValidation(skipSSLValidation bool) *API {
-	a.skipSSLValidation = skipSSLValidation
-	_ = a.Validate()
-	return a
-}
-
-// NewWithClientCredentials builds an API that uses the client credentials grant
-// to get a token for use with the UAA API.
-func NewWithClientCredentials(target string, zoneID string, clientID string, clientSecret string, tokenFormat TokenFormat, skipSSLValidation bool) (*API, error) {
-	a := New(target, zoneID).WithClientCredentials(clientID, clientSecret, tokenFormat).WithSkipSSLValidation(skipSSLValidation)
-	err := a.Validate()
+	err := a.configure()
 	if err != nil {
 		return nil, err
 	}
-	return a, err
-}
 
-func (a *API) WithClientCredentials(clientID string, clientSecret string, tokenFormat TokenFormat) *API {
-	a.mode = clientcredentials
-	a.clientID = clientID
-	a.clientSecret = clientSecret
-	a.tokenFormat = tokenFormat
-	_ = a.Validate()
-	return a
-}
-
-func (a *API) validateClientCredentials() error {
-	err := a.validateTarget()
-	if err != nil {
-		return err
-	}
-	tokenURL := urlWithPath(*a.TargetURL, "/oauth/token")
-	v := url.Values{}
-	v.Add("token_format", a.tokenFormat.String())
-	c := &cc.Config{
-		ClientID:       a.clientID,
-		ClientSecret:   a.clientSecret,
-		TokenURL:       tokenURL.String(),
-		EndpointParams: v,
-		AuthStyle:      oauth2.AuthStyleInHeader,
-	}
-	a.clientCredentialsConfig = c
-	a.AuthenticatedClient = c.Client(context.WithValue(context.Background(), oauth2.HTTPClient, a.UnauthenticatedClient))
-	return a.ensureTransports()
-}
-
-// NewWithPasswordCredentials builds an API that uses the password credentials
-// grant to get a token for use with the UAA API.
-func NewWithPasswordCredentials(target string, zoneID string, clientID string, clientSecret string, username string, password string, tokenFormat TokenFormat, skipSSLValidation bool) (*API, error) {
-	a := New(target, zoneID).WithPasswordCredentials(clientID, clientSecret, username, password, tokenFormat).WithSkipSSLValidation(skipSSLValidation)
-	err := a.Validate()
-	if err != nil {
-		return nil, err
-	}
-	return a, err
-}
-
-func (a *API) WithPasswordCredentials(clientID string, clientSecret string, username string, password string, tokenFormat TokenFormat) *API {
-	a.mode = passwordcredentials
-	a.clientID = clientID
-	a.clientSecret = clientSecret
-	a.username = username
-	a.password = password
-	a.tokenFormat = tokenFormat
-	_ = a.Validate()
-	return a
-}
-
-func (a *API) validatePasswordCredentials() error {
-	err := a.validateTarget()
-	if err != nil {
-		return err
-	}
-	tokenURL := urlWithPath(*a.TargetURL, "/oauth/token")
-	v := url.Values{}
-	v.Add("token_format", a.tokenFormat.String())
-	c := &pc.Config{
-		ClientID:     a.clientID,
-		ClientSecret: a.clientSecret,
-		Username:     a.username,
-		Password:     a.password,
-		Endpoint: oauth2.Endpoint{
-			TokenURL: tokenURL.String(),
-		},
-		EndpointParams: v,
-	}
-	a.passwordCredentialsConfig = c
-	a.AuthenticatedClient = c.Client(context.WithValue(context.Background(), oauth2.HTTPClient, a.UnauthenticatedClient))
-	return a.ensureTransports()
-}
-
-type tokenTransport struct {
-	underlyingTransport http.RoundTripper
-	token               oauth2.Token
-}
-
-func (t *tokenTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Set("Authorization", fmt.Sprintf("%s %s", t.token.Type(), t.token.AccessToken))
-	return t.underlyingTransport.RoundTrip(req)
-}
-
-// NewWithToken builds an API that uses the given token to make authenticated
-// requests to the UAA API.
-func NewWithToken(target string, zoneID string, token oauth2.Token) (*API, error) {
-	a := New(target, zoneID).WithToken(token)
-	err := a.Validate()
-	if err != nil {
-		return nil, err
-	}
-	return a, err
-}
-
-func (a *API) WithToken(t oauth2.Token) *API {
-	a.mode = token
-	a.token = &t
-	_ = a.Validate()
-	return a
-}
-
-func (a *API) validateToken() error {
-	if !a.token.Valid() {
-		return errors.New("access token is not valid, or is expired")
-	}
-
-	tokenClient := &http.Client{
-		Transport: &tokenTransport{
-			underlyingTransport: a.UnauthenticatedClient.Transport,
-			token:               *a.token,
-		},
-	}
-
-	a.AuthenticatedClient = tokenClient
-	return a.ensureTransports()
+	return a, nil
 }
 
 func (a *API) Token(ctx context.Context) (*oauth2.Token, error) {
+	if _, ok := ctx.Value(oauth2.HTTPClient).(*http.Client); !ok {
+		ctx = context.WithValue(ctx, oauth2.HTTPClient, a.baseClient)
+	}
+
 	switch a.mode {
 	case token:
 		if !a.token.Valid() {
@@ -277,10 +120,6 @@ func (a *API) Token(ctx context.Context) (*oauth2.Token, error) {
 		if a.oauthConfig == nil {
 			return nil, errors.New("you have supplied invalid authorization code configuration to go-uaa")
 		}
-		if a.UnauthenticatedClient == nil {
-			a = a.WithClient(defaultClient())
-		}
-		ctx := context.WithValue(ctx, oauth2.HTTPClient, a.UnauthenticatedClient)
 		tokenFormatParam := oauth2.SetAuthURLParam("token_format", a.tokenFormat.String())
 		responseTypeParam := oauth2.SetAuthURLParam("response_type", "token")
 
@@ -289,45 +128,275 @@ func (a *API) Token(ctx context.Context) (*oauth2.Token, error) {
 		if a.oauthConfig == nil {
 			return nil, errors.New("you have supplied invalid refresh token configuration to go-uaa")
 		}
-		if a.UnauthenticatedClient == nil {
-			a = a.WithClient(defaultClient())
-		}
-		ctx := context.WithValue(context.Background(), oauth2.HTTPClient, a.UnauthenticatedClient)
+
 		tokenSource := a.oauthConfig.TokenSource(ctx, &oauth2.Token{
 			RefreshToken: a.refreshToken,
 		})
 
-		return tokenSource.Token()
+		token, err := tokenSource.Token()
+		return token, requestErrorFromOauthError(err)
+	case passwordcredentials:
+		token, err := a.passwordCredentialsConfig.TokenSource(ctx).Token()
+		return token, requestErrorFromOauthError(err)
 	}
 	return nil, errors.New("your configuration provides no way for go-uaa to get a token")
 }
 
-// NewWithAuthorizationCode builds an API that uses the authorization code
-// grant to get a token for use with the UAA API.
-func NewWithAuthorizationCode(target string, zoneID string, clientID string, clientSecret string, authorizationCode string, tokenFormat TokenFormat, skipSSLValidation bool) (*API, error) {
-	a := New(target, zoneID).WithSkipSSLValidation(skipSSLValidation).WithAuthorizationCode(clientID, clientSecret, authorizationCode, tokenFormat)
-	err := a.Validate()
-	if err != nil {
-		return nil, err
+func (a *API) baseTransportIsNil() bool {
+	if a.baseTransport == nil || reflect.ValueOf(a.baseTransport).IsNil() {
+		return true
 	}
-	return a, err
+	return false
 }
 
-func (a *API) WithAuthorizationCode(clientID string, clientSecret string, authorizationCode string, tokenFormat TokenFormat) *API {
-	a.mode = authorizationcode
-	a.clientID = clientID
-	a.clientSecret = clientSecret
-	a.authorizationCode = authorizationCode
-	a.tokenFormat = tokenFormat
-	_ = a.Validate()
-	return a
-}
-
-func (a *API) validateAuthorizationCode() error {
-	err := a.validateTarget()
+func (a *API) configure() error {
+	err := a.configureTarget()
 	if err != nil {
 		return err
 	}
+	if a.baseClient == nil {
+		return errors.New("please ensure you pass a non-nil client to uaa.WithClient, or remove the uaa.WithClient option")
+	}
+	if a.baseTransportIsNil() {
+		a.baseTransport = a.baseClient.Transport
+	}
+	if a.baseTransportIsNil() {
+		a.baseTransport = http.DefaultTransport
+	}
+
+	a.ensureTransport(a.baseClient.Transport)
+	wrappedTransport := &uaaTransport{
+		base:           a.baseClient.Transport,
+		LoggingEnabled: a.verbose,
+	}
+	a.baseClient.Transport = wrappedTransport
+	switch a.mode {
+	case token:
+		err = a.configureToken()
+	case clientcredentials:
+		a.configureClientCredentials()
+	case passwordcredentials:
+		a.configurePasswordCredentials()
+	case authorizationcode:
+		err = a.configureAuthorizationCode()
+	case refreshtoken:
+		err = a.configureRefreshToken()
+	case custom:
+		if a.Client == nil {
+			a.Client = a.baseClient
+		}
+	default:
+		return errors.New("please ensure you pass an AuthenticationOption (e.g. WithClientCredentials, WithPasswordCredentials, WithAuthorizationCode, WithRefreshToken, WithToken) to New(), or manually construct a uaa.API and set uaa.API.Client")
+	}
+	if err != nil {
+		return err
+	}
+	if a.Client == nil {
+		return errors.New("Client is nil; please ensure you pass an AuthenticationOption (e.g. WithClientCredentials, WithPasswordCredentials, WithAuthorizationCode, WithRefreshToken, WithToken) to New(), or manually set Client")
+	}
+	a.ensureTransport(a.Client.Transport)
+	return nil
+}
+
+func (a *API) configureTarget() error {
+	if a.TargetURL != nil {
+		return nil
+	}
+	if a.target == "" && a.TargetURL == nil {
+		return errors.New("the target is missing")
+	}
+	u, err := BuildTargetURL(a.target)
+	if err != nil {
+		return err
+	}
+	a.TargetURL = u
+	return nil
+}
+
+type withClient struct {
+	client *http.Client
+}
+
+func WithClient(client *http.Client) Option {
+	return &withClient{client: client}
+}
+
+func (w *withClient) Apply(a *API) {
+	a.baseClient = w.client
+}
+
+type withTransport struct {
+	transport http.RoundTripper
+}
+
+func WithTransport(transport http.RoundTripper) Option {
+	return &withTransport{transport: transport}
+}
+
+func (w *withTransport) Apply(a *API) {
+	a.baseTransport = w.transport
+}
+
+type withSkipSSLValidation struct {
+	skipSSLValidation bool
+}
+
+func WithSkipSSLValidation(skipSSLValidation bool) Option {
+	return &withSkipSSLValidation{skipSSLValidation: skipSSLValidation}
+}
+
+func (w *withSkipSSLValidation) Apply(a *API) {
+	a.skipSSLValidation = w.skipSSLValidation
+}
+
+type withUserAgent struct {
+	userAgent string
+}
+
+func WithUserAgent(userAgent string) Option {
+	return &withUserAgent{userAgent: userAgent}
+}
+
+func (w *withUserAgent) Apply(a *API) {
+	a.userAgent = w.userAgent
+}
+
+type withZoneID struct {
+	zoneID string
+}
+
+func WithZoneID(zoneID string) Option {
+	return &withZoneID{zoneID: zoneID}
+}
+
+func (w *withZoneID) Apply(a *API) {
+	a.zoneID = w.zoneID
+}
+
+type withVerbosity struct {
+	verbose bool
+}
+
+func WithVerbosity(verbose bool) Option {
+	return &withVerbosity{verbose: verbose}
+}
+
+func (w *withVerbosity) Apply(a *API) {
+	a.verbose = w.verbose
+}
+
+type withClientCredentials struct {
+	clientID     string
+	clientSecret string
+	tokenFormat  TokenFormat
+}
+
+func WithClientCredentials(clientID string, clientSecret string, tokenFormat TokenFormat) AuthenticationOption {
+	return &withClientCredentials{clientID: clientID, clientSecret: clientSecret, tokenFormat: tokenFormat}
+}
+
+func (w *withClientCredentials) ApplyAuthentication(a *API) {
+	a.mode = clientcredentials
+	a.clientID = w.clientID
+	a.clientSecret = w.clientSecret
+	a.tokenFormat = w.tokenFormat
+}
+
+func (a *API) configureClientCredentials() {
+	tokenURL := urlWithPath(*a.TargetURL, "/oauth/token")
+	v := url.Values{}
+	v.Add("token_format", a.tokenFormat.String())
+	c := &cc.Config{
+		ClientID:       a.clientID,
+		ClientSecret:   a.clientSecret,
+		TokenURL:       tokenURL.String(),
+		EndpointParams: v,
+		AuthStyle:      oauth2.AuthStyleInHeader,
+	}
+	a.clientCredentialsConfig = c
+	a.Client = c.Client(context.WithValue(
+		context.Background(),
+		oauth2.HTTPClient,
+		a.baseClient,
+	))
+}
+
+type withPasswordCredentials struct {
+	clientID     string
+	clientSecret string
+	username     string
+	password     string
+	tokenFormat  TokenFormat
+}
+
+func WithPasswordCredentials(clientID string, clientSecret string, username string, password string, tokenFormat TokenFormat) AuthenticationOption {
+	return &withPasswordCredentials{
+		clientID:     clientID,
+		clientSecret: clientSecret,
+		username:     username,
+		password:     password,
+		tokenFormat:  tokenFormat,
+	}
+}
+
+func (w *withPasswordCredentials) ApplyAuthentication(a *API) {
+	a.mode = passwordcredentials
+	a.clientID = w.clientID
+	a.clientSecret = w.clientSecret
+	a.username = w.username
+	a.password = w.password
+	a.tokenFormat = w.tokenFormat
+}
+
+func (a *API) configurePasswordCredentials() {
+	tokenURL := urlWithPath(*a.TargetURL, "/oauth/token")
+	v := url.Values{}
+	v.Add("token_format", a.tokenFormat.String())
+	c := &pc.Config{
+		ClientID:     a.clientID,
+		ClientSecret: a.clientSecret,
+		Username:     a.username,
+		Password:     a.password,
+		Endpoint: oauth2.Endpoint{
+			TokenURL: tokenURL.String(),
+		},
+		EndpointParams: v,
+	}
+	a.passwordCredentialsConfig = c
+	a.Client = c.Client(context.WithValue(
+		context.Background(),
+		oauth2.HTTPClient,
+		a.baseClient))
+}
+
+type withAuthorizationCode struct {
+	clientID          string
+	clientSecret      string
+	authorizationCode string
+	redirectURL       *url.URL
+	tokenFormat       TokenFormat
+}
+
+func WithAuthorizationCode(clientID string, clientSecret string, authorizationCode string, tokenFormat TokenFormat, redirectURL *url.URL) AuthenticationOption {
+	return &withAuthorizationCode{
+		clientID:          clientID,
+		clientSecret:      clientSecret,
+		authorizationCode: authorizationCode,
+		tokenFormat:       tokenFormat,
+		redirectURL:       redirectURL,
+	}
+}
+
+func (w *withAuthorizationCode) ApplyAuthentication(a *API) {
+	a.mode = authorizationcode
+	a.clientID = w.clientID
+	a.clientSecret = w.clientSecret
+	a.authorizationCode = w.authorizationCode
+	a.tokenFormat = w.tokenFormat
+	a.redirectURL = w.redirectURL
+}
+
+func (a *API) configureAuthorizationCode() error {
 	tokenURL := urlWithPath(*a.TargetURL, "/oauth/token")
 	c := &oauth2.Config{
 		ClientID:     a.clientID,
@@ -336,51 +405,48 @@ func (a *API) validateAuthorizationCode() error {
 			TokenURL:  tokenURL.String(),
 			AuthStyle: oauth2.AuthStyleInHeader,
 		},
+		RedirectURL: a.redirectURL.String(),
 	}
 	a.oauthConfig = c
-	if a.UnauthenticatedClient == nil {
-		a = a.WithClient(defaultClient())
-	}
-	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, a.UnauthenticatedClient)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, a.baseClient)
 
 	if !a.token.Valid() {
 		t, err := a.Token(context.Background())
 		if err != nil {
-			return err
+			return requestErrorFromOauthError(err)
 		}
 		a.token = t
 	}
 
-	a.AuthenticatedClient = c.Client(ctx, a.token)
-	return a.ensureTransports()
+	a.Client = c.Client(ctx, a.token)
+	return nil
 }
 
-// NewWithRefreshToken builds an API that uses the given refresh token to get an
-// access token for use with the UAA API.
-func NewWithRefreshToken(target string, zoneID string, clientID string, clientSecret string, refreshToken string, tokenFormat TokenFormat, skipSSLValidation bool) (*API, error) {
-	a := New(target, zoneID).WithSkipSSLValidation(skipSSLValidation).WithRefreshToken(clientID, clientSecret, refreshToken, tokenFormat)
-	err := a.Validate()
-	if err != nil {
-		return nil, err
+type withRefreshToken struct {
+	clientID     string
+	clientSecret string
+	refreshToken string
+	tokenFormat  TokenFormat
+}
+
+func WithRefreshToken(clientID string, clientSecret string, refreshToken string, tokenFormat TokenFormat) AuthenticationOption {
+	return &withRefreshToken{
+		clientID:     clientID,
+		clientSecret: clientSecret,
+		refreshToken: refreshToken,
+		tokenFormat:  tokenFormat,
 	}
-	return a, err
 }
 
-func (a *API) WithRefreshToken(clientID string, clientSecret string, refreshToken string, tokenFormat TokenFormat) *API {
+func (w *withRefreshToken) ApplyAuthentication(a *API) {
 	a.mode = refreshtoken
-	a.clientID = clientID
-	a.clientSecret = clientSecret
-	a.refreshToken = refreshToken
-	a.tokenFormat = tokenFormat
-	_ = a.Validate()
-	return a
+	a.clientID = w.clientID
+	a.clientSecret = w.clientSecret
+	a.refreshToken = w.refreshToken
+	a.tokenFormat = w.tokenFormat
 }
 
-func (a *API) validateRefreshToken() error {
-	err := a.validateTarget()
-	if err != nil {
-		return err
-	}
+func (a *API) configureRefreshToken() error {
 	tokenURL := urlWithPath(*a.TargetURL, "/oauth/token")
 	query := tokenURL.Query()
 	query.Set("token_format", a.tokenFormat.String())
@@ -394,7 +460,7 @@ func (a *API) validateRefreshToken() error {
 		},
 	}
 	a.oauthConfig = c
-	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, a.UnauthenticatedClient)
+	ctx := context.WithValue(context.Background(), oauth2.HTTPClient, a.baseClient)
 
 	if !a.token.Valid() {
 		t, err := a.Token(context.Background())
@@ -404,6 +470,56 @@ func (a *API) validateRefreshToken() error {
 		a.token = t
 	}
 
-	a.AuthenticatedClient = c.Client(ctx, a.token)
-	return a.ensureTransports()
+	a.Client = c.Client(ctx, a.token)
+	return nil
+}
+
+type withToken struct {
+	token *oauth2.Token
+}
+
+func WithToken(token *oauth2.Token) AuthenticationOption {
+	return &withToken{token: token}
+}
+
+func (w *withToken) ApplyAuthentication(a *API) {
+	a.mode = token
+	a.token = w.token
+}
+
+func (a *API) configureToken() error {
+	if !a.token.Valid() {
+		return errors.New("access token is not valid, or is expired")
+	}
+
+	tokenClient := &http.Client{
+		Transport: &tokenTransport{
+			underlyingTransport: a.baseClient.Transport,
+			token:               *a.token,
+		},
+	}
+
+	a.Client = tokenClient
+	return nil
+}
+
+type tokenTransport struct {
+	underlyingTransport http.RoundTripper
+	token               oauth2.Token
+}
+
+func (t *tokenTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	req.Header.Set("Authorization", fmt.Sprintf("%s %s", t.token.Type(), t.token.AccessToken))
+	return t.underlyingTransport.RoundTrip(req)
+}
+
+type withNoAuthentication struct {
+}
+
+func WithNoAuthentication() AuthenticationOption {
+	return &withNoAuthentication{}
+}
+
+func (w *withNoAuthentication) ApplyAuthentication(a *API) {
+	a.mode = custom
 }
