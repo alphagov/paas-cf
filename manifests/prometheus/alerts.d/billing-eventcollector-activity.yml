@@ -1,0 +1,29 @@
+---
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name: 
+    rules:
+      - alert: BillingEventCollectorAppEvents 
+        expr: sum by(app_name) (rate(paas_billing_eventcollector_events_collected_total{kind="app"}[1d])) == 0
+        for: 3d
+        labels:
+          severity: critical
+        annotations:
+          summary: "Billing EventCollector is not collecting any app events"
+          description: "Billing EventCollector has not collected any app events for 3 days. This is unexpected and implies a problem with the collector and/or the billing app"
+
+- type: replace
+  path: /instance_groups/name=prometheus2/jobs/name=prometheus2/properties/prometheus/custom_rules?/-
+  value:
+    name:
+    rules:
+      - alert: BillingEventCollectorServiceEvents
+        expr: sum by(app_name) (rate(paas_billing_eventcollector_events_collected_total{kind="service"}[1d])) == 0
+        for: 3d
+        labels:
+          severity: critical
+        annotations:
+          summary: "Billing EventCollector is not collecting any service events"
+          description: "Billing EventCollector has not collected any service events for 3 days. This is unexpected and implies a problem with the collector and/or the billing app"
