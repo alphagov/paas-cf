@@ -5797,6 +5797,7 @@ jobs:
                       { 'route' => 'aiven-broker.${APPS_DNS_ZONE_NAME}' },
                     ]
                     app['services'] = ['logit-syslog-drain']
+                    app['stack'] = 'cflinuxfs4'
                   }
                   File.write('manifest.yml', manifest.to_yaml)
                 "
