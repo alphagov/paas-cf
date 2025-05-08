@@ -640,14 +640,14 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-accounts.git
       branch: main
-      tag_filter: v0.34.0
+      tag_filter: v0.37.0
 
   - name: paas-auditor
     type: git
     source:
       uri: https://github.com/alphagov/paas-auditor.git
       branch: main
-      tag_filter: v0.76.0
+      tag_filter: v0.77.0
 
   - name: paas-admin
     type: git
@@ -662,7 +662,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-prometheus-endpoints.git
       branch: main
-      tag_filter: v0.20.0
+      tag_filter: v0.21.0
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
