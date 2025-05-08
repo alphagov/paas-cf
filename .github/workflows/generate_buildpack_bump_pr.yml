@@ -4,7 +4,7 @@ on:
     - cron: "0 9 1 * *"
 
 env:
-  GO_VERSION: "1.21"
+  GO_VERSION: "1.22"
   GIT_AUTHOR_NAME: github-actions
   GIT_AUTHOR_EMAIL: github-actions@github.com
   GITHUB_UNPRIV_USERNAME: ${{ secrets.GOVUK_PAAS_UNPRIVILEGED_BOT_USERNAME }}

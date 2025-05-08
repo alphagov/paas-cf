@@ -640,14 +640,14 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-accounts.git
       branch: main
-      tag_filter: v0.34.0
+      tag_filter: v0.37.0
 
   - name: paas-auditor
     type: git
     source:
       uri: https://github.com/alphagov/paas-auditor.git
       branch: main
-      tag_filter: v0.76.0
+      tag_filter: v0.77.0
 
   - name: paas-admin
     type: git
@@ -662,7 +662,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-prometheus-endpoints.git
       branch: main
-      tag_filter: v0.20.0
+      tag_filter: v0.21.0
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
@@ -684,8 +684,8 @@ resources:
       uri: https://github.com/nerdswords/yet-another-cloudwatch-exporter.git
       fetch_tags: true
     version:
-      # v0.53.0
-      ref: 2fd8cd322931aeb5a39c457ede31022e67f479b9
+      # v0.61.2
+      ref: 43c09fe4ed3e93449121765462433ed924d679a2
 
   - name: pingdom-exporter
     type: git
@@ -3263,7 +3263,7 @@ jobs:
                         - logit-syslog-drain
                       env:
                         GO_INSTALL_PACKAGE_SPEC: github.com/nerdswords/yet-another-cloudwatch-exporter/cmd/yace
-                        GOVERSION: go1.21
+                        GOVERSION: go1.22
                   EOF
 
                   cat << EOF > manifest.yml
@@ -3271,7 +3271,7 @@ jobs:
                   applications:
                     - name: cloudwatch-exporter
                       memory: 128M
-                      disk_quota: 100M
+                      disk_quota: 256M
                       instances: 1
                       health-check-type: http
                       health-check-http-endpoint: /
