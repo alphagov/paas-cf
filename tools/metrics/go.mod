@@ -1,6 +1,7 @@
 module github.com/alphagov/paas-cf/tools/metrics
 
 go 1.22
+toolchain go1.24.1
 
 require (
 	code.cloudfoundry.org/lager v2.0.0+incompatible
@@ -15,7 +16,7 @@ require (
 	github.com/onsi/gomega v1.19.0
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.11.1
-	github.com/prometheus/client_model v0.2.0
+	github.com/prometheus/client_model v0.6.2
 	github.com/prometheus/common v0.26.0
 )
 
@@ -46,6 +47,6 @@ require (
 	golang.org/x/text v0.21.0 // indirect
 	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	google.golang.org/appengine v1.6.1 // indirect
-	google.golang.org/protobuf v1.33.0 // indirect
+	google.golang.org/protobuf v1.36.6 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
