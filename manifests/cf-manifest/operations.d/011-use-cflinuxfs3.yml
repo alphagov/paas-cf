@@ -35,11 +35,6 @@
     name: nodejs_buildpack
     package: nodejs-buildpack-cflinuxfs3
 - type: replace
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks/4:after
-  value:
-    name: go_buildpack
-    package: go-buildpack-cflinuxfs3
-- type: replace
   path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks/5:after
   value:
     name: python_buildpack
@@ -59,11 +54,6 @@
   value:
     name: r_buildpack
     package: r-buildpack-cflinuxfs3
-- type: replace
-  path: /instance_groups/name=api/jobs/name=cloud_controller_ng/properties/cc/install_buildpacks/9:after
-  value:
-    name: binary_buildpack
-    package: binary-buildpack-cflinuxfs3
 - type: replace
   path: /instance_groups/name=cc-worker/jobs/name=cloud_controller_worker/properties/cc/diego/droplet_destinations/cflinuxfs3?
   value: /home/vcap

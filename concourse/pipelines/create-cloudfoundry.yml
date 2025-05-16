@@ -631,23 +631,20 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker.git
-      branch: main
-      tag_filter: ((deploy_env_tag_prefix))
+      branch: update-stack-to-cflinuxfs4
       commit_verification_keys: ((gpg_public_keys))
 
   - name: paas-accounts
     type: git
     source:
       uri: https://github.com/alphagov/paas-accounts.git
-      branch: main
-      tag_filter: v0.37.0
+      branch: update-stack-to-cflinuxfs4
 
   - name: paas-auditor
     type: git
     source:
       uri: https://github.com/alphagov/paas-auditor.git
-      branch: main
-      tag_filter: v0.77.0
+      branch: update-stack-to-cflinuxfs4
 
   - name: paas-admin
     type: git
@@ -661,8 +658,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-prometheus-endpoints.git
-      branch: main
-      tag_filter: v0.21.0
+      branch: update-stack-to-cflinuxfs4
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
