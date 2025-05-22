@@ -11,6 +11,6 @@
   path: /releases/name=cflinuxfs4-compat
   value:
     name: "cflinuxfs4-compat"
-    version: "1.182.0"
-    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs4-compat-release?v=1.182.0"
-    sha1: "734402308d784313b9678778e8c438c932a1f176"
+    version: "1.267.0"
+    url: "https://bosh.io/d/github.com/cloudfoundry/cflinuxfs4-compat-release?v=1.267.0"
+    sha1: "b1a1a95d0dd2cdeacfeb0498ca72f8b000549c72"
