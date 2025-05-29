@@ -106,16 +106,4 @@ RSpec.describe "autoscaler" do
 
     it_behaves_like "an autoscaler rds client"
   end
-
-  describe "metricsserver" do
-    subject(:metricsserver) { manifest["instance_groups.metricsserver"] }
-
-    it_behaves_like "an autoscaler rds client"
-  end
-
-  describe "metricsgateway" do
-    subject(:metricsgateway) { manifest["instance_groups.metricsgateway"] }
-
-    it_behaves_like "an autoscaler rds client"
-  end
 end

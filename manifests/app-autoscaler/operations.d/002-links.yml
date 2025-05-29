@@ -25,10 +25,6 @@
   value: ((deploy_env))
 
 - type: replace
-  path: /instance_groups/name=metricsforwarder/jobs/name=loggregator_agent/consumes/doppler/deployment
-  value: ((deploy_env))
-
-- type: replace
   path: /instance_groups/name=scalingengine/jobs/name=route_registrar/consumes/nats/deployment
   value: ((deploy_env))
 
@@ -41,14 +37,6 @@
   value: ((deploy_env))
 
 - type: replace
-  path: /instance_groups/name=metricsserver/jobs/name=route_registrar/consumes/nats/deployment
-  value: ((deploy_env))
-
-- type: replace
   path: /instance_groups/name=eventgenerator/jobs/name=route_registrar/consumes/nats/deployment
-  value: ((deploy_env))
-
-- type: replace
-  path: /instance_groups/name=metricsgateway/jobs/name=route_registrar/consumes/nats/deployment
   value: ((deploy_env))
   
