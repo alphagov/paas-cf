@@ -30,7 +30,7 @@ for org in "$@"; do
 
     echo "    Buildpack Usage:"
     cf curl /v3/apps | jq -r '.resources[].guid' | while read -r guid; do
-      cf curl /v3/apps/$guid | jq -r '.lifecycle.data.buildpacks[]? // "default"'
+      cf curl "/v3/apps/$guid" | jq -r '.lifecycle.data.buildpacks[]? // "default"'
     done | sort | uniq -c | awk '{printf "      %s: %s\n", $2, $1}'
 
     echo "    Service Types:"
