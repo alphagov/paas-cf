@@ -10,13 +10,6 @@ export PAAS_CF_DIR
 # create temporary directory
 WORKDIR=$(mktemp -d)
 
-# clean up temporary directory on exit
-function cleanup {
-    # check WORKDIR does not equal /
-    if [[ "$WORKDIR" != "/" ]]; then
-        rm -rf "$WORKDIR"
-    fi
-}
 trap cleanup EXIT
 
 STATE_BUCKET="gds-paas-${DEPLOY_ENV}-state"
