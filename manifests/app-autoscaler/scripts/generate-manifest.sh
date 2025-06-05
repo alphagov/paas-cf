@@ -18,7 +18,7 @@ if [ "${SLIM_DEV_DEPLOYMENT-}" = "true" ]; then
 fi
 
 variables_file="$(mktemp)"
-trap 'rm -f "${variables_file}"' EXIT
+#trap 'rm -f "${variables_file}"' EXIT
 
 echo "
 ---
