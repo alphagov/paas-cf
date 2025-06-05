@@ -10,7 +10,7 @@ export PAAS_CF_DIR
 # create temporary directory
 WORKDIR=$(mktemp -d)
 
-trap cleanup EXIT
+#trap cleanup EXIT
 
 STATE_BUCKET="gds-paas-${DEPLOY_ENV}-state"
 
