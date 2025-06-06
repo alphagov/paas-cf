@@ -631,7 +631,7 @@ resources:
     type: git
     source:
       uri: https://github.com/alphagov/paas-aiven-broker.git
-      branch: main
+      branch: PAAS-245-remove-aiven-influxdb-integration
       tag_filter: ((deploy_env_tag_prefix))
       commit_verification_keys: ((gpg_public_keys))
 
