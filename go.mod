@@ -1,6 +1,6 @@
 module github.com/alphagov/paas-cf
 
-go 1.22
+go 1.22.0
 
 require (
 	github.com/ProtonMail/gopenpgp/v2 v2.5.2
@@ -12,7 +12,7 @@ require (
 require (
 	github.com/ProtonMail/go-crypto v0.0.0-20230124153114-0acdc8ae009b // indirect
 	github.com/ProtonMail/go-mime v0.0.0-20221031134845-8fd9bc37cf08 // indirect
-	github.com/cloudflare/circl v1.3.7 // indirect
+	github.com/cloudflare/circl v1.6.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
