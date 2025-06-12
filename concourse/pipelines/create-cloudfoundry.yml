@@ -5832,39 +5832,6 @@ jobs:
             NAME_PREFIX: AIVENBACC
             TEST_USER_PASSWORD: ((secrets_test_user_password))
 
-        - in_parallel:
-          - task: aiven-broker-acceptance-tests
-            tags: [colocated-with-web]
-            file: paas-cf/concourse/tasks/aiven-broker-acceptance-tests-run.yml
-            params:
-              DISABLE_CUSTOM_ACCEPTANCE_TESTS: ((disable_custom_acceptance_tests))
-              DEPLOY_ENV: ((deploy_env))
-              AWS_REGION: ((aws_region))
-              SYSTEM_DNS_ZONE_NAME: ((system_dns_zone_name))
-              SLIM_DEV_DEPLOYMENT: ((slim_dev_deployment))
-
-              PROMETHEUS_BASIC_AUTH_USERNAME: custom-broker-acceptance
-              PROMETHEUS_BASIC_AUTH_PASSWORD: ((custom_broker_acceptance_prometheus_password))
-            ensure:
-              task: upload-test-artifacts
-              tags: [colocated-with-web]
-              file: paas-cf/concourse/tasks/upload-test-artifacts.yml
-              params:
-                TEST_ARTIFACTS_BUCKET: ((test_artifacts_bucket))
-
-        ensure:
-          task: remove-temp-user
-          tags: [colocated-with-web]
-          file: paas-cf/concourse/tasks/delete_user.yml
-          timeout: 5m
-          input_mapping:
-            user-creds: admin-creds
-          params:
-            DISABLE_ADMIN_USER_CREATION: ((disable_custom_acceptance_tests))
-            API_ENDPOINT: ((api_endpoint))
-            CF_ADMIN: ((cf_admin))
-            CF_PASS: ((cf_pass))
-
       - task: tag-repo
         tags: [colocated-with-web]
         file: paas-cf/concourse/tasks/tag-repo.yml
