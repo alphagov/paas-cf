@@ -1,13 +1,16 @@
 package internal
 
 import (
-	"bytes"
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
+
+	"log"
 
 	"github.com/concourse/atc"
 	"github.com/tedsuo/rata"
@@ -29,7 +32,7 @@ type Request struct {
 	Params             rata.Params
 	Query              url.Values
 	Header             http.Header
-	Body               *bytes.Buffer
+	Body               io.Reader
 	ReturnResponseBody bool
 }
 
@@ -42,11 +45,12 @@ type Response struct {
 type connection struct {
 	url        string
 	httpClient *http.Client
+	tracing    bool
 
 	requestGenerator *rata.RequestGenerator
 }
 
-func NewConnection(apiURL string, httpClient *http.Client) Connection {
+func NewConnection(apiURL string, httpClient *http.Client, tracing bool) Connection {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
@@ -56,6 +60,7 @@ func NewConnection(apiURL string, httpClient *http.Client) Connection {
 	return &connection{
 		url:        apiURL,
 		httpClient: httpClient,
+		tracing:    tracing,
 
 		requestGenerator: rata.NewRequestGenerator(apiURL, atc.Routes),
 	}
@@ -75,9 +80,27 @@ func (connection *connection) Send(passedRequest Request, passedResponse *Respon
 		return err
 	}
 
+	if connection.tracing {
+		b, err := httputil.DumpRequestOut(req, true)
+		if err != nil {
+			return err
+		}
+
+		log.Println(string(b))
+	}
+
 	response, err := connection.httpClient.Do(req)
 	if err != nil {
 		return err
+	}
+
+	if connection.tracing {
+		b, err := httputil.DumpResponse(response, true)
+		if err != nil {
+			return err
+		}
+
+		log.Println(string(b))
 	}
 
 	if !passedRequest.ReturnResponseBody {
@@ -135,7 +158,7 @@ func (connection *connection) createHTTPRequest(passedRequest Request) (*http.Re
 	return req, nil
 }
 
-func (connection *connection) getBody(passedRequest Request) *bytes.Buffer {
+func (connection *connection) getBody(passedRequest Request) io.Reader {
 	if passedRequest.Header != nil && passedRequest.Body != nil {
 		if _, ok := passedRequest.Header["Content-Type"]; !ok {
 			panic("You must pass a 'Content-Type' Header with a body")
@@ -143,12 +166,15 @@ func (connection *connection) getBody(passedRequest Request) *bytes.Buffer {
 		return passedRequest.Body
 	}
 
-	return &bytes.Buffer{}
+	return nil
 }
 
 func (connection *connection) populateResponse(response *http.Response, returnResponseBody bool, passedResponse *Response) error {
 	if response.StatusCode == http.StatusNotFound {
-		return ResourceNotFoundError{}
+		var errors ResourceNotFoundError
+
+		json.NewDecoder(response.Body).Decode(&errors)
+		return errors
 	}
 
 	if response.StatusCode == http.StatusUnauthorized {

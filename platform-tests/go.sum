@@ -24,8 +24,8 @@ github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0 h1:sDMmm+q/3+Bu
 github.com/codegangsta/inject v0.0.0-20150114235600-33e0aa1cb7c0/go.mod h1:4Zcjuz89kmFXt9morQgcfYZAYZ5n8WHjt81YYWIwtTM=
 github.com/concourse/atc v0.0.0-20160908214930-406261dbd768 h1:tYlR0zGHTeX8OiKXEre0PngwtgEtUd5sKftGGT59+Bw=
 github.com/concourse/atc v0.0.0-20160908214930-406261dbd768/go.mod h1:sB+NvCgZM3gsgFKEec4dRfBAxz8AHrUgol2t4B42wVM=
-github.com/concourse/go-concourse v0.0.0-20160910211037-b260442fef03 h1:YBzRRyHbXHCT/+Pp4Ah95FdzwMSgtDSwjXq5rquxplo=
-github.com/concourse/go-concourse v0.0.0-20160910211037-b260442fef03/go.mod h1:IWOiXdc/gF5FCPa8uIV8ShGqBMcpYbV8T9MZLi609Bc=
+github.com/concourse/go-concourse v4.2.2+incompatible h1:fd7QTk9y0be5mbBq1YJmo6lkJ4JjgLOZD2u1SEkTMlM=
+github.com/concourse/go-concourse v4.2.2+incompatible/go.mod h1:IWOiXdc/gF5FCPa8uIV8ShGqBMcpYbV8T9MZLi609Bc=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
@@ -46,6 +46,8 @@ github.com/golang/protobuf v1.5.3/go.mod h1:XVQd3VNwM+JqD3oG2Ue2ip4fOMUkwXdXDdiu
 github.com/google/go-cmp v0.5.5/go.mod h1:v8dTdLbMG2kIc/vJvl+f65V22dbkXbowE6jgT/gNBxE=
 github.com/google/go-cmp v0.5.9 h1:O2Tfq5qg4qc4AmwVlvv0oLiVAGB7enBSJ2x2DqQFi38=
 github.com/google/go-cmp v0.5.9/go.mod h1:17dUlkBOakJ0+DkrSSNjCkIjxS6bF9zb3elmeNGIjoY=
+github.com/google/jsonapi v1.0.0 h1:qIGgO5Smu3yJmSs+QlvhQnrscdZfFhiV6S8ryJAglqU=
+github.com/google/jsonapi v1.0.0/go.mod h1:YYHiRPJT8ARXGER8In9VuLv4qvLfDmA9ULQqptbLE4s=
 github.com/google/pprof v0.0.0-20210407192527-94a9f03dee38 h1:yAJXTCF9TqKcTiHJAE8dj7HMvPfh66eeA2JYW7eFpSE=
 github.com/google/pprof v0.0.0-20210407192527-94a9f03dee38/go.mod h1:kpwsk12EmLew5upagYY7GY0pfYCcupk39gWOCRROcvE=
 github.com/google/uuid v1.1.1 h1:Gkbcsh/GbpXz7lPftLA3P6TYMwjCLYm83jiFQZF/3gY=
