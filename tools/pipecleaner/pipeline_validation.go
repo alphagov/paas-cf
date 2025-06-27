@@ -111,7 +111,7 @@ func (pv *pipelineValidator) Validate() {
 	for _, err := range errors {
 		pv.ConcourseValidationErrors = append(
 			pv.ConcourseValidationErrors,
-			fmt.Errorf(err),
+			fmt.Errorf("%s", err),
 		)
 	}
 
