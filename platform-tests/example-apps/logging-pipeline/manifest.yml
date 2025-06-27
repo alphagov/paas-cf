@@ -8,5 +8,5 @@ applications:
    buildpacks: [go_buildpack]
    stack: cflinuxfs4
    env:
-     GOVERSION: go1.22
+     GOVERSION: go1.24
      GOPACKAGENAME: github.com/alphagov/paas-cf/platform-tests/example-apps/logging-pipeline
