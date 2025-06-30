@@ -76,7 +76,7 @@ func getRDSManualSnapshotQuota(service *servicequotas.ServiceQuotas) (float64, e
 	quota := out.Quota
 
 	if quota.ErrorReason != nil {
-		return float64(0), fmt.Errorf(*quota.ErrorReason.ErrorMessage)
+		return float64(0), fmt.Errorf("%s", *quota.ErrorReason.ErrorMessage)
 	}
 
 	return *quota.Value, nil
