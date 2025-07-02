@@ -8,4 +8,4 @@ applications:
     buildpacks: [go_buildpack]
     command: ./bin/http-tester; sleep 1; echo 'done'
     env:
-      GOVERSION: go1.22
+      GOVERSION: go1.23
