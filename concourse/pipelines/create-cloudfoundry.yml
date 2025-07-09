@@ -71,7 +71,7 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+        tag: 4b682e2c9cbfdac64a01df2504fd32d185074515
     terraform: &terraform-image-resource
       type: registry-image
       source:
