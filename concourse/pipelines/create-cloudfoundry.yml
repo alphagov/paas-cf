@@ -71,7 +71,7 @@ meta:
       type: registry-image
       source:
         repository: ghcr.io/alphagov/paas/golang
-        tag: 9d7b91294e91172c6f2d63caae4c7b645fc46036
+        tag: 4b682e2c9cbfdac64a01df2504fd32d185074515
     terraform: &terraform-image-resource
       type: registry-image
       source:
@@ -640,14 +640,14 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-accounts.git
       branch: main
-      tag_filter: v0.38.0
+      tag_filter: v0.39.0
 
   - name: paas-auditor
     type: git
     source:
       uri: https://github.com/alphagov/paas-auditor.git
       branch: main
-      tag_filter: v0.78.0
+      tag_filter: v0.79.0
 
   - name: paas-admin
     type: git
@@ -662,7 +662,7 @@ resources:
     source:
       uri: https://github.com/alphagov/paas-prometheus-endpoints.git
       branch: main
-      tag_filter: v0.22.0
+      tag_filter: v0.23.0
 
   - name: prometheus-manifest-pre-vars
     type: s3-iam
@@ -3263,7 +3263,7 @@ jobs:
                         - logit-syslog-drain
                       env:
                         GO_INSTALL_PACKAGE_SPEC: github.com/nerdswords/yet-another-cloudwatch-exporter/cmd/yace
-                        GOVERSION: go1.22
+                        GOVERSION: go1.23
                   EOF
 
                   cat << EOF > manifest.yml
