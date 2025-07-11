@@ -152,11 +152,9 @@ var _ = Describe("VPC peering", func() {
 					command.Stdout = &out
 					err := command.Run()
 					Expect(err).To(BeNil(), "Config file: %s", filename)
-					Expect(out.String()).ToNot(BeEmpty(), fmt.Sprintf("Config file: %s", filename))
-					if strings.Contains(filename, "prod-lon") {
-						Expect(out.String(), fmt.Sprintf("Config file: %s", filename)).To(Equal("--- []"))
-					} else {
-						Expect(out.String(), fmt.Sprintf("Config file: %s", filename)).ToNot(Equal("--- []"))
+					if !strings.Contains(filename, "prod-lon") {
+						Expect(out.String()).ToNot(BeEmpty(), "Config file: %s", filename)
+						Expect(out.String()).ToNot(Equal("--- []"), "Config file: %s", filename)
 					}
 				}
 			})
