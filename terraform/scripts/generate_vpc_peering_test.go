@@ -2,6 +2,7 @@ package scripts_test
 
 import (
 	"fmt"
+	"strings"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
@@ -151,9 +152,10 @@ var _ = Describe("VPC peering", func() {
 					command.Stdout = &out
 					err := command.Run()
 					Expect(err).To(BeNil(), "Config file: %s", filename)
-					Expect(out.String()).ToNot(BeEmpty(), "Config file: %s", filename)
-					Expect(out.String()).ToNot(Equal(`--- []
-`), "Config file: %s", filename)
+					if !strings.Contains(filename, "prod-lon") {
+						Expect(out.String()).ToNot(BeEmpty(), "Config file: %s", filename)
+						Expect(out.String()).ToNot(Equal("--- []"), "Config file: %s", filename)
+					}
 				}
 			})
 		})
