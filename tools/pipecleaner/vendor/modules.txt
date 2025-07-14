@@ -102,6 +102,9 @@ github.com/patrickmn/go-cache
 # github.com/tedsuo/rata v1.0.1-0.20170830210128-07d200713958
 ## explicit
 github.com/tedsuo/rata
+# go.yaml.in/yaml/v2 v2.4.2
+## explicit; go 1.15
+go.yaml.in/yaml/v2
 # golang.org/x/crypto v0.31.0
 ## explicit; go 1.20
 golang.org/x/crypto/blowfish
@@ -155,6 +158,6 @@ gopkg.in/yaml.v2
 # gopkg.in/yaml.v3 v3.0.1
 ## explicit
 gopkg.in/yaml.v3
-# sigs.k8s.io/yaml v1.1.0
-## explicit
+# sigs.k8s.io/yaml v1.5.0
+## explicit; go 1.22
 sigs.k8s.io/yaml
