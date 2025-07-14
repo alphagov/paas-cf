@@ -1,6 +1,6 @@
 module github.com/alphagov/paas-cf
 
-go 1.22
+go 1.23
 
 require (
 	github.com/ProtonMail/gopenpgp/v2 v2.5.2
