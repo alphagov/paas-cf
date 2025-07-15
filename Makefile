@@ -341,6 +341,7 @@ prod-lon: ## Set Environment to prod-lon
 	$(eval export ENABLE_PAAS_ADMIN_CONTINUOUS_DEPLOY ?= true)
 	$(eval export DISABLE_APP_AUTOSCALER_ACCEPTANCE_TESTS ?= false)
 	$(eval export DISABLED_AZS)
+	$(eval export ENABLE_DESTROY=true)
 	@true
 
 .PHONY: bosh-cli
