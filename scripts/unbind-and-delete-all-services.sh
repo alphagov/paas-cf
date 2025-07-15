@@ -41,14 +41,12 @@ usage() {
 #### protect against accidental destruction of non-dev envs 
 non_dev_protect() {
   local prod_url
-  local prod_london_url
   local staging_url
   local target_url
   prod_url="https://api.cloud.service.gov.uk"
-  prod_london_url="https://api.london.cloud.service.gov.uk"
   staging_url="https://api.london.staging.cloudpipeline.digital"
   target_url=$(get_target_url)
-  if [[ "${target_url}" = "${prod_url}" ]] || [[ "${target_url}" = "${prod_london_url}" ]] || [[ "${target_url}" = "${staging_url}" ]]; then
+  if [[ "${target_url}" = "${prod_url}" ]] || [[ "${target_url}" = "${staging_url}" ]]; then
     print_error "halting execution due to non-dev protection"
   fi
 }
