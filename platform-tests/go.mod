@@ -27,7 +27,6 @@ require (
 	github.com/bmizerany/pat v0.0.0-20160217103242-c068ca2f0aac // indirect
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-task/slim-sprig/v3 v3.0.0 // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/google/pprof v0.0.0-20241210010833-40e02aabc2ad // indirect
 	github.com/hashicorp/errwrap v0.0.0-20141028054710-7554cd9344ce // indirect
@@ -43,11 +42,10 @@ require (
 	github.com/tedsuo/rata v0.0.0-20150202174335-b15ebd8bd97a // indirect
 	github.com/vito/go-sse v0.0.0-20160212001227-fd69d275caac // indirect
 	golang.org/x/net v0.37.0 // indirect
-	golang.org/x/oauth2 v0.0.0-20190130055435-99b60b757ec1 // indirect
+	golang.org/x/oauth2 v0.27.0 // indirect
 	golang.org/x/sys v0.31.0 // indirect
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/tools v0.30.0 // indirect
-	google.golang.org/appengine v1.4.0 // indirect
 	google.golang.org/protobuf v1.36.5 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
