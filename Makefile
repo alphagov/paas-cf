@@ -369,6 +369,10 @@ monitor-%: check-env ## Upload an optional, cross-region monitoring pipeline to 
 	MONITORED_AWS_REGION=$$(aws s3api get-bucket-location --bucket $$MONITORED_STATE_BUCKET --output text --query LocationConstraint) \
 		concourse/scripts/pipelines-cloudfoundry.sh
 
+.PHONY: download-pipeline
+download-pipeline: check-env ## Trigger a run of the create-cloudfoundry pipeline.
+	concourse/scripts/get-pipeline.sh
+
 .PHONY: trigger-deploy
 trigger-deploy: check-env ## Trigger a run of the create-cloudfoundry pipeline.
 	concourse/scripts/trigger-deploy.sh
