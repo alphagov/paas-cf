@@ -57,7 +57,7 @@ jobs:
           promtool --version
 
       - name: "Install Go ${{env.GO_VERSION}}"
-        uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe
+        uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00
         with:
           go-version: "${{env.GO_VERSION}}"
 
